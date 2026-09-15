@@ -42,7 +42,10 @@ jobs:
       - name: Archive pre-match predictions and score settled matches
         run: PYTHONPATH=/tmp/hkjc-direct python scripts/archive_and_score.py
 
-      - name: Validate archives
+      - name: Update persistent HKJC-keyed team identity and aliases
+        run: python scripts/update_team_aliases.py
+
+      - name: Validate archives and team registry
         run: |
           python - <<'PY'
           import csv
@@ -53,10 +56,13 @@ jobs:
               'data/results_archive.csv',
               'data/evaluation_current.csv',
               'data/evaluation_summary.csv',
+              'data/team_identity.csv',
+              'data/team_aliases.csv',
+              'data/team_alias_unresolved.csv',
           ]
           for p in paths:
               if not Path(p).exists():
-                  raise SystemExit(f'missing evaluation file: {p}')
+                  raise SystemExit(f'missing evaluation/registry file: {p}')
 
           def rows(path):
               with Path(path).open(encoding='utf-8-sig', newline='') as fh:
@@ -66,27 +72,67 @@ jobs:
           results = rows(paths[1])
           evaluation = rows(paths[2])
           summary = rows(paths[3])
+          identities = rows(paths[4])
+          aliases = rows(paths[5])
+          unresolved = rows(paths[6])
+          source = rows('data/forebet_current.csv')
+
           for name, data in [('prediction', preds), ('results', results), ('evaluation', evaluation)]:
               ids = [r.get('hkjc_event_id') for r in data if r.get('hkjc_event_id')]
               if len(ids) != len(set(ids)):
                   raise SystemExit(f'duplicate ids in {name} archive')
-          if len(summary) != 5:
-              raise SystemExit(f'expected 5 evaluation summary rows, got {len(summary)}')
+
+          if len(summary) != 6:
+              raise SystemExit(f'expected 6 evaluation summary rows, got {len(summary)}')
+          names = {r.get('model') for r in summary}
+          if 'HKJC Team-Form Poisson' not in names:
+              raise SystemExit('Team-Form Poisson missing from evaluation summary')
+
+          current_ids = {r.get('hkjc_event_id') for r in source if r.get('hkjc_event_id')}
+          pred_by_id = {r.get('hkjc_event_id'): r for r in preds if r.get('hkjc_event_id')}
+          for event_id in current_ids:
+              row = pred_by_id.get(event_id)
+              if row is None:
+                  raise SystemExit(f'current event missing from prediction archive: {event_id}')
+              if row.get('form_quality') == 'FORM_MODELED' and not all(row.get(k) for k in ('form_home','form_draw','form_away')):
+                  raise SystemExit(f'incomplete form probabilities in prediction archive: {event_id}')
+
+          identity_ids = [r.get('canonical_team_id') for r in identities if r.get('canonical_team_id')]
+          if len(identity_ids) != len(set(identity_ids)):
+              raise SystemExit('duplicate canonical ids in team_identity.csv')
+          alias_keys = [
+              (r.get('canonical_team_id'), r.get('source'), r.get('normalized_alias'))
+              for r in aliases
+              if r.get('canonical_team_id') and r.get('source') and r.get('normalized_alias')
+          ]
+          if len(alias_keys) != len(set(alias_keys)):
+              raise SystemExit('duplicate canonical/source/alias keys in team_aliases.csv')
+          if source and not identities:
+              raise SystemExit('team registry empty for non-empty current source')
+
           print(
               f'PASS prediction_archive={len(preds)} results_archive={len(results)} '
-              f'evaluated={len(evaluation)} summary_rows={len(summary)}'
+              f'evaluated={len(evaluation)} summary_rows={len(summary)} '
+              f'identities={len(identities)} aliases={len(aliases)} unresolved={len(unresolved)}'
           )
           PY
 
-      - name: Commit archives and evaluation metrics
+      - name: Commit archives, evaluation metrics and team registry
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/prediction_archive.csv data/results_archive.csv data/evaluation_current.csv data/evaluation_summary.csv
+          git add \
+            data/prediction_archive.csv \
+            data/results_archive.csv \
+            data/evaluation_current.csv \
+            data/evaluation_summary.csv \
+            data/team_identity.csv \
+            data/team_aliases.csv \
+            data/team_alias_unresolved.csv
           if git diff --cached --quiet; then
-            echo 'No archive/evaluation changes to commit.'
+            echo 'No archive/evaluation/registry changes to commit.'
           else
-            git commit -m 'Update prediction archive and evaluation metrics [skip ci]'
+            git commit -m 'Update prediction evaluation and team registry [skip ci]'
             git pull --rebase origin main
             git push
           fi
