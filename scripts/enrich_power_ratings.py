@@ -1,51 +1,53 @@
-"""Enrich the current HKJC-gated Forebet feed with independent club strength ratings.
+"""Enrich the HKJC-gated Forebet feed with independent Opta club power ratings.
 
-Primary source: FootballDatabase world club ranking.  The source is intentionally
-kept separate from Forebet: Forebet supplies match probabilities, while this
-module supplies a second, result-based team-strength signal.
+Forebet remains the match-probability model. Opta supplies a second, global
+team-strength signal on a 0-100 scale. The Opta dataviz bundle contains men's
+rankings for 10,000+ clubs, so this works across Europe, the Americas, Asia and
+other HKJC competitions rather than recreating FiveThirtyEight's narrower feed.
 
 Failure policy:
-- never destroy the Forebet feed;
-- keep the last good rating snapshot when the source is temporarily unavailable;
-- leave a rating blank rather than forcing a low-confidence team-name match.
+- never destroy a valid Forebet feed;
+- retain the last good Opta snapshot when a refresh temporarily fails;
+- never force an ambiguous team-name match.
 """
 from __future__ import annotations
 
 import csv
+import json
 import re
-import time
 import unicodedata
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Iterable
 
 import requests
-from bs4 import BeautifulSoup
 
-BASE_URL = "https://footballdatabase.com/ranking/world/{page}"
+SOURCE_URL = "https://dataviz.theanalyst.com/opta-power-rankings/index.js"
 FEED_PATH = Path("data/forebet_current.csv")
 RATINGS_PATH = Path("data/power_ratings.csv")
-SOURCE = "FootballDatabase"
-MAX_PAGES_FALLBACK = 80
-MAX_PAGES_HARD = 140
-REQUEST_TIMEOUT = 20
+SOURCE = "Opta Power Rankings"
+REQUEST_TIMEOUT = 45
+MIN_EXPECTED_RATINGS = 5000
 
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
     ),
+    "Accept": "*/*",
     "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://theanalyst.com/",
 }
 
-# Only high-value aliases are hard-coded.  Everything else goes through exact
-# normalization first, then a conservative fuzzy matcher.
+# Source/HKJC naming variants that are common in the current production feed.
+# Exact normalized matches are always preferred; fuzzy matching is conservative.
 ALIASES = {
-    "puebla": ["puebla", "puebla fc"],
-    "puebla fc": ["puebla", "puebla fc"],
-    "toluca": ["toluca", "toluca fc", "deportivo toluca"],
-    "deportivo toluca": ["toluca", "toluca fc", "deportivo toluca"],
+    "puebla": ["puebla", "puebla fc", "club puebla"],
+    "puebla fc": ["puebla", "puebla fc", "club puebla"],
+    "toluca": ["toluca", "toluca fc", "deportivo toluca", "deportivo toluca fc"],
+    "deportivo toluca": ["toluca", "toluca fc", "deportivo toluca", "deportivo toluca fc"],
     "dorados": ["dorados", "dorados de sinaloa", "dorados sinaloa"],
     "dorados sinaloa": ["dorados", "dorados de sinaloa", "dorados sinaloa"],
     "cancun": ["cancun", "cancun fc"],
@@ -60,10 +62,27 @@ ALIASES = {
     "viettel": ["the cong", "the cong viettel", "viettel", "viettel fc"],
     "melbourne victory": ["melbourne victory", "melbourne victory fc"],
     "kashiwa reysol": ["kashiwa reysol", "kashiwa"],
+    "grasshoppers": ["grasshoppers", "grasshopper club zurich", "grasshopper zurich"],
+    "sion": ["sion", "fc sion"],
+    "vallecano": ["rayo vallecano", "vallecano"],
+    "willem ii": ["willem ii", "willem ii tilburg"],
+    "al hilal": ["al hilal", "al hilal saudi", "al hilal riyadh"],
+    "al gharafa": ["al gharafa", "al gharafa sc"],
+    "bristol city": ["bristol city", "bristol city fc"],
+    "lincoln city": ["lincoln city", "lincoln city fc"],
+    "middlesbrough": ["middlesbrough", "middlesbrough fc"],
+    "west ham": ["west ham", "west ham united"],
+    "heart of midlothian": ["heart of midlothian", "hearts"],
+    "ipswich": ["ipswich", "ipswich town"],
+    "tottenham": ["tottenham", "tottenham hotspur"],
+    "real madrid": ["real madrid", "real madrid cf"],
+    "sao paulo": ["sao paulo", "sao paulo fc"],
+    "boca juniors": ["boca juniors", "ca boca juniors"],
 }
 
 GENERIC_TOKENS = {
     "fc", "cf", "sc", "afc", "club", "football", "soccer", "fk", "ac",
+    "de", "the",
 }
 
 
@@ -71,9 +90,11 @@ GENERIC_TOKENS = {
 class Rating:
     club: str
     country: str
-    points: int
+    score: float
     rank: int | None
     updated: str
+    opta_id: str = ""
+    league: str = ""
 
 
 def norm(value: str) -> str:
@@ -92,128 +113,79 @@ def core_tokens(value: str) -> tuple[str, ...]:
     return tuple(t for t in norm(value).split() if t not in GENERIC_TOKENS)
 
 
-def parse_updated(text: str) -> str:
-    m = re.search(r"Updated after matches played on\s+([^\n<]+)", text, re.I)
-    return m.group(1).strip() if m else ""
+def _extract_all_json_parse(js_text: str) -> list[str]:
+    """Return array payloads embedded as JSON.parse(`[ ... ]`) in Opta JS."""
+    pattern = r'JSON\.parse\(`(\[[^`]*\])`\)'
+    matches = re.findall(pattern, js_text)
+    # Opta's `comps` strings may double-escape quotes. Collapse the extra slash
+    # before json.loads, matching the resilient public parsers for this bundle.
+    dbl_esc = chr(92) + chr(92) + chr(34)
+    sgl_esc = chr(92) + chr(34)
+    return [raw.replace(dbl_esc, sgl_esc) for raw in matches]
 
 
-def parse_page(html: str) -> tuple[list[Rating], str, int | None]:
-    soup = BeautifulSoup(html, "lxml")
-    page_text = soup.get_text("\n", strip=True)
-    updated = parse_updated(page_text)
-
-    max_page = None
-    for a in soup.find_all("a", href=True):
-        m = re.search(r"/ranking/world/(\d+)", a["href"])
-        if m:
-            n = int(m.group(1))
-            max_page = n if max_page is None else max(max_page, n)
-
-    chosen = None
-    for table in soup.find_all("table"):
-        header = " | ".join(th.get_text(" ", strip=True) for th in table.find_all("th"))
-        h = header.casefold()
-        if "points" in h and ("club" in h or "country" in h):
-            chosen = table
-            break
-    if chosen is None:
-        return [], updated, max_page
-
-    rows: list[Rating] = []
-    for tr in chosen.find_all("tr"):
-        cells = tr.find_all("td")
-        if len(cells) < 3:
-            continue
-
-        # Rank is normally the first column.
-        rank = None
-        m_rank = re.search(r"\d+", cells[0].get_text(" ", strip=True))
-        if m_rank:
-            rank = int(m_rank.group())
-
-        club_cell = cells[1]
-        link = club_cell.find("a")
-        club = link.get_text(" ", strip=True) if link else ""
-        if not club:
-            # Fallback for layout changes: use text before a country badge/span.
-            club = club_cell.get_text(" ", strip=True)
-        club = re.sub(r"\s+", " ", club).strip()
-        if not club:
-            continue
-
-        country = ""
-        spans = club_cell.find_all("span")
-        if spans:
-            candidates = [s.get_text(" ", strip=True) for s in spans if s.get_text(" ", strip=True)]
-            if candidates:
-                country = candidates[-1]
-
-        # Points is normally the third column; keep a fallback in case a layout
-        # column is inserted.
-        points = None
-        for cell in cells[2:5]:
-            txt = cell.get_text(" ", strip=True).replace(",", "")
-            m = re.search(r"(?<!\d)(\d{3,4})(?!\d)", txt)
-            if m:
-                points = int(m.group(1))
-                break
-        if points is None:
-            continue
-
-        rows.append(Rating(club=club, country=country, points=points, rank=rank, updated=updated))
-    return rows, updated, max_page
-
-
-def get_with_retry(session: requests.Session, url: str) -> requests.Response:
-    last = None
-    for attempt in range(3):
+def _ranking_entries(js_text: str) -> list[dict]:
+    """Find the men's ranking block without relying on minified variable names."""
+    candidates: list[list[dict]] = []
+    for raw in _extract_all_json_parse(js_text):
         try:
-            r = session.get(url, timeout=REQUEST_TIMEOUT)
-            r.raise_for_status()
-            return r
-        except requests.RequestException as exc:
-            last = exc
-            time.sleep(1.2 * (attempt + 1))
-    raise RuntimeError(f"failed to fetch {url}: {last}")
+            data = json.loads(raw)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(data, list) or not data or not isinstance(data[0], dict):
+            continue
+        keys = set(data[0])
+        if {"contestantName", "currentRating"}.issubset(keys):
+            candidates.append(data)
+    if not candidates:
+        raise RuntimeError("Opta men's ranking JSON block not found")
+    # Men's dataset is much larger than the women's/search blocks. Selecting
+    # the largest valid ranking block is resilient to minified variable renames.
+    return max(candidates, key=len)
 
 
 def scrape_ratings() -> list[Rating]:
-    session = requests.Session()
-    session.headers.update(HEADERS)
+    response = requests.get(SOURCE_URL, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+    response.raise_for_status()
+    entries = _ranking_entries(response.text)
+    fetched = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
-    first = get_with_retry(session, BASE_URL.format(page=1))
-    first_rows, _, discovered_max = parse_page(first.text)
-    if not first_rows:
-        raise RuntimeError("FootballDatabase ranking table not found on page 1")
+    out: list[Rating] = []
+    for e in entries:
+        club = str(e.get("contestantName") or e.get("contestantClubName") or "").strip()
+        try:
+            score = float(e.get("currentRating"))
+        except (TypeError, ValueError):
+            continue
+        if not club or not (0 <= score <= 100):
+            continue
+        try:
+            rank = int(e.get("rank") or e.get("currentGlobalRank") or 0) or None
+        except (TypeError, ValueError):
+            rank = None
+        out.append(
+            Rating(
+                club=club,
+                country=str(e.get("country") or "").strip(),
+                score=score,
+                rank=rank,
+                updated=fetched,
+                opta_id=str(e.get("contestantId") or ""),
+                league=str(e.get("domesticLeagueName") or "").strip(),
+            )
+        )
 
-    max_page = discovered_max or MAX_PAGES_FALLBACK
-    max_page = max(1, min(max_page, MAX_PAGES_HARD))
-    all_rows = list(first_rows)
-    empty_streak = 0
-
-    for page in range(2, max_page + 1):
-        r = get_with_retry(session, BASE_URL.format(page=page))
-        rows, _, _ = parse_page(r.text)
-        if not rows:
-            empty_streak += 1
-            if empty_streak >= 2:
-                break
-        else:
-            empty_streak = 0
-            all_rows.extend(rows)
-        time.sleep(0.08)
-
-    # Deduplicate by normalized club name, keeping the best (lowest) rank.
+    # Deduplicate by normalized club name, retaining the highest-rated instance.
     dedup: dict[str, Rating] = {}
-    for row in all_rows:
+    for row in out:
         key = norm(row.club)
         prev = dedup.get(key)
-        if prev is None or ((row.rank or 10**9) < (prev.rank or 10**9)):
+        if prev is None or row.score > prev.score:
             dedup[key] = row
 
-    ratings = sorted(dedup.values(), key=lambda r: (r.rank or 10**9, r.club))
-    if len(ratings) < 200:
-        raise RuntimeError(f"rating scrape suspiciously small: {len(ratings)} rows")
+    ratings = sorted(dedup.values(), key=lambda r: (r.rank or 10**9, -r.score, r.club))
+    if len(ratings) < MIN_EXPECTED_RATINGS:
+        raise RuntimeError(f"Opta rating scrape suspiciously small: {len(ratings)} clubs")
     return ratings
 
 
@@ -222,9 +194,12 @@ def write_snapshot(ratings: Iterable[Rating]) -> None:
     tmp = RATINGS_PATH.with_suffix(".tmp")
     with tmp.open("w", encoding="utf-8-sig", newline="") as fh:
         w = csv.writer(fh)
-        w.writerow(["rank", "club", "country", "points", "updated", "source"])
+        w.writerow(["rank", "club", "country", "rating", "updated", "source", "opta_id", "league"])
         for r in ratings:
-            w.writerow([r.rank or "", r.club, r.country, r.points, r.updated, SOURCE])
+            w.writerow([
+                r.rank or "", r.club, r.country, f"{r.score:.6f}", r.updated,
+                SOURCE, r.opta_id, r.league,
+            ])
     tmp.replace(RATINGS_PATH)
 
 
@@ -235,16 +210,19 @@ def load_snapshot() -> list[Rating]:
     with RATINGS_PATH.open(encoding="utf-8-sig", newline="") as fh:
         for row in csv.DictReader(fh):
             try:
+                score_raw = row.get("rating") or row.get("points")
                 out.append(
                     Rating(
                         club=row["club"],
                         country=row.get("country", ""),
-                        points=int(float(row["points"])),
+                        score=float(score_raw),
                         rank=int(row["rank"]) if row.get("rank") else None,
                         updated=row.get("updated", ""),
+                        opta_id=row.get("opta_id", ""),
+                        league=row.get("league", ""),
                     )
                 )
-            except (KeyError, ValueError):
+            except (KeyError, TypeError, ValueError):
                 continue
     return out
 
@@ -292,7 +270,8 @@ def match_rating(name: str, ratings: list[Rating]) -> tuple[Rating | None, float
     if best is None:
         return None, 0.0
     score, rating = best
-    # Conservative: no ambiguous fuzzy matches.
+    # High threshold + separation from runner-up prevents accidental clubs with
+    # similar names from being treated as the same team.
     if score >= 0.90 and score - second >= 0.025:
         return rating, score
     return None, score
@@ -323,17 +302,14 @@ def enrich_feed(ratings: list[Rating]) -> tuple[int, int]:
         hr, hs = match_rating(home, ratings)
         ar, ass = match_rating(away, ratings)
         total_sides += 2
-        if hr:
-            matched_sides += 1
-        if ar:
-            matched_sides += 1
+        matched_sides += int(hr is not None) + int(ar is not None)
 
-        row["power_home"] = hr.points if hr else ""
-        row["power_away"] = ar.points if ar else ""
+        row["power_home"] = f"{hr.score:.4f}" if hr else ""
+        row["power_away"] = f"{ar.score:.4f}" if ar else ""
         row["power_home_name"] = hr.club if hr else ""
         row["power_away_name"] = ar.club if ar else ""
         row["power_source"] = SOURCE if (hr or ar) else ""
-        row["power_updated"] = (hr.updated if hr else (ar.updated if ar else ""))
+        row["power_updated"] = hr.updated if hr else (ar.updated if ar else "")
         row["power_home_match"] = f"{hs:.3f}" if hr else ""
         row["power_away_match"] = f"{ass:.3f}" if ar else ""
 
@@ -347,18 +323,17 @@ def enrich_feed(ratings: list[Rating]) -> tuple[int, int]:
 
 
 def main() -> int:
-    ratings: list[Rating]
     try:
         ratings = scrape_ratings()
         write_snapshot(ratings)
-        print(f"power ratings refreshed: {len(ratings)} clubs")
-    except Exception as exc:  # keep last good snapshot rather than killing Forebet
-        print(f"WARNING power-rating refresh failed: {exc}")
+        print(f"Opta power ratings refreshed: {len(ratings)} clubs")
+    except Exception as exc:
+        print(f"WARNING Opta rating refresh failed: {exc}")
         ratings = load_snapshot()
         print(f"using cached power-rating snapshot: {len(ratings)} clubs")
 
     matched, total = enrich_feed(ratings)
-    print(f"power enrichment coverage: {matched}/{total} team-sides")
+    print(f"Opta power enrichment coverage: {matched}/{total} team-sides")
     return 0
 
 
