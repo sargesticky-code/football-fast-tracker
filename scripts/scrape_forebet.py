@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import csv
+import io
 import os
 import re
 import sys
-import time
 import unicodedata
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
@@ -14,23 +14,27 @@ from zoneinfo import ZoneInfo
 
 import requests
 from bs4 import BeautifulSoup, Tag
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "forebet_current.csv"
 TARGET_OUT = ROOT / "data" / "hkjc_targets.csv"
 HKT = ZoneInfo("Asia/Hong_Kong")
 
-FOOTYLOGIC_URL = "https://footylogic.com/en"
+MASTER_SHEET_ID = "1WTyWLisEn_9-VmIqHK6TWZ4YGPbiejbBDfEpwv2BVRo"
+HKJC_SNAPSHOT_GID = "910835842"
+ACTIVE_ALIAS_GID = "432162540"
+BILINGUAL_MAP_GID = "1745665072"
+
 SCRAPERAPI_KEY = os.getenv("SCRAPERAPI_KEY", "").strip()
 SCRAPERAPI_URL = "https://api.scraperapi.com"
 MAX_COST = "12"
+GATE_ONLY = os.getenv("HKJC_GATE_ONLY", "0").strip() == "1"
 
 LOOKBACK_MINUTES = 15
 LOOKAHEAD_HOURS = 30
 MAX_FOREBET_DATES = 2
+MAX_SNAPSHOT_AGE_MINUTES = 120
+HTTP_TIMEOUT = 45
 
 COLUMNS = [
     "fetched_at_hkt", "match_date", "kickoff_text", "league_short",
@@ -38,17 +42,18 @@ COLUMNS = [
     "prediction_1x2", "predicted_score", "avg_goals", "odds_home",
     "odds_draw", "odds_away", "prediction_ou25", "prob_over25",
     "prob_under25", "odds_over25", "odds_under25",
-    "hkjc_league", "hkjc_home_team", "hkjc_away_team",
-    "hkjc_kickoff_hkt", "match_score",
+    "hkjc_event_id", "hkjc_league", "hkjc_home_team", "hkjc_away_team",
+    "hkjc_home_zh", "hkjc_away_zh", "hkjc_kickoff_hkt",
+    "hkjc_had_home", "hkjc_had_draw", "hkjc_had_away", "match_score",
 ]
 
 TARGET_COLUMNS = [
-    "match_date", "kickoff_hkt", "league", "home_team", "away_team"
+    "match_date", "kickoff_hkt", "hkjc_event_id", "league_zh",
+    "home_zh", "away_zh", "home_en", "away_en",
+    "had_home", "had_draw", "had_away", "mapping_source",
 ]
 
-TEAM_STOPWORDS = {
-    "fc", "cf", "afc", "sc", "ac", "fk", "club", "de", "the"
-}
+TEAM_STOPWORDS = {"fc", "cf", "afc", "sc", "ac", "fk", "club", "de", "the"}
 
 ALIASES = {
     "tottenham hotspur": "tottenham",
@@ -71,7 +76,17 @@ ALIASES = {
     "bayern munich": "bayern",
     "bayern munchen": "bayern",
     "paris saint germain": "psg",
+    "heart of midlothian": "hearts",
+    "heart of midlothian fc": "hearts",
+    "jeonbuk hyundai motors": "jeonbuk motors",
+    "jeonbuk hyundai": "jeonbuk motors",
 }
+
+SESSION = requests.Session()
+SESSION.headers.update({
+    "User-Agent": "Mozilla/5.0 (compatible; FootballFastTracker/1.0)",
+    "Accept": "text/csv,text/plain,*/*;q=0.8",
+})
 
 
 def text(el: Tag | None) -> str:
@@ -103,13 +118,6 @@ def decimal_odds(s: str) -> float | None:
         return None
 
 
-def normalize_date(value: str, fallback: str) -> str:
-    value = value.strip()
-    if len(value) >= 10 and re.match(r"\d{4}-\d{2}-\d{2}", value[:10]):
-        return value[:10]
-    return fallback
-
-
 def strip_accents(value: str) -> str:
     return "".join(
         ch for ch in unicodedata.normalize("NFKD", value)
@@ -129,6 +137,12 @@ def normalize_team(value: str) -> str:
     return ALIASES.get(value, value)
 
 
+def normalize_zh(value: str) -> str:
+    value = unicodedata.normalize("NFKC", value).strip().casefold()
+    value = re.sub(r"[\s·・._\-—–'’\"()（）\[\]【】/]+", "", value)
+    return value
+
+
 def team_score(a: str, b: str) -> float:
     a_n = normalize_team(a)
     b_n = normalize_team(b)
@@ -138,7 +152,6 @@ def team_score(a: str, b: str) -> float:
         return 1.0
     if min(len(a_n), len(b_n)) >= 5 and (a_n in b_n or b_n in a_n):
         return 0.96
-
     seq = SequenceMatcher(None, a_n, b_n).ratio()
     a_tokens = set(a_n.split())
     b_tokens = set(b_n.split())
@@ -148,6 +161,85 @@ def team_score(a: str, b: str) -> float:
     else:
         token_score = 0.0
     return max(seq, token_score)
+
+
+def public_csv_url(gid: str) -> str:
+    return (
+        f"https://docs.google.com/spreadsheets/d/{MASTER_SHEET_ID}/"
+        f"export?format=csv&gid={gid}"
+    )
+
+
+def fetch_csv(gid: str, label: str) -> list[dict[str, str]]:
+    url = public_csv_url(gid)
+    try:
+        r = SESSION.get(url, timeout=HTTP_TIMEOUT, allow_redirects=True)
+    except Exception as exc:
+        print(f"FATAL: {label} CSV request failed: {exc}", file=sys.stderr)
+        return []
+    if r.status_code != 200:
+        print(
+            f"FATAL: {label} CSV status={r.status_code} bytes={len(r.content)}",
+            file=sys.stderr,
+        )
+        return []
+    if "<html" in r.text[:500].casefold():
+        print(f"FATAL: {label} returned HTML instead of CSV", file=sys.stderr)
+        return []
+    rows = list(csv.DictReader(io.StringIO(r.text.lstrip("\ufeff"))))
+    print(f"HKJC_SOURCE {label} rows={len(rows)} bytes={len(r.content)}", flush=True)
+    return rows
+
+
+def parse_iso_utc(value: str) -> datetime | None:
+    value = (value or "").strip()
+    if not value:
+        return None
+    try:
+        if value.endswith("Z"):
+            value = value[:-1] + "+00:00"
+        dt = datetime.fromisoformat(value)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc)
+    except ValueError:
+        return None
+
+
+def build_alias_maps(
+    bilingual_rows: list[dict[str, str]],
+    active_rows: list[dict[str, str]],
+) -> tuple[dict[str, tuple[str, str, str]], dict[str, str]]:
+    event_map: dict[str, tuple[str, str, str]] = {}
+    zh_to_en: dict[str, str] = {}
+
+    for row in bilingual_rows:
+        event_id = (row.get("HKJC Event ID") or "").strip()
+        home_en = (row.get("Home EN") or "").strip()
+        away_en = (row.get("Away EN") or "").strip()
+        comp_en = (row.get("Competition EN") or "").strip()
+        home_zh = (row.get("Home ZH") or "").strip()
+        away_zh = (row.get("Away ZH") or "").strip()
+        if event_id and home_en and away_en:
+            event_map[event_id] = (home_en, away_en, comp_en)
+        if home_zh and home_en:
+            zh_to_en.setdefault(normalize_zh(home_zh), home_en)
+        if away_zh and away_en:
+            zh_to_en.setdefault(normalize_zh(away_zh), away_en)
+
+    for row in active_rows:
+        zh = (row.get("中文名") or "").strip()
+        en = (row.get("English Name") or "").strip()
+        if zh and en:
+            zh_to_en.setdefault(normalize_zh(zh), en)
+        known = (row.get("All Known Aliases") or "").strip()
+        if en and known:
+            for alias in known.split("|"):
+                alias = alias.strip()
+                if alias and re.search(r"[\u3400-\u9fff]", alias):
+                    zh_to_en.setdefault(normalize_zh(alias), en)
+
+    return event_map, zh_to_en
 
 
 def write_targets(targets: list[dict[str, Any]]) -> None:
@@ -162,119 +254,112 @@ def write_targets(targets: list[dict[str, Any]]) -> None:
 
 
 def load_hkjc_targets() -> list[dict[str, Any]]:
+    snapshot = fetch_csv(HKJC_SNAPSHOT_GID, "HKJC Source Snapshot")
+    if not snapshot:
+        return []
+
+    fetched_times = [
+        dt for dt in (parse_iso_utc(r.get("fetchedAt", "")) for r in snapshot)
+        if dt is not None
+    ]
+    if not fetched_times:
+        print("FATAL: HKJC snapshot has no parseable fetchedAt", file=sys.stderr)
+        return []
+
+    latest_fetch = max(fetched_times)
+    now_utc = datetime.now(timezone.utc)
+    age_minutes = (now_utc - latest_fetch).total_seconds() / 60
+    print(
+        f"HKJC_FRESHNESS latest={latest_fetch.isoformat()} age_min={age_minutes:.1f}",
+        flush=True,
+    )
+    if age_minutes < -10 or age_minutes > MAX_SNAPSHOT_AGE_MINUTES:
+        print(
+            f"FATAL: HKJC snapshot stale/future age={age_minutes:.1f}m; "
+            "ScraperAPI will not be called",
+            file=sys.stderr,
+        )
+        return []
+
+    bilingual = fetch_csv(BILINGUAL_MAP_GID, "HKJC Bilingual Map")
+    active_alias = fetch_csv(ACTIVE_ALIAS_GID, "Active Team Alias")
+    if not bilingual and not active_alias:
+        print(
+            "FATAL: no HKJC English alias source; ScraperAPI will not be called",
+            file=sys.stderr,
+        )
+        return []
+
+    event_map, zh_to_en = build_alias_maps(bilingual, active_alias)
+
     now = datetime.now(HKT)
     start = now - timedelta(minutes=LOOKBACK_MINUTES)
     end = now + timedelta(hours=LOOKAHEAD_HOURS)
-
-    options = Options()
-    options.add_argument("--headless=new")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1920,1080")
-    options.add_argument("--lang=en-US")
-    options.page_load_strategy = "eager"
-
-    driver = None
-    try:
-        driver = webdriver.Chrome(options=options)
-        driver.execute_cdp_cmd(
-            "Emulation.setTimezoneOverride",
-            {"timezoneId": "Asia/Hong_Kong"},
-        )
-        driver.set_page_load_timeout(45)
-        driver.get(FOOTYLOGIC_URL)
-
-        WebDriverWait(driver, 35, poll_frequency=1).until(
-            lambda d: " vs " in f" {d.find_element('tag name', 'body').text.lower()} "
-        )
-        time.sleep(2.0)
-        html = driver.page_source
-    except Exception as exc:
-        print(f"FATAL: HKJC/Footylogic gate failed before Forebet request: {exc}", file=sys.stderr)
-        return []
-    finally:
-        if driver is not None:
-            try:
-                driver.quit()
-            except Exception:
-                pass
-
-    soup = BeautifulSoup(html, "lxml")
-    current_date = None
     targets: list[dict[str, Any]] = []
-    date_re = re.compile(r"^\d{2}/\d{2}/\d{4}$")
-    time_re = re.compile(r"^\d{1,2}:\d{2}$")
+    unresolved: list[str] = []
 
-    for tr in soup.find_all("tr"):
-        parts = [s.strip() for s in tr.stripped_strings if s.strip()]
-        if not parts:
-            continue
-
-        header_date = next((p for p in parts if date_re.fullmatch(p)), None)
-        if header_date:
-            try:
-                current_date = datetime.strptime(header_date, "%d/%m/%Y").date()
-            except ValueError:
-                current_date = None
-            if "vs" not in [p.casefold() for p in parts]:
-                continue
-
-        lowered = [p.casefold() for p in parts]
-        if "vs" not in lowered or current_date is None:
-            continue
-
+    for row in snapshot:
+        kickoff_text = (row.get("kickoffHkt") or "").strip()
         try:
-            vs_i = lowered.index("vs")
-            home = parts[vs_i - 1].strip()
-            away = parts[vs_i + 1].strip()
-        except (ValueError, IndexError):
-            continue
-        if not home or not away:
-            continue
-
-        time_str = next((p for p in parts if time_re.fullmatch(p)), "")
-        if not time_str:
-            continue
-
-        try:
-            hh, mm = [int(x) for x in time_str.split(":", 1)]
-            kickoff = datetime(
-                current_date.year, current_date.month, current_date.day,
-                hh, mm, tzinfo=HKT
-            )
+            kickoff = datetime.strptime(kickoff_text, "%Y-%m-%d %H:%M").replace(tzinfo=HKT)
         except ValueError:
             continue
-
         if kickoff < start or kickoff > end:
             continue
 
-        league = parts[0].strip() if parts else ""
+        # User only wants matches currently sellable on HKJC HAD.
+        had_h = (row.get("HAD H") or "").strip()
+        had_d = (row.get("HAD D") or "").strip()
+        had_a = (row.get("HAD A") or "").strip()
+        if not (had_h and had_d and had_a):
+            continue
+
+        event_id = (row.get("HKJC #") or "").strip()
+        home_zh = (row.get("home") or "").strip()
+        away_zh = (row.get("away") or "").strip()
+        league_zh = (row.get("competition") or "").strip()
+        if not event_id or not home_zh or not away_zh:
+            continue
+
+        mapping_source = ""
+        if event_id in event_map:
+            home_en, away_en, _ = event_map[event_id]
+            mapping_source = "event bilingual"
+        else:
+            home_en = zh_to_en.get(normalize_zh(home_zh), "")
+            away_en = zh_to_en.get(normalize_zh(away_zh), "")
+            mapping_source = "team alias"
+
+        if not home_en or not away_en:
+            unresolved.append(f"{event_id}:{home_zh} vs {away_zh}")
+            continue
+
         targets.append({
             "match_date": kickoff.date().isoformat(),
             "kickoff_hkt": kickoff.strftime("%Y-%m-%d %H:%M"),
-            "league": league,
-            "home_team": home,
-            "away_team": away,
+            "hkjc_event_id": event_id,
+            "league_zh": league_zh,
+            "home_zh": home_zh,
+            "away_zh": away_zh,
+            "home_en": home_en,
+            "away_en": away_en,
+            "had_home": had_h,
+            "had_draw": had_d,
+            "had_away": had_a,
+            "mapping_source": mapping_source,
         })
 
-    deduped: dict[tuple[str, str, str], dict[str, Any]] = {}
+    deduped: dict[str, dict[str, Any]] = {}
     for row in targets:
-        key = (
-            row["match_date"],
-            normalize_team(row["home_team"]),
-            normalize_team(row["away_team"]),
-        )
-        deduped[key] = row
-
+        deduped[row["hkjc_event_id"]] = row
     targets = sorted(
         deduped.values(),
-        key=lambda r: (r["kickoff_hkt"], r["league"], r["home_team"]),
+        key=lambda r: (r["kickoff_hkt"], r["league_zh"], r["home_en"]),
     )
+
     if not targets:
         print(
-            "FATAL: HKJC/Footylogic returned zero target fixtures; "
-            "ScraperAPI will not be called",
+            "FATAL: zero mappable HKJC HAD targets; ScraperAPI will not be called",
             file=sys.stderr,
         )
         return []
@@ -282,18 +367,23 @@ def load_hkjc_targets() -> list[dict[str, Any]]:
     write_targets(targets)
     dates = sorted({r["match_date"] for r in targets})
     print(
-        f"HKJC_GATE targets={len(targets)} dates={','.join(dates)} "
-        f"window_hours={LOOKAHEAD_HOURS}",
+        f"HKJC_GATE targets={len(targets)} unresolved_alias={len(unresolved)} "
+        f"dates={','.join(dates)} window_hours={LOOKAHEAD_HOURS}",
         flush=True,
     )
-    for row in targets[:12]:
+    for row in targets[:25]:
         print(
-            f"  HKJC {row['kickoff_hkt']} | {row['league']} | "
-            f"{row['home_team']} vs {row['away_team']}",
+            f"  PICK {row['hkjc_event_id']} {row['kickoff_hkt']} | "
+            f"{row['home_en']} vs {row['away_en']} | "
+            f"HAD {row['had_home']}/{row['had_draw']}/{row['had_away']}",
             flush=True,
         )
-    if len(targets) > 12:
-        print(f"  ... {len(targets) - 12} more HKJC targets", flush=True)
+    if len(targets) > 25:
+        print(f"  ... {len(targets) - 25} more HKJC picks", flush=True)
+    if unresolved:
+        print("HKJC_ALIAS_GAPS " + " | ".join(unresolved[:15]), flush=True)
+        if len(unresolved) > 15:
+            print(f"HKJC_ALIAS_GAPS ... {len(unresolved) - 15} more", flush=True)
     return targets
 
 
@@ -306,18 +396,11 @@ def fetch_forebet_date(match_date: str) -> tuple[str | None, int | None]:
         "https://www.forebet.com/en/football-predictions/"
         f"predictions-1x2/{match_date}"
     )
-    params = {
-        "api_key": SCRAPERAPI_KEY,
-        "url": url,
-        "max_cost": MAX_COST,
-    }
+    params = {"api_key": SCRAPERAPI_KEY, "url": url, "max_cost": MAX_COST}
     try:
         r = requests.get(SCRAPERAPI_URL, params=params, timeout=70)
     except Exception as exc:
-        print(
-            f"ERROR: ScraperAPI request failed for {match_date}: {exc}",
-            file=sys.stderr,
-        )
+        print(f"ERROR: ScraperAPI request failed for {match_date}: {exc}", file=sys.stderr)
         return None, None
 
     raw_cost = r.headers.get("sa-credit-cost")
@@ -332,18 +415,19 @@ def fetch_forebet_date(match_date: str) -> tuple[str | None, int | None]:
         flush=True,
     )
     if r.status_code != 200:
-        print(
-            f"ERROR: ScraperAPI non-200 for {match_date}; no retry",
-            file=sys.stderr,
-        )
+        print(f"ERROR: ScraperAPI non-200 for {match_date}; no retry", file=sys.stderr)
         return None, credit_cost
     if "rcnt" not in r.text:
-        print(
-            f"ERROR: Forebet rows missing for {match_date}; no retry",
-            file=sys.stderr,
-        )
+        print(f"ERROR: Forebet rows missing for {match_date}; no retry", file=sys.stderr)
         return None, credit_cost
     return r.text, credit_cost
+
+
+def normalize_date(value: str, fallback: str) -> str:
+    value = value.strip()
+    if len(value) >= 10 and re.match(r"\d{4}-\d{2}-\d{2}", value[:10]):
+        return value[:10]
+    return fallback
 
 
 def parse_forebet_rows(html: str, requested_date: str) -> list[dict[str, Any]]:
@@ -377,19 +461,6 @@ def parse_forebet_rows(html: str, requested_date: str) -> list[dict[str, Any]]:
         while len(odds) < 3:
             odds.append(None)
 
-        prediction = (
-            text(row.select_one("span.forepr span"))
-            or text(row.select_one(".forepr"))
-        )
-        predicted_score = (
-            text(row.select_one("div.ex_sc.tabonly"))
-            or text(row.select_one(".predict_score, .ex_sc"))
-        )
-        avg_goals = (
-            text(row.select_one("div.avg_sc.tabonly"))
-            or text(row.select_one(".avg_sc"))
-        )
-
         rows.append({
             "fetched_at_hkt": fetched_at,
             "match_date": match_date,
@@ -400,9 +471,9 @@ def parse_forebet_rows(html: str, requested_date: str) -> list[dict[str, Any]]:
             "prob_home": probs[0],
             "prob_draw": probs[1],
             "prob_away": probs[2],
-            "prediction_1x2": prediction,
-            "predicted_score": predicted_score,
-            "avg_goals": avg_goals,
+            "prediction_1x2": text(row.select_one("span.forepr span")) or text(row.select_one(".forepr")),
+            "predicted_score": text(row.select_one("div.ex_sc.tabonly")) or text(row.select_one(".predict_score, .ex_sc")),
+            "avg_goals": text(row.select_one("div.avg_sc.tabonly")) or text(row.select_one(".avg_sc")),
             "odds_home": odds[0],
             "odds_draw": odds[1],
             "odds_away": odds[2],
@@ -412,14 +483,10 @@ def parse_forebet_rows(html: str, requested_date: str) -> list[dict[str, Any]]:
             "odds_over25": "",
             "odds_under25": "",
         })
-
     return rows
 
 
-def attach_hkjc_target(
-    row: dict[str, Any],
-    targets: list[dict[str, Any]],
-) -> dict[str, Any] | None:
+def attach_hkjc_target(row: dict[str, Any], targets: list[dict[str, Any]]) -> dict[str, Any] | None:
     same_date = [t for t in targets if t["match_date"] == row["match_date"]]
     if not same_date:
         return None
@@ -429,8 +496,8 @@ def attach_hkjc_target(
     best_home = 0.0
     best_away = 0.0
     for target in same_date:
-        hs = team_score(row["home_team"], target["home_team"])
-        aws = team_score(row["away_team"], target["away_team"])
+        hs = team_score(row["home_team"], target["home_en"])
+        aws = team_score(row["away_team"], target["away_en"])
         avg = (hs + aws) / 2
         if avg > best_avg:
             best = target
@@ -438,18 +505,21 @@ def attach_hkjc_target(
             best_home = hs
             best_away = aws
 
-    if best is None:
-        return None
-
-    if best_home < 0.68 or best_away < 0.68 or best_avg < 0.76:
+    if best is None or best_home < 0.68 or best_away < 0.68 or best_avg < 0.76:
         return None
 
     out = dict(row)
     out.update({
-        "hkjc_league": best["league"],
-        "hkjc_home_team": best["home_team"],
-        "hkjc_away_team": best["away_team"],
+        "hkjc_event_id": best["hkjc_event_id"],
+        "hkjc_league": best["league_zh"],
+        "hkjc_home_team": best["home_en"],
+        "hkjc_away_team": best["away_en"],
+        "hkjc_home_zh": best["home_zh"],
+        "hkjc_away_zh": best["away_zh"],
         "hkjc_kickoff_hkt": best["kickoff_hkt"],
+        "hkjc_had_home": best["had_home"],
+        "hkjc_had_draw": best["had_draw"],
+        "hkjc_had_away": best["had_away"],
         "match_score": round(best_avg, 3),
     })
     return out
@@ -467,9 +537,10 @@ def write_csv(rows: list[dict[str, Any]]) -> None:
 
 
 def main() -> int:
-    print("MODE=HKJC_GATE_THEN_FOREBET", flush=True)
+    print("MODE=PUBLIC_HKJC_SHEET_GATE_THEN_FOREBET", flush=True)
     print(
-        f"SCRAPERAPI_MAX_COST={MAX_COST} MAX_FOREBET_DATES={MAX_FOREBET_DATES}",
+        f"GATE_ONLY={int(GATE_ONLY)} SCRAPERAPI_MAX_COST={MAX_COST} "
+        f"MAX_FOREBET_DATES={MAX_FOREBET_DATES}",
         flush=True,
     )
 
@@ -477,15 +548,11 @@ def main() -> int:
     if not targets:
         return 2
 
-    target_dates = sorted({r["match_date"] for r in targets})
-    if len(target_dates) > MAX_FOREBET_DATES:
-        print(
-            f"WARN: target dates {target_dates}; limiting to first "
-            f"{MAX_FOREBET_DATES} dates to protect credits",
-            file=sys.stderr,
-        )
-        target_dates = target_dates[:MAX_FOREBET_DATES]
+    if GATE_ONLY:
+        print(f"GATE_ONLY_PASS targets={len(targets)} scraperapi_calls=0", flush=True)
+        return 0
 
+    target_dates = sorted({r["match_date"] for r in targets})[:MAX_FOREBET_DATES]
     parsed: list[dict[str, Any]] = []
     total_known_cost = 0
     calls = 0
@@ -495,53 +562,30 @@ def main() -> int:
         calls += 1
         if cost is not None:
             total_known_cost += cost
-        if html is None:
-            continue
-        parsed.extend(parse_forebet_rows(html, match_date))
+        if html is not None:
+            parsed.extend(parse_forebet_rows(html, match_date))
 
     if not parsed:
-        print(
-            "FATAL: no Forebet rows retrieved for HKJC target dates; "
-            "existing CSV preserved",
-            file=sys.stderr,
-        )
+        print("FATAL: no Forebet rows retrieved; existing CSV preserved", file=sys.stderr)
         return 2
 
-    matched: list[dict[str, Any]] = []
-    matched_target_keys: set[tuple[str, str, str]] = set()
+    unique: dict[str, dict[str, Any]] = {}
     for row in parsed:
         selected = attach_hkjc_target(row, targets)
         if selected is None:
             continue
-        matched.append(selected)
-        matched_target_keys.add((
-            selected["match_date"],
-            normalize_team(selected["hkjc_home_team"]),
-            normalize_team(selected["hkjc_away_team"]),
-        ))
-
-    unique: dict[tuple[str, str, str], dict[str, Any]] = {}
-    for row in matched:
-        key = (
-            row["match_date"],
-            normalize_team(row["hkjc_home_team"]),
-            normalize_team(row["hkjc_away_team"]),
-        )
+        key = selected["hkjc_event_id"]
         old = unique.get(key)
-        if old is None or float(row.get("match_score") or 0) > float(old.get("match_score") or 0):
-            unique[key] = row
+        if old is None or float(selected.get("match_score") or 0) > float(old.get("match_score") or 0):
+            unique[key] = selected
+
     matched = sorted(
         unique.values(),
-        key=lambda r: (
-            r.get("hkjc_kickoff_hkt", ""),
-            r.get("hkjc_league", ""),
-            r.get("hkjc_home_team", ""),
-        ),
+        key=lambda r: (r.get("hkjc_kickoff_hkt", ""), r.get("hkjc_event_id", "")),
     )
-
     if not matched:
         print(
-            "FATAL: Forebet returned data, but zero rows matched HKJC fixtures; "
+            "FATAL: Forebet returned data but zero rows matched HKJC targets; "
             "existing CSV preserved",
             file=sys.stderr,
         )
@@ -549,36 +593,17 @@ def main() -> int:
 
     good_probs = sum(
         1 for r in matched
-        if all(
-            isinstance(r.get(k), (int, float))
-            for k in ("prob_home", "prob_draw", "prob_away")
-        )
+        if all(isinstance(r.get(k), (int, float)) for k in ("prob_home", "prob_draw", "prob_away"))
     )
     if good_probs == 0:
-        print(
-            "FATAL: matched HKJC rows contain no usable 1X2 probabilities; "
-            "existing CSV preserved",
-            file=sys.stderr,
-        )
+        print("FATAL: matched HKJC rows have no usable probabilities", file=sys.stderr)
         return 2
-
-    target_keys = {
-        (
-            r["match_date"],
-            normalize_team(r["home_team"]),
-            normalize_team(r["away_team"]),
-        )
-        for r in targets
-        if r["match_date"] in target_dates
-    }
-    unmatched_count = len(target_keys - matched_target_keys)
 
     write_csv(matched)
     print(
-        f"SUMMARY hkjc_targets={len(target_keys)} forebet_rows_seen={len(parsed)} "
+        f"SUMMARY hkjc_targets={len(targets)} forebet_rows_seen={len(parsed)} "
         f"kept={len(matched)} probability_rows={good_probs} "
-        f"unmatched_hkjc={unmatched_count} scraperapi_calls={calls} "
-        f"known_credit_cost={total_known_cost}",
+        f"scraperapi_calls={calls} known_credit_cost={total_known_cost}",
         flush=True,
     )
     print(f"WROTE {OUT} rows={len(matched)}", flush=True)
