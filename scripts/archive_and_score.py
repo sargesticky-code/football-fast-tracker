@@ -207,7 +207,9 @@ def update_prediction_archive(now: datetime) -> int:
 
 def fetch_results(now: datetime) -> list[dict]:
     fb = HKJCFootball()
-    start = (now.date() - timedelta(days=30)).isoformat()
+    # HKJC keeps roughly 30 days, but a daily 8-day rolling window is enough
+    # because settled rows are permanently retained in RESULTS_ARCHIVE.
+    start = (now.date() - timedelta(days=8)).isoformat()
     end = now.date().isoformat()
     raw = fb.fetch_results(start_date=start, end_date=end)
     fetched = now.replace(microsecond=0).isoformat()
