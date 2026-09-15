@@ -1,0 +1,40 @@
+﻿match_date,kickoff_hkt,hkjc_event_id,league_zh,home_zh,away_zh,home_en,away_en,had_home,had_draw,had_away,mapping_source
+2026-09-16,2026-09-16 00:00,FB5213,亞冠精英盃,艾阿恩,艾納斯,Al Ain,Al Nassr,3.5,3.75,1.72,team alias
+2026-09-16,2026-09-16 00:00,FB5201,意大利盃,熱拿亞,蘇迪路,Genoa,Sudtirol,1.48,3.75,5.2,team alias
+2026-09-16,2026-09-16 01:00,FB5192,瑞士超級聯賽,草蜢,錫永,Grasshoppers,Sion,3.55,3.95,1.67,team alias
+2026-09-16,2026-09-16 01:00,FB5172,西班牙甲組聯賽,華歷簡奴,愛斯賓奴,Vallecano,Espanyol,2.31,2.96,2.75,team alias
+2026-09-16,2026-09-16 02:00,FB5170,荷蘭甲組聯賽,阿積士,威廉二世,Ajax,Willem II,1.06,8.25,16,team alias
+2026-09-16,2026-09-16 02:00,FB5173,西班牙甲組聯賽,艾拉維斯,華倫西亞,Alaves,Valencia,1.48,3.6,5.5,team alias
+2026-09-16,2026-09-16 02:15,FB5208,亞冠精英盃,希拉爾,艾加拉法,Al Hilal,Al Gharafa,1.03,9.5,25,team alias
+2026-09-16,2026-09-16 02:30,FB5187,英格蘭聯賽盃,彼德堡,班士利,Peterborough,Barnsley,2.09,3.55,2.68,team alias
+2026-09-16,2026-09-16 02:45,FB5209,英格蘭冠軍聯賽,布里斯托城,林肯城,Bristol City,Lincoln City,1.82,3.3,3.55,team alias
+2026-09-16,2026-09-16 02:45,FB5210,英格蘭冠軍聯賽,米杜士堡,米禾爾,Middlesbrough,Millwall,1.38,4.35,5.6,team alias
+2026-09-16,2026-09-16 02:45,FB5184,英格蘭聯賽盃,韋斯咸,富咸,West Ham,Fulham,2.4,3.4,2.37,team alias
+2026-09-16,2026-09-16 02:45,FB5195,蘇格蘭超級聯賽,福爾柯克,赫斯,Falkirk,Heart of Midlothian,3.55,3.65,1.74,team alias
+2026-09-16,2026-09-16 02:45,FB5193,蘇格蘭超級聯賽,喜伯年,基爾馬諾克,Hibernian,Kilmarnock,1.3,4.55,6.8,team alias
+2026-09-16,2026-09-16 02:45,FB5194,蘇格蘭超級聯賽,馬瑟韋爾,鴨巴甸,Motherwell,Aberdeen,1.72,3.5,3.75,team alias
+2026-09-16,2026-09-16 03:00,FB5200,意大利盃,費倫天拿,比薩SC,Fiorentina,Pisa,1.29,4.6,7,team alias
+2026-09-16,2026-09-16 03:00,FB5182,英格蘭聯賽盃,葉士域治,阿仙奴,Ipswich,Arsenal,10.5,5.7,1.16,team alias
+2026-09-16,2026-09-16 03:00,FB5181,英格蘭聯賽盃,利物浦,熱刺,Liverpool,Tottenham,1.53,4.1,4.2,team alias
+2026-09-16,2026-09-16 03:00,FB5185,英格蘭聯賽盃,雷丁,賓福特,Reading,Brentford,10,6.7,1.13,team alias
+2026-09-16,2026-09-16 03:30,FB5174,西班牙甲組聯賽,艾爾切,皇家馬德里,Elche,Real Madrid,12,7.25,1.09,team alias
+2026-09-16,2026-09-16 06:00,FB5151,南美球會盃,華斯高,聖達菲,Vasco da Gama,Santa Fe,1.29,4.25,8.5,team alias
+2026-09-16,2026-09-16 06:00,FB5157,南美自由盃,CA普拉坦斯,富明尼斯,CA Platense,Fluminense,2.66,2.78,2.52,team alias
+2026-09-16,2026-09-16 06:28,FB5148,巴西乙組聯賽,紐迪高,奧柏拉里奧,Nautico Recife,Operario-PR,1.89,3.15,3.5,team alias
+2026-09-16,2026-09-16 07:00,FB5229,美國冠軍聯賽,印地安納十一,布魯克林FC,Indy Eleven,Brooklyn FC,1.47,4.1,4.8,team alias
+2026-09-16,2026-09-16 07:58,FB5149,巴西乙組聯賽,CRB,利斯菲體育會,CRB,Sport Recife,1.76,3.45,3.65,team alias
+2026-09-16,2026-09-16 08:30,FB5150,南美球會盃,聖保羅,小保加,Sao Paulo,Boca Juniors,2.12,2.83,3.25,team alias
+2026-09-16,2026-09-16 08:30,FB5217,女子巴西甲組聯賽,巴希亞女足,哥連泰斯女足,Bahia Women,Corinthians Women,5.4,3.85,1.43,team alias
+2026-09-16,2026-09-16 09:00,FB5215,墨西哥甲組聯賽,多拉多斯,坎昆FC,Dorados,Cancun FC,2.14,3.35,2.72,team alias
+2026-09-16,2026-09-16 09:00,FB5199,墨西哥超級聯賽,普埃布拉,托盧卡,Puebla,Toluca,5,3.95,1.47,team alias
+2026-09-16,2026-09-16 13:00,FB4742,亞運男足,阿聯酋男亞足,伊朗男亞足,United Arab Emirates U23,Iran U23,3.1,3.3,1.97,team alias
+2026-09-16,2026-09-16 15:00,FB4743,亞運男足,泰國男亞足,吉爾吉斯男亞足,Thailand U23,Kyrgyzstan U23,2.18,2.94,3,team alias
+2026-09-16,2026-09-16 18:00,FB5251,亞冠2,FC首爾,萬隆,FC Seoul,Persib Bandung,2.14,3.25,2.8,team alias
+2026-09-16,2026-09-16 18:00,FB5216,亞冠精英盃,全北汽車,柏雷素爾,Jeonbuk Motors,Kashiwa Reysol,3.2,3.25,1.95,team alias
+2026-09-16,2026-09-16 18:00,FB4744,亞運男足,中國男亞足,北韓男亞足,China U23,North Korea U23,2.23,2.85,3,team alias
+2026-09-16,2026-09-16 20:15,FB5230,亞冠2,FC軍用電信,墨爾本勝利,The Cong,Melbourne Victory,3.35,3.55,1.81,team alias
+2026-09-16,2026-09-16 20:15,FB5214,亞冠精英盃,泰港,神戶勝利船,Port FC,Vissel Kobe,4.35,3.6,1.6,team alias
+2026-09-16,2026-09-16 21:00,FB5145,女子世青盃,阿根廷女足U20,南韓女足U20,Argentina Women U20,South Korea Women U20,1.49,4.1,4.6,team alias
+2026-09-16,2026-09-16 21:00,FB5146,女子世青盃,巴西女足U20,美國女足U20,Brazil Women U20,USA Women U20,2.58,3.25,2.28,team alias
+2026-09-16,2026-09-16 23:30,FB5198,俄羅斯超級聯賽,莫斯科路迪拿,魯賓卡山,Rodina Moscow,Rubin Kazan,2.88,3.1,2.16,team alias
+2026-09-16,2026-09-16 23:30,FB5196,俄羅斯超級聯賽,莫斯科斯巴達,法高爾佛羅內什,Spartak Moscow,Fakel Voronezh,1.17,5.3,11,team alias
