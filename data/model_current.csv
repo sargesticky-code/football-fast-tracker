@@ -1,6 +1,6 @@
 ﻿fetched_at_hkt,hkjc_event_id,home,away,model_league,model_home_name,model_away_name,dc_prob_home,dc_prob_draw,dc_prob_away,dc_xg_home,dc_xg_away,dc_prob_over25,pi_prob_home,pi_prob_draw,pi_prob_away,pi_home_rating,pi_away_rating,pi_diff,training_matches,team_match_quality,quality,model_source
-2026-09-16T01:03:36+08:00,FB5199,Puebla,Toluca,,,,,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
-2026-09-16T01:03:36+08:00,FB5214,Port FC,Vissel Kobe,,,,,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
-2026-09-16T01:03:36+08:00,FB5215,Dorados,Cancun FC,,,,,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
-2026-09-16T01:03:36+08:00,FB5216,Jeonbuk Motors,Kashiwa Reysol,,,,,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
-2026-09-16T01:03:36+08:00,FB5251,FC Seoul,Persib Bandung,,,,,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
+2026-09-16T06:58:53+08:00,FB5199,Puebla,Toluca,HKJC MXL,Puebla,Toluca,0.028479,0.913479,0.058042,0.03064,0.06157,0.000122,0.127091,0.317140,0.555769,-0.27231,0.59022,-0.86253,67,1.000,MODELED,HKJC matchResult / penaltyblog 1.12.2
+2026-09-16T06:58:53+08:00,FB5214,Port FC,Vissel Kobe,HKJC connected history (ACL),Port FC,Vissel Kobe,0.052347,0.259194,0.688459,0.20852,1.41841,0.223621,0.530745,0.328547,0.140708,0.73273,0.47130,0.26143,185,1.000,MODELED,HKJC matchResult / penaltyblog 1.12.2
+2026-09-16T06:58:53+08:00,FB5215,Dorados,Cancun FC,HKJC MD1,Dorados,Cancun FC,,,,,,,,,,,,,,1.000,MODEL_FAIL:ValueError,HKJC matchResult / penaltyblog 1.12.2
+2026-09-16T06:58:53+08:00,FB5216,Jeonbuk Motors,Kashiwa Reysol,HKJC connected history (ACL),Jeonbuk Motors,Kashiwa Reysol,0.189746,0.290416,0.519838,0.67081,1.31155,0.318548,0.338548,0.381697,0.279754,0.22177,0.26016,-0.03839,158,1.000,MODELED,HKJC matchResult / penaltyblog 1.12.2
+2026-09-16T06:58:53+08:00,FB5251,FC Seoul,Persib Bandung,HKJC connected history (AC2),FC Seoul,Persib Bandung,,,,,,,,,,,,,,1.000,MODEL_FAIL:ValueError,HKJC matchResult / penaltyblog 1.12.2
