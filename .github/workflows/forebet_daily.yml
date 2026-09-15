@@ -1,0 +1,69 @@
+name: Forebet Daily Feed
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 22 * * *' # 06:45 Hong Kong time
+  push:
+    paths:
+      - 'scripts/**'
+      - 'requirements.txt'
+      - '.github/workflows/forebet_daily.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: forebet-daily-feed
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Scrape Forebet current and upcoming fixtures
+        run: python scripts/scrape_forebet.py
+
+      - name: Validate CSV
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          p = Path('data/forebet_current.csv')
+          with p.open(encoding='utf-8-sig', newline='') as f:
+              rows = list(csv.DictReader(f))
+          if not rows:
+              raise SystemExit('Forebet CSV has zero data rows')
+          required = {'match_date','home_team','away_team','prob_home','prob_draw','prob_away'}
+          missing = required - set(rows[0])
+          if missing:
+              raise SystemExit(f'Missing CSV columns: {sorted(missing)}')
+          print(f'Validated {len(rows)} Forebet rows')
+          PY
+
+      - name: Commit refreshed feed
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/forebet_current.csv
+          if git diff --cached --quiet; then
+            echo 'No feed changes to commit.'
+          else
+            git commit -m 'Update Forebet feed [skip ci]'
+            git push
+          fi
