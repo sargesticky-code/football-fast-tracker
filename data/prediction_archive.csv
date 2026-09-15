@@ -1,0 +1,6 @@
+﻿hkjc_event_id,kickoff_hkt,captured_at_hkt,league,home,away,forebet_home,forebet_draw,forebet_away,forebet_pick,hkjc_home,hkjc_draw,hkjc_away,opta_home,opta_away,bet365_home,bet365_draw,bet365_away,dc_home,dc_draw,dc_away,dc_xg_home,dc_xg_away,pi_home,pi_draw,pi_away,pi_diff,model_quality,model_source
+FB5199,2026-09-16T09:00+08:00,2026-09-16T06:56:39+08:00,墨西哥超級聯賽,Puebla,Toluca,15.0,35.0,50.0,2,5.0,3.95,1.47,75.1483,86.6092,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
+FB5215,2026-09-16T09:00+08:00,2026-09-16T06:56:39+08:00,墨西哥甲組聯賽,Dorados,Cancun FC,29.0,36.0,35.0,X,2.14,3.35,2.72,66.9976,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
+FB5216,2026-09-16T18:00+08:00,2026-09-16T06:56:39+08:00,亞冠精英盃,Jeonbuk Motors,Kashiwa Reysol,36.0,38.0,26.0,X,3.2,3.25,1.95,76.5136,78.8704,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
+FB5251,2026-09-16T18:00+08:00,2026-09-16T06:56:39+08:00,亞冠2,FC Seoul,Persib Bandung,41.0,16.0,43.0,2,2.14,3.25,2.8,78.6545,71.5635,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
+FB5214,2026-09-16T20:15+08:00,2026-09-16T06:56:39+08:00,亞冠精英盃,Port FC,Vissel Kobe,29.0,36.0,35.0,X,4.35,3.6,1.6,71.5988,80.0088,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
