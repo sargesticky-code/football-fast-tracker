@@ -1,0 +1,92 @@
+name: Prediction Archive and Evaluation
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 23 * * *' # 07:30 Hong Kong time, after model and Bet365 refreshes
+  push:
+    paths:
+      - '.github/workflows/evaluation_daily.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prediction-archive-evaluation
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HKJC_UPSTREAM_SHA: '1d2234102dc8f1ee23d0b45c25c125dc3ef98176'
+    steps:
+      - name: Checkout latest production feeds
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Clone pinned HKJC GraphQL client
+        run: |
+          rm -rf /tmp/hkjc-direct
+          git clone --filter=blob:none --no-checkout https://github.com/sososo829/hkjc-football-scraper.git /tmp/hkjc-direct
+          git -C /tmp/hkjc-direct fetch --depth 1 origin "$HKJC_UPSTREAM_SHA"
+          git -C /tmp/hkjc-direct checkout --detach "$HKJC_UPSTREAM_SHA"
+
+      - name: Archive pre-match predictions and score settled matches
+        run: PYTHONPATH=/tmp/hkjc-direct python scripts/archive_and_score.py
+
+      - name: Validate archives
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+
+          paths = [
+              'data/prediction_archive.csv',
+              'data/results_archive.csv',
+              'data/evaluation_current.csv',
+              'data/evaluation_summary.csv',
+          ]
+          for p in paths:
+              if not Path(p).exists():
+                  raise SystemExit(f'missing evaluation file: {p}')
+
+          def rows(path):
+              with Path(path).open(encoding='utf-8-sig', newline='') as fh:
+                  return list(csv.DictReader(fh))
+
+          preds = rows(paths[0])
+          results = rows(paths[1])
+          evaluation = rows(paths[2])
+          summary = rows(paths[3])
+          for name, data in [('prediction', preds), ('results', results), ('evaluation', evaluation)]:
+              ids = [r.get('hkjc_event_id') for r in data if r.get('hkjc_event_id')]
+              if len(ids) != len(set(ids)):
+                  raise SystemExit(f'duplicate ids in {name} archive')
+          if len(summary) != 5:
+              raise SystemExit(f'expected 5 evaluation summary rows, got {len(summary)}')
+          print(
+              f'PASS prediction_archive={len(preds)} results_archive={len(results)} '
+              f'evaluated={len(evaluation)} summary_rows={len(summary)}'
+          )
+          PY
+
+      - name: Commit archives and evaluation metrics
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/prediction_archive.csv data/results_archive.csv data/evaluation_current.csv data/evaluation_summary.csv
+          if git diff --cached --quiet; then
+            echo 'No archive/evaluation changes to commit.'
+          else
+            git commit -m 'Update prediction archive and evaluation metrics [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
