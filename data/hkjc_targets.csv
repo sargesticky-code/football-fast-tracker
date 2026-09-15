@@ -1,6 +1,4 @@
 ﻿match_date,kickoff_hkt,hkjc_event_id,league_zh,home_zh,away_zh,home_en,away_en,had_home,had_draw,had_away,mapping_source
-2026-09-16,2026-09-16 00:00,FB5213,亞冠精英盃,艾阿恩,艾納斯,Al Ain,Al Nassr,3.5,3.75,1.72,team alias
-2026-09-16,2026-09-16 00:00,FB5201,意大利盃,熱拿亞,蘇迪路,Genoa,Sudtirol,1.48,3.75,5.2,team alias
 2026-09-16,2026-09-16 01:00,FB5192,瑞士超級聯賽,草蜢,錫永,Grasshoppers,Sion,3.55,3.95,1.67,team alias
 2026-09-16,2026-09-16 01:00,FB5172,西班牙甲組聯賽,華歷簡奴,愛斯賓奴,Vallecano,Espanyol,2.31,2.96,2.75,team alias
 2026-09-16,2026-09-16 02:00,FB5170,荷蘭甲組聯賽,阿積士,威廉二世,Ajax,Willem II,1.06,8.25,16,team alias
