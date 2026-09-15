@@ -6,6 +6,8 @@ on:
     - cron: '45 22 * * *' # 06:45 Hong Kong time
   push:
     paths:
+      - 'scripts/normalize_hkjc.py'
+      - 'scripts/run_selective.py'
       - 'scripts/enrich_power_ratings.py'
       - '.github/workflows/forebet_daily.yml'
 
@@ -19,10 +21,11 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     env:
       SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
       HKJC_GATE_ONLY: '0'
+      HKJC_UPSTREAM_SHA: '1d2234102dc8f1ee23d0b45c25c125dc3ef98176'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,46 +41,74 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Fetch Forebet only for HKJC fixtures
+      - name: Capture HKJC directly from official GraphQL
+        run: |
+          rm -rf /tmp/hkjc-direct
+          git clone --filter=blob:none --no-checkout https://github.com/sososo829/hkjc-football-scraper.git /tmp/hkjc-direct
+          git -C /tmp/hkjc-direct fetch --depth 1 origin "$HKJC_UPSTREAM_SHA"
+          git -C /tmp/hkjc-direct checkout --detach "$HKJC_UPSTREAM_SHA"
+          cd /tmp/hkjc-direct
+          python -m hkjc list --format json --out /tmp/hkjc_matches.json
+          python -m hkjc odds --page HAD --format json --out /tmp/hkjc_had.json
+          cd "$GITHUB_WORKSPACE"
+          python scripts/normalize_hkjc.py \
+            --matches /tmp/hkjc_matches.json \
+            --had /tmp/hkjc_had.json \
+            --horizon-hours 36
+
+      - name: Fetch Forebet only for direct HKJC fixtures
         run: python scripts/run_selective.py
 
       - name: Add independent Opta global power ratings
         run: python scripts/enrich_power_ratings.py
 
-      - name: Validate selective feed
+      - name: Validate production feeds
         run: |
           python - <<'PY'
           import csv
           from pathlib import Path
 
+          current_path = Path('data/hkjc_current.csv')
           target_path = Path('data/hkjc_targets.csv')
           feed_path = Path('data/forebet_current.csv')
           ratings_path = Path('data/power_ratings.csv')
+
+          for path in (current_path, target_path, feed_path, ratings_path):
+              if not path.exists():
+                  raise SystemExit(f'missing production file: {path}')
+
+          with current_path.open(encoding='utf-8-sig', newline='') as fh:
+              current = list(csv.DictReader(fh))
           with target_path.open(encoding='utf-8-sig', newline='') as fh:
               targets = list(csv.DictReader(fh))
           with feed_path.open(encoding='utf-8-sig', newline='') as fh:
               feed = list(csv.DictReader(fh))
 
+          if not current:
+              raise SystemExit('zero direct HKJC current rows')
           if not targets:
-              raise SystemExit('zero HKJC targets')
+              raise SystemExit('zero direct HKJC pre-event HAD targets')
           if not feed:
               raise SystemExit('zero HKJC-matched Forebet rows')
+
+          bad_target_source = [r for r in targets if r.get('mapping_source') != 'HKJC GraphQL']
+          if bad_target_source:
+              raise SystemExit(f'{len(bad_target_source)} targets are not direct HKJC GraphQL')
+          bad_target_odds = [r for r in targets if not all(r.get(k) for k in ('had_home','had_draw','had_away'))]
+          if bad_target_odds:
+              raise SystemExit(f'{len(bad_target_odds)} direct HKJC targets missing HAD triplet')
 
           target_ids = {r['hkjc_event_id'] for r in targets}
           bad = [r for r in feed if r.get('hkjc_event_id') not in target_ids]
           if bad:
               raise SystemExit(f'feed contains {len(bad)} non-HKJC rows')
-
           duplicates = len(feed) - len({r['hkjc_event_id'] for r in feed})
           if duplicates:
               raise SystemExit(f'feed contains {duplicates} duplicate HKJC events')
-
           bad_probs = [r for r in feed if not all(r.get(k) for k in ('prob_home','prob_draw','prob_away'))]
           if bad_probs:
               raise SystemExit(f'feed contains {len(bad_probs)} model-empty rows')
 
-          if not ratings_path.exists():
-              raise SystemExit('no Opta power-rating snapshot')
           with ratings_path.open(encoding='utf-8-sig', newline='') as fh:
               ratings = list(csv.DictReader(fh))
           if len(ratings) < 5000:
@@ -85,28 +116,29 @@ jobs:
 
           rated_sides = sum(bool(r.get('power_home')) + bool(r.get('power_away')) for r in feed)
           total_sides = len(feed) * 2
-          min_sides = max(1, len(feed))  # at least 50% of team-sides
+          min_sides = max(1, len(feed))
           if rated_sides < min_sides:
               raise SystemExit(f'Opta coverage too low: {rated_sides}/{total_sides}')
 
           print(
-              f'PASS targets={len(targets)} kept={len(feed)} non_hkjc=0 '
-              f'duplicates=0 model_empty=0 opta_snapshot={len(ratings)} '
-              f'power={rated_sides}/{total_sides}'
+              f'PASS hkjc_current={len(current)} direct_targets={len(targets)} '
+              f'forebet_kept={len(feed)} non_hkjc=0 duplicates=0 model_empty=0 '
+              f'opta_snapshot={len(ratings)} power={rated_sides}/{total_sides}'
           )
           PY
 
-      - name: Commit refreshed selective feed
+      - name: Commit refreshed production feeds
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/hkjc_targets.csv data/forebet_current.csv
+          git add data/hkjc_current.csv data/hkjc_targets.csv data/forebet_current.csv
           if [ -f data/power_ratings.csv ]; then
             git add data/power_ratings.csv
           fi
           if git diff --cached --quiet; then
             echo 'No feed changes to commit.'
           else
-            git commit -m 'Update HKJC-gated Forebet and Opta power feed [skip ci]'
+            git commit -m 'Update direct HKJC, Forebet and Opta feeds [skip ci]'
+            git pull --rebase origin main
             git push
           fi
