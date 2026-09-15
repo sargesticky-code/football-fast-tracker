@@ -21,6 +21,8 @@ jobs:
     timeout-minutes: 10
     env:
       HKJC_UPSTREAM_SHA: '1d2234102dc8f1ee23d0b45c25c125dc3ef98176'
+      # Settled rows persist forever; archive_and_score only refetches a light 8-day result window.
+      RESULT_ARCHIVE_MODE: 'rolling-persistent'
     steps:
       - name: Checkout latest production feeds
         uses: actions/checkout@v4
