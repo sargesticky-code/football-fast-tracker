@@ -41,7 +41,7 @@ jobs:
       - name: Fetch Forebet only for HKJC fixtures
         run: python scripts/run_selective.py
 
-      - name: Add independent global power ratings
+      - name: Add independent Opta global power ratings
         run: python scripts/enrich_power_ratings.py
 
       - name: Validate selective feed
@@ -52,6 +52,7 @@ jobs:
 
           target_path = Path('data/hkjc_targets.csv')
           feed_path = Path('data/forebet_current.csv')
+          ratings_path = Path('data/power_ratings.csv')
           with target_path.open(encoding='utf-8-sig', newline='') as fh:
               targets = list(csv.DictReader(fh))
           with feed_path.open(encoding='utf-8-sig', newline='') as fh:
@@ -75,11 +76,23 @@ jobs:
           if bad_probs:
               raise SystemExit(f'feed contains {len(bad_probs)} model-empty rows')
 
+          if not ratings_path.exists():
+              raise SystemExit('no Opta power-rating snapshot')
+          with ratings_path.open(encoding='utf-8-sig', newline='') as fh:
+              ratings = list(csv.DictReader(fh))
+          if len(ratings) < 5000:
+              raise SystemExit(f'Opta snapshot suspiciously small: {len(ratings)}')
+
           rated_sides = sum(bool(r.get('power_home')) + bool(r.get('power_away')) for r in feed)
           total_sides = len(feed) * 2
+          min_sides = max(1, len(feed))  # at least 50% of team-sides
+          if rated_sides < min_sides:
+              raise SystemExit(f'Opta coverage too low: {rated_sides}/{total_sides}')
+
           print(
               f'PASS targets={len(targets)} kept={len(feed)} non_hkjc=0 '
-              f'duplicates=0 model_empty=0 power={rated_sides}/{total_sides}'
+              f'duplicates=0 model_empty=0 opta_snapshot={len(ratings)} '
+              f'power={rated_sides}/{total_sides}'
           )
           PY
 
@@ -87,10 +100,13 @@ jobs:
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/hkjc_targets.csv data/forebet_current.csv data/power_ratings.csv
+          git add data/hkjc_targets.csv data/forebet_current.csv
+          if [ -f data/power_ratings.csv ]; then
+            git add data/power_ratings.csv
+          fi
           if git diff --cached --quiet; then
             echo 'No feed changes to commit.'
           else
-            git commit -m 'Update HKJC-gated Forebet and power-rating feed [skip ci]'
+            git commit -m 'Update HKJC-gated Forebet and Opta power feed [skip ci]'
             git push
           fi
