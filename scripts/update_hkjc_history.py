@@ -1,0 +1,236 @@
+"""Incrementally maintain compact HKJC results history for current Fast Tracker teams.
+
+This script is designed to run inside the model workflow with the pinned
+`sososo829/hkjc-football-scraper` package on PYTHONPATH. It uses HKJC's own
+matchResult GraphQL history, keyed by stable HKJC team ids, and persists a
+single de-duplicated CSV instead of refetching years of history every day.
+
+First sight of a team: bootstrap the most recent 12 calendar months.
+Known team: refresh the current and previous calendar month only.
+"""
+from __future__ import annotations
+
+import argparse
+import calendar
+import csv
+import json
+import os
+import time
+from datetime import date, datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+from hkjc.scraper import HKJCFootball
+
+HKT = ZoneInfo("Asia/Hong_Kong")
+ROOT = Path(__file__).resolve().parent.parent
+FEED = ROOT / "data" / "forebet_current.csv"
+HISTORY = ROOT / "data" / "hkjc_history.csv"
+TEAM_MAP = ROOT / "data" / "hkjc_current_teams.csv"
+
+BOOTSTRAP_MONTHS = max(3, int(os.getenv("HKJC_HISTORY_BOOTSTRAP_MONTHS", "12")))
+REFRESH_MONTHS = max(1, int(os.getenv("HKJC_HISTORY_REFRESH_MONTHS", "2")))
+REQUEST_SLEEP = max(0.0, float(os.getenv("HKJC_HISTORY_REQUEST_SLEEP", "0.05")))
+
+HISTORY_COLUMNS = [
+    "match_id", "hkjc_event_id", "kickoff_hkt", "tournament",
+    "home_id", "away_id", "home", "away", "home_goals", "away_goals",
+    "payout_confirmed", "fetched_at_hkt",
+]
+TEAM_COLUMNS = [
+    "fetched_at_hkt", "hkjc_event_id", "match_id", "kickoff_hkt",
+    "tournament", "home_id", "away_id", "home", "away",
+]
+
+
+def month_windows(months: int) -> list[tuple[int, int]]:
+    y, m = date.today().year, date.today().month
+    out: list[tuple[int, int]] = []
+    for _ in range(months):
+        out.append((y, m))
+        if m == 1:
+            y, m = y - 1, 12
+        else:
+            m -= 1
+    return out
+
+
+def stage(results, rtype: int, sid: int):
+    return next(
+        (r for r in (results or []) if r.get("resultType") == rtype and r.get("stageId") == sid),
+        None,
+    )
+
+
+def valid_pair(entry) -> bool:
+    return bool(
+        entry
+        and isinstance(entry.get("homeResult"), int)
+        and entry.get("homeResult") >= 0
+        and isinstance(entry.get("awayResult"), int)
+        and entry.get("awayResult") >= 0
+    )
+
+
+def normalize_result(m: dict, fetched_at: str) -> dict | None:
+    ft = stage(m.get("results"), 1, 5)
+    if not valid_pair(ft):
+        return None
+    home = m.get("homeTeam") or {}
+    away = m.get("awayTeam") or {}
+    tourn = m.get("tournament") or {}
+    match_id = str(m.get("id") or "").strip()
+    if not match_id:
+        return None
+    return {
+        "match_id": match_id,
+        "hkjc_event_id": str(m.get("frontEndId") or "").strip(),
+        "kickoff_hkt": str(m.get("kickOffTime") or m.get("matchDate") or "").strip(),
+        "tournament": str(tourn.get("code") or "").strip(),
+        "home_id": str(home.get("id") or "").strip(),
+        "away_id": str(away.get("id") or "").strip(),
+        "home": str(home.get("name_en") or home.get("name_ch") or "").strip(),
+        "away": str(away.get("name_en") or away.get("name_ch") or "").strip(),
+        "home_goals": ft.get("homeResult"),
+        "away_goals": ft.get("awayResult"),
+        "payout_confirmed": ft.get("payoutConfirmed", ""),
+        "fetched_at_hkt": fetched_at,
+    }
+
+
+def load_csv(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open(encoding="utf-8-sig", newline="") as fh:
+        return list(csv.DictReader(fh))
+
+
+def write_csv(path: Path, columns: list[str], rows: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    with tmp.open("w", encoding="utf-8-sig", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=columns, extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({c: row.get(c, "") for c in columns})
+    tmp.replace(path)
+
+
+def current_fixture_map(raw_listing: list[dict], wanted_ids: set[str], fetched_at: str) -> list[dict]:
+    out: list[dict] = []
+    for m in raw_listing:
+        event_id = str(m.get("frontEndId") or "").strip()
+        if not event_id or event_id not in wanted_ids:
+            continue
+        home = m.get("homeTeam") or {}
+        away = m.get("awayTeam") or {}
+        tourn = m.get("tournament") or {}
+        row = {
+            "fetched_at_hkt": fetched_at,
+            "hkjc_event_id": event_id,
+            "match_id": str(m.get("id") or "").strip(),
+            "kickoff_hkt": str(m.get("kickOffTime") or "").strip(),
+            "tournament": str(tourn.get("code") or "").strip(),
+            "home_id": str(home.get("id") or "").strip(),
+            "away_id": str(away.get("id") or "").strip(),
+            "home": str(home.get("name_en") or home.get("name_ch") or "").strip(),
+            "away": str(away.get("name_en") or away.get("name_ch") or "").strip(),
+        }
+        if row["home_id"] and row["away_id"]:
+            out.append(row)
+    out.sort(key=lambda r: (r.get("kickoff_hkt", ""), r.get("hkjc_event_id", "")))
+    return out
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--raw-list", required=True, help="Raw HKJC list_matches() JSON")
+    args = ap.parse_args()
+
+    if not FEED.exists():
+        raise SystemExit("missing data/forebet_current.csv")
+    with FEED.open(encoding="utf-8-sig", newline="") as fh:
+        feed_rows = list(csv.DictReader(fh))
+    wanted_ids = {str(r.get("hkjc_event_id") or "").strip() for r in feed_rows}
+    wanted_ids.discard("")
+    if not wanted_ids:
+        write_csv(TEAM_MAP, TEAM_COLUMNS, [])
+        print("HKJC_HISTORY current_forebet_events=0")
+        return 0
+
+    raw_listing = json.loads(Path(args.raw_list).read_text(encoding="utf-8-sig"))
+    if not isinstance(raw_listing, list):
+        raise SystemExit("raw HKJC match listing is not a list")
+
+    fetched_at = datetime.now(HKT).replace(microsecond=0).isoformat()
+    teams = current_fixture_map(raw_listing, wanted_ids, fetched_at)
+    write_csv(TEAM_MAP, TEAM_COLUMNS, teams)
+    missing_events = wanted_ids - {r["hkjc_event_id"] for r in teams}
+    if missing_events:
+        print("WARN HKJC_HISTORY missing_current_ids=" + ",".join(sorted(missing_events)))
+
+    existing = load_csv(HISTORY)
+    by_match: dict[str, dict] = {
+        str(r.get("match_id") or "").strip(): r
+        for r in existing
+        if str(r.get("match_id") or "").strip()
+    }
+    existing_team_ids: set[str] = set()
+    for r in by_match.values():
+        if r.get("home_id"):
+            existing_team_ids.add(str(r["home_id"]))
+        if r.get("away_id"):
+            existing_team_ids.add(str(r["away_id"]))
+
+    current_team_ids = sorted({r["home_id"] for r in teams} | {r["away_id"] for r in teams})
+    fb = HKJCFootball()
+    calls = 0
+    inserted = 0
+    refreshed = 0
+
+    bootstrap_windows = month_windows(BOOTSTRAP_MONTHS)
+    refresh_windows = month_windows(REFRESH_MONTHS)
+
+    for team_id in current_team_ids:
+        windows = refresh_windows if team_id in existing_team_ids else bootstrap_windows
+        mode = "refresh" if team_id in existing_team_ids else "bootstrap"
+        team_new = 0
+        for y, m in reversed(windows):
+            sd = f"{y:04d}-{m:02d}-01"
+            ed = f"{y:04d}-{m:02d}-{calendar.monthrange(y, m)[1]:02d}"
+            try:
+                result = fb.fetch_results(start_date=sd, end_date=ed, team_id=team_id)
+            except Exception as exc:
+                print(f"WARN HKJC_HISTORY team={team_id} month={y:04d}{m:02d} error={type(exc).__name__}:{exc}")
+                continue
+            calls += 1
+            for raw in result.get("matches") or []:
+                row = normalize_result(raw, fetched_at)
+                if not row:
+                    continue
+                old = by_match.get(row["match_id"])
+                if old is None:
+                    inserted += 1
+                    team_new += 1
+                else:
+                    refreshed += 1
+                by_match[row["match_id"]] = row
+            if REQUEST_SLEEP:
+                time.sleep(REQUEST_SLEEP)
+        print(f"HKJC_HISTORY_TEAM id={team_id} mode={mode} months={len(windows)} new={team_new}")
+
+    history_rows = sorted(
+        by_match.values(),
+        key=lambda r: (str(r.get("kickoff_hkt") or ""), str(r.get("match_id") or "")),
+    )
+    write_csv(HISTORY, HISTORY_COLUMNS, history_rows)
+    print(
+        f"HKJC_HISTORY events={len(wanted_ids)} current_teams={len(current_team_ids)} "
+        f"rows={len(history_rows)} inserted={inserted} refreshed={refreshed} calls={calls} "
+        f"bootstrap_months={BOOTSTRAP_MONTHS} refresh_months={REFRESH_MONTHS}"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
