@@ -4,10 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '45 22 * * *' # 06:45 Hong Kong time
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/forebet_daily.yml'
 
 permissions:
   contents: write
@@ -18,7 +14,6 @@ concurrency:
 
 jobs:
   scrape:
-    if: github.event_name != 'push' || contains(github.event.head_commit.message, 'RUN FINAL SELECTIVE TEST')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -69,9 +64,11 @@ jobs:
           if duplicates:
               raise SystemExit(f'feed contains {duplicates} duplicate HKJC events')
 
-          print(f'PASS targets={len(targets)} kept={len(feed)} non_hkjc=0 duplicates=0')
-          for r in feed:
-              print(f"KEEP {r['hkjc_event_id']} {r['hkjc_home_team']} vs {r['hkjc_away_team']} | {r['prob_home']}/{r['prob_draw']}/{r['prob_away']}")
+          bad_probs = [r for r in feed if not all(r.get(k) for k in ('prob_home','prob_draw','prob_away'))]
+          if bad_probs:
+              raise SystemExit(f'feed contains {len(bad_probs)} model-empty rows')
+
+          print(f'PASS targets={len(targets)} kept={len(feed)} non_hkjc=0 duplicates=0 model_empty=0')
           PY
 
       - name: Commit refreshed selective feed
