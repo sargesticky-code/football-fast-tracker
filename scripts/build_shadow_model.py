@@ -1,12 +1,12 @@
-"""Build an independent Dixon-Coles + Pi shadow feed for current Fast Tracker games.
+"""Build independent Dixon-Coles + Pi shadow probabilities for Fast Tracker.
 
-The model deliberately does NOT use Forebet probabilities, HKJC prices, Bet365
-prices or Opta ratings as training features.  It trains from football-data.co.uk
-results, so it can be compared honestly against the external models/markets.
+Priority order:
+1) football-data.co.uk league history for well-covered European leagues.
+2) HKJC's own matchResult history (stable team ids) as a global fallback.
 
-Coverage is fail-closed: if a fixture cannot be matched confidently to a league
-with adequate free history, the row is retained with quality=UNSUPPORTED_HISTORY
-and blank model probabilities instead of inventing a prediction.
+No Forebet probabilities, HKJC prices, Bet365 prices or Opta ratings are used as
+training features. Coverage is fail-closed: unsupported fixtures stay in the
+output with blank probabilities rather than receiving invented numbers.
 """
 from __future__ import annotations
 
@@ -27,6 +27,8 @@ HKT = ZoneInfo("Asia/Hong_Kong")
 ROOT = Path(__file__).resolve().parent.parent
 FEED = ROOT / "data" / "forebet_current.csv"
 OUT = ROOT / "data" / "model_current.csv"
+HKJC_HISTORY = ROOT / "data" / "hkjc_history.csv"
+HKJC_TEAMS = ROOT / "data" / "hkjc_current_teams.csv"
 BASE = "https://www.football-data.co.uk/mmz4281/{season}/{code}.csv"
 TIMEOUT = 30
 
@@ -71,7 +73,6 @@ ALIASES = {
     "internazionale": "inter",
     "paris saint germain": "paris sg",
     "psg": "paris sg",
-    "bayern munich": "bayern munich",
     "bayern munchen": "bayern munich",
     "borussia dortmund": "dortmund",
     "sporting lisbon": "sporting cp",
@@ -102,10 +103,7 @@ def sim(a: str, b: str) -> float:
 def season_codes(now: datetime) -> list[str]:
     y = now.year
     start = y if now.month >= 7 else y - 1
-    codes = []
-    for s in (start, start - 1, start - 2):
-        codes.append(f"{s % 100:02d}{(s + 1) % 100:02d}")
-    return codes
+    return [f"{s % 100:02d}{(s + 1) % 100:02d}" for s in (start, start - 1, start - 2)]
 
 
 def fetch_csv(session: requests.Session, season: str, code: str) -> pd.DataFrame:
@@ -128,7 +126,6 @@ def best_name(name: str, candidates: set[str]) -> tuple[str | None, float]:
         return None, 0.0
     scored = sorted(((sim(name, c), c) for c in candidates), reverse=True)
     score, candidate = scored[0]
-    # Avoid accepting a fuzzy tie as an authoritative alias.
     if len(scored) > 1 and score < 0.94 and score - scored[1][0] < 0.05:
         return None, score
     return (candidate, score) if score >= 0.78 else (None, score)
@@ -168,15 +165,20 @@ def clean_history(parts: list[pd.DataFrame]) -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
-def fit_one(hist: pd.DataFrame, home: str, away: str) -> dict:
-    if len(hist) < 120:
+def fit_one(
+    hist: pd.DataFrame,
+    home: str,
+    away: str,
+    *,
+    min_matches: int = 120,
+    min_team_games: int = 20,
+) -> dict:
+    if len(hist) < min_matches:
         raise ValueError(f"insufficient history {len(hist)}")
-    team_games = pd.concat([
-        hist.loc[(hist["HomeTeam"] == home) | (hist["AwayTeam"] == home)],
-        hist.loc[(hist["HomeTeam"] == away) | (hist["AwayTeam"] == away)],
-    ]).drop_duplicates()
-    if len(team_games) < 20:
-        raise ValueError("insufficient target-team history")
+    home_games = hist.loc[(hist["HomeTeam"] == home) | (hist["AwayTeam"] == home)]
+    away_games = hist.loc[(hist["HomeTeam"] == away) | (hist["AwayTeam"] == away)]
+    if len(home_games) < min_team_games or len(away_games) < min_team_games:
+        raise ValueError(f"insufficient target-team history {len(home_games)}/{len(away_games)}")
 
     weights = pb.models.dixon_coles_weights(hist["date_dt"], xi=0.001)
     model = pb.models.DixonColesGoalModel(
@@ -191,7 +193,7 @@ def fit_one(hist: pd.DataFrame, home: str, away: str) -> dict:
     ph, pd_, pa = [float(x) for x in pred.home_draw_away]
 
     pi = pb.ratings.PiRatingSystem()
-    for r in hist.itertuples(index=False):
+    for r in hist.sort_values("date_dt").itertuples(index=False):
         pi.update_ratings(str(r.HomeTeam), str(r.AwayTeam), int(r.FTHG) - int(r.FTAG))
     pp = pi.calculate_match_probabilities(home, away)
     home_rating = float(pi.get_team_rating(home))
@@ -214,8 +216,82 @@ def fit_one(hist: pd.DataFrame, home: str, away: str) -> dict:
     }
 
 
+def load_hkjc_inputs() -> tuple[pd.DataFrame, dict[str, dict[str, str]]]:
+    if not HKJC_HISTORY.exists() or not HKJC_TEAMS.exists():
+        return pd.DataFrame(), {}
+    try:
+        h = pd.read_csv(HKJC_HISTORY, dtype=str)
+        with HKJC_TEAMS.open(encoding="utf-8-sig", newline="") as fh:
+            maps = {r["hkjc_event_id"]: r for r in csv.DictReader(fh) if r.get("hkjc_event_id")}
+    except Exception:
+        return pd.DataFrame(), {}
+    required = {"match_id", "kickoff_hkt", "tournament", "home_id", "away_id", "home_goals", "away_goals"}
+    if h.empty or not required.issubset(h.columns):
+        return pd.DataFrame(), maps
+    h["FTHG"] = pd.to_numeric(h["home_goals"], errors="coerce")
+    h["FTAG"] = pd.to_numeric(h["away_goals"], errors="coerce")
+    h["date_dt"] = pd.to_datetime(h["kickoff_hkt"], errors="coerce", utc=True).dt.tz_convert(None)
+    h["HomeTeam"] = h["home_id"].fillna("").astype(str)
+    h["AwayTeam"] = h["away_id"].fillna("").astype(str)
+    h = h.dropna(subset=["FTHG", "FTAG", "date_dt"])
+    h = h[(h["HomeTeam"] != "") & (h["AwayTeam"] != "")]
+    h = h.sort_values("date_dt").drop_duplicates(subset=["match_id"], keep="last")
+    return h.reset_index(drop=True), maps
+
+
+def team_game_count(hist: pd.DataFrame, team_id: str) -> int:
+    return int(((hist["HomeTeam"] == team_id) | (hist["AwayTeam"] == team_id)).sum())
+
+
+def select_hkjc_history(all_hist: pd.DataFrame, mapping: dict[str, str]) -> tuple[pd.DataFrame, str]:
+    if all_hist.empty:
+        return pd.DataFrame(), ""
+    home = str(mapping.get("home_id") or "")
+    away = str(mapping.get("away_id") or "")
+    tournament = str(mapping.get("tournament") or "")
+    if not home or not away:
+        return pd.DataFrame(), ""
+
+    same = all_hist.loc[all_hist["tournament"].fillna("").astype(str) == tournament].copy()
+    if len(same) >= 50 and team_game_count(same, home) >= 10 and team_game_count(same, away) >= 10:
+        return same, f"HKJC {tournament}"
+
+    selected_idx: set[int] = set()
+    frontier = {home, away}
+    known = set(frontier)
+    for _ in range(3):
+        mask = all_hist["HomeTeam"].isin(frontier) | all_hist["AwayTeam"].isin(frontier)
+        idx = set(all_hist.index[mask].tolist())
+        new_idx = idx - selected_idx
+        if not new_idx:
+            break
+        selected_idx |= idx
+        rows = all_hist.loc[sorted(new_idx)]
+        discovered = set(rows["HomeTeam"].astype(str)) | set(rows["AwayTeam"].astype(str))
+        frontier = discovered - known
+        known |= discovered
+        if len(selected_idx) >= 450:
+            break
+    if not selected_idx:
+        return pd.DataFrame(), ""
+    selected = all_hist.loc[sorted(selected_idx)].copy()
+    if len(selected) > 500:
+        selected = selected.sort_values("date_dt").tail(500)
+    return selected, f"HKJC connected history ({tournament or 'mixed'})"
+
+
 def fmt_prob(value) -> str:
     return "" if value in (None, "") else f"{float(value):.6f}"
+
+
+def finalize_values(values: dict) -> dict:
+    out = dict(values)
+    for k, v in list(out.items()):
+        if k.startswith("dc_prob") or k.startswith("pi_prob"):
+            out[k] = fmt_prob(v)
+        elif isinstance(v, float):
+            out[k] = f"{v:.5f}"
+    return out
 
 
 def write(rows: list[dict]) -> None:
@@ -243,11 +319,9 @@ def main() -> int:
     seasons = season_codes(now)
     session = requests.Session()
 
-    # Cheap discovery: current-season table only for each supported league.
     current: dict[str, pd.DataFrame] = {code: fetch_csv(session, seasons[0], code) for code in LEAGUES}
     discovered = {r["hkjc_event_id"]: discover_fixture(r, current) for r in fixtures}
     needed_codes = sorted({d[1] for d in discovered.values() if d})
-
     histories: dict[str, pd.DataFrame] = {}
     for code in needed_codes:
         parts = [current.get(code, pd.DataFrame())]
@@ -255,9 +329,14 @@ def main() -> int:
             parts.append(fetch_csv(session, season, code))
         histories[code] = clean_history(parts)
 
+    hkjc_hist, hkjc_maps = load_hkjc_inputs()
+
     fetched = now.replace(microsecond=0).isoformat()
     out: list[dict] = []
     modeled = 0
+    modeled_fd = 0
+    modeled_hkjc = 0
+
     for fixture in fixtures:
         event_id = fixture.get("hkjc_event_id", "")
         source_home = fixture.get("hkjc_home_team") or fixture.get("home_team") or ""
@@ -268,38 +347,67 @@ def main() -> int:
             "home": source_home,
             "away": source_away,
             "quality": "UNSUPPORTED_HISTORY",
-            "model_source": "penaltyblog 1.12.2 / football-data.co.uk",
+            "model_source": "none",
         }
+
+        fd_error = None
         found = discovered.get(event_id)
-        if not found:
-            out.append(base)
-            continue
-        quality, code, home, away, hs, aws = found
-        base.update({
-            "model_league": LEAGUES[code],
-            "model_home_name": home,
-            "model_away_name": away,
-            "team_match_quality": f"{quality:.3f}",
-        })
-        try:
-            values = fit_one(histories[code], home, away)
-            for k, v in list(values.items()):
-                if k.startswith("dc_prob") or k.startswith("pi_prob"):
-                    values[k] = fmt_prob(v)
-                elif isinstance(v, float):
-                    values[k] = f"{v:.5f}"
-            base.update(values)
-            base["quality"] = "MODELED"
-            modeled += 1
-        except Exception as exc:
-            base["quality"] = f"MODEL_FAIL:{type(exc).__name__}"
+        if found:
+            quality, code, home, away, _hs, _aws = found
+            base.update({
+                "model_league": LEAGUES[code],
+                "model_home_name": home,
+                "model_away_name": away,
+                "team_match_quality": f"{quality:.3f}",
+            })
+            try:
+                values = fit_one(histories[code], home, away, min_matches=120, min_team_games=20)
+                base.update(finalize_values(values))
+                base["quality"] = "MODELED"
+                base["model_source"] = "football-data.co.uk / penaltyblog 1.12.2"
+                modeled += 1
+                modeled_fd += 1
+                out.append(base)
+                continue
+            except Exception as exc:
+                fd_error = f"{type(exc).__name__}:{exc}"
+
+        mapping = hkjc_maps.get(event_id)
+        if mapping:
+            hist, label = select_hkjc_history(hkjc_hist, mapping)
+            home_id = str(mapping.get("home_id") or "")
+            away_id = str(mapping.get("away_id") or "")
+            base.update({
+                "model_league": label or f"HKJC {mapping.get('tournament','')}",
+                "model_home_name": mapping.get("home") or source_home,
+                "model_away_name": mapping.get("away") or source_away,
+                "team_match_quality": "1.000",
+            })
+            try:
+                values = fit_one(hist, home_id, away_id, min_matches=45, min_team_games=10)
+                base.update(finalize_values(values))
+                base["quality"] = "MODELED"
+                base["model_source"] = "HKJC matchResult / penaltyblog 1.12.2"
+                modeled += 1
+                modeled_hkjc += 1
+                out.append(base)
+                continue
+            except Exception as exc:
+                base["quality"] = f"MODEL_FAIL:{type(exc).__name__}"
+                base["model_source"] = "HKJC matchResult / penaltyblog 1.12.2"
+        elif fd_error:
+            base["quality"] = "MODEL_FAIL:FOOTBALL_DATA"
+            base["model_source"] = "football-data.co.uk / penaltyblog 1.12.2"
+
         out.append(base)
 
     out.sort(key=lambda r: r.get("hkjc_event_id", ""))
     write(out)
     print(
         f"SHADOW_MODEL fixtures={len(fixtures)} modeled={modeled} "
-        f"unsupported={len(fixtures)-modeled} leagues={','.join(needed_codes) or '-'}"
+        f"football_data={modeled_fd} hkjc_history={modeled_hkjc} "
+        f"fail_closed={len(fixtures)-modeled} fd_leagues={','.join(needed_codes) or '-'} "
+        f"hkjc_history_rows={len(hkjc_hist)}"
     )
     return 0
 
