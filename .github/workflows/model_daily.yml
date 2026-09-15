@@ -1,0 +1,83 @@
+name: Football Shadow Models
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '5 23 * * *' # 07:05 Hong Kong time, after the 06:45 source refresh
+  push:
+    paths:
+      - '.github/workflows/model_daily.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: football-shadow-models
+  cancel-in-progress: true
+
+jobs:
+  model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout latest production feed
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-model.txt
+
+      - name: Install model dependencies
+        run: pip install -r requirements-model.txt
+
+      - name: Build independent Dixon-Coles and Pi shadow feed
+        run: python scripts/build_shadow_model.py
+
+      - name: Validate shadow model output
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+
+          with Path('data/forebet_current.csv').open(encoding='utf-8-sig', newline='') as fh:
+              source = list(csv.DictReader(fh))
+          with Path('data/model_current.csv').open(encoding='utf-8-sig', newline='') as fh:
+              model = list(csv.DictReader(fh))
+          if len(model) != len(source):
+              raise SystemExit(f'model/source row mismatch {len(model)}/{len(source)}')
+          source_ids = {r['hkjc_event_id'] for r in source}
+          model_ids = {r['hkjc_event_id'] for r in model}
+          if source_ids != model_ids:
+              raise SystemExit('model event ids do not match current Forebet feed')
+
+          modeled = 0
+          for row in model:
+              if row.get('quality') != 'MODELED':
+                  continue
+              modeled += 1
+              dc = [float(row[k]) for k in ('dc_prob_home','dc_prob_draw','dc_prob_away')]
+              pi = [float(row[k]) for k in ('pi_prob_home','pi_prob_draw','pi_prob_away')]
+              if abs(sum(dc) - 1) > 0.015:
+                  raise SystemExit(f'bad Dixon-Coles probability sum {row["hkjc_event_id"]}: {sum(dc)}')
+              if abs(sum(pi) - 1) > 0.015:
+                  raise SystemExit(f'bad Pi probability sum {row["hkjc_event_id"]}: {sum(pi)}')
+          print(f'PASS shadow_rows={len(model)} modeled={modeled} fail_closed={len(model)-modeled}')
+          PY
+
+      - name: Commit shadow feed
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/model_current.csv
+          if git diff --cached --quiet; then
+            echo 'No model changes to commit.'
+          else
+            git commit -m 'Update Dixon-Coles and Pi shadow feed [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
