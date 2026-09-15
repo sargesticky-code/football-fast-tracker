@@ -1,12 +1,12 @@
 """Incrementally maintain compact HKJC results history for current Fast Tracker teams.
 
-This script is designed to run inside the model workflow with the pinned
-`sososo829/hkjc-football-scraper` package on PYTHONPATH. It uses HKJC's own
-matchResult GraphQL history, keyed by stable HKJC team ids, and persists a
-single de-duplicated CSV instead of refetching years of history every day.
+This script uses HKJC's matchResult GraphQL history, keyed by stable HKJC team
+ids. A separate coverage registry records which team ids were explicitly
+bootstrapped; merely appearing as an opponent in somebody else's history never
+counts as complete coverage.
 
-First sight of a team: bootstrap the most recent 12 calendar months.
-Known team: refresh the current and previous calendar month only.
+First explicit sight of a team: bootstrap the most recent 12 calendar months.
+Explicitly bootstrapped team: refresh the current and previous calendar month.
 """
 from __future__ import annotations
 
@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parent.parent
 FEED = ROOT / "data" / "forebet_current.csv"
 HISTORY = ROOT / "data" / "hkjc_history.csv"
 TEAM_MAP = ROOT / "data" / "hkjc_current_teams.csv"
+COVERAGE = ROOT / "data" / "hkjc_history_coverage.csv"
 
 BOOTSTRAP_MONTHS = max(3, int(os.getenv("HKJC_HISTORY_BOOTSTRAP_MONTHS", "12")))
 REFRESH_MONTHS = max(1, int(os.getenv("HKJC_HISTORY_REFRESH_MONTHS", "2")))
@@ -40,6 +41,10 @@ HISTORY_COLUMNS = [
 TEAM_COLUMNS = [
     "fetched_at_hkt", "hkjc_event_id", "match_id", "kickoff_hkt",
     "tournament", "home_id", "away_id", "home", "away",
+]
+COVERAGE_COLUMNS = [
+    "team_id", "status", "bootstrap_months", "first_bootstrap_hkt",
+    "last_refresh_hkt", "last_mode", "successful_months", "history_games",
 ]
 
 
@@ -142,6 +147,23 @@ def current_fixture_map(raw_listing: list[dict], wanted_ids: set[str], fetched_a
     return out
 
 
+def map_team_ids(rows: list[dict[str, str]]) -> set[str]:
+    out: set[str] = set()
+    for r in rows:
+        for key in ("home_id", "away_id"):
+            value = str(r.get(key) or "").strip()
+            if value:
+                out.add(value)
+    return out
+
+
+def count_team_games(by_match: dict[str, dict], team_id: str) -> int:
+    return sum(
+        1 for r in by_match.values()
+        if str(r.get("home_id") or "") == team_id or str(r.get("away_id") or "") == team_id
+    )
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--raw-list", required=True, help="Raw HKJC list_matches() JSON")
@@ -162,6 +184,29 @@ def main() -> int:
     if not isinstance(raw_listing, list):
         raise SystemExit("raw HKJC match listing is not a list")
 
+    # Preserve the previous explicit target map for one-time migration when the
+    # coverage registry is first introduced.
+    prior_team_map = load_csv(TEAM_MAP)
+    coverage_rows = load_csv(COVERAGE)
+    coverage: dict[str, dict[str, str]] = {
+        str(r.get("team_id") or "").strip(): r
+        for r in coverage_rows if str(r.get("team_id") or "").strip()
+    }
+    if not coverage and prior_team_map:
+        migration_time = datetime.now(HKT).replace(microsecond=0).isoformat()
+        for team_id in sorted(map_team_ids(prior_team_map)):
+            coverage[team_id] = {
+                "team_id": team_id,
+                "status": "BOOTSTRAPPED",
+                "bootstrap_months": str(BOOTSTRAP_MONTHS),
+                "first_bootstrap_hkt": migration_time,
+                "last_refresh_hkt": migration_time,
+                "last_mode": "MIGRATED_PRIOR_TARGET",
+                "successful_months": str(BOOTSTRAP_MONTHS),
+                "history_games": "",
+            }
+        print(f"HKJC_HISTORY_COVERAGE migrated_prior_targets={len(coverage)}")
+
     fetched_at = datetime.now(HKT).replace(microsecond=0).isoformat()
     teams = current_fixture_map(raw_listing, wanted_ids, fetched_at)
     write_csv(TEAM_MAP, TEAM_COLUMNS, teams)
@@ -175,14 +220,8 @@ def main() -> int:
         for r in existing
         if str(r.get("match_id") or "").strip()
     }
-    existing_team_ids: set[str] = set()
-    for r in by_match.values():
-        if r.get("home_id"):
-            existing_team_ids.add(str(r["home_id"]))
-        if r.get("away_id"):
-            existing_team_ids.add(str(r["away_id"]))
 
-    current_team_ids = sorted({r["home_id"] for r in teams} | {r["away_id"] for r in teams})
+    current_team_ids = sorted(map_team_ids(teams))
     fb = HKJCFootball()
     calls = 0
     inserted = 0
@@ -192,9 +231,12 @@ def main() -> int:
     refresh_windows = month_windows(REFRESH_MONTHS)
 
     for team_id in current_team_ids:
-        windows = refresh_windows if team_id in existing_team_ids else bootstrap_windows
-        mode = "refresh" if team_id in existing_team_ids else "bootstrap"
+        cov = coverage.get(team_id, {})
+        is_bootstrapped = cov.get("status") == "BOOTSTRAPPED"
+        windows = refresh_windows if is_bootstrapped else bootstrap_windows
+        mode = "refresh" if is_bootstrapped else "bootstrap"
         team_new = 0
+        successful_months = 0
         for y, m in reversed(windows):
             sd = f"{y:04d}-{m:02d}-01"
             ed = f"{y:04d}-{m:02d}-{calendar.monthrange(y, m)[1]:02d}"
@@ -204,6 +246,7 @@ def main() -> int:
                 print(f"WARN HKJC_HISTORY team={team_id} month={y:04d}{m:02d} error={type(exc).__name__}:{exc}")
                 continue
             calls += 1
+            successful_months += 1
             for raw in result.get("matches") or []:
                 row = normalize_result(raw, fetched_at)
                 if not row:
@@ -217,17 +260,37 @@ def main() -> int:
                 by_match[row["match_id"]] = row
             if REQUEST_SLEEP:
                 time.sleep(REQUEST_SLEEP)
-        print(f"HKJC_HISTORY_TEAM id={team_id} mode={mode} months={len(windows)} new={team_new}")
+
+        row = dict(cov) if cov else {"team_id": team_id}
+        if mode == "bootstrap":
+            min_success = max(3, math.ceil(BOOTSTRAP_MONTHS * 0.75)) if False else max(3, (BOOTSTRAP_MONTHS * 3 + 3) // 4)
+            if successful_months >= min_success:
+                row["status"] = "BOOTSTRAPPED"
+                row["bootstrap_months"] = str(BOOTSTRAP_MONTHS)
+                row["first_bootstrap_hkt"] = row.get("first_bootstrap_hkt") or fetched_at
+            else:
+                row["status"] = "PARTIAL"
+        row["last_refresh_hkt"] = fetched_at
+        row["last_mode"] = mode.upper()
+        row["successful_months"] = str(successful_months)
+        row["history_games"] = str(count_team_games(by_match, team_id))
+        coverage[team_id] = row
+        print(
+            f"HKJC_HISTORY_TEAM id={team_id} mode={mode} months={len(windows)} "
+            f"success={successful_months} new={team_new} games={row['history_games']} status={row.get('status','')}"
+        )
 
     history_rows = sorted(
         by_match.values(),
         key=lambda r: (str(r.get("kickoff_hkt") or ""), str(r.get("match_id") or "")),
     )
+    coverage_out = sorted(coverage.values(), key=lambda r: r.get("team_id", ""))
     write_csv(HISTORY, HISTORY_COLUMNS, history_rows)
+    write_csv(COVERAGE, COVERAGE_COLUMNS, coverage_out)
     print(
         f"HKJC_HISTORY events={len(wanted_ids)} current_teams={len(current_team_ids)} "
         f"rows={len(history_rows)} inserted={inserted} refreshed={refreshed} calls={calls} "
-        f"bootstrap_months={BOOTSTRAP_MONTHS} refresh_months={REFRESH_MONTHS}"
+        f"coverage={len(coverage_out)} bootstrap_months={BOOTSTRAP_MONTHS} refresh_months={REFRESH_MONTHS}"
     )
     return 0
 
