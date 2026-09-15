@@ -71,7 +71,7 @@ jobs:
       - name: Build global HKJC Team-Form Poisson shadow feed
         run: python scripts/build_form_model.py
 
-      - name: Validate shadow model outputs
+      - name: Validate shadow model outputs and history coverage
         run: |
           python - <<'PY'
           import csv
@@ -86,6 +86,7 @@ jobs:
           form = rows('data/form_current.csv')
           teams = rows('data/hkjc_current_teams.csv')
           history = rows('data/hkjc_history.csv')
+          coverage = rows('data/hkjc_history_coverage.csv')
 
           source_ids = {r['hkjc_event_id'] for r in source}
           if len(model) != len(source) or {r['hkjc_event_id'] for r in model} != source_ids:
@@ -96,6 +97,20 @@ jobs:
               raise SystemExit('HKJC team-id map does not match current Forebet feed')
           if source and not history:
               raise SystemExit('HKJC results history is empty for non-empty source')
+
+          current_team_ids = {
+              str(r.get(k) or '').strip()
+              for r in teams for k in ('home_id','away_id')
+              if str(r.get(k) or '').strip()
+          }
+          coverage_by_id = {str(r.get('team_id') or '').strip(): r for r in coverage if str(r.get('team_id') or '').strip()}
+          missing_coverage = sorted(current_team_ids - set(coverage_by_id))
+          if missing_coverage:
+              raise SystemExit('current target teams missing explicit history coverage: ' + ','.join(missing_coverage))
+          partial_coverage = sorted(
+              tid for tid in current_team_ids
+              if coverage_by_id[tid].get('status') != 'BOOTSTRAPPED'
+          )
 
           dc_modeled = 0
           rejected_sparse = 0
@@ -130,7 +145,8 @@ jobs:
           print(
               f'PASS source={len(source)} dc_pi_full_league={dc_modeled} '
               f'sparse_dc_pi_rejected={rejected_sparse} form_modeled={form_modeled} '
-              f'form_fail_closed={len(form)-form_modeled} history_rows={len(history)}'
+              f'form_fail_closed={len(form)-form_modeled} history_rows={len(history)} '
+              f'coverage_rows={len(coverage)} current_coverage_partial={len(partial_coverage)}'
           )
           PY
 
@@ -138,7 +154,12 @@ jobs:
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/model_current.csv data/form_current.csv data/hkjc_history.csv data/hkjc_current_teams.csv
+          git add \
+            data/model_current.csv \
+            data/form_current.csv \
+            data/hkjc_history.csv \
+            data/hkjc_current_teams.csv \
+            data/hkjc_history_coverage.csv
           if git diff --cached --quiet; then
             echo 'No model/history changes to commit.'
           else
