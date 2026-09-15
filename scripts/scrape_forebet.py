@@ -183,10 +183,15 @@ def fetch_csv(gid: str, label: str) -> list[dict[str, str]]:
             file=sys.stderr,
         )
         return []
-    if "<html" in r.text[:500].casefold():
+    try:
+        decoded = r.content.decode("utf-8-sig")
+    except UnicodeDecodeError as exc:
+        print(f"FATAL: {label} CSV UTF-8 decode failed: {exc}", file=sys.stderr)
+        return []
+    if "<html" in decoded[:500].casefold():
         print(f"FATAL: {label} returned HTML instead of CSV", file=sys.stderr)
         return []
-    rows = list(csv.DictReader(io.StringIO(r.text.lstrip("\ufeff"))))
+    rows = list(csv.DictReader(io.StringIO(decoded)))
     print(f"HKJC_SOURCE {label} rows={len(rows)} bytes={len(r.content)}", flush=True)
     return rows
 
@@ -307,7 +312,6 @@ def load_hkjc_targets() -> list[dict[str, Any]]:
         if kickoff < start or kickoff > end:
             continue
 
-        # User only wants matches currently sellable on HKJC HAD.
         had_h = (row.get("HAD H") or "").strip()
         had_d = (row.get("HAD D") or "").strip()
         had_a = (row.get("HAD A") or "").strip()
