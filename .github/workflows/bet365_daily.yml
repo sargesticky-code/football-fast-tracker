@@ -1,0 +1,121 @@
+name: Bet365 HKJC Benchmark
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 23 * * *' # 07:15 Hong Kong time
+  push:
+    paths:
+      - '.github/workflows/bet365_daily.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bet365-hkjc-benchmark
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      BET365_UPSTREAM_SHA: '4661617374758df712f1bc67557169924ae736b5'
+    steps:
+      - name: Checkout current HKJC target feed
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Decide whether any supported Bet365 competition is currently HKJC-bettable
+        id: detect
+        shell: bash
+        run: |
+          leagues="$(python scripts/filter_bet365.py --detect)"
+          echo "leagues=$leagues" >> "$GITHUB_OUTPUT"
+          echo "Supported HKJC overlap: ${leagues:-none}"
+
+      - name: Write empty current benchmark when no supported HKJC overlap exists
+        if: steps.detect.outputs.leagues == ''
+        run: python scripts/filter_bet365.py --empty
+
+      - name: Install Playwright only when a Bet365 scrape is actually needed
+        if: steps.detect.outputs.leagues != ''
+        run: |
+          pip install 'playwright>=1.40,<2' 'tqdm>=4.12,<5'
+          python -m playwright install --with-deps chromium
+
+      - name: Clone pinned validated Bet365 scraper
+        if: steps.detect.outputs.leagues != ''
+        run: |
+          rm -rf /tmp/b365-upstream
+          git clone --filter=blob:none --no-checkout https://github.com/sergiydev09/primo-soccer-stats.git /tmp/b365-upstream
+          git -C /tmp/b365-upstream fetch --depth 1 origin "$BET365_UPSTREAM_SHA"
+          git -C /tmp/b365-upstream checkout --detach "$BET365_UPSTREAM_SHA"
+
+      - name: Scrape only supported HKJC competitions
+        if: steps.detect.outputs.leagues != ''
+        shell: bash
+        run: |
+          cd /tmp/b365-upstream
+          IFS=',' read -ra LEAGUES <<< "${{ steps.detect.outputs.leagues }}"
+          for league in "${LEAGUES[@]}"; do
+            echo "Bet365 scrape: $league"
+            timeout 600s xvfb-run -a python bet365_scraper.py cuotas \
+              --league "$league" --jornada 1 --tabs Resultado --rapido \
+              --perfil "/tmp/b365-profile-$league" \
+              --out "/tmp/b365_${league}.csv"
+          done
+
+      - name: Keep only fixtures that match current HKJC event ids
+        if: steps.detect.outputs.leagues != ''
+        shell: bash
+        run: |
+          args=()
+          for f in /tmp/b365_*.csv; do
+            [ -f "$f" ] && args+=(--raw "$f")
+          done
+          if [ ${#args[@]} -eq 0 ]; then
+            echo 'No Bet365 raw files produced.' >&2
+            exit 1
+          fi
+          python scripts/filter_bet365.py "${args[@]}"
+
+      - name: Validate benchmark feed
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          p = Path('data/bet365_current.csv')
+          if not p.exists():
+              raise SystemExit('missing data/bet365_current.csv')
+          with p.open(encoding='utf-8-sig', newline='') as fh:
+              rows = list(csv.DictReader(fh))
+          ids = [r.get('hkjc_event_id') for r in rows]
+          if len(ids) != len(set(ids)):
+              raise SystemExit('duplicate HKJC ids in Bet365 benchmark')
+          for r in rows:
+              if not all(r.get(k) for k in ('bet365_home','bet365_draw','bet365_away')):
+                  raise SystemExit(f'incomplete Bet365 1X2: {r.get("hkjc_event_id")}')
+              if float(r.get('match_quality') or 0) < 0.80:
+                  raise SystemExit(f'low-confidence Bet365 match: {r.get("hkjc_event_id")}')
+          print(f'PASS bet365_hkjc_rows={len(rows)}')
+          PY
+
+      - name: Commit benchmark feed
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/bet365_current.csv
+          if git diff --cached --quiet; then
+            echo 'No Bet365 feed changes to commit.'
+          else
+            git commit -m 'Update HKJC-gated Bet365 benchmark [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
