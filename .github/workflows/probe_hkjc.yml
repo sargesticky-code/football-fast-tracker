@@ -1,0 +1,54 @@
+name: HKJC GraphQL Probe
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/probe_hkjc.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Clone public HKJC scraper
+        run: |
+          git clone --depth 1 https://github.com/sososo829/hkjc-football-scraper.git /tmp/hkjc-probe
+          cd /tmp/hkjc-probe
+          python --version
+
+      - name: Probe current HKJC match list
+        run: |
+          cd /tmp/hkjc-probe
+          python -m hkjc list --format json --out /tmp/hkjc_matches.json
+          python - <<'PY'
+          import json, pathlib
+          p = pathlib.Path('/tmp/hkjc_matches.json')
+          obj = json.loads(p.read_text(encoding='utf-8'))
+          rows = obj if isinstance(obj, list) else obj.get('matches', obj.get('data', [])) if isinstance(obj, dict) else []
+          print('HKJC_MATCH_FILE_BYTES', p.stat().st_size)
+          print('HKJC_MATCH_ROWS', len(rows) if hasattr(rows, '__len__') else 'unknown')
+          print('HKJC_MATCH_SAMPLE', json.dumps(rows[:2] if isinstance(rows, list) else obj, ensure_ascii=False)[:2500])
+          PY
+
+      - name: Probe current HKJC HAD odds
+        run: |
+          cd /tmp/hkjc-probe
+          python -m hkjc odds --page HAD --format json --out /tmp/hkjc_had.json
+          python - <<'PY'
+          import json, pathlib
+          p = pathlib.Path('/tmp/hkjc_had.json')
+          obj = json.loads(p.read_text(encoding='utf-8'))
+          rows = obj if isinstance(obj, list) else obj.get('odds', obj.get('data', [])) if isinstance(obj, dict) else []
+          print('HKJC_HAD_FILE_BYTES', p.stat().st_size)
+          print('HKJC_HAD_ROWS', len(rows) if hasattr(rows, '__len__') else 'unknown')
+          print('HKJC_HAD_SAMPLE', json.dumps(rows[:3] if isinstance(rows, list) else obj, ensure_ascii=False)[:3500])
+          PY
