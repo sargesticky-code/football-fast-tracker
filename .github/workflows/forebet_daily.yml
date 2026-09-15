@@ -4,6 +4,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '45 22 * * *' # 06:45 Hong Kong time
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/forebet_daily.yml'
 
 permissions:
   contents: write
@@ -14,8 +18,9 @@ concurrency:
 
 jobs:
   scrape:
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, 'RUN HKJC GATE TEST')
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     env:
       SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
     steps:
@@ -33,37 +38,51 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Fetch one Forebet 1X2 page
+      - name: Build HKJC gate and fetch selected Forebet rows
         run: python scripts/scrape_forebet.py
 
-      - name: Validate CSV
+      - name: Validate HKJC-gated CSVs
         run: |
           python - <<'PY'
           import csv
           from pathlib import Path
-          p = Path('data/forebet_current.csv')
-          with p.open(encoding='utf-8-sig', newline='') as f:
+
+          targets_path = Path('data/hkjc_targets.csv')
+          feed_path = Path('data/forebet_current.csv')
+
+          with targets_path.open(encoding='utf-8-sig', newline='') as f:
+              targets = list(csv.DictReader(f))
+          if not targets:
+              raise SystemExit('HKJC target CSV has zero rows')
+
+          with feed_path.open(encoding='utf-8-sig', newline='') as f:
               rows = list(csv.DictReader(f))
           if not rows:
-              raise SystemExit('Forebet CSV has zero data rows')
-          required = {'match_date','home_team','away_team','prob_home','prob_draw','prob_away'}
+              raise SystemExit('Forebet CSV has zero HKJC-matched rows')
+
+          required = {
+              'match_date','home_team','away_team','prob_home','prob_draw','prob_away',
+              'hkjc_home_team','hkjc_away_team','hkjc_kickoff_hkt','match_score'
+          }
           missing = required - set(rows[0])
           if missing:
               raise SystemExit(f'Missing CSV columns: {sorted(missing)}')
+
           usable = [r for r in rows if r['prob_home'] and r['prob_draw'] and r['prob_away']]
           if not usable:
               raise SystemExit('Forebet CSV has no usable probability rows')
-          print(f'Validated {len(rows)} rows; {len(usable)} with 1X2 probabilities')
+
+          print(f'Validated {len(targets)} HKJC targets; kept {len(rows)} Forebet matches')
           PY
 
-      - name: Commit refreshed feed
+      - name: Commit refreshed feeds
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/forebet_current.csv
+          git add data/forebet_current.csv data/hkjc_targets.csv
           if git diff --cached --quiet; then
             echo 'No feed changes to commit.'
           else
-            git commit -m 'Update Forebet feed [skip ci]'
+            git commit -m 'Update HKJC-gated Forebet feed [skip ci]'
             git push
           fi
