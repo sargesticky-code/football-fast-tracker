@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   scrape:
-    if: github.event_name != 'push' || contains(github.event.head_commit.message, 'RUN FOREBET SELECTIVE TEST')
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, 'RUN FINAL SELECTIVE TEST')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -39,8 +39,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Fetch Forebet only for HKJC target date
-        run: python scripts/scrape_forebet.py
+      - name: Fetch Forebet only for HKJC fixtures
+        run: python scripts/run_selective.py
 
       - name: Validate selective feed
         run: |
@@ -48,19 +48,40 @@ jobs:
           import csv
           from pathlib import Path
 
-          t = Path('data/hkjc_targets.csv')
-          f = Path('data/forebet_current.csv')
-          with t.open(encoding='utf-8-sig', newline='') as fh:
+          target_path = Path('data/hkjc_targets.csv')
+          feed_path = Path('data/forebet_current.csv')
+          with target_path.open(encoding='utf-8-sig', newline='') as fh:
               targets = list(csv.DictReader(fh))
-          with f.open(encoding='utf-8-sig', newline='') as fh:
+          with feed_path.open(encoding='utf-8-sig', newline='') as fh:
               feed = list(csv.DictReader(fh))
+
           if not targets:
               raise SystemExit('zero HKJC targets')
           if not feed:
               raise SystemExit('zero HKJC-matched Forebet rows')
+
           target_ids = {r['hkjc_event_id'] for r in targets}
           bad = [r for r in feed if r.get('hkjc_event_id') not in target_ids]
           if bad:
               raise SystemExit(f'feed contains {len(bad)} non-HKJC rows')
-          print(f'PASS targets={len(targets)} kept={len(feed)} non_hkjc=0')
+
+          duplicates = len(feed) - len({r['hkjc_event_id'] for r in feed})
+          if duplicates:
+              raise SystemExit(f'feed contains {duplicates} duplicate HKJC events')
+
+          print(f'PASS targets={len(targets)} kept={len(feed)} non_hkjc=0 duplicates=0')
+          for r in feed:
+              print(f"KEEP {r['hkjc_event_id']} {r['hkjc_home_team']} vs {r['hkjc_away_team']} | {r['prob_home']}/{r['prob_draw']}/{r['prob_away']}")
           PY
+
+      - name: Commit refreshed selective feed
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/hkjc_targets.csv data/forebet_current.csv
+          if git diff --cached --quiet; then
+            echo 'No feed changes to commit.'
+          else
+            git commit -m 'Update HKJC-gated Forebet feed [skip ci]'
+            git push
+          fi
