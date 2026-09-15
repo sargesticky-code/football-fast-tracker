@@ -1,0 +1,53 @@
+name: Bet365 Playwright Probe
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/probe_bet365.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Playwright Chromium
+        run: |
+          python -m pip install --upgrade pip
+          pip install 'playwright>=1.40' 'tqdm>=4.12'
+          python -m playwright install --with-deps chromium
+
+      - name: Clone current Bet365 scraper
+        run: |
+          git clone --depth 1 https://github.com/sergiydev09/primo-soccer-stats.git /tmp/b365-probe
+          python /tmp/b365-probe/bet365_scraper.py ligas
+
+      - name: Probe one La Liga match
+        continue-on-error: true
+        run: |
+          cd /tmp/b365-probe
+          timeout 180s xvfb-run -a python bet365_scraper.py cuotas \
+            --league spain --jornada 1 --partidos 1 --tabs Resultado --rapido \
+            --perfil /tmp/b365-profile --out /tmp/b365_probe.csv
+          rc=$?
+          echo "BET365_EXIT_CODE=$rc"
+          if [ -f /tmp/b365_probe.csv ]; then
+            echo "BET365_CSV_BYTES=$(wc -c < /tmp/b365_probe.csv)"
+            echo "BET365_CSV_ROWS=$(($(wc -l < /tmp/b365_probe.csv)-1))"
+            head -n 8 /tmp/b365_probe.csv
+          else
+            echo 'BET365_CSV_MISSING=1'
+          fi
+          if [ -f logs/bet365_errors.log ]; then
+            echo '--- BET365 ERROR LOG ---'
+            tail -n 80 logs/bet365_errors.log
+          fi
+          exit 0
