@@ -54,3 +54,5 @@ jobs:
               raise SystemExit('HKJC target CSV has zero rows')
           print(f'Validated {len(rows)} exact HKJC HAD targets; no ScraperAPI call made')
           PY
+
+# UTF-8 HKJC gate verification
