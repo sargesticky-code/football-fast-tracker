@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import os
 import random
 import re
 import sys
@@ -18,6 +19,8 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "forebet_current.csv"
 HKT = ZoneInfo("Asia/Hong_Kong")
 DAYS_AHEAD = 7
+SCRAPERAPI_KEY = os.getenv("SCRAPERAPI_KEY", "").strip()
+SCRAPERAPI_URL = "https://api.scraperapi.com"
 
 HEADERS = {
     "User-Agent": (
@@ -108,21 +111,63 @@ def looks_like_forebet(html: str) -> bool:
     return "rcnt" in html or ("forebet" in low and "football" in low and "<html" in low)
 
 
-def fetch_html(url: str) -> str | None:
-    # One normal HTTP request, then one cloudscraper HTTP fallback. No browser.
+def scraperapi_fetch(url: str) -> str | None:
+    if not SCRAPERAPI_KEY:
+        return None
+
+    attempts = [
+        {"api_key": SCRAPERAPI_KEY, "url": url},
+        {"api_key": SCRAPERAPI_KEY, "url": url, "render": "true"},
+    ]
+    for i, params in enumerate(attempts, start=1):
+        try:
+            r = requests.get(SCRAPERAPI_URL, params=params, timeout=70)
+            if r.status_code == 200 and looks_like_forebet(r.text):
+                print(f"FETCH scraperapi attempt={i} bytes={len(r.text)}", flush=True)
+                return r.text
+            print(
+                f"WARN scraperapi attempt={i} status={r.status_code} "
+                f"bytes={len(r.text)} rows_marker={'yes' if 'rcnt' in r.text else 'no'}",
+                file=sys.stderr,
+                flush=True,
+            )
+        except Exception as exc:
+            print(f"WARN scraperapi attempt={i}: {exc}", file=sys.stderr, flush=True)
+    return None
+
+
+def direct_fetch(url: str) -> tuple[str | None, bool]:
+    """Return (html, blocked_403). Direct path is diagnostic/fallback only."""
+    saw_403 = False
     for label, client in (("requests", PLAIN), ("cloudscraper", CLOUD)):
         try:
             r = client.get(url, timeout=18, allow_redirects=True)
             if r.status_code == 200 and looks_like_forebet(r.text):
-                return r.text
+                return r.text, saw_403
+            if r.status_code == 403:
+                saw_403 = True
             print(
                 f"WARN {label} {url} status={r.status_code} "
                 f"bytes={len(r.text)} rows_marker={'yes' if 'rcnt' in r.text else 'no'}",
                 file=sys.stderr,
+                flush=True,
             )
         except Exception as exc:
-            print(f"WARN {label} {url}: {exc}", file=sys.stderr)
-    return None
+            print(f"WARN {label} {url}: {exc}", file=sys.stderr, flush=True)
+    return None, saw_403
+
+
+def fetch_html(url: str) -> tuple[str | None, bool]:
+    # Production path: proxy first. GitHub-hosted IPs are currently 403-blocked
+    # by Forebet, so direct requests are only a fallback / diagnostic.
+    if SCRAPERAPI_KEY:
+        html = scraperapi_fetch(url)
+        if html is not None:
+            return html, False
+        print("WARN ScraperAPI did not return usable Forebet HTML; trying direct fallback", file=sys.stderr)
+
+    html, blocked_403 = direct_fetch(url)
+    return html, blocked_403
 
 
 def common_fields(row: Tag, requested_date: str) -> dict[str, Any] | None:
@@ -218,22 +263,27 @@ def parse_ou_page(html: str, requested_date: str) -> list[dict[str, Any]]:
     return out
 
 
-def scrape() -> tuple[list[dict[str, Any]], int, int]:
+def scrape() -> tuple[list[dict[str, Any]], int, int, bool]:
     now = datetime.now(HKT)
     fetched_at = now.strftime("%Y-%m-%d %H:%M:%S")
     merged: dict[tuple[str, str, str], dict[str, Any]] = {}
     pages_ok = 0
     pages_failed = 0
+    hard_403 = False
 
     for offset in range(DAYS_AHEAD + 1):
         d = (now.date() + timedelta(days=offset)).isoformat()
         print(f"DATE {d}", flush=True)
         for market, slug in MARKETS.items():
             url = f"https://www.forebet.com/en/football-predictions/{slug}/{d}"
-            html = fetch_html(url)
+            html, blocked_403 = fetch_html(url)
+            if blocked_403 and not SCRAPERAPI_KEY:
+                hard_403 = True
             if html is None:
                 pages_failed += 1
                 print(f"ERROR no HTML: {market} {d}", file=sys.stderr, flush=True)
+                if hard_403 and not SCRAPERAPI_KEY:
+                    return [], pages_ok, pages_failed, hard_403
                 continue
             pages_ok += 1
             rows = parse_1x2_page(html, d) if market == "1x2" else parse_ou_page(html, d)
@@ -250,7 +300,7 @@ def scrape() -> tuple[list[dict[str, Any]], int, int]:
         r.get("match_date", ""), r.get("kickoff_text", ""),
         r.get("league_short", ""), r.get("home_team", "")
     ))
-    return rows, pages_ok, pages_failed
+    return rows, pages_ok, pages_failed, hard_403
 
 
 def existing_data_rows() -> int:
@@ -275,15 +325,27 @@ def write_csv(rows: list[dict[str, Any]]) -> None:
 
 
 def main() -> int:
-    rows, pages_ok, pages_failed = scrape()
+    mode = "scraperapi" if SCRAPERAPI_KEY else "direct"
+    print(f"FOREBET_FETCH_MODE={mode}", flush=True)
+    rows, pages_ok, pages_failed, hard_403 = scrape()
     old_rows = existing_data_rows()
     print(
         f"SUMMARY rows={len(rows)} pages_ok={pages_ok} "
-        f"pages_failed={pages_failed} old_rows={old_rows}", flush=True
+        f"pages_failed={pages_failed} old_rows={old_rows} hard_403={hard_403}",
+        flush=True,
     )
+
     if not rows:
-        print("FATAL: zero current rows; preserving existing CSV", file=sys.stderr)
+        if hard_403 and not SCRAPERAPI_KEY:
+            print(
+                "FATAL: Forebet blocks GitHub runner IPs with HTTP 403. "
+                "Add repository Actions secret SCRAPERAPI_KEY.",
+                file=sys.stderr,
+            )
+        else:
+            print("FATAL: zero current rows; preserving existing CSV", file=sys.stderr)
         return 2
+
     write_csv(rows)
     print(f"WROTE {OUT} rows={len(rows)}", flush=True)
     return 0
