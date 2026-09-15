@@ -1,0 +1,44 @@
+name: CatBoost Ensemble Research
+
+# Intentionally manual-only. This keeps the heavier ML stack out of the daily
+# production budget until the shadow models have enough observations for a
+# meaningful walk-forward comparison.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      UPSTREAM_SHA: '4b0eb25b87da07a552eb9e97266838f9b7721736'
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Clone pinned ensemble research implementation
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/jdgoated1/football-predictor.git research
+          git -C research fetch --depth 1 origin "$UPSTREAM_SHA"
+          git -C research checkout --detach "$UPSTREAM_SHA"
+
+      - name: Install research dependencies
+        run: pip install -r research/requirements.txt
+
+      - name: Reproduce upstream chronological training/evaluation
+        working-directory: research
+        run: |
+          set -o pipefail
+          python train.py 2>&1 | tee ../catboost_research.log
+
+      - name: Preserve research log only
+        uses: actions/upload-artifact@v4
+        with:
+          name: catboost-research-log
+          path: catboost_research.log
+          retention-days: 7
