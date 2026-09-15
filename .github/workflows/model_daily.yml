@@ -62,10 +62,16 @@ jobs:
       - name: Refresh incremental HKJC results history for current teams
         run: PYTHONPATH=/tmp/hkjc-direct python scripts/update_hkjc_history.py --raw-list /tmp/hkjc_raw_matches.json
 
-      - name: Build independent Dixon-Coles and Pi shadow feed
+      - name: Build Dixon-Coles and Pi candidates
         run: python scripts/build_shadow_model.py
 
-      - name: Validate shadow model output
+      - name: Reject sparse-network HKJC DC Pi fits
+        run: python scripts/quality_gate_shadow_models.py
+
+      - name: Build global HKJC Team-Form Poisson shadow feed
+        run: python scripts/build_form_model.py
+
+      - name: Validate shadow model outputs
         run: |
           python - <<'PY'
           import csv
@@ -77,55 +83,66 @@ jobs:
 
           source = rows('data/forebet_current.csv')
           model = rows('data/model_current.csv')
+          form = rows('data/form_current.csv')
           teams = rows('data/hkjc_current_teams.csv')
           history = rows('data/hkjc_history.csv')
 
-          if len(model) != len(source):
-              raise SystemExit(f'model/source row mismatch {len(model)}/{len(source)}')
           source_ids = {r['hkjc_event_id'] for r in source}
-          model_ids = {r['hkjc_event_id'] for r in model}
-          team_ids = {r['hkjc_event_id'] for r in teams}
-          if source_ids != model_ids:
-              raise SystemExit('model event ids do not match current Forebet feed')
-          if source_ids != team_ids:
-              raise SystemExit(f'HKJC team-id map mismatch source={len(source_ids)} map={len(team_ids)}')
+          if len(model) != len(source) or {r['hkjc_event_id'] for r in model} != source_ids:
+              raise SystemExit('DC/Pi model rows do not match current Forebet feed')
+          if len(form) != len(source) or {r['hkjc_event_id'] for r in form} != source_ids:
+              raise SystemExit('form model rows do not match current Forebet feed')
+          if {r['hkjc_event_id'] for r in teams} != source_ids:
+              raise SystemExit('HKJC team-id map does not match current Forebet feed')
           if source and not history:
               raise SystemExit('HKJC results history is empty for non-empty source')
 
-          modeled = 0
-          hkjc_modeled = 0
-          fd_modeled = 0
+          dc_modeled = 0
+          rejected_sparse = 0
           for row in model:
+              if row.get('quality') == 'SPARSE_GRAPH_REJECTED':
+                  rejected_sparse += 1
+                  if any(row.get(k) for k in ('dc_prob_home','dc_prob_draw','dc_prob_away','pi_prob_home','pi_prob_draw','pi_prob_away')):
+                      raise SystemExit(f'sparse graph row retained probabilities: {row["hkjc_event_id"]}')
+                  continue
               if row.get('quality') != 'MODELED':
                   continue
-              modeled += 1
+              dc_modeled += 1
               dc = [float(row[k]) for k in ('dc_prob_home','dc_prob_draw','dc_prob_away')]
               pi = [float(row[k]) for k in ('pi_prob_home','pi_prob_draw','pi_prob_away')]
-              if abs(sum(dc) - 1) > 0.015:
-                  raise SystemExit(f'bad Dixon-Coles probability sum {row["hkjc_event_id"]}: {sum(dc)}')
-              if abs(sum(pi) - 1) > 0.015:
-                  raise SystemExit(f'bad Pi probability sum {row["hkjc_event_id"]}: {sum(pi)}')
-              source_name = row.get('model_source') or ''
-              if source_name.startswith('HKJC'):
-                  hkjc_modeled += 1
-              elif source_name.startswith('football-data'):
-                  fd_modeled += 1
+              if abs(sum(dc) - 1) > 0.015 or abs(sum(pi) - 1) > 0.015:
+                  raise SystemExit(f'bad DC/Pi probability sum: {row["hkjc_event_id"]}')
+              if not str(row.get('model_source') or '').startswith('football-data'):
+                  raise SystemExit(f'non-full-league DC/Pi row passed: {row["hkjc_event_id"]}')
+
+          form_modeled = 0
+          for row in form:
+              if row.get('quality') != 'FORM_MODELED':
+                  continue
+              form_modeled += 1
+              p = [float(row[k]) for k in ('form_prob_home','form_prob_draw','form_prob_away')]
+              if abs(sum(p) - 1) > 0.015:
+                  raise SystemExit(f'bad form probability sum: {row["hkjc_event_id"]}')
+              xg = float(row['form_xg_home']) + float(row['form_xg_away'])
+              if not 0.5 <= xg <= 7.0:
+                  raise SystemExit(f'implausible form xG: {row["hkjc_event_id"]} {xg}')
+
           print(
-              f'PASS shadow_rows={len(model)} modeled={modeled} '
-              f'football_data={fd_modeled} hkjc_history={hkjc_modeled} '
-              f'fail_closed={len(model)-modeled} history_rows={len(history)} team_maps={len(teams)}'
+              f'PASS source={len(source)} dc_pi_full_league={dc_modeled} '
+              f'sparse_dc_pi_rejected={rejected_sparse} form_modeled={form_modeled} '
+              f'form_fail_closed={len(form)-form_modeled} history_rows={len(history)}'
           )
           PY
 
-      - name: Commit shadow feed and incremental HKJC history
+      - name: Commit shadow feeds and incremental HKJC history
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/model_current.csv data/hkjc_history.csv data/hkjc_current_teams.csv
+          git add data/model_current.csv data/form_current.csv data/hkjc_history.csv data/hkjc_current_teams.csv
           if git diff --cached --quiet; then
             echo 'No model/history changes to commit.'
           else
-            git commit -m 'Update global shadow models and HKJC history [skip ci]'
+            git commit -m 'Update validated shadow models and HKJC history [skip ci]'
             git pull --rebase origin main
             git push
           fi
