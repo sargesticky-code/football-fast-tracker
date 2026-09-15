@@ -4,11 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '45 22 * * *' # 06:45 Hong Kong time
-  push:
-    paths:
-      - 'scripts/**'
-      - 'requirements.txt'
-      - '.github/workflows/forebet_daily.yml'
 
 permissions:
   contents: write
@@ -20,7 +15,7 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 5
     env:
       SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
     steps:
@@ -38,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Scrape Forebet current and upcoming fixtures
+      - name: Fetch one Forebet 1X2 page
         run: python scripts/scrape_forebet.py
 
       - name: Validate CSV
@@ -55,7 +50,10 @@ jobs:
           missing = required - set(rows[0])
           if missing:
               raise SystemExit(f'Missing CSV columns: {sorted(missing)}')
-          print(f'Validated {len(rows)} Forebet rows')
+          usable = [r for r in rows if r['prob_home'] and r['prob_draw'] and r['prob_away']]
+          if not usable:
+              raise SystemExit('Forebet CSV has no usable probability rows')
+          print(f'Validated {len(rows)} rows; {len(usable)} with 1X2 probabilities')
           PY
 
       - name: Commit refreshed feed
