@@ -1,6 +1,6 @@
 ﻿fetched_at_hkt,hkjc_event_id,home,away,form_prob_home,form_prob_draw,form_prob_away,form_xg_home,form_xg_away,home_games,away_games,home_venue_games,away_venue_games,quality,model_source
-2026-09-16T07:05:07+08:00,FB5152,Atletico Mineiro,Santos,0.433842,0.257472,0.308687,1.46684,1.19610,59,66,29,31,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-16T07:05:07+08:00,FB5153,Corinthians,Estudiantes,0.355790,0.324148,0.320062,0.95346,0.88749,68,49,33,24,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-16T07:05:07+08:00,FB5156,Independiente Rivadavia,Atletico Tucuman,0.439677,0.267538,0.292785,1.39285,1.08459,45,33,25,16,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-16T07:05:07+08:00,FB5180,Botafogo,Gremio,0.443901,0.268472,0.287627,1.39082,1.06399,53,53,27,27,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-16T07:05:07+08:00,FB5254,Birmingham Legion,New Mexico Utd,0.277040,0.260428,0.462532,1.07936,1.47483,20,29,12,11,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-16T07:11:40+08:00,FB5152,Atletico Mineiro,Santos,0.433842,0.257472,0.308687,1.46684,1.19610,59,66,29,31,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-16T07:11:40+08:00,FB5153,Corinthians,Estudiantes,0.355790,0.324148,0.320062,0.95346,0.88749,68,49,33,24,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-16T07:11:40+08:00,FB5156,Independiente Rivadavia,Atletico Tucuman,0.439677,0.267538,0.292785,1.39285,1.08459,45,33,25,16,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-16T07:11:40+08:00,FB5180,Botafogo,Gremio,0.443901,0.268472,0.287627,1.39082,1.06399,53,53,27,27,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-16T07:11:40+08:00,FB5254,Birmingham Legion,New Mexico Utd,0.277040,0.260428,0.462532,1.07936,1.47483,20,29,12,11,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
