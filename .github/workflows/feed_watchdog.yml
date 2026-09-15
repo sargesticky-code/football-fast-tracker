@@ -1,0 +1,88 @@
+name: Feed Freshness Watchdog
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 23 * * *' # 07:20 Hong Kong time; recovery only when primary feed is stale
+  push:
+    paths:
+      - '.github/workflows/feed_watchdog.yml'
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: feed-freshness-watchdog
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout current feed timestamps
+        uses: actions/checkout@v4
+
+      - name: Decide whether production source is stale
+        id: freshness
+        run: |
+          python - <<'PY'
+          import csv
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+
+          HKT = ZoneInfo('Asia/Hong_Kong')
+          MAX_AGE_MINUTES = 180
+
+          def parse(value):
+              value = (value or '').strip()
+              if not value:
+                  return None
+              try:
+                  dt = datetime.fromisoformat(value.replace('Z', '+00:00'))
+              except ValueError:
+                  try:
+                      dt = datetime.strptime(value, '%Y-%m-%d %H:%M:%S').replace(tzinfo=HKT)
+                  except ValueError:
+                      return None
+              if dt.tzinfo is None:
+                  dt = dt.replace(tzinfo=HKT)
+              return dt.astimezone(timezone.utc)
+
+          stamps = []
+          diagnostics = []
+          for path in ('data/hkjc_targets.csv', 'data/forebet_current.csv'):
+              p = Path(path)
+              if not p.exists():
+                  diagnostics.append(f'{path}=MISSING')
+                  continue
+              with p.open(encoding='utf-8-sig', newline='') as fh:
+                  row = next(csv.DictReader(fh), None)
+              dt = parse((row or {}).get('fetched_at_hkt', ''))
+              if dt is None:
+                  diagnostics.append(f'{path}=BAD_TIMESTAMP')
+                  continue
+              age = (datetime.now(timezone.utc) - dt).total_seconds() / 60
+              stamps.append(age)
+              diagnostics.append(f'{path}={age:.1f}m')
+
+          stale = len(stamps) < 2 or max(stamps) > MAX_AGE_MINUTES
+          print('WATCHDOG ' + ' '.join(diagnostics) + f' stale={int(stale)} threshold={MAX_AGE_MINUTES}m')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as fh:
+              fh.write(f'stale={str(stale).lower()}\n')
+          PY
+
+      - name: Dispatch production Forebet/HKJC refresh only when stale
+        if: steps.freshness.outputs.stale == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo 'Primary feed is stale; dispatching forebet_daily.yml once.'
+          gh workflow run forebet_daily.yml --repo "$GITHUB_REPOSITORY" --ref main
+
+      - name: Fresh feed - no paid recovery scrape needed
+        if: steps.freshness.outputs.stale != 'true'
+        run: echo 'Primary feed is fresh; watchdog exits without dispatch.'
