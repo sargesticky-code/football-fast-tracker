@@ -1,0 +1,6 @@
+﻿fetched_at_hkt,hkjc_event_id,home,away,model_league,model_home_name,model_away_name,dc_prob_home,dc_prob_draw,dc_prob_away,dc_xg_home,dc_xg_away,dc_prob_over25,pi_prob_home,pi_prob_draw,pi_prob_away,pi_home_rating,pi_away_rating,pi_diff,training_matches,team_match_quality,quality,model_source
+2026-09-16T01:03:36+08:00,FB5199,Puebla,Toluca,,,,,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
+2026-09-16T01:03:36+08:00,FB5214,Port FC,Vissel Kobe,,,,,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
+2026-09-16T01:03:36+08:00,FB5215,Dorados,Cancun FC,,,,,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
+2026-09-16T01:03:36+08:00,FB5216,Jeonbuk Motors,Kashiwa Reysol,,,,,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
+2026-09-16T01:03:36+08:00,FB5251,FC Seoul,Persib Bandung,,,,,,,,,,,,,,,,,,UNSUPPORTED_HISTORY,penaltyblog 1.12.2 / football-data.co.uk
