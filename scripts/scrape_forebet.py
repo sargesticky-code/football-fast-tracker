@@ -33,32 +33,22 @@ HEADERS = {
 }
 
 COLUMNS = [
-    "fetched_at_hkt",
-    "match_date",
-    "kickoff_text",
-    "league_short",
-    "home_team",
-    "away_team",
-    "prob_home",
-    "prob_draw",
-    "prob_away",
-    "prediction_1x2",
-    "predicted_score",
-    "avg_goals",
-    "odds_home",
-    "odds_draw",
-    "odds_away",
-    "prediction_ou25",
-    "prob_over25",
-    "prob_under25",
-    "odds_over25",
-    "odds_under25",
+    "fetched_at_hkt", "match_date", "kickoff_text", "league_short",
+    "home_team", "away_team", "prob_home", "prob_draw", "prob_away",
+    "prediction_1x2", "predicted_score", "avg_goals", "odds_home",
+    "odds_draw", "odds_away", "prediction_ou25", "prob_over25",
+    "prob_under25", "odds_over25", "odds_under25",
 ]
 
 MARKETS = {
     "1x2": "predictions-1x2",
     "ou25": "under-over-25-goals",
 }
+
+PLAIN = requests.Session()
+PLAIN.headers.update(HEADERS)
+CLOUD = cloudscraper.create_scraper()
+CLOUD.headers.update(HEADERS)
 
 
 def text(el: Tag | None) -> str:
@@ -113,24 +103,25 @@ def match_key(match_date: str, home: str, away: str) -> tuple[str, str, str]:
     return match_date, norm(home), norm(away)
 
 
+def looks_like_forebet(html: str) -> bool:
+    low = html.casefold()
+    return "rcnt" in html or ("forebet" in low and "football" in low and "<html" in low)
+
+
 def fetch_html(url: str) -> str | None:
-    # Plain HTTP first; cloudscraper is an HTTP fallback, not a browser.
-    clients: list[Any] = [requests.Session(), cloudscraper.create_scraper()]
-    for client in clients:
-        client.headers.update(HEADERS)
-        for attempt in range(3):
-            try:
-                r = client.get(url, timeout=35, allow_redirects=True)
-                if r.status_code == 200 and "rcnt" in r.text:
-                    return r.text
-                print(
-                    f"WARN fetch {url} attempt={attempt + 1} status={r.status_code} "
-                    f"rows_marker={'yes' if 'rcnt' in r.text else 'no'}",
-                    file=sys.stderr,
-                )
-            except Exception as exc:
-                print(f"WARN fetch {url} attempt={attempt + 1}: {exc}", file=sys.stderr)
-            time.sleep(1.5 ** attempt + random.uniform(0.2, 0.8))
+    # One normal HTTP request, then one cloudscraper HTTP fallback. No browser.
+    for label, client in (("requests", PLAIN), ("cloudscraper", CLOUD)):
+        try:
+            r = client.get(url, timeout=18, allow_redirects=True)
+            if r.status_code == 200 and looks_like_forebet(r.text):
+                return r.text
+            print(
+                f"WARN {label} {url} status={r.status_code} "
+                f"bytes={len(r.text)} rows_marker={'yes' if 'rcnt' in r.text else 'no'}",
+                file=sys.stderr,
+            )
+        except Exception as exc:
+            print(f"WARN {label} {url}: {exc}", file=sys.stderr)
     return None
 
 
@@ -168,34 +159,22 @@ def parse_1x2_page(html: str, requested_date: str) -> list[dict[str, Any]]:
         base = common_fields(row, requested_date)
         if not base:
             continue
-
         prob_spans = row.select("div.fprc span")
         probs = [pct(text(sp)) for sp in prob_spans[:3]]
         while len(probs) < 3:
             probs.append(None)
-
         odds_spans = row.select("div.haodd span")
         odds = [decimal_odds(text(sp)) for sp in odds_spans[:3]]
         while len(odds) < 3:
             odds.append(None)
-
         pred = text(row.select_one("span.forepr span")) or text(row.select_one(".forepr"))
         score = text(row.select_one("div.ex_sc.tabonly")) or text(row.select_one(".predict_score, .ex_sc"))
         avg = text(row.select_one("div.avg_sc.tabonly")) or text(row.select_one(".avg_sc"))
-
-        base.update(
-            {
-                "prob_home": probs[0],
-                "prob_draw": probs[1],
-                "prob_away": probs[2],
-                "prediction_1x2": pred,
-                "predicted_score": score,
-                "avg_goals": avg,
-                "odds_home": odds[0],
-                "odds_draw": odds[1],
-                "odds_away": odds[2],
-            }
-        )
+        base.update({
+            "prob_home": probs[0], "prob_draw": probs[1], "prob_away": probs[2],
+            "prediction_1x2": pred, "predicted_score": score, "avg_goals": avg,
+            "odds_home": odds[0], "odds_draw": odds[1], "odds_away": odds[2],
+        })
         out.append(base)
     return out
 
@@ -207,12 +186,10 @@ def parse_ou_page(html: str, requested_date: str) -> list[dict[str, Any]]:
         base = common_fields(row, requested_date)
         if not base:
             continue
-
         pred = text(row.select_one("span.forepr span")) or text(row.select_one(".forepr"))
         prob_spans = row.select("div.fprc span")[:2]
         prob_vals = [pct(text(sp)) for sp in prob_spans]
         hi = highlighted_probability_index(prob_spans)
-
         prob_over = prob_under = None
         if len(prob_vals) >= 2 and hi in (0, 1):
             other = 1 - hi
@@ -220,30 +197,23 @@ def parse_ou_page(html: str, requested_date: str) -> list[dict[str, Any]]:
                 prob_over, prob_under = prob_vals[hi], prob_vals[other]
             elif pred.casefold().startswith("under"):
                 prob_under, prob_over = prob_vals[hi], prob_vals[other]
-        # If Forebet changes highlighting, retain the values conservatively only
-        # when class names themselves identify the side.
         if prob_over is None or prob_under is None:
             for sp, val in zip(prob_spans, prob_vals):
-                cls = " ".join(sp.get("class") or []).casefold()
+                classes = sp.get("class") or []
+                cls = " ".join(classes if isinstance(classes, list) else [classes]).casefold()
                 if "over" in cls:
                     prob_over = val
                 elif "under" in cls:
                     prob_under = val
-
         odds_spans = row.select("div.haodd span")
         odds = [decimal_odds(text(sp)) for sp in odds_spans[:2]]
         while len(odds) < 2:
             odds.append(None)
-
-        base.update(
-            {
-                "prediction_ou25": pred,
-                "prob_over25": prob_over,
-                "prob_under25": prob_under,
-                "odds_over25": odds[0],
-                "odds_under25": odds[1],
-            }
-        )
+        base.update({
+            "prediction_ou25": pred,
+            "prob_over25": prob_over, "prob_under25": prob_under,
+            "odds_over25": odds[0], "odds_under25": odds[1],
+        })
         out.append(base)
     return out
 
@@ -257,26 +227,29 @@ def scrape() -> tuple[list[dict[str, Any]], int, int]:
 
     for offset in range(DAYS_AHEAD + 1):
         d = (now.date() + timedelta(days=offset)).isoformat()
-        print(f"DATE {d}")
+        print(f"DATE {d}", flush=True)
         for market, slug in MARKETS.items():
             url = f"https://www.forebet.com/en/football-predictions/{slug}/{d}"
             html = fetch_html(url)
             if html is None:
                 pages_failed += 1
-                print(f"ERROR no HTML: {market} {d}", file=sys.stderr)
+                print(f"ERROR no HTML: {market} {d}", file=sys.stderr, flush=True)
                 continue
             pages_ok += 1
             rows = parse_1x2_page(html, d) if market == "1x2" else parse_ou_page(html, d)
-            print(f"  {market}: {len(rows)} rows")
+            print(f"  {market}: {len(rows)} rows", flush=True)
             for part in rows:
                 key = match_key(part["match_date"], part["home_team"], part["away_team"])
                 target = merged.setdefault(key, {})
                 target.update({k: v for k, v in part.items() if v not in (None, "")})
                 target.setdefault("fetched_at_hkt", fetched_at)
-            time.sleep(random.uniform(0.8, 1.4))
+            time.sleep(random.uniform(0.25, 0.55))
 
     rows = list(merged.values())
-    rows.sort(key=lambda r: (r.get("match_date", ""), r.get("kickoff_text", ""), r.get("league_short", ""), r.get("home_team", "")))
+    rows.sort(key=lambda r: (
+        r.get("match_date", ""), r.get("kickoff_text", ""),
+        r.get("league_short", ""), r.get("home_team", "")
+    ))
     return rows, pages_ok, pages_failed
 
 
@@ -304,16 +277,15 @@ def write_csv(rows: list[dict[str, Any]]) -> None:
 def main() -> int:
     rows, pages_ok, pages_failed = scrape()
     old_rows = existing_data_rows()
-    print(f"SUMMARY rows={len(rows)} pages_ok={pages_ok} pages_failed={pages_failed} old_rows={old_rows}")
-
-    # Never replace a previously healthy feed with an empty scrape caused by
-    # a transient Forebet/Cloudflare/network problem.
+    print(
+        f"SUMMARY rows={len(rows)} pages_ok={pages_ok} "
+        f"pages_failed={pages_failed} old_rows={old_rows}", flush=True
+    )
     if not rows:
         print("FATAL: zero current rows; preserving existing CSV", file=sys.stderr)
         return 2
-
     write_csv(rows)
-    print(f"WROTE {OUT} rows={len(rows)}")
+    print(f"WROTE {OUT} rows={len(rows)}", flush=True)
     return 0
 
 
