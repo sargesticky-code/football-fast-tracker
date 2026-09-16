@@ -1,4 +1,4 @@
-name: Probe Forebet Free OU Variants
+name: Probe Forebet Free OU Markdown
 on:
   workflow_dispatch:
   push:
@@ -11,26 +11,24 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Probe Jina O-U variants
+      - name: Probe Jina markdown O-U
         shell: bash
         run: |
           set -euo pipefail
           URLS=(
             'https://www.forebet.com/en/football-tips-and-predictions-for-today/predictions-under-over-goals?task=under-over'
-            'https://www.forebet.com/en/football-tips-and-predictions-for-today/predictions-under-over-goals?lang=en'
-            'https://www.forebet.com/en/football-tips-and-predictions-for-today/predictions-under-over-goals?start=2'
-            'https://www.forebet.com/en/football-predictions/under-over-25-goals/2026-09-16/by-league?start=2'
+            'https://www.forebet.com/en/component/forebet/under-over'
             'https://www.forebet.com/en/football-predictions/under-over-25-goals/2026-09-16/by-league'
           )
-          NAMES=(task lang start2 date_start2 date)
+          NAMES=(task component date)
           for i in "${!URLS[@]}"; do
-            M="${NAMES[$i]}"; OUT="/tmp/$M.html"
-            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/${URLS[$i]}" -H 'x-respond-with: html' -H 'x-timeout: 30' -o "$OUT"; then
+            M="${NAMES[$i]}"; OUT="/tmp/$M.md"
+            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/${URLS[$i]}" -H 'x-timeout: 30' -o "$OUT"; then
               echo "OU=$M FETCH_FAILED"; continue
             fi
-            RCNT=$(python -c 'import re,sys; s=open(sys.argv[1],encoding="utf-8",errors="ignore").read(); print(len(re.findall(r"class=\"[^\"]*rcnt",s)))' "$OUT")
-            echo "OU=$M bytes=$(wc -c <"$OUT") rcnt=$RCNT"
-            for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
+            echo "OU=$M bytes=$(wc -c <"$OUT")"
+            head -5 "$OUT" | sed 's/^/  /'
+            for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya' 'Under' 'Over'; do
               if grep -Fqi "$needle" "$OUT"; then echo "  FOUND $needle"; else echo "  MISSING $needle"; fi
             done
           done
