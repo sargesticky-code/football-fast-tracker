@@ -44,6 +44,13 @@ SCORE_SEARCH_RE = re.compile(r"(\d+)\s*-\s*(\d+)")
 DECIMAL_SEARCH_RE = re.compile(r"(?<!\d)(\d+\.\d+)(?!\d)")
 INTEGER_ONLY_RE = re.compile(r"^\d{1,3}%?$")
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+COMPACT_CORNER_RE = re.compile(
+    r"(?<!\d)(?P<under>\d{1,3})\s+(?P<over>\d{1,3})\s*"
+    r"(?P<prediction>under|over)\s*(?P<home>\d{1,2})\s*-\s*"
+    r"(?P<away>\d{1,2}?)(?P<avg>\d{1,2}\.\d{2})"
+    r"(?P<weather>\d{2,3})°[FC]",
+    flags=re.I,
+)
 
 
 def norm(value: str) -> str:
@@ -162,11 +169,47 @@ def _pair_from_line(line: str) -> tuple[str, str] | None:
     return None
 
 
+def _parse_compact_corner_line(line: str) -> dict[str, str]:
+    """Decode Forebet rows collapsed by Jina into one string.
+
+    Example: ``43 57Over5 - 510.5959°F-`` means:
+    Under 43%, Over 57%, prediction Over, score 5-5, avg corners 10.59,
+    weather 59°F.  The away score and average are concatenated, so the away
+    score capture is deliberately non-greedy.
+    """
+    match = COMPACT_CORNER_RE.search(line)
+    if not match:
+        return {}
+
+    under = int(match.group("under"))
+    over = int(match.group("over"))
+    if under + over != 100:
+        return {}
+
+    return {
+        "under": str(under),
+        "over": str(over),
+        "prediction": match.group("prediction").capitalize(),
+        "score": text_score(match.group("home"), match.group("away")),
+        "avg": match.group("avg"),
+    }
+
+
 def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
     if start < 0:
         return {}
 
     end = min(len(page_lines), start + 30)
+
+    # Jina sometimes collapses an entire historical corner row into one line,
+    # e.g. ``57 43Under4 - 47.4784°F-``.  Search only the near fixture window
+    # first so a missing row cannot accidentally borrow the next fixture's data.
+    compact_end = min(len(page_lines), start + 10)
+    for i in range(start, compact_end):
+        compact = _parse_compact_corner_line(page_lines[i])
+        if compact:
+            return compact
+
     pair: tuple[str, str] | None = None
     pair_at = -1
 
