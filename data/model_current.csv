@@ -1,6 +1,6 @@
 ﻿fetched_at_hkt,hkjc_event_id,home,away,model_league,model_home_name,model_away_name,dc_prob_home,dc_prob_draw,dc_prob_away,dc_xg_home,dc_xg_away,dc_prob_over25,pi_prob_home,pi_prob_draw,pi_prob_away,pi_home_rating,pi_away_rating,pi_diff,training_matches,team_match_quality,quality,model_source
-2026-09-16T07:11:33+08:00,FB5152,Atletico Mineiro,Santos,HKJC connected history (SAC),Atletico Mineiro,Santos,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-16T07:11:33+08:00,FB5153,Corinthians,Estudiantes,HKJC connected history (LBC),Corinthians,Estudiantes,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-16T07:11:33+08:00,FB5156,Independiente Rivadavia,Atletico Tucuman,HKJC connected history (AGC),Independiente Rivadavia,Atletico Tucuman,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-16T07:11:33+08:00,FB5180,Botafogo,Gremio,HKJC BD1,Botafogo,Gremio,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-16T07:11:33+08:00,FB5254,Birmingham Legion,New Mexico Utd,HKJC connected history (USL),Birmingham Legion,New Mexico Utd,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-16T09:20:35+08:00,FB5152,Atletico Mineiro,Santos,HKJC connected history (SAC),Atletico Mineiro,Santos,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-16T09:20:35+08:00,FB5153,Corinthians,Estudiantes,HKJC connected history (LBC),Corinthians,Estudiantes,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-16T09:20:35+08:00,FB5156,Independiente Rivadavia,Atletico Tucuman,HKJC connected history (AGC),Independiente Rivadavia,Atletico Tucuman,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-16T09:20:35+08:00,FB5180,Botafogo,Gremio,HKJC BD1,Botafogo,Gremio,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-16T09:20:35+08:00,FB5254,Birmingham Legion,New Mexico Utd,HKJC connected history (USL),Birmingham Legion,New Mexico Utd,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
