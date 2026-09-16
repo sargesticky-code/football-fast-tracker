@@ -83,6 +83,6 @@ jobs:
           echo 'Primary feed is stale; dispatching forebet_daily.yml once.'
           gh workflow run forebet_daily.yml --repo "$GITHUB_REPOSITORY" --ref main
 
-      - name: Fresh feed - no paid recovery scrape needed
+      - name: Fresh feed - no recovery dispatch needed
         if: steps.freshness.outputs.stale != 'true'
-        run: echo 'Primary feed is fresh; watchdog exits without dispatch.'
+        run: echo 'Primary feed is fresh; zero-credit production refresh is not needed.'
