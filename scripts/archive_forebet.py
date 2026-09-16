@@ -13,7 +13,10 @@ PREDICTION_ARCHIVE = Path('data/prediction_archive.csv')
 FIELDS = [
     'captured_at_hkt','hkjc_event_id','hkjc_league','hkjc_home_team','hkjc_away_team',
     'hkjc_home_zh','hkjc_away_zh','hkjc_kickoff_hkt','prob_home','prob_draw','prob_away',
-    'prediction_1x2','predicted_score','avg_goals','power_home','power_away','power_source','power_updated'
+    'prediction_1x2','predicted_score','avg_goals','power_home','power_away','power_source','power_updated',
+    'prediction_ou25','prob_over25','prob_under25','ou_predicted_score',
+    'corner_prediction','corner_prob_under95','corner_prob_over95','corner_predicted_score','avg_corners',
+    'forebet_detail_url'
 ]
 
 
@@ -41,6 +44,16 @@ def map_forebet(r):
         'power_away': clean(r.get('power_away')),
         'power_source': clean(r.get('power_source')),
         'power_updated': clean(r.get('power_updated')),
+        'prediction_ou25': clean(r.get('prediction_ou25')),
+        'prob_over25': clean(r.get('prob_over25')),
+        'prob_under25': clean(r.get('prob_under25')),
+        'ou_predicted_score': clean(r.get('ou_predicted_score')),
+        'corner_prediction': clean(r.get('corner_prediction')),
+        'corner_prob_under95': clean(r.get('corner_prob_under95')),
+        'corner_prob_over95': clean(r.get('corner_prob_over95')),
+        'corner_predicted_score': clean(r.get('corner_predicted_score')),
+        'avg_corners': clean(r.get('avg_corners')),
+        'forebet_detail_url': clean(r.get('forebet_detail_url')),
     }
 
 
@@ -64,6 +77,9 @@ def map_prediction(r):
         'power_away': clean(r.get('opta_away')),
         'power_source': 'Opta Power Rankings' if clean(r.get('opta_home')) or clean(r.get('opta_away')) else '',
         'power_updated': '',
+        'prediction_ou25': '', 'prob_over25': '', 'prob_under25': '', 'ou_predicted_score': '',
+        'corner_prediction': '', 'corner_prob_under95': '', 'corner_prob_over95': '',
+        'corner_predicted_score': '', 'avg_corners': '', 'forebet_detail_url': '',
     }
 
 
@@ -91,7 +107,14 @@ def merge_row(store, row):
         return
     if not all(clean(row.get(k)) for k in ('prob_home','prob_draw','prob_away')):
         return
-    store[event_id] = {k: clean(row.get(k)) for k in FIELDS}
+    incoming = {k: clean(row.get(k)) for k in FIELDS}
+    old = store.get(event_id)
+    # Preserve richer old fields when a later partial capture omits a secondary market.
+    if old:
+        for k in FIELDS:
+            if not incoming.get(k) and old.get(k):
+                incoming[k] = old[k]
+    store[event_id] = incoming
 
 
 def main():
@@ -113,8 +136,7 @@ def main():
     ARCHIVE.parent.mkdir(parents=True, exist_ok=True)
     with ARCHIVE.open('w', encoding='utf-8-sig', newline='') as fh:
         w = csv.DictWriter(fh, fieldnames=FIELDS)
-        w.writeheader()
-        w.writerows(rows)
+        w.writeheader(); w.writerows(rows)
     print(f'FOREBET_ARCHIVE rows={len(rows)} current={len(read_csv(CURRENT))}')
 
 if __name__ == '__main__':
