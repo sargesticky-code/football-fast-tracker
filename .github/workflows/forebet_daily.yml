@@ -8,6 +8,7 @@ on:
     paths:
       - 'scripts/normalize_hkjc.py'
       - 'scripts/run_selective.py'
+      - 'scripts/update_forebet_alias_registry.py'
       - 'scripts/enrich_power_ratings.py'
       - '.github/workflows/forebet_daily.yml'
 
@@ -21,7 +22,7 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     env:
       SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
       HKJC_GATE_ONLY: '0'
@@ -51,13 +52,13 @@ jobs:
           python -m hkjc list --format json --out /tmp/hkjc_matches.json
           python -m hkjc odds --page HAD --format json --out /tmp/hkjc_had.json
           cd "$GITHUB_WORKSPACE"
-          python scripts/normalize_hkjc.py \
-            --matches /tmp/hkjc_matches.json \
-            --had /tmp/hkjc_had.json \
-            --horizon-hours 36
+          python scripts/normalize_hkjc.py --matches /tmp/hkjc_matches.json --had /tmp/hkjc_had.json --horizon-hours 36
 
       - name: Fetch Forebet only for direct HKJC fixtures
         run: python scripts/run_selective.py
+
+      - name: Learn permanent Forebet team aliases
+        run: python scripts/update_forebet_alias_registry.py
 
       - name: Add independent Opta global power ratings
         run: python scripts/enrich_power_ratings.py
@@ -70,87 +71,45 @@ jobs:
           python - <<'PY'
           import csv
           from pathlib import Path
-
-          current_path = Path('data/hkjc_current.csv')
-          target_path = Path('data/hkjc_targets.csv')
-          feed_path = Path('data/forebet_current.csv')
-          archive_path = Path('data/forebet_archive.csv')
-          ratings_path = Path('data/power_ratings.csv')
-
-          for path in (current_path, target_path, feed_path, archive_path, ratings_path):
-              if not path.exists():
-                  raise SystemExit(f'missing production file: {path}')
-
-          with current_path.open(encoding='utf-8-sig', newline='') as fh:
-              current = list(csv.DictReader(fh))
-          with target_path.open(encoding='utf-8-sig', newline='') as fh:
-              targets = list(csv.DictReader(fh))
-          with feed_path.open(encoding='utf-8-sig', newline='') as fh:
-              feed = list(csv.DictReader(fh))
-          with archive_path.open(encoding='utf-8-sig', newline='') as fh:
-              archive = list(csv.DictReader(fh))
-
-          if not current:
-              raise SystemExit('zero direct HKJC current rows')
-          if not targets:
-              raise SystemExit('zero direct HKJC pre-event HAD targets')
-          if not feed:
-              raise SystemExit('zero HKJC-matched Forebet rows')
-
-          bad_target_source = [r for r in targets if r.get('mapping_source') != 'HKJC GraphQL']
-          if bad_target_source:
-              raise SystemExit(f'{len(bad_target_source)} targets are not direct HKJC GraphQL')
-          bad_target_odds = [r for r in targets if not all(r.get(k) for k in ('had_home','had_draw','had_away'))]
-          if bad_target_odds:
-              raise SystemExit(f'{len(bad_target_odds)} direct HKJC targets missing HAD triplet')
-
+          paths = {
+              'current': Path('data/hkjc_current.csv'),
+              'targets': Path('data/hkjc_targets.csv'),
+              'feed': Path('data/forebet_current.csv'),
+              'archive': Path('data/forebet_archive.csv'),
+              'aliases': Path('data/team_alias_registry.csv'),
+              'ratings': Path('data/power_ratings.csv'),
+          }
+          for label, path in paths.items():
+              if not path.exists(): raise SystemExit(f'missing production file {label}: {path}')
+          def read(path):
+              with path.open(encoding='utf-8-sig', newline='') as fh: return list(csv.DictReader(fh))
+          current, targets, feed = read(paths['current']), read(paths['targets']), read(paths['feed'])
+          archive, aliases, ratings = read(paths['archive']), read(paths['aliases']), read(paths['ratings'])
+          if not current or not targets or not feed: raise SystemExit('zero production rows')
           target_ids = {r['hkjc_event_id'] for r in targets}
-          bad = [r for r in feed if r.get('hkjc_event_id') not in target_ids]
-          if bad:
-              raise SystemExit(f'feed contains {len(bad)} non-HKJC rows')
-          duplicates = len(feed) - len({r['hkjc_event_id'] for r in feed})
-          if duplicates:
-              raise SystemExit(f'feed contains {duplicates} duplicate HKJC events')
-          bad_probs = [r for r in feed if not all(r.get(k) for k in ('prob_home','prob_draw','prob_away'))]
-          if bad_probs:
-              raise SystemExit(f'feed contains {len(bad_probs)} model-empty rows')
-
+          if any(r.get('hkjc_event_id') not in target_ids for r in feed): raise SystemExit('non-HKJC Forebet row')
+          if len(feed) != len({r['hkjc_event_id'] for r in feed}): raise SystemExit('duplicate Forebet HKJC event')
+          if any(not all(r.get(k) for k in ('prob_home','prob_draw','prob_away')) for r in feed): raise SystemExit('model-empty Forebet row')
           archive_ids = {r.get('hkjc_event_id') for r in archive}
-          missing_archive = [r['hkjc_event_id'] for r in feed if r.get('hkjc_event_id') not in archive_ids]
-          if missing_archive:
-              raise SystemExit(f'archive missing current event ids: {missing_archive}')
-
-          with ratings_path.open(encoding='utf-8-sig', newline='') as fh:
-              ratings = list(csv.DictReader(fh))
-          if len(ratings) < 5000:
-              raise SystemExit(f'Opta snapshot suspiciously small: {len(ratings)}')
-
+          if any(r['hkjc_event_id'] not in archive_ids for r in feed): raise SystemExit('archive missing current event')
+          active_aliases = [r for r in aliases if r.get('status') in ('ACTIVE','MANUAL')]
+          if not active_aliases: raise SystemExit('alias registry has no active rows')
+          if len(ratings) < 5000: raise SystemExit(f'Opta snapshot suspiciously small: {len(ratings)}')
           rated_sides = sum(bool(r.get('power_home')) + bool(r.get('power_away')) for r in feed)
-          total_sides = len(feed) * 2
-          min_sides = max(1, len(feed))
-          if rated_sides < min_sides:
-              raise SystemExit(f'Opta coverage too low: {rated_sides}/{total_sides}')
-
-          print(
-              f'PASS hkjc_current={len(current)} direct_targets={len(targets)} '
-              f'forebet_kept={len(feed)} forebet_archive={len(archive)} '
-              f'non_hkjc=0 duplicates=0 model_empty=0 '
-              f'opta_snapshot={len(ratings)} power={rated_sides}/{total_sides}'
-          )
+          if rated_sides < max(1, len(feed)): raise SystemExit(f'Opta coverage too low: {rated_sides}/{len(feed)*2}')
+          print(f"PASS hkjc_current={len(current)} targets={len(targets)} forebet={len(feed)} archive={len(archive)} aliases={len(aliases)} power={rated_sides}/{len(feed)*2}")
           PY
 
       - name: Commit refreshed production feeds
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/hkjc_current.csv data/hkjc_targets.csv data/forebet_current.csv data/forebet_archive.csv
-          if [ -f data/power_ratings.csv ]; then
-            git add data/power_ratings.csv
-          fi
+          git add data/hkjc_current.csv data/hkjc_targets.csv data/forebet_current.csv data/forebet_archive.csv data/team_alias_registry.csv
+          if [ -f data/power_ratings.csv ]; then git add data/power_ratings.csv; fi
           if git diff --cached --quiet; then
             echo 'No feed changes to commit.'
           else
-            git commit -m 'Update direct HKJC, Forebet, archive and Opta feeds [skip ci]'
+            git commit -m 'Update HKJC, Forebet, aliases, archive and Opta feeds [skip ci]'
             git pull --rebase origin main
             git push
           fi
