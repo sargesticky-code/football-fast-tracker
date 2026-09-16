@@ -54,13 +54,18 @@ def fetch_markdown(url: str, label: str) -> str | None:
     try:
         r = requests.get(
             JINA + url,
-            headers={"x-timeout": "30", "User-Agent": "Mozilla/5.0"},
+            headers={
+                "x-timeout": "30",
+                "User-Agent": "Mozilla/5.0",
+                "X-No-Cache": "true",
+                "X-Cache-Tolerance": "0",
+            },
             timeout=TIMEOUT,
         )
     except Exception as exc:
         print(f"WARN Jina {label} failed: {exc}")
         return None
-    print(f"FOREBET_MARKET_JINA label={label} status={r.status_code} bytes={len(r.text)}")
+    print(f"FOREBET_MARKET_JINA label={label} status={r.status_code} bytes={len(r.text)} fresh=1")
     if r.status_code != 200:
         return None
     return r.text
@@ -148,7 +153,7 @@ def main() -> int:
     calls = 0
     for d in dates:
         ou_url = f"https://www.forebet.com/en/football-predictions/under-over-25-goals/{d}/by-league"
-        corner_url = f"https://www.forebet.com/en/football-predictions/corners/{d}"
+        corner_url = f"https://www.forebet.com/en/football-predictions/corners/{d}/by-league"
         ou = fetch_markdown(ou_url, f"ou25_{d}")
         calls += 1
         corners = fetch_markdown(corner_url, f"corners95_{d}")
