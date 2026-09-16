@@ -2,9 +2,10 @@
 
 Durable routine:
 - zero ScraperAPI credits;
-- one fresh full-HTML Jina request per market per Forebet date;
+- one fresh rendered Jina request per market per Forebet date;
+- browser rendering waits for Forebet match rows and extracts only `.rcnt` rows;
 - exact Forebet home/away names from the already-matched 1X2 feed are the join key;
-- tolerant text parsing handles teams/probabilities split across HTML text nodes;
+- tolerant text parsing handles teams/probabilities split across rendered text nodes;
 - no league-specific or event-specific routes;
 - archived secondary-market values are preserved by restore_active_forebet.py when
   a later Forebet page omits a fixture after kickoff;
@@ -19,13 +20,12 @@ import unicodedata
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parent.parent
 FEED = ROOT / "data" / "forebet_current.csv"
 JINA = "https://r.jina.ai/"
 TIMEOUT = 90
-MIN_PAGE_TEXT = 5_000
+MIN_PAGE_TEXT = 500
 
 EXTRA_FIELDS = [
     "ou_predicted_score",
@@ -57,45 +57,35 @@ def text_score(home: str, away: str) -> str:
 
 
 def fetch_page_text(url: str, label: str) -> str | None:
-    """Ask Jina for the full rendered HTML, then flatten it locally to text.
+    """Render Forebet in Jina's browser and extract the actual match-row nodes.
 
-    The 1X2 production path already uses x-respond-with=html successfully.  Using
-    Jina's default Markdown here produced much smaller responses and silently
-    omitted valid Forebet corner rows, so secondary markets now use the same full
-    HTML strategy.
+    Forebet's market pages are dynamic.  Asking Jina for raw HTML returned only a
+    ~6 KB shell with zero `.rcnt` rows.  Browser-rendered Markdown plus a wait and
+    target selector keeps the rendered rows while dropping navigation noise.
     """
+    headers = {
+        "X-Engine": "browser",
+        "X-Return-Format": "markdown",
+        "X-Wait-For-Selector": ".rcnt",
+        "X-Target-Selector": ".rcnt",
+        "X-Respond-Timing": "mutation-idle",
+        "X-Timeout": "45",
+        "User-Agent": "Mozilla/5.0",
+        "X-Cache-Tolerance": "0",
+    }
     try:
-        r = requests.get(
-            JINA + url,
-            headers={
-                "x-respond-with": "html",
-                "x-timeout": "30",
-                "User-Agent": "Mozilla/5.0",
-                "X-No-Cache": "true",
-                "X-Cache-Tolerance": "0",
-            },
-            timeout=TIMEOUT,
-        )
+        r = requests.get(JINA + url, headers=headers, timeout=TIMEOUT)
     except Exception as exc:
         print(f"WARN Jina {label} failed: {exc}")
         return None
-    if r.status_code != 200:
-        print(
-            f"FOREBET_MARKET_JINA label={label} status={r.status_code} "
-            f"html_bytes={len(r.text)} fresh=1"
-        )
-        return None
-    soup = BeautifulSoup(r.text, "lxml")
-    plain = soup.get_text("\n", strip=True)
-    rcnt = len(soup.select(".rcnt"))
     print(
         f"FOREBET_MARKET_JINA label={label} status={r.status_code} "
-        f"html_bytes={len(r.text)} text_bytes={len(plain)} rcnt={rcnt} fresh=1"
+        f"bytes={len(r.text)} engine=browser target=.rcnt fresh=1"
     )
-    if len(plain) < MIN_PAGE_TEXT:
-        print(f"WARN Forebet {label} render too small text_bytes={len(plain)}")
+    if r.status_code != 200 or len(r.text) < MIN_PAGE_TEXT:
+        print(f"WARN Forebet {label} rendered market rows unavailable")
         return None
-    return plain
+    return r.text
 
 
 def lines(text: str) -> list[str]:
@@ -103,7 +93,7 @@ def lines(text: str) -> list[str]:
 
 
 def find_fixture_index(page_lines: list[str], home: str, away: str) -> int:
-    """Find a fixture even when HTML flattening puts home/away on separate lines."""
+    """Find a fixture even when rendering puts home/away on separate lines."""
     h, a = norm(home), norm(away)
     if not h or not a:
         return -1
@@ -136,12 +126,7 @@ def _pair_from_line(line: str) -> tuple[str, str] | None:
 
 
 def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
-    """Parse one Forebet list row from a tolerant text window.
-
-    Forebet/Jina may render the two probabilities either on one line or as two
-    adjacent text nodes, and may put `Under 5-4` on one line.  Requiring an exact
-    `55 45` line was therefore too brittle.
-    """
+    """Parse one Forebet list row from a tolerant rendered-text window."""
     if start < 0:
         return {}
 
@@ -154,7 +139,6 @@ def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
         if pair:
             pair_at = i
             break
-        # Probabilities are sometimes separate text nodes, e.g. `55` then `45`.
         if i + 1 < end:
             left = page_lines[i].strip().rstrip("%")
             right = page_lines[i + 1].strip().rstrip("%")
@@ -192,7 +176,6 @@ def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
                 score_at = i
                 continue
         if score:
-            # Avg goals/corners is normally the first decimal after predicted score.
             m_avg = DECIMAL_SEARCH_RE.search(line if i > score_at else "")
             if m_avg:
                 avg = m_avg.group(1)
