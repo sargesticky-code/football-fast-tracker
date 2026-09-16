@@ -1,15 +1,17 @@
 """Production entrypoint for the HKJC-gated Forebet feed.
 
-Architecture:
-- HKJC GraphQL defines the current bettable fixture universe.
-- A persistent Forebet -> HKJC team-alias registry is loaded before matching.
-- Forebet pages are generic source pages; no league-specific routing is allowed.
-- ScraperAPI is retained only as a bounded transport fallback while the free
-  rendered-source path is being validated.
+Durable architecture:
+- HKJC GraphQL defines the bettable fixture universe.
+- Persistent Forebet -> HKJC aliases are loaded before matching.
+- Forebet is fetched through generic Jina-rendered public pages only.
+- No league-specific routes and no ScraperAPI calls are used in routine production.
+- The existing rolling archive preserves the last model for an event if a later
+  public-page refresh temporarily omits it.
 """
 from __future__ import annotations
 
 import csv
+import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -18,10 +20,12 @@ import scrape_forebet as feed
 DIRECT_TARGETS = Path("data/hkjc_targets.csv")
 ALIAS_REGISTRY = Path("data/team_alias_registry.csv")
 DIRECT_MAX_AGE_MINUTES = 180
-feed.MAX_COST = "10"
+JINA_PREFIX = "https://r.jina.ai/"
+JINA_TIMEOUT = 90
 
 _legacy_load_targets = feed.load_hkjc_targets
 _original_attach = feed.attach_hkjc_target
+_GLOBAL_HTML_CACHE: str | None = None
 
 
 def _parse_iso(value: str) -> datetime | None:
@@ -38,7 +42,6 @@ def _parse_iso(value: str) -> datetime | None:
 
 
 def _forebet_date_from_hkt(kickoff_hkt: str, fallback: str) -> str:
-    """Translate HKT kickoff to the calendar date used by Forebet pages."""
     value = (kickoff_hkt or "").strip()
     if not value:
         return fallback
@@ -52,21 +55,21 @@ def _forebet_date_from_hkt(kickoff_hkt: str, fallback: str) -> str:
     return (dt - timedelta(hours=8)).date().isoformat()
 
 
-def _requested_page_date(_value: str, fallback: str) -> str:
-    return fallback
+def _row_date(value: str, fallback: str) -> str:
+    """Use Forebet row datetime when present; otherwise use the requested page date."""
+    value = (value or "").strip()
+    m = re.search(r"(\d{4}-\d{2}-\d{2})", value)
+    return m.group(1) if m else fallback
 
 
-feed.normalize_date = _requested_page_date
+feed.normalize_date = _row_date
 
 
 def _load_alias_registry() -> int:
-    """Load persistent aliases into the normalizer before any fixture matching."""
     if not ALIAS_REGISTRY.exists():
         print("FOREBET_ALIAS_REGISTRY rows=0 status=missing", flush=True)
         return 0
-
-    loaded = 0
-    conflicts = 0
+    loaded = conflicts = 0
     with ALIAS_REGISTRY.open(encoding="utf-8-sig", newline="") as fh:
         for row in csv.DictReader(fh):
             status = (row.get("status") or "").strip().upper()
@@ -77,17 +80,12 @@ def _load_alias_registry() -> int:
             canonical = (row.get("canonical_hkjc_name") or "").strip()
             if not alias or not canonical:
                 continue
-            # Resolve using the base normalizer before inserting the new alias.
             alias_key = feed.normalize_team(alias)
             canonical_value = feed.normalize_team(canonical)
             if alias_key and canonical_value:
                 feed.ALIASES[alias_key] = canonical_value
                 loaded += 1
-
-    print(
-        f"FOREBET_ALIAS_REGISTRY rows={loaded} conflicts_skipped={conflicts}",
-        flush=True,
-    )
+    print(f"FOREBET_ALIAS_REGISTRY rows={loaded} conflicts_skipped={conflicts}", flush=True)
     return loaded
 
 
@@ -95,14 +93,14 @@ _load_alias_registry()
 
 
 def _translate_target_dates(rows):
-    translated = []
+    out = []
     for row in rows:
         item = dict(row)
         item["match_date"] = _forebet_date_from_hkt(
             item.get("kickoff_hkt", ""), item.get("match_date", "")
         )
-        translated.append(item)
-    return translated
+        out.append(item)
+    return out
 
 
 def _load_direct_or_fallback():
@@ -112,34 +110,25 @@ def _load_direct_or_fallback():
                 rows = list(csv.DictReader(fh))
             usable = [
                 r for r in rows
-                if r.get("hkjc_event_id")
-                and r.get("match_date")
-                and r.get("home_en")
-                and r.get("away_en")
+                if r.get("hkjc_event_id") and r.get("match_date")
+                and r.get("home_en") and r.get("away_en")
                 and all(r.get(k) for k in ("had_home", "had_draw", "had_away"))
             ]
             stamps = [_parse_iso(r.get("fetched_at_hkt", "")) for r in usable]
             stamps = [x for x in stamps if x is not None]
             if usable and stamps:
-                latest = max(stamps)
-                age = (datetime.now(timezone.utc) - latest).total_seconds() / 60
+                age = (datetime.now(timezone.utc) - max(stamps)).total_seconds() / 60
                 if -10 <= age <= DIRECT_MAX_AGE_MINUTES:
                     usable = _translate_target_dates(usable)
                     print(
-                        f"HKJC_GATE_SOURCE direct_graphql rows={len(usable)} "
-                        f"age_min={age:.1f} forebet_dates="
-                        f"{','.join(sorted({r['match_date'] for r in usable}))}",
+                        f"HKJC_GATE_SOURCE direct_graphql rows={len(usable)} age_min={age:.1f} "
+                        f"forebet_dates={','.join(sorted({r['match_date'] for r in usable}))}",
                         flush=True,
                     )
                     return usable
-                print(
-                    f"WARN: direct HKJC target file stale age_min={age:.1f}; "
-                    "using legacy snapshot fallback",
-                    flush=True,
-                )
+                print(f"WARN: direct HKJC targets stale age_min={age:.1f}; using snapshot fallback", flush=True)
         except Exception as exc:
-            print(f"WARN: direct HKJC targets invalid ({exc}); using fallback", flush=True)
-
+            print(f"WARN: direct HKJC targets invalid ({exc}); using snapshot fallback", flush=True)
     print("HKJC_GATE_SOURCE legacy_google_snapshot_fallback", flush=True)
     return _translate_target_dates(_legacy_load_targets())
 
@@ -147,39 +136,57 @@ def _load_direct_or_fallback():
 feed.load_hkjc_targets = _load_direct_or_fallback
 
 
+def _jina_html(url: str, label: str) -> str | None:
+    try:
+        r = feed.requests.get(
+            JINA_PREFIX + url,
+            headers={"x-respond-with": "html", "x-timeout": "30", "User-Agent": "Mozilla/5.0"},
+            timeout=JINA_TIMEOUT,
+        )
+    except Exception as exc:
+        print(f"ERROR: Jina Forebet {label} failed: {exc}", file=feed.sys.stderr)
+        return None
+    print(f"FOREBET_JINA label={label} status={r.status_code} bytes={len(r.text)}", flush=True)
+    if r.status_code != 200 or "rcnt" not in r.text:
+        return None
+    return r.text
+
+
+def _global_forebet_html() -> str:
+    global _GLOBAL_HTML_CACHE
+    if _GLOBAL_HTML_CACHE is not None:
+        return _GLOBAL_HTML_CACHE
+    # These are generic all-predictions views, not league-specific exceptions.
+    urls = [
+        "https://www.forebet.com/en/football-predictions/predictions-1x2?start=2",
+        "https://www.forebet.com/en/football-predictions?start=1",
+    ]
+    parts: list[str] = []
+    for i, url in enumerate(urls, 1):
+        html = _jina_html(url, f"global_{i}")
+        if html:
+            parts.append(html)
+    _GLOBAL_HTML_CACHE = "\n".join(parts)
+    return _GLOBAL_HTML_CACHE
+
+
 def _fetch_forebet_generic_date(match_date: str):
-    """Generic dated Forebet transport. No league-specific supplemental routes."""
-    if not feed.SCRAPERAPI_KEY:
-        print("FATAL: missing SCRAPERAPI_KEY GitHub Actions secret", file=feed.sys.stderr)
-        return None, None
-    url = (
+    """Combine the dated page with generic all-predictions pages; zero paid credits."""
+    parts: list[str] = []
+    dated_url = (
         "https://www.forebet.com/en/football-predictions/"
         f"predictions-1x2/{match_date}/by-league"
     )
-    params = {
-        "api_key": feed.SCRAPERAPI_KEY,
-        "url": url,
-        "max_cost": feed.MAX_COST,
-    }
-    try:
-        r = feed.requests.get(feed.SCRAPERAPI_URL, params=params, timeout=70)
-    except Exception as exc:
-        print(f"ERROR: Forebet request failed for {match_date}: {exc}", file=feed.sys.stderr)
-        return None, None
-
-    raw_cost = r.headers.get("sa-credit-cost")
-    try:
-        cost = int(float(raw_cost)) if raw_cost else None
-    except ValueError:
-        cost = None
-    print(
-        f"FOREBET_GENERIC_DATE date={match_date} status={r.status_code} "
-        f"credit_cost={raw_cost or 'unknown'} bytes={len(r.text)}",
-        flush=True,
-    )
-    if r.status_code != 200 or "rcnt" not in r.text:
-        return None, cost
-    return r.text, cost
+    dated = _jina_html(dated_url, f"date_{match_date}")
+    if dated:
+        parts.append(dated)
+    global_html = _global_forebet_html()
+    if global_html:
+        parts.append(global_html)
+    if not parts:
+        print(f"ERROR: zero free Forebet source pages for {match_date}", file=feed.sys.stderr)
+        return None, 0
+    return "\n".join(parts), 0
 
 
 feed.fetch_forebet_date = _fetch_forebet_generic_date
