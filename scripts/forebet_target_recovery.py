@@ -1,9 +1,11 @@
 """Target-aware recovery for HKJC fixtures omitted from Forebet's 1X2 index pages.
 
 Forebet's dated 1X2 page does not always expose every league in the first
-rendered batch.  This module uses other *date-wide Forebet index pages* only as
-an index to discover match-detail URLs, then reads the 1X2 model from each
-matched detail page.  It is generic: no country/league route is hard-coded.
+rendered batch. Recovery therefore has two generic layers:
+1) append Forebet's own current 1X2 value index when it supplies usable models;
+2) use date-wide cards/corners indexes only to discover match-detail URLs for
+   still-missing HKJC targets, then read the 1X2 model from those detail pages.
+No country/league-specific route table is required.
 """
 from __future__ import annotations
 
@@ -44,8 +46,6 @@ def _detail_url(row) -> str:
     anchor = row.find("a", href=MATCH_LINK_RE)
     if anchor and anchor.get("href"):
         return urljoin(BASE, str(anchor.get("href")))
-    # Some Forebet renders put the fixture href on a nested element outside the
-    # obvious team labels but still inside the same rcnt row.
     for anchor in row.find_all("a", href=True):
         href = str(anchor.get("href") or "")
         if "/football/matches/" in href:
@@ -117,13 +117,43 @@ def install(production) -> None:
             )
             return html, cost
 
+        extra_parts: list[str] = []
+
+        # Forebet's /values page is another first-party 1X2 index and often
+        # exposes leagues omitted from the first dated 1X2 render. Because the
+        # normal HKJC date/team gate is still applied, unrelated rows are ignored.
+        values_html = production._jina_html(
+            "https://www.forebet.com/en/values", f"recovery_values_{match_date}"
+        )
+        if values_html:
+            values_ids = _usable_ids(production, values_html, match_date, date_targets)
+            new_values = (values_ids & missing_ids)
+            if new_values:
+                extra_parts.append(values_html)
+                covered |= new_values
+                missing_ids = required - covered
+            print(
+                f"FOREBET_VALUE_RECOVERY date={match_date} "
+                f"matched={len(values_ids)} new={len(new_values)} "
+                f"remaining={len(missing_ids)}",
+                flush=True,
+            )
+
+        if not missing_ids:
+            final_html = "\n".join(
+                [part for part in (html or "", *extra_parts) if part]
+            )
+            print(
+                f"FOREBET_TARGET_RECOVERY date={match_date} needed={len(required - _usable_ids(production, html, match_date, date_targets))} "
+                f"recovered={len(required - covered)} unresolved=0",
+                flush=True,
+            )
+            return (final_html or None), cost
+
         target_by_id = {
             str(t.get("hkjc_event_id") or "").strip(): t for t in date_targets
         }
         discovered: dict[str, str] = {}
-        # These are generic, date-wide Forebet indexes.  They tend to expose
-        # leagues omitted from the first 1X2 render, while keeping recovery
-        # independent of any country/league-specific route table.
         index_urls = [
             (
                 "cards",
@@ -159,7 +189,7 @@ def install(production) -> None:
             )
 
         detail_parts: list[str] = []
-        recovered: set[str] = set()
+        recovered_detail: set[str] = set()
         for event_id in sorted(discovered)[:MAX_DETAIL_RECOVERY]:
             detail_url = discovered[event_id]
             detail_html = production._jina_html(
@@ -172,13 +202,16 @@ def install(production) -> None:
                 continue
             if event_id in _usable_ids(production, detail_html, match_date, [target]):
                 detail_parts.append(detail_html)
-                recovered.add(event_id)
+                recovered_detail.add(event_id)
 
-        final_html = "\n".join([part for part in (html or "", *detail_parts) if part])
-        unresolved = missing_ids - recovered
+        recovered_total = (required - missing_ids) | recovered_detail
+        unresolved = required - covered - recovered_detail
+        final_html = "\n".join(
+            [part for part in (html or "", *extra_parts, *detail_parts) if part]
+        )
         print(
-            f"FOREBET_TARGET_RECOVERY date={match_date} needed={len(missing_ids)} "
-            f"discovered={len(discovered)} recovered={len(recovered)} "
+            f"FOREBET_TARGET_RECOVERY date={match_date} needed={len(required - _usable_ids(production, html, match_date, date_targets))} "
+            f"discovered={len(discovered)} recovered={len(recovered_total)} "
             f"unresolved={len(unresolved)}",
             flush=True,
         )
