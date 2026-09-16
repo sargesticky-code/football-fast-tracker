@@ -1,9 +1,9 @@
-name: HKJC Hourly Market Feed
+name: HKJC Live Market Feed
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '13 * * * *' # hourly; official HKJC GraphQL only, no ScraperAPI cost
+    - cron: '3,13,23,33,43,53 * * * *' # every 10 minutes; official HKJC GraphQL only, no ScraperAPI cost
   push:
     paths:
       - '.github/workflows/hkjc_hourly.yml'
@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: hkjc-hourly-market-feed
+  group: hkjc-live-market-feed
   cancel-in-progress: true
 
 jobs:
@@ -52,7 +52,7 @@ jobs:
             --had /tmp/hkjc_had.json \
             --horizon-hours 36
 
-      - name: Validate live HKJC market feed
+      - name: Validate HKJC market feed
         run: |
           python - <<'PY'
           import csv
@@ -76,7 +76,7 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No HKJC changes to commit.'
           else
-            git commit -m 'Refresh hourly HKJC market feed [skip ci]'
+            git commit -m 'Refresh HKJC live market feed [skip ci]'
             git pull --rebase origin main
             git push
           fi
