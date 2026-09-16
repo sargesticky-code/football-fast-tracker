@@ -1,4 +1,4 @@
-name: Probe Jina Forebet Detail
+name: Probe Jina Forebet Markets
 on:
   workflow_dispatch:
   push:
@@ -9,21 +9,22 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
-      - name: Inspect generic Forebet match detail markdown
+      - name: Probe generic Forebet market pages
         shell: bash
         run: |
           set -euo pipefail
-          TARGET='https://www.forebet.com/en/football/matches/wahda-abu-dhabi-kuwait-sc-2549766'
-          curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" -H 'x-timeout: 25' -o /tmp/m.txt
-          echo "bytes=$(wc -c </tmp/m.txt)"
-          python - <<'PY'
-          s=open('/tmp/m.txt',encoding='utf-8',errors='ignore').read()
-          for needle in ['Prob. %','Under/Over','2.5','9.5','Avg. corners','Wahda Abu Dhabi Kuwait SC']:
-              print('NEEDLE',needle,'COUNT',s.count(needle))
-          for marker in ['Under/Over\n\n2.5','Under/Over\n\n9.5','Avg. corners']:
-              i=s.find(marker)
-              print('\nMARKER',repr(marker),'AT',i)
-              if i>=0: print(s[max(0,i-450):i+1200])
-          PY
+          declare -A URLS
+          URLS[one]='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
+          URLS[ou]='https://www.forebet.com/en/football-predictions/under-over-25-goals/2026-09-16/by-league'
+          URLS[corners]='https://www.forebet.com/en/football-predictions/corners'
+          for M in one ou corners; do
+            OUT="/tmp/$M.html"
+            curl -LsS --fail --max-time 90 "https://r.jina.ai/${URLS[$M]}" -H 'x-respond-with: html' -H 'x-timeout: 25' -o "$OUT"
+            RCNT=$(python -c 'import re,sys; s=open(sys.argv[1],encoding="utf-8",errors="ignore").read(); print(len(re.findall(r"class=\"[^\"]*rcnt",s)))' "$OUT")
+            echo "MARKET=$M bytes=$(wc -c <"$OUT") rcnt=$RCNT"
+            for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
+              if grep -Fqi "$needle" "$OUT"; then echo "  FOUND $needle"; else echo "  MISSING $needle"; fi
+            done
+          done
