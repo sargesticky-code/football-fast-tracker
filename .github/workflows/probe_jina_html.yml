@@ -1,4 +1,4 @@
-name: Probe Jina Forebet Markets
+name: Probe Jina Forebet Routine Markets
 on:
   workflow_dispatch:
   push:
@@ -9,19 +9,26 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 8
     steps:
-      - name: Probe generic Forebet market pages
+      - name: Probe fixed today and tomorrow Forebet market pages
         shell: bash
         run: |
           set -euo pipefail
-          declare -A URLS
-          URLS[one]='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
-          URLS[ou]='https://www.forebet.com/en/football-predictions/under-over-25-goals/2026-09-16/by-league'
-          URLS[corners]='https://www.forebet.com/en/football-predictions/corners'
-          for M in one ou corners; do
-            OUT="/tmp/$M.html"
-            curl -LsS --fail --max-time 90 "https://r.jina.ai/${URLS[$M]}" -H 'x-respond-with: html' -H 'x-timeout: 25' -o "$OUT"
+          URLS=(
+            'https://www.forebet.com/en/football-tips-and-predictions-for-today/predictions-1x2'
+            'https://www.forebet.com/en/football-tips-and-predictions-for-tomorrow/predictions-1x2'
+            'https://www.forebet.com/en/football-tips-and-predictions-for-today/predictions-under-over-goals'
+            'https://www.forebet.com/en/football-tips-and-predictions-for-tomorrow/under-over-25-goals/'
+            'https://www.forebet.com/en/football-tips-and-predictions-for-today/corners'
+            'https://www.forebet.com/en/football-tips-and-predictions-for-tomorrow/corners'
+          )
+          NAMES=(today_1x2 tomorrow_1x2 today_ou tomorrow_ou today_corners tomorrow_corners)
+          for i in "${!URLS[@]}"; do
+            M="${NAMES[$i]}"; OUT="/tmp/$M.html"
+            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/${URLS[$i]}" -H 'x-respond-with: html' -H 'x-timeout: 25' -o "$OUT"; then
+              echo "MARKET=$M FETCH_FAILED"; continue
+            fi
             RCNT=$(python -c 'import re,sys; s=open(sys.argv[1],encoding="utf-8",errors="ignore").read(); print(len(re.findall(r"class=\"[^\"]*rcnt",s)))' "$OUT")
             echo "MARKET=$M bytes=$(wc -c <"$OUT") rcnt=$RCNT"
             for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
