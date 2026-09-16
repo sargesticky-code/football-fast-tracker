@@ -103,8 +103,18 @@ jobs:
             echo 'No core feed changes to checkpoint.'
           else
             git commit -m 'Checkpoint core HKJC and Forebet feeds [skip ci]'
-            git pull --rebase origin main
-            git push
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push; then
+                break
+              fi
+              if [ "$attempt" -eq 4 ]; then
+                echo 'Core checkpoint push failed after retries.' >&2
+                exit 1
+              fi
+              echo "Core checkpoint push raced with another writer; retrying ($attempt/4)."
+              sleep 2
+            done
           fi
 
       - name: Add independent Opta global power ratings
@@ -112,7 +122,6 @@ jobs:
         run: python scripts/enrich_power_ratings.py
 
       - name: Add Forebet O-U and corner signals from free match pages
-        continue-on-error: true
         run: python scripts/enrich_forebet_markets.py
 
       - name: Normalize Forebet scores for Google Sheets
@@ -184,6 +193,16 @@ jobs:
             echo 'No feed changes to commit.'
           else
             git commit -m 'Update HKJC and zero-credit Forebet model feeds [skip ci]'
-            git pull --rebase origin main
-            git push
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push; then
+                break
+              fi
+              if [ "$attempt" -eq 4 ]; then
+                echo 'Final feed push failed after retries.' >&2
+                exit 1
+              fi
+              echo "Final feed push raced with another writer; retrying ($attempt/4)."
+              sleep 2
+            done
           fi
