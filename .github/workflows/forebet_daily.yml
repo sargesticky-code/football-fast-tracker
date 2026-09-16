@@ -11,6 +11,7 @@ on:
       - 'scripts/restore_active_forebet.py'
       - 'scripts/update_forebet_alias_registry.py'
       - 'scripts/enrich_forebet_markets.py'
+      - 'scripts/normalize_forebet_text.py'
       - 'scripts/enrich_power_ratings.py'
       - 'scripts/archive_forebet.py'
       - '.github/workflows/forebet_daily.yml'
@@ -70,6 +71,9 @@ jobs:
 
       - name: Add Forebet O-U and corner signals from free match pages
         run: python scripts/enrich_forebet_markets.py
+
+      - name: Normalize Forebet scores for Google Sheets
+        run: python scripts/normalize_forebet_text.py
 
       - name: Persist rolling Forebet event archive
         run: python scripts/archive_forebet.py --bootstrap-ref 3e91d22ef028fe4ec230e205e1a73efece76d568
