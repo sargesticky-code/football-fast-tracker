@@ -19,7 +19,10 @@ jobs:
           curl -L --fail --max-time 90 "https://r.jina.ai/$TARGET" \
             -H 'x-respond-with: html' -H 'x-timeout: 30' -o /tmp/f.html
           echo "bytes=$(wc -c </tmp/f.html) rcnt=$(grep -o 'class="[^"]*rcnt' /tmp/f.html | wc -l)"
-          grep -o 'data-next-page-url="[^"]*"' /tmp/f.html | head -5 || true
+          echo '--- pagination attrs ---'
+          grep -oE 'data-next-page-url="[^"]+"|href="[^"]*start=[^"]*"' /tmp/f.html | head -30 || true
+          echo '--- next anchors ---'
+          grep -oiE '<a[^>]+href="[^"]+"[^>]*>[^<]*(next|›|»)[^<]*</a>' /tmp/f.html | head -10 || true
           for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
             if grep -Fqi "$needle" /tmp/f.html; then echo "FOUND $needle"; else echo "MISSING $needle"; fi
           done
