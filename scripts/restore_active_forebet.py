@@ -1,11 +1,16 @@
 """Restore last-known Forebet models for still-active HKJC fixtures.
 
-This is a generic resilience layer, not a league/event exception.  A free Jina
+This is a generic resilience layer, not a league/event exception. A free Jina
 refresh may legitimately be partial; if an HKJC event is still in today's target
 universe and we previously captured a valid Forebet model for the same FBxxxx,
-carry that model back into forebet_current.csv.  Current HKJC identity/odds are
+carry that model back into forebet_current.csv. Current HKJC identity/odds are
 refreshed from hkjc_targets.csv while the old Forebet capture timestamp remains,
 so model age stays observable.
+
+For rows that were refreshed successfully, preserve any previously captured
+secondary-market fields (O/U and corners) when the later Forebet refresh omits
+them. Forebet can remove already-started fixtures from market list pages; that
+must not erase a valid earlier capture.
 """
 from __future__ import annotations
 
@@ -17,6 +22,12 @@ ROOT = Path(__file__).resolve().parent.parent
 CURRENT = ROOT / "data" / "forebet_current.csv"
 ARCHIVE = ROOT / "data" / "forebet_archive.csv"
 TARGETS = ROOT / "data" / "hkjc_targets.csv"
+
+SECONDARY_FIELDS = (
+    "prediction_ou25", "prob_over25", "prob_under25", "ou_predicted_score",
+    "corner_prediction", "corner_prob_under95", "corner_prob_over95",
+    "corner_predicted_score", "avg_corners", "forebet_detail_url",
+)
 
 
 def clean(value) -> str:
@@ -98,6 +109,22 @@ def main() -> int:
     archive_by_id = {clean(r.get("hkjc_event_id")): r for r in archive if clean(r.get("hkjc_event_id"))}
     target_by_id = {clean(r.get("hkjc_event_id")): r for r in targets if clean(r.get("hkjc_event_id"))}
 
+    # A fresh 1X2 row can coexist with an older archived O/U/corner capture.
+    # Fill only blanks: fresh values always win, archive is resilience fallback.
+    secondary_rows = secondary_fields = 0
+    for event_id, row in current_by_id.items():
+        old = archive_by_id.get(event_id)
+        if not old:
+            continue
+        changed = False
+        for field in SECONDARY_FIELDS:
+            if not clean(row.get(field)) and clean(old.get(field)):
+                row[field] = clean(old.get(field))
+                secondary_fields += 1
+                changed = True
+        if changed:
+            secondary_rows += 1
+
     restored = 0
     for event_id, target in target_by_id.items():
         if event_id in current_by_id:
@@ -127,7 +154,8 @@ def main() -> int:
 
     print(
         f"FOREBET_ARCHIVE_RESTORE restored={restored} current={len(rows)} "
-        f"active_targets={len(target_by_id)} archive={len(archive_by_id)}"
+        f"active_targets={len(target_by_id)} archive={len(archive_by_id)} "
+        f"secondary_rows={secondary_rows} secondary_fields={secondary_fields}"
     )
     return 0
 
