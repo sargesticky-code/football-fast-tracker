@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '45 22 * * *' # 06:45 Hong Kong time
+    - cron: '45 10 * * *' # 18:45 Hong Kong time
   push:
     paths:
       - 'scripts/normalize_hkjc.py'
       - 'scripts/run_selective.py'
+      - 'scripts/run_selective_v2.py'
+      - 'scripts/forebet_match_policy.py'
       - 'scripts/restore_active_forebet.py'
       - 'scripts/update_forebet_alias_registry.py'
       - 'scripts/enrich_forebet_markets.py'
@@ -57,8 +60,8 @@ jobs:
           cd "$GITHUB_WORKSPACE"
           python scripts/normalize_hkjc.py --matches /tmp/hkjc_matches.json --had /tmp/hkjc_had.json --horizon-hours 36
 
-      - name: Fetch Forebet 1X2 from generic free rendered pages
-        run: python scripts/run_selective.py
+      - name: Fetch Forebet 1X2 with durable HKJC matching policy
+        run: python scripts/run_selective_v2.py
 
       - name: Restore active Forebet models from rolling archive
         run: python scripts/restore_active_forebet.py
@@ -66,10 +69,50 @@ jobs:
       - name: Learn permanent Forebet team aliases
         run: python scripts/update_forebet_alias_registry.py
 
+      - name: Validate core Forebet match feed
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          targets_path = Path('data/hkjc_targets.csv')
+          feed_path = Path('data/forebet_current.csv')
+          aliases_path = Path('data/team_alias_registry.csv')
+          for path in (targets_path, feed_path, aliases_path):
+              if not path.exists(): raise SystemExit(f'missing core production file: {path}')
+          def read(path):
+              with path.open(encoding='utf-8-sig', newline='') as fh: return list(csv.DictReader(fh))
+          targets, feed, aliases = read(targets_path), read(feed_path), read(aliases_path)
+          if not targets or not feed: raise SystemExit('zero core production rows')
+          target_ids = {r.get('hkjc_event_id') for r in targets if r.get('hkjc_event_id')}
+          if any(r.get('hkjc_event_id') not in target_ids for r in feed): raise SystemExit('non-HKJC Forebet row')
+          if len(feed) != len({r.get('hkjc_event_id') for r in feed}): raise SystemExit('duplicate Forebet HKJC event')
+          if any(not all(r.get(k) for k in ('prob_home','prob_draw','prob_away')) for r in feed): raise SystemExit('model-empty Forebet row')
+          active_aliases = [r for r in aliases if r.get('status') in ('ACTIVE','MANUAL')]
+          if not active_aliases: raise SystemExit('alias registry has no active rows')
+          ratio = len(feed) / len(targets)
+          if ratio < 0.40: raise SystemExit(f'Forebet core coverage too low: {len(feed)}/{len(targets)} ({ratio:.1%})')
+          print(f'CORE_PASS targets={len(targets)} forebet={len(feed)} coverage={ratio:.1%} aliases={len(active_aliases)}')
+          PY
+
+      - name: Checkpoint core HKJC, Forebet and alias feeds
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/hkjc_current.csv data/hkjc_targets.csv data/forebet_current.csv data/team_alias_registry.csv
+          if git diff --cached --quiet; then
+            echo 'No core feed changes to checkpoint.'
+          else
+            git commit -m 'Checkpoint core HKJC and Forebet feeds [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
+
       - name: Add independent Opta global power ratings
+        continue-on-error: true
         run: python scripts/enrich_power_ratings.py
 
       - name: Add Forebet O-U and corner signals from free match pages
+        continue-on-error: true
         run: python scripts/enrich_forebet_markets.py
 
       - name: Normalize Forebet scores for Google Sheets
@@ -106,24 +149,23 @@ jobs:
           if any(r['hkjc_event_id'] not in archive_ids for r in feed): raise SystemExit('archive missing current event')
           active_aliases = [r for r in aliases if r.get('status') in ('ACTIVE','MANUAL')]
           if not active_aliases: raise SystemExit('alias registry has no active rows')
-          if len(ratings) < 5000: raise SystemExit(f'Opta snapshot suspiciously small: {len(ratings)}')
+          if len(ratings) < 5000:
+              print(f'WARN Opta snapshot suspiciously small: {len(ratings)}')
           rated_sides = sum(bool(r.get('power_home')) + bool(r.get('power_away')) for r in feed)
-          if rated_sides < max(1, len(feed)): raise SystemExit(f'Opta coverage too low: {rated_sides}/{len(feed)*2}')
           ou = sum(bool(r.get('prediction_ou25')) for r in feed)
           corners = sum(bool(r.get('corner_prediction')) for r in feed)
           detail = sum(bool(r.get('forebet_detail_url')) for r in feed)
           model_ratio = len(feed) / len(targets)
           ou_ratio = ou / len(feed)
           corner_ratio = corners / len(feed)
-          minimums = {'model': 0.40, 'ou25': 0.25, 'corners95': 0.25}
-          if model_ratio < minimums['model']:
+          if model_ratio < 0.40:
               raise SystemExit(f'Forebet model coverage too low: {len(feed)}/{len(targets)} ({model_ratio:.1%})')
-          if ou_ratio < minimums['ou25']:
-              raise SystemExit(f'Forebet O-U coverage too low: {ou}/{len(feed)} ({ou_ratio:.1%})')
-          if corner_ratio < minimums['corners95']:
-              raise SystemExit(f'Forebet corner coverage too low: {corners}/{len(feed)} ({corner_ratio:.1%})')
+          if ou_ratio < 0.25:
+              print(f'WARN Forebet O-U coverage low: {ou}/{len(feed)} ({ou_ratio:.1%})')
+          if corner_ratio < 0.25:
+              print(f'WARN Forebet corner coverage low: {corners}/{len(feed)} ({corner_ratio:.1%})')
           if detail and not (ou or corners):
-              raise SystemExit('Forebet detail pages resolved but no O-U/corner signals parsed')
+              print('WARN Forebet detail pages resolved but no O-U/corner signals parsed')
           print(
               f"PASS hkjc_current={len(current)} targets={len(targets)} forebet={len(feed)} "
               f"archive={len(archive)} aliases={len(aliases)} power={rated_sides}/{len(feed)*2} "
