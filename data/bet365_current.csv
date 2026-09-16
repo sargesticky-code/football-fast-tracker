@@ -1,6 +1,4 @@
 ﻿fetched_at_hkt,hkjc_event_id,match_date,kickoff_hkt,league,home,away,bet365_home,bet365_draw,bet365_away,bet365_fixture_id,match_quality,source
-2026-09-16T01:07:49+08:00,FB5173,2026-09-16,2026-09-16 02:00,西班牙甲組聯賽,Alaves,Valencia,1.615,3.7,6.25,200165957,1.0,Bet365 Playwright
-2026-09-16T01:07:49+08:00,FB5174,2026-09-16,2026-09-16 03:30,西班牙甲組聯賽,CF Elche,Real Madrid,12.0,7.5,1.2,200165986,0.975,Bet365 Playwright
-2026-09-16T01:07:49+08:00,FB5176,2026-09-17,2026-09-17 01:00,SFL,Deportivo,Sevilla,2.4,3.25,3.0,200165983,0.975,Bet365 Playwright
-2026-09-16T01:07:49+08:00,FB5177,2026-09-17,2026-09-17 01:00,SFL,Atletico Madrid,Osasuna,1.38,4.75,8.5,200165962,1.0,Bet365 Playwright
-2026-09-16T01:07:49+08:00,FB5178,2026-09-17,2026-09-17 03:30,SFL,Barcelona,Santander,1.062,14.0,23.0,200165971,0.975,Bet365 Playwright
+2026-09-16T09:27:24+08:00,FB5176,2026-09-17,2026-09-17 01:00,SFL,Deportivo,Sevilla,2.4,3.25,3.0,200165983,0.975,Bet365 Playwright
+2026-09-16T09:27:24+08:00,FB5177,2026-09-17,2026-09-17 01:00,SFL,Atletico Madrid,Osasuna,1.38,4.75,8.5,200165962,1.0,Bet365 Playwright
+2026-09-16T09:27:24+08:00,FB5178,2026-09-17,2026-09-17 03:30,SFL,Barcelona,Santander,1.062,14.0,23.0,200165971,0.975,Bet365 Playwright
