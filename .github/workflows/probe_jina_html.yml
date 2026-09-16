@@ -1,0 +1,25 @@
+name: Probe Jina Forebet HTML
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/probe_jina_html.yml'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Probe rendered HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
+          curl -L --fail --max-time 90 "https://r.jina.ai/$TARGET" \
+            -H 'x-respond-with: html' -H 'x-timeout: 30' -o /tmp/f.html
+          echo "bytes=$(wc -c </tmp/f.html) rcnt=$(grep -o 'class="[^"]*rcnt' /tmp/f.html | wc -l)"
+          grep -o 'data-next-page-url="[^"]*"' /tmp/f.html | head -5 || true
+          for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
+            if grep -Fqi "$needle" /tmp/f.html; then echo "FOUND $needle"; else echo "MISSING $needle"; fi
+          done
