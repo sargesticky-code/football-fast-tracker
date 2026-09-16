@@ -8,6 +8,7 @@ on:
     paths:
       - 'scripts/normalize_hkjc.py'
       - 'scripts/run_selective.py'
+      - 'scripts/restore_active_forebet.py'
       - 'scripts/update_forebet_alias_registry.py'
       - 'scripts/enrich_forebet_markets.py'
       - 'scripts/enrich_power_ratings.py'
@@ -57,6 +58,9 @@ jobs:
 
       - name: Fetch Forebet 1X2 from generic free rendered pages
         run: python scripts/run_selective.py
+
+      - name: Restore active Forebet models from rolling archive
+        run: python scripts/restore_active_forebet.py
 
       - name: Learn permanent Forebet team aliases
         run: python scripts/update_forebet_alias_registry.py
