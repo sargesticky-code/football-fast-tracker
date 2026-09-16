@@ -1,4 +1,4 @@
-name: Probe Jina Forebet HTML
+name: Probe Jina Forebet Detail
 on:
   workflow_dispatch:
   push:
@@ -11,23 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Inspect generic Forebet match detail structure
+      - name: Inspect generic Forebet match detail markdown
         shell: bash
         run: |
           set -euo pipefail
-          pip -q install beautifulsoup4 lxml
           TARGET='https://www.forebet.com/en/football/matches/wahda-abu-dhabi-kuwait-sc-2549766'
-          curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" -H 'x-respond-with: html' -H 'x-timeout: 25' -o /tmp/m.html
+          curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" -H 'x-timeout: 25' -o /tmp/m.txt
+          echo "bytes=$(wc -c </tmp/m.txt)"
           python - <<'PY'
-          from bs4 import BeautifulSoup
-          s=BeautifulSoup(open('/tmp/m.html',encoding='utf-8',errors='ignore').read(),'lxml')
-          rows=[]
-          for i,row in enumerate(s.select('div.rcnt')):
-              txt=' '.join(row.get_text(' ',strip=True).split())
-              if 'Wahda Abu Dhabi' not in txt or 'Kuwait SC' not in txt: continue
-              p=row.parent
-              print('ROW',i,'CLASS',row.get('class'),'TEXT',txt[:350])
-              print(' PARENT',p.name,p.get('class'), 'TEXT', ' '.join(p.get_text(' ',strip=True).split())[:500])
-              print(' CHILD_CLASSES',[(c.name,c.get('class')) for c in row.find_all(recursive=False)][:20])
-          print('TOTAL_RCNT',len(s.select('div.rcnt')))
+          s=open('/tmp/m.txt',encoding='utf-8',errors='ignore').read()
+          for needle in ['Prob. %','Under/Over','2.5','9.5','Avg. corners','Wahda Abu Dhabi Kuwait SC']:
+              print('NEEDLE',needle,'COUNT',s.count(needle))
+          for marker in ['Under/Over\n\n2.5','Under/Over\n\n9.5','Avg. corners']:
+              i=s.find(marker)
+              print('\nMARKER',repr(marker),'AT',i)
+              if i>=0: print(s[max(0,i-450):i+1200])
           PY
