@@ -202,10 +202,11 @@ def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
     end = min(len(page_lines), start + 30)
 
     # Jina sometimes collapses an entire historical corner row into one line,
-    # e.g. ``57 43Under4 - 47.4784°F-``.  Search only the near fixture window
-    # first so a missing row cannot accidentally borrow the next fixture's data.
+    # e.g. ``57 43Under4 - 47.4784°F-``.  The fixture finder may anchor on the
+    # previous row when home/away are split across nearby lines, so never parse
+    # a compact market row at the anchor itself; begin on the following line.
     compact_end = min(len(page_lines), start + 10)
-    for i in range(start, compact_end):
+    for i in range(start + 1, compact_end):
         compact = _parse_compact_corner_line(page_lines[i])
         if compact:
             return compact
