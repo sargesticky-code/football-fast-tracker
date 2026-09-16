@@ -11,22 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Probe fixed today and tomorrow Forebet market pages
+      - name: Probe generic Forebet market pagination
         shell: bash
         run: |
           set -euo pipefail
-          URLS=(
-            'https://www.forebet.com/en/football-tips-and-predictions-for-today/predictions-1x2'
-            'https://www.forebet.com/en/football-tips-and-predictions-for-tomorrow/predictions-1x2'
-            'https://www.forebet.com/en/football-tips-and-predictions-for-today/predictions-under-over-goals'
-            'https://www.forebet.com/en/football-tips-and-predictions-for-tomorrow/under-over-25-goals/'
-            'https://www.forebet.com/en/football-tips-and-predictions-for-today/corners'
-            'https://www.forebet.com/en/football-tips-and-predictions-for-tomorrow/corners'
-          )
-          NAMES=(today_1x2 tomorrow_1x2 today_ou tomorrow_ou today_corners tomorrow_corners)
-          for i in "${!URLS[@]}"; do
-            M="${NAMES[$i]}"; OUT="/tmp/$M.html"
-            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/${URLS[$i]}" -H 'x-respond-with: html' -H 'x-timeout: 25' -o "$OUT"; then
+          declare -A URLS
+          URLS[one_p1]='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
+          URLS[one_p2]='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league?start=2'
+          URLS[one_all_p2]='https://www.forebet.com/en/football-predictions/predictions-1x2?start=2'
+          URLS[ou_component]='https://www.forebet.com/en/component/forebet/under-over'
+          URLS[corners_component]='https://www.forebet.com/en/component/forebet/corners'
+          for M in one_p1 one_p2 one_all_p2 ou_component corners_component; do
+            OUT="/tmp/$M.html"
+            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/${URLS[$M]}" -H 'x-respond-with: html' -H 'x-timeout: 25' -o "$OUT"; then
               echo "MARKET=$M FETCH_FAILED"; continue
             fi
             RCNT=$(python -c 'import re,sys; s=open(sys.argv[1],encoding="utf-8",errors="ignore").read(); print(len(re.findall(r"class=\"[^\"]*rcnt",s)))' "$OUT")
@@ -34,4 +31,13 @@ jobs:
             for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
               if grep -Fqi "$needle" "$OUT"; then echo "  FOUND $needle"; else echo "  MISSING $needle"; fi
             done
+            python - "$OUT" "$M" <<'PY'
+from bs4 import BeautifulSoup
+import sys
+p,m=sys.argv[1],sys.argv[2]
+s=BeautifulSoup(open(p,encoding='utf-8',errors='ignore').read(),'html.parser')
+for r in s.select('div.rcnt')[:1]:
+    print('SNIP',m,'TEXT=', ' | '.join(r.stripped_strings)[:1000])
+    print('SNIP',m,'CLASSES=', sorted({c for t in r.find_all(True) for c in (t.get('class') or [])})[:120])
+PY
           done
