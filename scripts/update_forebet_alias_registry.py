@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from scrape_forebet import team_score
+from forebet_match_policy import team_score
 
 ROOT = Path(__file__).resolve().parent.parent
 CURRENT = ROOT / "data" / "forebet_current.csv"
@@ -61,8 +61,10 @@ def main() -> int:
             if not alias or not canonical:
                 continue
             confidence = team_score(alias, canonical)
-            # Only auto-learn highly reliable team mappings. Lower-confidence
-            # rows stay available for matching but are not persisted as aliases.
+            # The production match policy removes stable source noise (country
+            # tags/articles) and handles distinctive club acronyms before this
+            # threshold is applied.  Therefore newly-seen, safely matched names
+            # can be persisted instead of needing repeated manual fixes.
             if confidence < 0.90:
                 continue
 
@@ -83,7 +85,7 @@ def main() -> int:
                     "last_seen_hkt": now,
                     "match_count": "1",
                     "status": "ACTIVE",
-                    "source": "AUTO_HIGH_CONFIDENCE",
+                    "source": "AUTO_MATCH_POLICY",
                 }
                 learned += 1
             else:
@@ -93,7 +95,7 @@ def main() -> int:
                 if old.get("status") != "MANUAL":
                     old["status"] = "ACTIVE"
                 if not old.get("source"):
-                    old["source"] = "AUTO_HIGH_CONFIDENCE"
+                    old["source"] = "AUTO_MATCH_POLICY"
 
     rows = sorted(
         store.values(),
