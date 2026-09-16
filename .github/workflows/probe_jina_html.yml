@@ -1,4 +1,4 @@
-name: Probe Forebet Free OU Markdown
+name: Probe Forebet Market Row Structures
 on:
   workflow_dispatch:
   push:
@@ -11,24 +11,28 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Probe Jina markdown O-U
+      - name: Inspect free O-U markdown and corners HTML rows
         shell: bash
         run: |
           set -euo pipefail
-          URLS=(
-            'https://www.forebet.com/en/football-tips-and-predictions-for-today/predictions-under-over-goals?task=under-over'
-            'https://www.forebet.com/en/component/forebet/under-over'
-            'https://www.forebet.com/en/football-predictions/under-over-25-goals/2026-09-16/by-league'
-          )
-          NAMES=(task component date)
-          for i in "${!URLS[@]}"; do
-            M="${NAMES[$i]}"; OUT="/tmp/$M.md"
-            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/${URLS[$i]}" -H 'x-timeout: 30' -o "$OUT"; then
-              echo "OU=$M FETCH_FAILED"; continue
-            fi
-            echo "OU=$M bytes=$(wc -c <"$OUT")"
-            head -5 "$OUT" | sed 's/^/  /'
-            for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya' 'Under' 'Over'; do
-              if grep -Fqi "$needle" "$OUT"; then echo "  FOUND $needle"; else echo "  MISSING $needle"; fi
-            done
-          done
+          curl -LsS --fail --max-time 90 'https://r.jina.ai/https://www.forebet.com/en/football-predictions/under-over-25-goals/2026-09-16/by-league' -H 'x-timeout: 30' -o /tmp/ou.md
+          echo '--- OU SPARTAK CONTEXT ---'
+          grep -n -i -A5 -B5 'Spartak Moscow' /tmp/ou.md | head -80 || true
+          echo '--- OU RODINA CONTEXT ---'
+          grep -n -i -A5 -B5 'Rodina Moscow' /tmp/ou.md | head -80 || true
+          curl -LsS --fail --max-time 90 'https://r.jina.ai/https://www.forebet.com/en/football-tips-and-predictions-for-today/corners' -H 'x-respond-with: html' -H 'x-timeout: 30' -o /tmp/corners.html
+          python - <<'PY'
+from bs4 import BeautifulSoup
+s=BeautifulSoup(open('/tmp/corners.html',encoding='utf-8',errors='ignore').read(),'html.parser')
+for needle in ['Spartak Moscow','Wahda Abu Dhabi']:
+    found=None
+    for r in s.select('div.rcnt'):
+        if needle.lower() in r.get_text(' ',strip=True).lower(): found=r; break
+    print('--- CORNER ROW',needle,'---')
+    if not found:
+        print('MISSING'); continue
+    print('TEXT', ' | '.join(found.stripped_strings)[:1600])
+    for sel in ['div.fprc span','.forepr','.ex_sc','.avg_sc','.predict_score','.haodd span']:
+        print(sel,[x.get_text(' ',strip=True) for x in found.select(sel)])
+    print('CLASSES',sorted({c for t in found.find_all(True) for c in (t.get('class') or [])})[:160])
+PY
