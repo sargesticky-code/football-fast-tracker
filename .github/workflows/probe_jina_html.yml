@@ -9,22 +9,25 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 5
     steps:
-      - name: Probe dated Forebet pagination through Jina
+      - name: Inspect generic Forebet match detail structure
         shell: bash
         run: |
           set -euo pipefail
-          BASE='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
-          for START in 0 1 2 3 4 5 6 7 8 9 10 11 12; do
-            if [ "$START" = 0 ]; then TARGET="$BASE"; else TARGET="$BASE?start=$START"; fi
-            OUT="/tmp/f-$START.html"
-            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" -H 'x-respond-with: html' -H 'x-timeout: 20' -o "$OUT"; then
-              echo "START=$START FETCH_FAILED"; continue
-            fi
-            RCNT=$(python -c 'import re,sys; s=open(sys.argv[1],encoding="utf-8",errors="ignore").read(); print(len(re.findall(r"class=\"[^\"]*rcnt",s)))' "$OUT")
-            echo "START=$START bytes=$(wc -c <"$OUT") rcnt=$RCNT"
-            for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
-              if grep -Fqi "$needle" "$OUT"; then echo "  FOUND $needle"; else echo "  MISSING $needle"; fi
-            done
-          done
+          pip -q install beautifulsoup4 lxml
+          TARGET='https://www.forebet.com/en/football/matches/wahda-abu-dhabi-kuwait-sc-2549766'
+          curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" -H 'x-respond-with: html' -H 'x-timeout: 25' -o /tmp/m.html
+          python - <<'PY'
+          from bs4 import BeautifulSoup
+          s=BeautifulSoup(open('/tmp/m.html',encoding='utf-8',errors='ignore').read(),'lxml')
+          rows=[]
+          for i,row in enumerate(s.select('div.rcnt')):
+              txt=' '.join(row.get_text(' ',strip=True).split())
+              if 'Wahda Abu Dhabi' not in txt or 'Kuwait SC' not in txt: continue
+              p=row.parent
+              print('ROW',i,'CLASS',row.get('class'),'TEXT',txt[:350])
+              print(' PARENT',p.name,p.get('class'), 'TEXT', ' '.join(p.get_text(' ',strip=True).split())[:500])
+              print(' CHILD_CLASSES',[(c.name,c.get('class')) for c in row.find_all(recursive=False)][:20])
+          print('TOTAL_RCNT',len(s.select('div.rcnt')))
+          PY
