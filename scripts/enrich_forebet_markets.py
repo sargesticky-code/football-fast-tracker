@@ -4,7 +4,8 @@ Durable routine:
 - zero ScraperAPI credits;
 - cheap fresh Jina Markdown first;
 - retry a date with browser rendering only when corner coverage is weak;
-- use both Forebet match_date and HKJC kickoff date for midnight-crossing fixtures;
+- use Forebet/HKJC dates plus a previous-day timezone fallback;
+- try every fixture occurrence so sidebars/pick-of-the-day duplicates cannot mask rows;
 - exact Forebet home/away names from the already-matched 1X2 feed are the join key;
 - tolerate teams/probabilities split across rendered text nodes;
 - preserve archived secondary-market values elsewhere in the pipeline;
@@ -16,7 +17,7 @@ import csv
 import re
 import unicodedata
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import requests
@@ -89,16 +90,28 @@ def _iso_date_from_value(value: str) -> str:
 
 
 def candidate_dates(row: dict[str, str]) -> list[str]:
-    """Try Forebet's stored date plus HKJC local kickoff date."""
-    out: list[str] = []
+    """Try canonical dates first, then the previous day for timezone crossings.
+
+    HKJC is in Hong Kong time while Forebet's historical market pages can place
+    a just-after-midnight fixture on the preceding date page.  Keeping the
+    canonical dates first preserves normal matching while the one-day fallback
+    recovers those boundary fixtures without event-specific rules.
+    """
+    base_dates: list[str] = []
     for value in (
         row.get("match_date", ""),
         row.get("hkjc_kickoff_hkt", ""),
         row.get("kickoff_text", ""),
     ):
         d = _iso_date_from_value(value)
-        if d and d not in out:
-            out.append(d)
+        if d and d not in base_dates:
+            base_dates.append(d)
+
+    out = list(base_dates)
+    for d in base_dates:
+        previous = (datetime.strptime(d, "%Y-%m-%d").date() - timedelta(days=1)).isoformat()
+        if previous not in out:
+            out.append(previous)
     return out
 
 
@@ -137,18 +150,32 @@ def fetch_jina(url: str, label: str, mode: str = "cheap") -> str | None:
     return response.text
 
 
-def find_fixture_index(page_lines: list[str], home: str, away: str) -> int:
+def find_fixture_indices(page_lines: list[str], home: str, away: str) -> list[int]:
+    """Return every plausible occurrence, anchored near the home-team text.
+
+    Forebet repeats some fixtures in sidebars and Pick-of-the-day cards.  The
+    old first-match-only search could stop on such a duplicate and never reach
+    the actual market table row.  Anchoring on the home team also avoids
+    returning the previous fixture's compact market line as the start index.
+    """
     h, a = norm(home), norm(away)
     if not h or not a:
-        return -1
+        return []
+
+    found: list[int] = []
     for i in range(len(page_lines)):
-        for width in (1, 2, 3, 4):
-            if i + width > len(page_lines):
-                break
-            joined = norm(" ".join(page_lines[i : i + width]))
-            if h in joined and a in joined:
-                return i
-    return -1
+        home_window = norm(" ".join(page_lines[i : min(len(page_lines), i + 2)]))
+        if h not in home_window:
+            continue
+        fixture_window = norm(" ".join(page_lines[i : min(len(page_lines), i + 5)]))
+        if a in fixture_window and i not in found:
+            found.append(i)
+    return found
+
+
+def find_fixture_index(page_lines: list[str], home: str, away: str) -> int:
+    indices = find_fixture_indices(page_lines, home, away)
+    return indices[0] if indices else -1
 
 
 def _numbers(line: str) -> list[int]:
@@ -202,9 +229,8 @@ def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
     end = min(len(page_lines), start + 30)
 
     # Jina sometimes collapses an entire historical corner row into one line,
-    # e.g. ``57 43Under4 - 47.4784°F-``.  The fixture finder may anchor on the
-    # previous row when home/away are split across nearby lines, so never parse
-    # a compact market row at the anchor itself; begin on the following line.
+    # e.g. ``57 43Under4 - 47.4784°F-``.  Begin after the fixture anchor so a
+    # previous market row cannot be borrowed by the next fixture.
     compact_end = min(len(page_lines), start + 10)
     for i in range(start + 1, compact_end):
         compact = _parse_compact_corner_line(page_lines[i])
@@ -279,25 +305,28 @@ def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
 
 
 def parse_for_row(page_lines: list[str], row: dict[str, str]) -> dict[str, str]:
-    idx = find_fixture_index(
+    for idx in find_fixture_indices(
         page_lines,
         row.get("home_team", ""),
         row.get("away_team", ""),
-    )
-    return parse_row_window(page_lines, idx)
+    ):
+        parsed = parse_row_window(page_lines, idx)
+        if parsed:
+            return parsed
+    return {}
 
 
 def page_fixture_coverage(page_lines: list[str], rows: list[dict[str, str]]) -> tuple[int, int]:
     listed = parsed = 0
     for row in rows:
-        idx = find_fixture_index(
+        indices = find_fixture_indices(
             page_lines,
             row.get("home_team", ""),
             row.get("away_team", ""),
         )
-        if idx >= 0:
+        if indices:
             listed += 1
-            if parse_row_window(page_lines, idx):
+            if any(parse_row_window(page_lines, idx) for idx in indices):
                 parsed += 1
     return listed, parsed
 
@@ -311,13 +340,14 @@ def debug_unparsed_windows(
     """Print small raw windows for listed fixtures the parser cannot decode."""
     shown = 0
     for row in rows:
-        idx = find_fixture_index(
+        indices = find_fixture_indices(
             page_lines,
             row.get("home_team", ""),
             row.get("away_team", ""),
         )
-        if idx < 0 or parse_row_window(page_lines, idx):
+        if not indices or any(parse_row_window(page_lines, idx) for idx in indices):
             continue
+        idx = indices[0]
         event_id = row.get("hkjc_event_id", "")
         print(
             f"FOREBET_CORNER_DEBUG_BEGIN date={date} event={event_id} "
@@ -394,17 +424,18 @@ def lookup_row(
     listed_any = False
     for date in candidate_dates(row):
         page_lines = pages.get(date, [])
-        idx = find_fixture_index(
+        indices = find_fixture_indices(
             page_lines,
             row.get("home_team", ""),
             row.get("away_team", ""),
         )
-        if idx < 0:
+        if not indices:
             continue
         listed_any = True
-        parsed = parse_row_window(page_lines, idx)
-        if parsed:
-            return parsed, date, True
+        for idx in indices:
+            parsed = parse_row_window(page_lines, idx)
+            if parsed:
+                return parsed, date, True
     return {}, "", listed_any
 
 
@@ -461,7 +492,8 @@ def main() -> int:
             row["corner_predicted_score"] = corners["score"]
             row["avg_corners"] = corners["avg"]
             corner_count += 1
-            primary = candidate_dates(row)[0] if candidate_dates(row) else used_date
+            primary_dates = candidate_dates(row)
+            primary = primary_dates[0] if primary_dates else used_date
             if primary:
                 fresh_corner_by_primary_date[primary] += 1
         elif listed:
