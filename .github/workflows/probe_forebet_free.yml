@@ -1,0 +1,32 @@
+name: Probe Forebet Free Reader
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/probe_forebet_free.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Probe Jina Reader against Forebet date page
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://r.jina.ai/http://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
+          curl -L --fail --max-time 60 -A 'Mozilla/5.0' "$URL" -o /tmp/forebet.txt
+          echo "bytes=$(wc -c </tmp/forebet.txt)"
+          for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
+            if grep -Fqi "$needle" /tmp/forebet.txt; then
+              echo "FOUND $needle"
+            else
+              echo "MISSING $needle"
+            fi
+          done
+          grep -i -A4 -B2 'Wahda Abu Dhabi' /tmp/forebet.txt | head -30 || true
+          grep -i -A4 -B2 'Al Khaldiya' /tmp/forebet.txt | head -30 || true
