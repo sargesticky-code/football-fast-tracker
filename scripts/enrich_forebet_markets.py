@@ -2,9 +2,9 @@
 
 Durable routine:
 - zero ScraperAPI credits;
-- fresh Jina Markdown requests with cache bypass;
+- one fresh full-HTML Jina request per market per Forebet date;
 - exact Forebet home/away names from the already-matched 1X2 feed are the join key;
-- corner list pagination is followed so later fixtures are not silently missed;
+- tolerant text parsing handles teams/probabilities split across HTML text nodes;
 - no league-specific or event-specific routes;
 - archived secondary-market values are preserved by restore_active_forebet.py when
   a later Forebet page omits a fixture after kickoff;
@@ -14,18 +14,18 @@ Durable routine:
 from __future__ import annotations
 
 import csv
-import hashlib
 import re
 import unicodedata
 from pathlib import Path
 
 import requests
+from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parent.parent
 FEED = ROOT / "data" / "forebet_current.csv"
 JINA = "https://r.jina.ai/"
 TIMEOUT = 90
-MAX_CORNER_PAGES = 6
+MIN_PAGE_TEXT = 5_000
 
 EXTRA_FIELDS = [
     "ou_predicted_score",
@@ -37,9 +37,9 @@ EXTRA_FIELDS = [
     "forebet_detail_url",
 ]
 
-PAIR_RE = re.compile(r"^(\d{1,3})\s+(\d{1,3})$")
-SCORE_RE = re.compile(r"^(\d+)\s*-\s*(\d+)$")
-NUMBER_RE = re.compile(r"^\d+(?:\.\d+)?$")
+SCORE_SEARCH_RE = re.compile(r"(\d+)\s*-\s*(\d+)")
+DECIMAL_SEARCH_RE = re.compile(r"(?<!\d)(\d+\.\d+)(?!\d)")
+INTEGER_ONLY_RE = re.compile(r"^\d{1,3}%?$")
 
 
 def norm(value: str) -> str:
@@ -56,11 +56,19 @@ def text_score(home: str, away: str) -> str:
     return f"{home} - {away}"
 
 
-def fetch_markdown(url: str, label: str) -> str | None:
+def fetch_page_text(url: str, label: str) -> str | None:
+    """Ask Jina for the full rendered HTML, then flatten it locally to text.
+
+    The 1X2 production path already uses x-respond-with=html successfully.  Using
+    Jina's default Markdown here produced much smaller responses and silently
+    omitted valid Forebet corner rows, so secondary markets now use the same full
+    HTML strategy.
+    """
     try:
         r = requests.get(
             JINA + url,
             headers={
+                "x-respond-with": "html",
                 "x-timeout": "30",
                 "User-Agent": "Mozilla/5.0",
                 "X-No-Cache": "true",
@@ -71,10 +79,23 @@ def fetch_markdown(url: str, label: str) -> str | None:
     except Exception as exc:
         print(f"WARN Jina {label} failed: {exc}")
         return None
-    print(f"FOREBET_MARKET_JINA label={label} status={r.status_code} bytes={len(r.text)} fresh=1")
     if r.status_code != 200:
+        print(
+            f"FOREBET_MARKET_JINA label={label} status={r.status_code} "
+            f"html_bytes={len(r.text)} fresh=1"
+        )
         return None
-    return r.text
+    soup = BeautifulSoup(r.text, "lxml")
+    plain = soup.get_text("\n", strip=True)
+    rcnt = len(soup.select(".rcnt"))
+    print(
+        f"FOREBET_MARKET_JINA label={label} status={r.status_code} "
+        f"html_bytes={len(r.text)} text_bytes={len(plain)} rcnt={rcnt} fresh=1"
+    )
+    if len(plain) < MIN_PAGE_TEXT:
+        print(f"WARN Forebet {label} render too small text_bytes={len(plain)}")
+        return None
+    return plain
 
 
 def lines(text: str) -> list[str]:
@@ -82,47 +103,102 @@ def lines(text: str) -> list[str]:
 
 
 def find_fixture_index(page_lines: list[str], home: str, away: str) -> int:
+    """Find a fixture even when HTML flattening puts home/away on separate lines."""
     h, a = norm(home), norm(away)
     if not h or not a:
         return -1
-    for i, line in enumerate(page_lines):
-        n = norm(line)
-        if h in n and a in n:
-            return i
+    for i in range(len(page_lines)):
+        for width in (1, 2, 3, 4):
+            if i + width > len(page_lines):
+                break
+            n = norm(" ".join(page_lines[i : i + width]))
+            if h in n and a in n:
+                return i
     return -1
 
 
+def _numbers(line: str) -> list[int]:
+    values = []
+    for token in re.findall(r"(?<!\d)(\d{1,3})%?(?!\d)", line):
+        try:
+            values.append(int(token))
+        except ValueError:
+            pass
+    return values
+
+
+def _pair_from_line(line: str) -> tuple[str, str] | None:
+    nums = _numbers(line)
+    for left, right in zip(nums, nums[1:]):
+        if 0 <= left <= 100 and 0 <= right <= 100 and left + right == 100:
+            return str(left), str(right)
+    return None
+
+
 def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
-    """Parse Forebet list-page row after its fixture-link line."""
+    """Parse one Forebet list row from a tolerant text window.
+
+    Forebet/Jina may render the two probabilities either on one line or as two
+    adjacent text nodes, and may put `Under 5-4` on one line.  Requiring an exact
+    `55 45` line was therefore too brittle.
+    """
     if start < 0:
         return {}
-    pair = None
+
+    end = min(len(page_lines), start + 30)
+    pair: tuple[str, str] | None = None
+    pair_at = -1
+
+    for i in range(start + 1, end):
+        pair = _pair_from_line(page_lines[i])
+        if pair:
+            pair_at = i
+            break
+        # Probabilities are sometimes separate text nodes, e.g. `55` then `45`.
+        if i + 1 < end:
+            left = page_lines[i].strip().rstrip("%")
+            right = page_lines[i + 1].strip().rstrip("%")
+            if INTEGER_ONLY_RE.match(page_lines[i].strip()) and INTEGER_ONLY_RE.match(page_lines[i + 1].strip()):
+                try:
+                    li, ri = int(left), int(right)
+                except ValueError:
+                    continue
+                if 0 <= li <= 100 and 0 <= ri <= 100 and li + ri == 100:
+                    pair = (str(li), str(ri))
+                    pair_at = i
+                    break
+
+    if not pair:
+        return {}
+
     pred = ""
     score = ""
     avg = ""
-    for line in page_lines[start + 1 : min(len(page_lines), start + 18)]:
-        if pair is None:
-            m = PAIR_RE.match(line)
-            if m:
-                pair = (m.group(1), m.group(2))
+    score_at = -1
+    for i in range(pair_at, end):
+        line = page_lines[i]
+        m_pred = re.search(r"\b(under|over)\b", line, flags=re.I)
+        if m_pred and not pred:
+            pred = m_pred.group(1).capitalize()
+            m_score = SCORE_SEARCH_RE.search(line[m_pred.end() :])
+            if m_score:
+                score = text_score(m_score.group(1), m_score.group(2))
+                score_at = i
+            continue
+        if pred and not score:
+            m_score = SCORE_SEARCH_RE.search(line)
+            if m_score:
+                score = text_score(m_score.group(1), m_score.group(2))
+                score_at = i
                 continue
-        if pair is not None and not pred:
-            low = line.casefold()
-            if low.startswith("under"):
-                pred = "Under"
-                continue
-            if low.startswith("over"):
-                pred = "Over"
-                continue
-        if pair is not None and pred and not score:
-            m = SCORE_RE.match(line)
-            if m:
-                score = text_score(m.group(1), m.group(2))
-                continue
-        if score and NUMBER_RE.match(line):
-            avg = line
-            break
-    if not pair or not pred:
+        if score:
+            # Avg goals/corners is normally the first decimal after predicted score.
+            m_avg = DECIMAL_SEARCH_RE.search(line if i > score_at else "")
+            if m_avg:
+                avg = m_avg.group(1)
+                break
+
+    if not pred:
         return {}
     return {
         "under": pair[0],
@@ -139,40 +215,6 @@ def read_feed() -> tuple[list[dict[str, str]], list[str]]:
         return list(r), list(r.fieldnames or [])
 
 
-def fetch_corner_pages(date: str, date_rows: list[dict[str, str]]) -> tuple[list[str], int]:
-    """Fetch dated corner pages including pagination, stopping on duplicate renders."""
-    base = f"https://www.forebet.com/en/football-predictions/corners/{date}/by-league"
-    merged: list[str] = []
-    seen: set[str] = set()
-    calls = 0
-    for page in range(1, MAX_CORNER_PAGES + 1):
-        url = base if page == 1 else f"{base}?start={page}"
-        text = fetch_markdown(url, f"corners95_{date}_p{page}")
-        calls += 1
-        if not text:
-            if page == 1:
-                continue
-            break
-        sig = hashlib.sha1(text.encode("utf-8", errors="ignore")).hexdigest()
-        if sig in seen:
-            print(f"FOREBET_CORNER_PAGE_DUP date={date} page={page} stop=1")
-            break
-        seen.add(sig)
-        page_lines = lines(text)
-        merged.extend(page_lines)
-        listed = sum(
-            find_fixture_index(merged, r.get("home_team", ""), r.get("away_team", "")) >= 0
-            for r in date_rows
-        )
-        print(
-            f"FOREBET_CORNER_PAGE date={date} page={page} lines={len(page_lines)} "
-            f"target_listed={listed}/{len(date_rows)}"
-        )
-        if listed == len(date_rows):
-            break
-    return merged, calls
-
-
 def main() -> int:
     if not FEED.exists():
         raise SystemExit(f"missing {FEED}")
@@ -184,20 +226,18 @@ def main() -> int:
             fields.append(f)
 
     dates = sorted({(r.get("match_date") or "").strip() for r in rows if r.get("match_date")})
-    rows_by_date = {
-        d: [r for r in rows if (r.get("match_date") or "").strip() == d]
-        for d in dates
-    }
     ou_pages: dict[str, list[str]] = {}
     corner_pages: dict[str, list[str]] = {}
     calls = 0
     for d in dates:
         ou_url = f"https://www.forebet.com/en/football-predictions/under-over-25-goals/{d}/by-league"
-        ou = fetch_markdown(ou_url, f"ou25_{d}")
+        corner_url = f"https://www.forebet.com/en/football-predictions/corners/{d}/by-league"
+        ou_text = fetch_page_text(ou_url, f"ou25_{d}")
         calls += 1
-        ou_pages[d] = lines(ou or "")
-        corner_pages[d], corner_calls = fetch_corner_pages(d, rows_by_date[d])
-        calls += corner_calls
+        corner_text = fetch_page_text(corner_url, f"corners95_{d}")
+        calls += 1
+        ou_pages[d] = lines(ou_text or "")
+        corner_pages[d] = lines(corner_text or "")
 
     ou_count = corner_count = corner_listed = 0
     corner_parse_failures: list[str] = []
