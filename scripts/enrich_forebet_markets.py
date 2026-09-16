@@ -1,25 +1,24 @@
-"""Enrich current HKJC-matched Forebet rows with O/U and corner predictions.
+"""Batch-enrich HKJC-matched Forebet rows with O/U 2.5 and corners 9.5.
 
-The routine uses only public Forebet pages through Jina Reader. It does not use
-ScraperAPI. A generic 1X2 page is used to discover each match-detail URL; the
-match page then supplies O/U 2.5 and corner U/O 9.5 signals for that exact event.
+Durable routine:
+- zero ScraperAPI credits;
+- one Jina Markdown request per market per Forebet date;
+- exact Forebet home/away names from the already-matched 1X2 feed are the join key;
+- no league-specific or event-specific routes;
+- rolling archive preserves earlier secondary-market values if a later batch omits them.
 """
 from __future__ import annotations
 
 import csv
 import re
-import time
 import unicodedata
 from pathlib import Path
-from urllib.parse import urljoin
 
 import requests
-from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parent.parent
 FEED = ROOT / "data" / "forebet_current.csv"
 JINA = "https://r.jina.ai/"
-BASE = "https://www.forebet.com"
 TIMEOUT = 90
 
 EXTRA_FIELDS = [
@@ -32,110 +31,94 @@ EXTRA_FIELDS = [
     "forebet_detail_url",
 ]
 
+PAIR_RE = re.compile(r"^(\d{1,3})\s+(\d{1,3})$")
+SCORE_RE = re.compile(r"^(\d+)\s*-\s*(\d+)$")
+NUMBER_RE = re.compile(r"^\d+(?:\.\d+)?$")
+
 
 def norm(value: str) -> str:
     value = unicodedata.normalize("NFKD", value or "")
     value = "".join(ch for ch in value if not unicodedata.combining(ch))
     value = value.casefold().replace("&", " and ")
+    value = re.sub(r"https?://\S+", " ", value)
     value = re.sub(r"[^a-z0-9]+", " ", value)
     return re.sub(r"\s+", " ", value).strip()
 
 
-def fetch_jina(url: str, html: bool) -> str | None:
-    headers = {"x-timeout": "30", "User-Agent": "Mozilla/5.0"}
-    if html:
-        headers["x-respond-with"] = "html"
+def fetch_markdown(url: str, label: str) -> str | None:
     try:
-        r = requests.get(JINA + url, headers=headers, timeout=TIMEOUT)
+        r = requests.get(
+            JINA + url,
+            headers={"x-timeout": "30", "User-Agent": "Mozilla/5.0"},
+            timeout=TIMEOUT,
+        )
     except Exception as exc:
-        print(f"WARN Jina fetch failed url={url}: {exc}")
+        print(f"WARN Jina {label} failed: {exc}")
         return None
+    print(f"FOREBET_MARKET_JINA label={label} status={r.status_code} bytes={len(r.text)}")
     if r.status_code != 200:
-        print(f"WARN Jina status={r.status_code} url={url}")
         return None
     return r.text
 
 
-def discover_links(rows: list[dict[str, str]]) -> dict[tuple[str, str], str]:
-    """Build a generic Forebet team-pair -> match-detail URL map."""
-    dates = sorted({(r.get("match_date") or "").strip() for r in rows if r.get("match_date")})
-    urls = [
-        f"https://www.forebet.com/en/football-predictions/predictions-1x2/{d}/by-league"
-        for d in dates
-    ]
-    # Generic all-predictions pages cover rows omitted from the first dated payload.
-    urls += [
-        "https://www.forebet.com/en/football-predictions/predictions-1x2?start=2",
-        "https://www.forebet.com/en/football-predictions?start=1",
-    ]
-    links: dict[tuple[str, str], str] = {}
-    for url in urls:
-        html = fetch_jina(url, html=True)
-        if not html or "rcnt" not in html:
-            continue
-        soup = BeautifulSoup(html, "lxml")
-        for box in soup.select("div.rcnt"):
-            h = box.select_one("span.homeTeam span[itemprop='name']")
-            a = box.select_one("span.awayTeam span[itemprop='name']")
-            if not h or not a:
-                continue
-            anchor = box.select_one("a[href*='/football/matches/']")
-            if anchor is None:
-                # Forebet sometimes puts the preview URL on a team/match wrapper.
-                anchor = next(
-                    (x for x in box.select("a[href]") if "/football/matches/" in (x.get("href") or "")),
-                    None,
-                )
-            if anchor is None:
-                continue
-            href = (anchor.get("href") or "").strip()
-            if not href:
-                continue
-            links[(norm(h.get_text(" ", strip=True)), norm(a.get_text(" ", strip=True)))] = urljoin(BASE, href)
-    print(f"FOREBET_DETAIL_LINKS discovered={len(links)} source_pages={len(urls)}")
-    return links
-
-
-def _lines(text: str) -> list[str]:
+def lines(text: str) -> list[str]:
     return [re.sub(r"\s+", " ", x).strip() for x in text.splitlines() if x.strip()]
 
 
-def parse_under_over_section(markdown: str, threshold: str) -> dict[str, str]:
-    """Parse the first Under/Over block with a given threshold from one match page."""
-    lines = _lines(markdown)
-    start = -1
-    for i in range(len(lines) - 1):
-        if lines[i].casefold() == "under/over" and lines[i + 1] == threshold:
-            start = i + 2
-            break
+def find_fixture_index(page_lines: list[str], home: str, away: str) -> int:
+    h, a = norm(home), norm(away)
+    if not h or not a:
+        return -1
+    for i, line in enumerate(page_lines):
+        n = norm(line)
+        if h in n and a in n:
+            return i
+    return -1
+
+
+def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
+    """Parse Forebet list-page row after its fixture-link line.
+
+    Expected sequence is probability pair, Under/Over prediction, predicted score,
+    then average. Extra image/weather/coefficient lines after those fields are ignored.
+    """
     if start < 0:
         return {}
-
-    pair_re = re.compile(r"^(\d{1,3})\s+(\d{1,3})$")
-    score_re = re.compile(r"^(\d+)\s*-\s*(\d+)$")
-    for i in range(start, min(len(lines), start + 45)):
-        m = pair_re.match(lines[i])
-        if not m:
-            continue
-        under, over = m.group(1), m.group(2)
-        pred = ""
-        score = ""
-        avg = ""
-        for j in range(i + 1, min(len(lines), i + 9)):
-            low = lines[j].casefold()
-            if not pred and (low.startswith("under") or low.startswith("over")):
-                pred = "Under" if low.startswith("under") else "Over"
+    pair = None
+    pred = ""
+    score = ""
+    avg = ""
+    for line in page_lines[start + 1 : min(len(page_lines), start + 18)]:
+        if pair is None:
+            m = PAIR_RE.match(line)
+            if m:
+                pair = (m.group(1), m.group(2))
                 continue
-            sm = score_re.match(lines[j])
-            if sm and not score:
-                score = f"{sm.group(1)}-{sm.group(2)}"
+        if pair is not None and not pred:
+            low = line.casefold()
+            if low.startswith("under"):
+                pred = "Under"
                 continue
-            if score and re.fullmatch(r"\d+(?:\.\d+)?", lines[j]):
-                avg = lines[j]
-                break
-        if pred:
-            return {"under": under, "over": over, "prediction": pred, "score": score, "avg": avg}
-    return {}
+            if low.startswith("over"):
+                pred = "Over"
+                continue
+        if pair is not None and pred and not score:
+            m = SCORE_RE.match(line)
+            if m:
+                score = f"{m.group(1)}-{m.group(2)}"
+                continue
+        if score and NUMBER_RE.match(line):
+            avg = line
+            break
+    if not pair or not pred:
+        return {}
+    return {
+        "under": pair[0],
+        "over": pair[1],
+        "prediction": pred,
+        "score": score,
+        "avg": avg,
+    }
 
 
 def read_feed() -> tuple[list[dict[str, str]], list[str]]:
@@ -154,29 +137,29 @@ def main() -> int:
         if f not in fields:
             fields.append(f)
 
-    links = discover_links(rows)
-    detail_cache: dict[str, str | None] = {}
-    ou_count = corner_count = link_count = 0
+    dates = sorted({(r.get("match_date") or "").strip() for r in rows if r.get("match_date")})
+    ou_pages: dict[str, list[str]] = {}
+    corner_pages: dict[str, list[str]] = {}
+    calls = 0
+    for d in dates:
+        ou_url = f"https://www.forebet.com/en/football-predictions/under-over-25-goals/{d}/by-league"
+        corner_url = f"https://www.forebet.com/en/football-predictions/corners/{d}"
+        ou = fetch_markdown(ou_url, f"ou25_{d}")
+        calls += 1
+        corners = fetch_markdown(corner_url, f"corners95_{d}")
+        calls += 1
+        ou_pages[d] = lines(ou or "")
+        corner_pages[d] = lines(corners or "")
 
-    for idx, row in enumerate(rows):
-        key = (norm(row.get("home_team", "")), norm(row.get("away_team", "")))
-        url = links.get(key, "")
-        row["forebet_detail_url"] = url
-        if not url:
-            continue
-        link_count += 1
-        if url not in detail_cache:
-            detail_cache[url] = fetch_jina(url, html=False)
-            # Keep the free anonymous reader comfortably below burst limits.
-            time.sleep(0.8)
-        md = detail_cache[url] or ""
-        if not md:
-            continue
+    ou_count = corner_count = 0
+    for row in rows:
+        d = (row.get("match_date") or "").strip()
+        home = row.get("home_team", "")
+        away = row.get("away_team", "")
 
-        ou = parse_under_over_section(md, "2.5")
+        ou = parse_row_window(ou_pages.get(d, []), find_fixture_index(ou_pages.get(d, []), home, away))
         if ou:
             row["prediction_ou25"] = ou["prediction"]
-            # Existing feed schema is Over first, Under second.
             row["prob_over25"] = ou["over"]
             row["prob_under25"] = ou["under"]
             row["ou_predicted_score"] = ou["score"]
@@ -184,7 +167,10 @@ def main() -> int:
                 row["avg_goals"] = ou["avg"]
             ou_count += 1
 
-        corners = parse_under_over_section(md, "9.5")
+        corners = parse_row_window(
+            corner_pages.get(d, []),
+            find_fixture_index(corner_pages.get(d, []), home, away),
+        )
         if corners:
             row["corner_prediction"] = corners["prediction"]
             row["corner_prob_under95"] = corners["under"]
@@ -193,15 +179,23 @@ def main() -> int:
             row["avg_corners"] = corners["avg"]
             corner_count += 1
 
+        # Reserved for compatibility/debugging; routine enrichment is batch-based.
+        row["forebet_detail_url"] = ""
+
     tmp = FEED.with_suffix(".tmp")
     with tmp.open("w", encoding="utf-8-sig", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=fields)
         w.writeheader(); w.writerows(rows)
     tmp.replace(FEED)
+
     print(
-        f"FOREBET_MARKETS rows={len(rows)} detail_links={link_count} "
-        f"ou25={ou_count} corners95={corner_count} jina_calls={len(detail_cache)}"
+        f"FOREBET_MARKETS_BATCH rows={len(rows)} dates={len(dates)} "
+        f"ou25={ou_count} corners95={corner_count} jina_calls={calls} scraperapi_credits=0"
     )
+    if ou_count == 0:
+        raise SystemExit("zero Forebet O/U rows parsed")
+    if corner_count == 0:
+        raise SystemExit("zero Forebet corner rows parsed")
     return 0
 
 
