@@ -2,14 +2,19 @@
 
 Durable routine:
 - zero ScraperAPI credits;
-- one Jina Markdown request per market per Forebet date;
+- fresh Jina Markdown requests with cache bypass;
 - exact Forebet home/away names from the already-matched 1X2 feed are the join key;
+- corner list pagination is followed so later fixtures are not silently missed;
 - no league-specific or event-specific routes;
-- rolling archive preserves earlier secondary-market values if a later batch omits them.
+- archived secondary-market values are preserved by restore_active_forebet.py when
+  a later Forebet page omits a fixture after kickoff;
+- if a fixture is visibly listed on the corner page but cannot be parsed, fail the
+  run instead of accepting a silent parser gap.
 """
 from __future__ import annotations
 
 import csv
+import hashlib
 import re
 import unicodedata
 from pathlib import Path
@@ -20,6 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 FEED = ROOT / "data" / "forebet_current.csv"
 JINA = "https://r.jina.ai/"
 TIMEOUT = 90
+MAX_CORNER_PAGES = 6
 
 EXTRA_FIELDS = [
     "ou_predicted_score",
@@ -87,11 +93,7 @@ def find_fixture_index(page_lines: list[str], home: str, away: str) -> int:
 
 
 def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
-    """Parse Forebet list-page row after its fixture-link line.
-
-    Expected sequence is probability pair, Under/Over prediction, predicted score,
-    then average. Extra image/weather/coefficient lines after those fields are ignored.
-    """
+    """Parse Forebet list-page row after its fixture-link line."""
     if start < 0:
         return {}
     pair = None
@@ -137,6 +139,40 @@ def read_feed() -> tuple[list[dict[str, str]], list[str]]:
         return list(r), list(r.fieldnames or [])
 
 
+def fetch_corner_pages(date: str, date_rows: list[dict[str, str]]) -> tuple[list[str], int]:
+    """Fetch dated corner pages including pagination, stopping on duplicate renders."""
+    base = f"https://www.forebet.com/en/football-predictions/corners/{date}/by-league"
+    merged: list[str] = []
+    seen: set[str] = set()
+    calls = 0
+    for page in range(1, MAX_CORNER_PAGES + 1):
+        url = base if page == 1 else f"{base}?start={page}"
+        text = fetch_markdown(url, f"corners95_{date}_p{page}")
+        calls += 1
+        if not text:
+            if page == 1:
+                continue
+            break
+        sig = hashlib.sha1(text.encode("utf-8", errors="ignore")).hexdigest()
+        if sig in seen:
+            print(f"FOREBET_CORNER_PAGE_DUP date={date} page={page} stop=1")
+            break
+        seen.add(sig)
+        page_lines = lines(text)
+        merged.extend(page_lines)
+        listed = sum(
+            find_fixture_index(merged, r.get("home_team", ""), r.get("away_team", "")) >= 0
+            for r in date_rows
+        )
+        print(
+            f"FOREBET_CORNER_PAGE date={date} page={page} lines={len(page_lines)} "
+            f"target_listed={listed}/{len(date_rows)}"
+        )
+        if listed == len(date_rows):
+            break
+    return merged, calls
+
+
 def main() -> int:
     if not FEED.exists():
         raise SystemExit(f"missing {FEED}")
@@ -148,26 +184,31 @@ def main() -> int:
             fields.append(f)
 
     dates = sorted({(r.get("match_date") or "").strip() for r in rows if r.get("match_date")})
+    rows_by_date = {
+        d: [r for r in rows if (r.get("match_date") or "").strip() == d]
+        for d in dates
+    }
     ou_pages: dict[str, list[str]] = {}
     corner_pages: dict[str, list[str]] = {}
     calls = 0
     for d in dates:
         ou_url = f"https://www.forebet.com/en/football-predictions/under-over-25-goals/{d}/by-league"
-        corner_url = f"https://www.forebet.com/en/football-predictions/corners/{d}/by-league"
         ou = fetch_markdown(ou_url, f"ou25_{d}")
         calls += 1
-        corners = fetch_markdown(corner_url, f"corners95_{d}")
-        calls += 1
         ou_pages[d] = lines(ou or "")
-        corner_pages[d] = lines(corners or "")
+        corner_pages[d], corner_calls = fetch_corner_pages(d, rows_by_date[d])
+        calls += corner_calls
 
-    ou_count = corner_count = 0
+    ou_count = corner_count = corner_listed = 0
+    corner_parse_failures: list[str] = []
+    corner_unlisted: list[str] = []
     for row in rows:
         d = (row.get("match_date") or "").strip()
         home = row.get("home_team", "")
         away = row.get("away_team", "")
 
-        ou = parse_row_window(ou_pages.get(d, []), find_fixture_index(ou_pages.get(d, []), home, away))
+        ou_idx = find_fixture_index(ou_pages.get(d, []), home, away)
+        ou = parse_row_window(ou_pages.get(d, []), ou_idx)
         if ou:
             row["prediction_ou25"] = ou["prediction"]
             row["prob_over25"] = ou["over"]
@@ -177,20 +218,23 @@ def main() -> int:
                 row["avg_goals"] = ou["avg"]
             ou_count += 1
 
-        corners = parse_row_window(
-            corner_pages.get(d, []),
-            find_fixture_index(corner_pages.get(d, []), home, away),
-        )
-        if corners:
-            row["corner_prediction"] = corners["prediction"]
-            row["corner_prob_under95"] = corners["under"]
-            row["corner_prob_over95"] = corners["over"]
-            row["corner_predicted_score"] = corners["score"]
-            row["avg_corners"] = corners["avg"]
-            corner_count += 1
-
-        # Reserved for compatibility/debugging; routine enrichment is batch-based.
-        row["forebet_detail_url"] = ""
+        c_idx = find_fixture_index(corner_pages.get(d, []), home, away)
+        if c_idx >= 0:
+            corner_listed += 1
+            corners = parse_row_window(corner_pages.get(d, []), c_idx)
+            if corners:
+                row["corner_prediction"] = corners["prediction"]
+                row["corner_prob_under95"] = corners["under"]
+                row["corner_prob_over95"] = corners["over"]
+                row["corner_predicted_score"] = corners["score"]
+                row["avg_corners"] = corners["avg"]
+                corner_count += 1
+            else:
+                corner_parse_failures.append(
+                    f"{row.get('hkjc_event_id','')}:{home} vs {away}"
+                )
+        else:
+            corner_unlisted.append(f"{row.get('hkjc_event_id','')}:{home} vs {away}")
 
     tmp = FEED.with_suffix(".tmp")
     with tmp.open("w", encoding="utf-8-sig", newline="") as fh:
@@ -201,8 +245,17 @@ def main() -> int:
 
     print(
         f"FOREBET_MARKETS_BATCH rows={len(rows)} dates={len(dates)} "
-        f"ou25={ou_count} corners95={corner_count} jina_calls={calls} scraperapi_credits=0"
+        f"ou25={ou_count} corner_listed={corner_listed} corners95={corner_count} "
+        f"corner_unlisted={len(corner_unlisted)} corner_parse_failures={len(corner_parse_failures)} "
+        f"jina_calls={calls} scraperapi_credits=0"
     )
+    if corner_unlisted:
+        print("FOREBET_CORNER_UNLISTED " + " | ".join(corner_unlisted[:20]))
+    if corner_parse_failures:
+        print("FOREBET_CORNER_PARSE_FAILURES " + " | ".join(corner_parse_failures[:20]))
+        raise SystemExit(
+            f"Forebet corner fixtures listed but not parsed: {len(corner_parse_failures)}"
+        )
     if ou_count == 0:
         raise SystemExit("zero Forebet O/U rows parsed")
     if corner_count == 0:
