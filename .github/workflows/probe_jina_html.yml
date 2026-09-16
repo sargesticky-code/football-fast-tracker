@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:
-      - name: Probe generic Forebet pages through Jina
+      - name: Probe dated Forebet pagination through Jina
         shell: bash
         run: |
           set -euo pipefail
-          BASE='https://www.forebet.com/en/football-predictions/predictions-1x2'
-          for START in 0 1 2 3 4 5 20 40 80 160 320 640; do
+          BASE='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
+          for START in 0 1 2 3 4 5 6 7 8 9 10 11 12; do
             if [ "$START" = 0 ]; then TARGET="$BASE"; else TARGET="$BASE?start=$START"; fi
             OUT="/tmp/f-$START.html"
             if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" -H 'x-respond-with: html' -H 'x-timeout: 20' -o "$OUT"; then
