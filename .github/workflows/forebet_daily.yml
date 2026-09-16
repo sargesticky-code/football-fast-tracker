@@ -112,12 +112,23 @@ jobs:
           ou = sum(bool(r.get('prediction_ou25')) for r in feed)
           corners = sum(bool(r.get('corner_prediction')) for r in feed)
           detail = sum(bool(r.get('forebet_detail_url')) for r in feed)
+          model_ratio = len(feed) / len(targets)
+          ou_ratio = ou / len(feed)
+          corner_ratio = corners / len(feed)
+          minimums = {'model': 0.40, 'ou25': 0.25, 'corners95': 0.25}
+          if model_ratio < minimums['model']:
+              raise SystemExit(f'Forebet model coverage too low: {len(feed)}/{len(targets)} ({model_ratio:.1%})')
+          if ou_ratio < minimums['ou25']:
+              raise SystemExit(f'Forebet O-U coverage too low: {ou}/{len(feed)} ({ou_ratio:.1%})')
+          if corner_ratio < minimums['corners95']:
+              raise SystemExit(f'Forebet corner coverage too low: {corners}/{len(feed)} ({corner_ratio:.1%})')
           if detail and not (ou or corners):
               raise SystemExit('Forebet detail pages resolved but no O-U/corner signals parsed')
           print(
               f"PASS hkjc_current={len(current)} targets={len(targets)} forebet={len(feed)} "
               f"archive={len(archive)} aliases={len(aliases)} power={rated_sides}/{len(feed)*2} "
-              f"detail={detail} ou25={ou} corners95={corners} scraperapi_credits=0"
+              f"detail={detail} model_coverage={model_ratio:.1%} "
+              f"ou25={ou} ({ou_ratio:.1%}) corners95={corners} ({corner_ratio:.1%}) scraperapi_credits=0"
           )
           PY
 
