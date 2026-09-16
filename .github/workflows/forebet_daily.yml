@@ -62,6 +62,9 @@ jobs:
       - name: Add independent Opta global power ratings
         run: python scripts/enrich_power_ratings.py
 
+      - name: Persist rolling Forebet event archive
+        run: python scripts/archive_forebet.py --bootstrap-ref 3e91d22ef028fe4ec230e205e1a73efece76d568
+
       - name: Validate production feeds
         run: |
           python - <<'PY'
@@ -71,9 +74,10 @@ jobs:
           current_path = Path('data/hkjc_current.csv')
           target_path = Path('data/hkjc_targets.csv')
           feed_path = Path('data/forebet_current.csv')
+          archive_path = Path('data/forebet_archive.csv')
           ratings_path = Path('data/power_ratings.csv')
 
-          for path in (current_path, target_path, feed_path, ratings_path):
+          for path in (current_path, target_path, feed_path, archive_path, ratings_path):
               if not path.exists():
                   raise SystemExit(f'missing production file: {path}')
 
@@ -83,6 +87,8 @@ jobs:
               targets = list(csv.DictReader(fh))
           with feed_path.open(encoding='utf-8-sig', newline='') as fh:
               feed = list(csv.DictReader(fh))
+          with archive_path.open(encoding='utf-8-sig', newline='') as fh:
+              archive = list(csv.DictReader(fh))
 
           if not current:
               raise SystemExit('zero direct HKJC current rows')
@@ -109,6 +115,11 @@ jobs:
           if bad_probs:
               raise SystemExit(f'feed contains {len(bad_probs)} model-empty rows')
 
+          archive_ids = {r.get('hkjc_event_id') for r in archive}
+          missing_archive = [r['hkjc_event_id'] for r in feed if r.get('hkjc_event_id') not in archive_ids]
+          if missing_archive:
+              raise SystemExit(f'archive missing current event ids: {missing_archive}')
+
           with ratings_path.open(encoding='utf-8-sig', newline='') as fh:
               ratings = list(csv.DictReader(fh))
           if len(ratings) < 5000:
@@ -122,7 +133,8 @@ jobs:
 
           print(
               f'PASS hkjc_current={len(current)} direct_targets={len(targets)} '
-              f'forebet_kept={len(feed)} non_hkjc=0 duplicates=0 model_empty=0 '
+              f'forebet_kept={len(feed)} forebet_archive={len(archive)} '
+              f'non_hkjc=0 duplicates=0 model_empty=0 '
               f'opta_snapshot={len(ratings)} power={rated_sides}/{total_sides}'
           )
           PY
@@ -131,14 +143,14 @@ jobs:
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/hkjc_current.csv data/hkjc_targets.csv data/forebet_current.csv
+          git add data/hkjc_current.csv data/hkjc_targets.csv data/forebet_current.csv data/forebet_archive.csv
           if [ -f data/power_ratings.csv ]; then
             git add data/power_ratings.csv
           fi
           if git diff --cached --quiet; then
             echo 'No feed changes to commit.'
           else
-            git commit -m 'Update direct HKJC, Forebet and Opta feeds [skip ci]'
+            git commit -m 'Update direct HKJC, Forebet, archive and Opta feeds [skip ci]'
             git pull --rebase origin main
             git push
           fi
