@@ -1,4 +1,4 @@
-name: Probe Jina Forebet Routine Markets
+name: Probe Forebet Direct Chrome
 on:
   workflow_dispatch:
   push:
@@ -11,25 +11,30 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Probe free Forebet component transport variants
+      - name: Install Playwright Python
+        run: pip install playwright
+      - name: Probe Forebet with runner Chrome
         shell: bash
         run: |
-          set -euo pipefail
-          URLS=(
-            'https://r.jina.ai/https://www.forebet.com/en/component/forebet/under-over'
-            'https://r.jina.ai/http://www.forebet.com/en/component/forebet/under-over'
-            'https://r.jina.ai/https://www.forebet.com/en/football-tips-and-predictions-for-today/corners'
-            'https://r.jina.ai/https://www.forebet.com/en/football-predictions/predictions-1x2?start=2'
-          )
-          NAMES=(ou_https ou_http corners one_generic)
-          for i in "${!URLS[@]}"; do
-            M="${NAMES[$i]}"; OUT="/tmp/$M.html"
-            if ! curl -LsS --fail --max-time 90 "${URLS[$i]}" -H 'x-respond-with: html' -H 'x-timeout: 30' -o "$OUT"; then
-              echo "MARKET=$M FETCH_FAILED"; continue
-            fi
-            RCNT=$(python -c 'import re,sys; s=open(sys.argv[1],encoding="utf-8",errors="ignore").read(); print(len(re.findall(r"class=\"[^\"]*rcnt",s)))' "$OUT")
-            echo "MARKET=$M bytes=$(wc -c <"$OUT") rcnt=$RCNT"
-            for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
-              if grep -Fqi "$needle" "$OUT"; then echo "  FOUND $needle"; else echo "  MISSING $needle"; fi
-            done
-          done
+          python - <<'PY'
+          from playwright.sync_api import sync_playwright
+          urls={
+            'one':'https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league',
+            'ou':'https://www.forebet.com/en/component/forebet/under-over',
+            'corners':'https://www.forebet.com/en/football-tips-and-predictions-for-today/corners',
+          }
+          needles=['Spartak Moscow','Rodina Moscow','Wahda Abu Dhabi','Al Khaldiya']
+          with sync_playwright() as p:
+            browser=p.chromium.launch(channel='chrome',headless=True,args=['--no-sandbox','--disable-blink-features=AutomationControlled'])
+            page=browser.new_page(viewport={'width':1440,'height':900}, locale='en-US')
+            for name,url in urls.items():
+              try:
+                resp=page.goto(url,wait_until='domcontentloaded',timeout=60000)
+                page.wait_for_timeout(4000)
+                html=page.content()
+                print('MARKET',name,'status',resp.status if resp else None,'bytes',len(html),'rcnt',html.count('rcnt'))
+                for n in needles: print(' ',('FOUND' if n.lower() in html.lower() else 'MISSING'),n)
+              except Exception as e:
+                print('MARKET',name,'ERROR',repr(e))
+            browser.close()
+          PY
