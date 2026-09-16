@@ -11,17 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Probe free high-row Forebet market pages
+      - name: Probe free Forebet component transport variants
         shell: bash
         run: |
           set -euo pipefail
-          declare -A URLS
-          URLS[one]='https://www.forebet.com/en/football-tips-and-predictions-for-today/predictions-1x2/by-league/1000'
-          URLS[ou]='https://www.forebet.com/en/football-tips-and-predictions-for-today/predictions-under-over-goals/by-league/1000'
-          URLS[corners]='https://www.forebet.com/en/football-tips-and-predictions-for-today/corners/by-league/1000'
-          for M in one ou corners; do
-            OUT="/tmp/$M.html"
-            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/${URLS[$M]}" -H 'x-respond-with: html' -H 'x-timeout: 30' -o "$OUT"; then
+          URLS=(
+            'https://r.jina.ai/https://www.forebet.com/en/component/forebet/under-over'
+            'https://r.jina.ai/http://www.forebet.com/en/component/forebet/under-over'
+            'https://r.jina.ai/https://www.forebet.com/en/football-tips-and-predictions-for-today/corners'
+            'https://r.jina.ai/https://www.forebet.com/en/football-predictions/predictions-1x2?start=2'
+          )
+          NAMES=(ou_https ou_http corners one_generic)
+          for i in "${!URLS[@]}"; do
+            M="${NAMES[$i]}"; OUT="/tmp/$M.html"
+            if ! curl -LsS --fail --max-time 90 "${URLS[$i]}" -H 'x-respond-with: html' -H 'x-timeout: 30' -o "$OUT"; then
               echo "MARKET=$M FETCH_FAILED"; continue
             fi
             RCNT=$(python -c 'import re,sys; s=open(sys.argv[1],encoding="utf-8",errors="ignore").read(); print(len(re.findall(r"class=\"[^\"]*rcnt",s)))' "$OUT")
