@@ -16,12 +16,19 @@ jobs:
         run: |
           set -euo pipefail
           BASE='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
-          for START in 0 30 40 44 60; do
+          for START in 0 30 40 44 60 80 100; do
             if [ "$START" = 0 ]; then TARGET="$BASE"; else TARGET="$BASE?start=$START"; fi
             OUT="/tmp/f-$START.html"
-            curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" \
-              -H 'x-respond-with: html' -H 'x-timeout: 20' -o "$OUT"
-            RCNT=$(grep -o 'class="[^"]*rcnt' "$OUT" | wc -l)
+            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" \
+              -H 'x-respond-with: html' -H 'x-timeout: 20' -o "$OUT"; then
+              echo "START=$START FETCH_FAILED"; continue
+            fi
+            RCNT=$(python - "$OUT" <<'PY'
+import re,sys
+s=open(sys.argv[1],encoding='utf-8',errors='ignore').read()
+print(len(re.findall(r'class="[^"]*rcnt',s)))
+PY
+)
             echo "START=$START bytes=$(wc -c <"$OUT") rcnt=$RCNT"
             for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
               if grep -Fqi "$needle" "$OUT"; then echo "  FOUND $needle"; else echo "  MISSING $needle"; fi
