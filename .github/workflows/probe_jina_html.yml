@@ -9,30 +9,21 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 5
     steps:
-      - name: Probe rendered HTML
+      - name: Probe generic start offsets
         shell: bash
         run: |
           set -euo pipefail
-          TARGET='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
-          curl -L --fail --max-time 90 "https://r.jina.ai/$TARGET" \
-            -H 'x-respond-with: html' -H 'x-timeout: 30' -o /tmp/f.html
-          echo "bytes=$(wc -c </tmp/f.html) rcnt=$(grep -o 'class="[^"]*rcnt' /tmp/f.html | wc -l)"
-          echo '--- pagination / loader clues ---'
-          python - <<'PY'
-          import re
-          s=open('/tmp/f.html',encoding='utf-8',errors='ignore').read()
-          pats=[r'.{0,160}mrows.{0,220}',r'.{0,160}load.{0,80}more.{0,220}',r'.{0,160}next-page.{0,220}',r'.{0,160}ajax.{0,220}',r'.{0,160}[?&]start=\d+.{0,220}']
-          seen=set()
-          for pat in pats:
-              for m in re.finditer(pat,s,re.I|re.S):
-                  x=' '.join(m.group(0).split())
-                  if x not in seen:
-                      seen.add(x); print(x[:700])
-                  if len(seen)>=30: break
-              if len(seen)>=30: break
-          PY
-          for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
-            if grep -Fqi "$needle" /tmp/f.html; then echo "FOUND $needle"; else echo "MISSING $needle"; fi
+          BASE='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
+          for START in 0 30 40 44 60; do
+            if [ "$START" = 0 ]; then TARGET="$BASE"; else TARGET="$BASE?start=$START"; fi
+            OUT="/tmp/f-$START.html"
+            curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" \
+              -H 'x-respond-with: html' -H 'x-timeout: 20' -o "$OUT"
+            RCNT=$(grep -o 'class="[^"]*rcnt' "$OUT" | wc -l)
+            echo "START=$START bytes=$(wc -c <"$OUT") rcnt=$RCNT"
+            for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
+              if grep -Fqi "$needle" "$OUT"; then echo "  FOUND $needle"; else echo "  MISSING $needle"; fi
+            done
           done
