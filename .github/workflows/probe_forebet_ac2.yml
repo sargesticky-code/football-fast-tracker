@@ -1,0 +1,32 @@
+name: Probe Forebet AC2 League
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/probe_forebet_ac2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
+    steps:
+      - name: Fetch targeted AFC Champions League 2 page
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, requests
+          url='https://www.forebet.com/en/predictions-asia/afc-cup'
+          r=requests.get('https://api.scraperapi.com', params={'api_key':os.environ['SCRAPERAPI_KEY'],'url':url,'max_cost':'10'}, timeout=70)
+          print('status',r.status_code,'bytes',len(r.text),'cost',r.headers.get('sa-credit-cost'))
+          open('/tmp/ac2.html','w',encoding='utf-8').write(r.text)
+          for needle in ['Wahda Abu Dhabi','Kuwait SC','Al Khaldiya','Nasaf Qarshi']:
+              print(('FOUND' if needle.lower() in r.text.lower() else 'MISSING'), needle)
+          if r.status_code != 200: raise SystemExit(2)
+          PY
