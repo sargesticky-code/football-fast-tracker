@@ -9,26 +9,20 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
-      - name: Probe generic start offsets
+      - name: Probe generic Forebet pages through Jina
         shell: bash
         run: |
           set -euo pipefail
-          BASE='https://www.forebet.com/en/football-predictions/predictions-1x2/2026-09-16/by-league'
-          for START in 0 30 40 44 60 80 100; do
+          BASE='https://www.forebet.com/en/football-predictions/predictions-1x2'
+          for START in 0 1 2 3 4 5 20 40 80 160 320 640; do
             if [ "$START" = 0 ]; then TARGET="$BASE"; else TARGET="$BASE?start=$START"; fi
             OUT="/tmp/f-$START.html"
-            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" \
-              -H 'x-respond-with: html' -H 'x-timeout: 20' -o "$OUT"; then
+            if ! curl -LsS --fail --max-time 90 "https://r.jina.ai/$TARGET" -H 'x-respond-with: html' -H 'x-timeout: 20' -o "$OUT"; then
               echo "START=$START FETCH_FAILED"; continue
             fi
-            RCNT=$(python - "$OUT" <<'PY'
-import re,sys
-s=open(sys.argv[1],encoding='utf-8',errors='ignore').read()
-print(len(re.findall(r'class="[^"]*rcnt',s)))
-PY
-)
+            RCNT=$(python -c 'import re,sys; s=open(sys.argv[1],encoding="utf-8",errors="ignore").read(); print(len(re.findall(r"class=\"[^\"]*rcnt",s)))' "$OUT")
             echo "START=$START bytes=$(wc -c <"$OUT") rcnt=$RCNT"
             for needle in 'Spartak Moscow' 'Rodina Moscow' 'Wahda Abu Dhabi' 'Al Khaldiya'; do
               if grep -Fqi "$needle" "$OUT"; then echo "  FOUND $needle"; else echo "  MISSING $needle"; fi
