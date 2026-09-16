@@ -82,11 +82,7 @@ def _iso_date_from_value(value: str) -> str:
 
 
 def candidate_dates(row: dict[str, str]) -> list[str]:
-    """Try Forebet's stored date plus HKJC local kickoff date.
-
-    This catches fixtures whose Forebet capture date and Hong Kong kickoff date
-    differ across midnight.
-    """
+    """Try Forebet's stored date plus HKJC local kickoff date."""
     out: list[str] = []
     for value in (
         row.get("match_date", ""),
@@ -262,6 +258,38 @@ def page_fixture_coverage(page_lines: list[str], rows: list[dict[str, str]]) -> 
     return listed, parsed
 
 
+def debug_unparsed_windows(
+    page_lines: list[str],
+    rows: list[dict[str, str]],
+    date: str,
+    limit: int = 3,
+) -> None:
+    """Print small raw windows for listed fixtures the parser cannot decode."""
+    shown = 0
+    for row in rows:
+        idx = find_fixture_index(
+            page_lines,
+            row.get("home_team", ""),
+            row.get("away_team", ""),
+        )
+        if idx < 0 or parse_row_window(page_lines, idx):
+            continue
+        event_id = row.get("hkjc_event_id", "")
+        print(
+            f"FOREBET_CORNER_DEBUG_BEGIN date={date} event={event_id} "
+            f"fixture={row.get('home_team','')} vs {row.get('away_team','')} idx={idx}"
+        )
+        lo = max(0, idx - 8)
+        hi = min(len(page_lines), idx + 24)
+        for line_no in range(lo, hi):
+            marker = ">>" if line_no == idx else "  "
+            print(f"FOREBET_CORNER_DEBUG {marker} {line_no}: {page_lines[line_no]!r}")
+        print(f"FOREBET_CORNER_DEBUG_END date={date} event={event_id}")
+        shown += 1
+        if shown >= limit:
+            break
+
+
 def fetch_market_pages(
     market: str,
     dates: list[str],
@@ -294,6 +322,8 @@ def fetch_market_pages(
                 f"FOREBET_CORNER_DATE_CHEAP date={date} rows={len(date_rows)} "
                 f"listed={listed} parsed={parsed} ratio={ratio:.1%}"
             )
+            if listed and parsed < listed:
+                debug_unparsed_windows(chosen, date_rows, date)
 
             if date_rows and ratio < 0.60:
                 browser = fetch_jina(url, f"{market}_{date}", "browser")
