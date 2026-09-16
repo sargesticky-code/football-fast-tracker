@@ -45,6 +45,11 @@ def norm(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip()
 
 
+def text_score(home: str, away: str) -> str:
+    """Use spaces around the dash so Google IMPORTDATA keeps a score as text."""
+    return f"{home} - {away}"
+
+
 def fetch_markdown(url: str, label: str) -> str | None:
     try:
         r = requests.get(
@@ -105,7 +110,7 @@ def parse_row_window(page_lines: list[str], start: int) -> dict[str, str]:
         if pair is not None and pred and not score:
             m = SCORE_RE.match(line)
             if m:
-                score = f"{m.group(1)}-{m.group(2)}"
+                score = text_score(m.group(1), m.group(2))
                 continue
         if score and NUMBER_RE.match(line):
             avg = line
@@ -185,7 +190,8 @@ def main() -> int:
     tmp = FEED.with_suffix(".tmp")
     with tmp.open("w", encoding="utf-8-sig", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=fields)
-        w.writeheader(); w.writerows(rows)
+        w.writeheader()
+        w.writerows(rows)
     tmp.replace(FEED)
 
     print(
