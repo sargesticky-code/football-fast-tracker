@@ -9,7 +9,9 @@ on:
       - 'scripts/normalize_hkjc.py'
       - 'scripts/run_selective.py'
       - 'scripts/update_forebet_alias_registry.py'
+      - 'scripts/enrich_forebet_markets.py'
       - 'scripts/enrich_power_ratings.py'
+      - 'scripts/archive_forebet.py'
       - '.github/workflows/forebet_daily.yml'
 
 permissions:
@@ -22,9 +24,8 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     env:
-      SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
       HKJC_GATE_ONLY: '0'
       HKJC_UPSTREAM_SHA: '1d2234102dc8f1ee23d0b45c25c125dc3ef98176'
     steps:
@@ -54,7 +55,7 @@ jobs:
           cd "$GITHUB_WORKSPACE"
           python scripts/normalize_hkjc.py --matches /tmp/hkjc_matches.json --had /tmp/hkjc_had.json --horizon-hours 36
 
-      - name: Fetch Forebet only for direct HKJC fixtures
+      - name: Fetch Forebet 1X2 from generic free rendered pages
         run: python scripts/run_selective.py
 
       - name: Learn permanent Forebet team aliases
@@ -62,6 +63,9 @@ jobs:
 
       - name: Add independent Opta global power ratings
         run: python scripts/enrich_power_ratings.py
+
+      - name: Add Forebet O-U and corner signals from free match pages
+        run: python scripts/enrich_forebet_markets.py
 
       - name: Persist rolling Forebet event archive
         run: python scripts/archive_forebet.py --bootstrap-ref 3e91d22ef028fe4ec230e205e1a73efece76d568
@@ -97,7 +101,16 @@ jobs:
           if len(ratings) < 5000: raise SystemExit(f'Opta snapshot suspiciously small: {len(ratings)}')
           rated_sides = sum(bool(r.get('power_home')) + bool(r.get('power_away')) for r in feed)
           if rated_sides < max(1, len(feed)): raise SystemExit(f'Opta coverage too low: {rated_sides}/{len(feed)*2}')
-          print(f"PASS hkjc_current={len(current)} targets={len(targets)} forebet={len(feed)} archive={len(archive)} aliases={len(aliases)} power={rated_sides}/{len(feed)*2}")
+          ou = sum(bool(r.get('prediction_ou25')) for r in feed)
+          corners = sum(bool(r.get('corner_prediction')) for r in feed)
+          detail = sum(bool(r.get('forebet_detail_url')) for r in feed)
+          if detail and not (ou or corners):
+              raise SystemExit('Forebet detail pages resolved but no O-U/corner signals parsed')
+          print(
+              f"PASS hkjc_current={len(current)} targets={len(targets)} forebet={len(feed)} "
+              f"archive={len(archive)} aliases={len(aliases)} power={rated_sides}/{len(feed)*2} "
+              f"detail={detail} ou25={ou} corners95={corners} scraperapi_credits=0"
+          )
           PY
 
       - name: Commit refreshed production feeds
@@ -109,7 +122,7 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No feed changes to commit.'
           else
-            git commit -m 'Update HKJC, Forebet, aliases, archive and Opta feeds [skip ci]'
+            git commit -m 'Update HKJC and zero-credit Forebet model feeds [skip ci]'
             git pull --rebase origin main
             git push
           fi
