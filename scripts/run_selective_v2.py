@@ -1,4 +1,4 @@
-"""Production Forebet runner with durable matching and target recovery."""
+"""Production Forebet runner with durable matching plus multi-index target recovery."""
 from __future__ import annotations
 
 from forebet_match_policy import install as install_match_policy
