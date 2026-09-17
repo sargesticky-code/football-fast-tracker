@@ -1,14 +1,17 @@
 """Fixture-anchored parser for Forebet match-detail Markdown.
 
 Forebet detail pages contain many navigation/sidebar mentions of "1 X 2" before
-the real prediction table.  This parser identifies the actual fixture heading,
+the real prediction table. This parser identifies the actual fixture heading,
 then accepts only a 1X2 table whose nearby headers contain Probability/Prob. %
-and Pred.  It is intentionally isolated so detail-page format changes do not
+and Pred. It is intentionally isolated so detail-page format changes do not
 couple to the broader recovery engine.
 """
 from __future__ import annotations
 
 import re
+
+_METADATA_PREFIX = re.compile(r"^(?:Title|URL Source|Markdown Content):\s*", re.I)
+_METADATA_SUFFIX = re.compile(r"\s+Prediction,\s*Stats,\s*H2H\b.*$", re.I)
 
 
 def _plain_markdown_line(value: str) -> str:
@@ -19,14 +22,18 @@ def _plain_markdown_line(value: str) -> str:
     return " ".join(value.split()).strip()
 
 
+def _team_label(value: str) -> str:
+    value = _METADATA_PREFIX.sub("", value or "")
+    value = _METADATA_SUFFIX.sub("", value)
+    return " ".join(value.split()).strip(" -")
+
+
 def _probability_triple(line: str) -> tuple[int, int, int] | None:
     numbers = [int(x) for x in re.findall(r"(?<!\d)(\d{1,3})(?!\d)", line)]
     if len(numbers) != 3:
         return None
     # Forebet publishes integer-rounded probabilities. Three independently
-    # rounded percentages can legitimately total 99, 100 or 101 (for example
-    # AC Oulu vs Inter Turku is rendered as 31/25/45). Keep this tolerance
-    # narrow; fixture/table anchoring still guards against unrelated triples.
+    # rounded percentages can legitimately total 99, 100 or 101.
     total = sum(numbers)
     if any(x < 0 or x > 100 for x in numbers) or not 99 <= total <= 101:
         return None
@@ -36,24 +43,28 @@ def _probability_triple(line: str) -> tuple[int, int, int] | None:
 def _fixture_heading(production, lines: list[str], target: dict) -> tuple[str, str, int]:
     target_home = str(target.get("home_en") or "").strip()
     target_away = str(target.get("away_en") or "").strip()
-    best: tuple[float, str, str, int] | None = None
+    best: tuple[float, int, str, str, int] | None = None
 
     for index, line in enumerate(lines):
         match = re.match(r"^(.+?)\s+VS\s+(.+?)$", line, flags=re.I)
         if not match:
             continue
-        home = match.group(1).strip()
-        away = match.group(2).strip()
+        home = _team_label(match.group(1))
+        away = _team_label(match.group(2))
         hs = production.feed.team_score(home, target_home)
         aws = production.feed.team_score(away, target_away)
         avg = (hs + aws) / 2
         if hs < 0.68 or aws < 0.68 or avg < 0.76:
             continue
-        if best is None or avg > best[0]:
-            best = (avg, home, away, index)
+        # On equal match quality prefer the shorter/cleaner heading over a
+        # page-title wrapper such as "... Prediction, Stats, H2H - ...".
+        cleanliness = -(len(home) + len(away))
+        candidate = (avg, cleanliness, home, away, index)
+        if best is None or candidate[:2] > best[:2]:
+            best = candidate
 
     if best is not None:
-        return best[1], best[2], best[3]
+        return best[2], best[3], best[4]
     return target_home, target_away, -1
 
 
