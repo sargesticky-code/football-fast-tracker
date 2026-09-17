@@ -12,13 +12,16 @@ on:
       - 'scripts/run_selective_v2.py'
       - 'scripts/forebet_match_policy.py'
       - 'scripts/forebet_target_recovery.py'
+      - 'scripts/forebet_detail_parser.py'
       - 'scripts/forebet_availability.py'
+      - 'scripts/reconcile_forebet_availability.py'
       - 'scripts/restore_active_forebet.py'
       - 'scripts/update_forebet_alias_registry.py'
       - 'scripts/enrich_forebet_markets.py'
       - 'scripts/normalize_forebet_text.py'
       - 'scripts/enrich_power_ratings.py'
       - 'scripts/archive_forebet.py'
+      - 'data/team_alias_manual.csv'
       - '.github/workflows/forebet_daily.yml'
 
 permissions:
@@ -72,6 +75,9 @@ jobs:
       - name: Restore active Forebet models from rolling archive
         run: python scripts/restore_active_forebet.py
 
+      - name: Reconcile availability with active model feed
+        run: python scripts/reconcile_forebet_availability.py
+
       - name: Learn permanent Forebet team aliases
         run: python scripts/update_forebet_alias_registry.py
 
@@ -100,6 +106,11 @@ jobs:
           if any(not all(r.get(k) for k in ('prob_home','prob_draw','prob_away')) for r in feed): raise SystemExit('model-empty Forebet row')
           allowed = {'MODEL', 'FIXTURE_ONLY', 'UNRESOLVED'}
           if any(r.get('state') not in allowed for r in availability): raise SystemExit('invalid Forebet availability state')
+          state_by_id = {r.get('hkjc_event_id'): r.get('state') for r in availability if r.get('hkjc_event_id')}
+          non_model_feed = sorted(event_id for event_id in feed_ids if state_by_id.get(event_id) != 'MODEL')
+          if non_model_feed: raise SystemExit('current model rows not marked MODEL: ' + ','.join(non_model_feed))
+          stale_model_states = sorted(event_id for event_id, state in state_by_id.items() if state == 'MODEL' and event_id not in feed_ids)
+          if stale_model_states: raise SystemExit('MODEL availability without current model row: ' + ','.join(stale_model_states))
           active_aliases = [r for r in aliases if r.get('status') in ('ACTIVE','MANUAL')]
           if not active_aliases: raise SystemExit('alias registry has no active rows')
           ratio = len(feed) / len(availability)
@@ -175,6 +186,11 @@ jobs:
           if feed_ids - availability_ids: raise SystemExit('Forebet feed row missing from run availability universe')
           if len(feed) != len(feed_ids): raise SystemExit('duplicate Forebet HKJC event')
           if any(not all(r.get(k) for k in ('prob_home','prob_draw','prob_away')) for r in feed): raise SystemExit('model-empty Forebet row')
+          state_by_id = {r.get('hkjc_event_id'): r.get('state') for r in availability if r.get('hkjc_event_id')}
+          non_model_feed = sorted(event_id for event_id in feed_ids if state_by_id.get(event_id) != 'MODEL')
+          if non_model_feed: raise SystemExit('final model rows not marked MODEL: ' + ','.join(non_model_feed))
+          stale_model_states = sorted(event_id for event_id, state in state_by_id.items() if state == 'MODEL' and event_id not in feed_ids)
+          if stale_model_states: raise SystemExit('final MODEL availability without current model row: ' + ','.join(stale_model_states))
           archive_ids = {r.get('hkjc_event_id') for r in archive}
           if any(r['hkjc_event_id'] not in archive_ids for r in feed): raise SystemExit('archive missing current event')
           allowed = {'MODEL', 'FIXTURE_ONLY', 'UNRESOLVED'}
