@@ -10,8 +10,8 @@ import forebet_target_recovery as target_recovery  # noqa: E402
 from forebet_detail_parser import install as install_detail_parser  # noqa: E402
 from forebet_availability import install as install_availability  # noqa: E402
 
-# Detail parser v2: anchor to the real fixture + prediction-table header instead
-# of the first navigation/sidebar occurrence of "1 X 2" on a Forebet page.
+# Detail parser v3: anchor to the real fixture/table and tolerate Forebet's
+# independently rounded integer probability totals of 99, 100 or 101.
 install_detail_parser(target_recovery)
 target_recovery.install(production)
 install_availability(production)
