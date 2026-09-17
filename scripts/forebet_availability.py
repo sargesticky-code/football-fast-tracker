@@ -1,6 +1,6 @@
 """Classify Forebet availability for every active HKJC model target.
 
-This layer runs after all prediction recovery.  It distinguishes three states:
+This layer runs after all prediction recovery. It distinguishes three states:
 - MODEL: a usable Forebet 1X2 model was recovered;
 - FIXTURE_ONLY: Forebet recognises the fixture on its livescore surface but no
   usable prediction model was found;
@@ -22,6 +22,7 @@ HKT = ZoneInfo("Asia/Hong_Kong")
 LIVESCORE_URL = "https://www.forebet.com/en/livescore"
 STATE_FIELD = "forebet_state"
 REASON_FIELD = "forebet_reason"
+CHECKED_FIELD = "forebet_checked_at"
 _LIVESCORE_CACHE: str | None | bool = False
 
 
@@ -103,7 +104,7 @@ def _fixture_ids(production, body: str | None, targets: list[dict]) -> set[str]:
             if hs < 0.68:
                 continue
             # Livescore renders a compact fixture block: time/status, home,
-            # score/separator, away, id.  Keep the window tight so standings
+            # score/separator, away, id. Keep the window tight so standings
             # or unrelated team mentions cannot establish fixture presence.
             for j in range(i + 1, min(len(lines), i + 6)):
                 aws = production.feed.team_score(lines[j], away)
@@ -125,15 +126,16 @@ def _write_states(production, states: dict[str, tuple[str, str]]) -> None:
         reader = csv.DictReader(fh)
         rows = list(reader)
         fields = list(reader.fieldnames or [])
-    if STATE_FIELD not in fields:
-        fields.append(STATE_FIELD)
-    if REASON_FIELD not in fields:
-        fields.append(REASON_FIELD)
+    for field in (STATE_FIELD, REASON_FIELD, CHECKED_FIELD):
+        if field not in fields:
+            fields.append(field)
 
+    checked_at = datetime.now(HKT).isoformat(timespec="seconds")
     for row in rows:
         event_id = str(row.get("hkjc_event_id") or "").strip()
         if event_id in states:
             row[STATE_FIELD], row[REASON_FIELD] = states[event_id]
+            row[CHECKED_FIELD] = checked_at
 
     tmp = path.with_suffix(".availability.tmp")
     with tmp.open("w", encoding="utf-8-sig", newline="") as fh:
