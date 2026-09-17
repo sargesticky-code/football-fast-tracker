@@ -2,12 +2,14 @@
 
 This layer runs after all prediction recovery. It distinguishes three states:
 - MODEL: a usable Forebet 1X2 model was recovered;
-- FIXTURE_ONLY: Forebet recognises the fixture on its livescore surface but no
-  usable prediction model was found;
+- FIXTURE_ONLY: Forebet recognises the fixture but no usable prediction model
+  was found;
 - UNRESOLVED: neither a model nor reliable fixture-presence evidence was found.
 
 Availability is written to its own Forebet-owned CSV. HKJC feeds remain owned by
 the high-frequency HKJC workflow, preventing cross-workflow write conflicts.
+A previously observed FIXTURE_ONLY state is retained while the HKJC target stays
+active, because Forebet's live-score surface naturally drops fixtures over time.
 No probabilities or predictions are invented for FIXTURE_ONLY fixtures.
 """
 from __future__ import annotations
@@ -22,11 +24,42 @@ HKT = ZoneInfo("Asia/Hong_Kong")
 LIVESCORE_URL = "https://www.forebet.com/en/livescore"
 _LIVESCORE_CACHE: str | None | bool = False
 _AVAILABILITY: dict[str, dict[str, str]] = {}
+_PREVIOUS_AVAILABILITY: dict[str, dict[str, str]] = {}
+_PREVIOUS_LOADED = False
 
 FIELDS = [
     "checked_at_hkt", "match_date", "kickoff_hkt", "hkjc_event_id", "league_zh",
     "home_en", "away_en", "state", "reason",
 ]
+
+
+def _availability_path(production) -> Path:
+    return Path(production.DIRECT_TARGETS).parent / "forebet_availability.csv"
+
+
+def _load_previous_availability(production) -> dict[str, dict[str, str]]:
+    global _PREVIOUS_LOADED
+    if _PREVIOUS_LOADED:
+        return _PREVIOUS_AVAILABILITY
+    _PREVIOUS_LOADED = True
+    path = _availability_path(production)
+    if not path.exists():
+        print("FOREBET_AVAILABILITY_PREVIOUS rows=0 status=missing", flush=True)
+        return _PREVIOUS_AVAILABILITY
+    try:
+        with path.open(encoding="utf-8-sig", newline="") as fh:
+            for row in csv.DictReader(fh):
+                event_id = str(row.get("hkjc_event_id") or "").strip()
+                if event_id:
+                    _PREVIOUS_AVAILABILITY[event_id] = dict(row)
+    except Exception as exc:
+        print(f"WARN Forebet previous availability read failed: {exc}", flush=True)
+        return _PREVIOUS_AVAILABILITY
+    print(
+        f"FOREBET_AVAILABILITY_PREVIOUS rows={len(_PREVIOUS_AVAILABILITY)} status=loaded",
+        flush=True,
+    )
+    return _PREVIOUS_AVAILABILITY
 
 
 def _clean_line(value: str) -> str:
@@ -119,7 +152,7 @@ def _fixture_ids(production, body: str | None, targets: list[dict]) -> set[str]:
 
 
 def _write_availability(production) -> None:
-    path = Path(production.DIRECT_TARGETS).parent / "forebet_availability.csv"
+    path = _availability_path(production)
     path.parent.mkdir(parents=True, exist_ok=True)
     rows = sorted(
         _AVAILABILITY.values(),
@@ -145,6 +178,7 @@ def install(production) -> None:
         if not targets:
             return html, cost
 
+        previous = _load_previous_availability(production)
         model_ids = _model_ids(production, html, match_date, targets)
         unresolved_targets = [
             target for target in targets
@@ -160,16 +194,25 @@ def install(production) -> None:
 
         checked_at = datetime.now(HKT).isoformat(timespec="seconds")
         counts = {"MODEL": 0, "FIXTURE_ONLY": 0, "UNRESOLVED": 0}
+        retained_fixture_only = 0
         for target in targets:
             event_id = str(target.get("hkjc_event_id") or "").strip()
             if not event_id:
                 continue
+            old_state = str(previous.get(event_id, {}).get("state") or "").strip().upper()
             if event_id in model_ids:
                 state = "MODEL"
                 reason = "usable_forebet_prediction_model"
             elif event_id in fixture_ids:
                 state = "FIXTURE_ONLY"
                 reason = "forebet_livescore_fixture_without_usable_prediction_model"
+            elif old_state == "FIXTURE_ONLY":
+                # Livescore is ephemeral evidence. Once the exact active HKJC
+                # fixture was observed on Forebet, preserve that evidence until
+                # the target leaves the active modelling window.
+                state = "FIXTURE_ONLY"
+                reason = "previously_observed_forebet_fixture_without_prediction_model"
+                retained_fixture_only += 1
             else:
                 state = "UNRESOLVED"
                 reason = "not_resolved_on_forebet_prediction_or_livescore_surfaces"
@@ -189,7 +232,8 @@ def install(production) -> None:
                 print(
                     f"FOREBET_{state} event={event_id} "
                     f"league={target.get('league_zh','')} "
-                    f"fixture={target.get('home_en','')} vs {target.get('away_en','')}",
+                    f"fixture={target.get('home_en','')} vs {target.get('away_en','')} "
+                    f"reason={reason}",
                     flush=True,
                 )
 
@@ -197,7 +241,8 @@ def install(production) -> None:
         print(
             f"FOREBET_AVAILABILITY date={match_date} targets={len(targets)} "
             f"model={counts['MODEL']} fixture_only={counts['FIXTURE_ONLY']} "
-            f"unresolved={counts['UNRESOLVED']} checked_at={checked_at}",
+            f"unresolved={counts['UNRESOLVED']} retained_fixture_only={retained_fixture_only} "
+            f"checked_at={checked_at}",
             flush=True,
         )
         return html, cost
