@@ -2,17 +2,19 @@
 
 This module sits above the legacy parser and handles recurring source-name
 patterns without growing a one-off hard-coded alias list for every fixture.
-The persistent alias registry remains the final authority once a mapping has
-been learned.
+Verified provider-specific exceptions live in data/team_alias_manual.csv while
+the rolling learned registry remains the final persistent evidence store.
 """
 from __future__ import annotations
 
+import csv
 import re
 from difflib import SequenceMatcher
 
 import scrape_forebet as feed
 
 _LEGACY_NORMALIZE = feed.normalize_team
+MANUAL_ALIAS_FILE = feed.ROOT / "data" / "team_alias_manual.csv"
 
 EXTRA_STOPWORDS = {"al"}
 
@@ -22,6 +24,24 @@ SHORT_TOKEN_DENY = {
 }
 
 _COUNTRY_TAG = re.compile(r"\(\s*[A-Z]{2,4}\s*\)")
+
+
+def _load_manual_aliases() -> int:
+    if not MANUAL_ALIAS_FILE.exists():
+        return 0
+    loaded = 0
+    with MANUAL_ALIAS_FILE.open(encoding="utf-8-sig", newline="") as fh:
+        for row in csv.DictReader(fh):
+            alias = str(row.get("forebet_alias") or "").strip()
+            canonical = str(row.get("canonical_hkjc_name") or "").strip()
+            if not alias or not canonical:
+                continue
+            alias_key = _LEGACY_NORMALIZE(alias)
+            canonical_value = _LEGACY_NORMALIZE(canonical)
+            if alias_key and canonical_value:
+                feed.ALIASES[alias_key] = canonical_value
+                loaded += 1
+    return loaded
 
 
 def normalize_team(value: str) -> str:
@@ -72,6 +92,8 @@ def team_score(a: str, b: str) -> float:
 
 
 def install() -> None:
-    """Install the policy into the legacy parser before production imports it."""
+    """Install permanent aliases and matching policy before production imports."""
+    loaded = _load_manual_aliases()
     feed.normalize_team = normalize_team
     feed.team_score = team_score
+    print(f"FOREBET_MANUAL_ALIAS_SEEDS rows={loaded}", flush=True)
