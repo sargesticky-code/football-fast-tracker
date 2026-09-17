@@ -6,8 +6,8 @@ This layer runs after all prediction recovery. It distinguishes three states:
   usable prediction model was found;
 - UNRESOLVED: neither a model nor reliable fixture-presence evidence was found.
 
-The classification is written back to hkjc_targets.csv so source gaps are
-explicit and durable instead of appearing as unexplained blank model cells.
+Availability is written to its own Forebet-owned CSV. HKJC feeds remain owned by
+the high-frequency HKJC workflow, preventing cross-workflow write conflicts.
 No probabilities or predictions are invented for FIXTURE_ONLY fixtures.
 """
 from __future__ import annotations
@@ -20,10 +20,13 @@ from zoneinfo import ZoneInfo
 
 HKT = ZoneInfo("Asia/Hong_Kong")
 LIVESCORE_URL = "https://www.forebet.com/en/livescore"
-STATE_FIELD = "forebet_state"
-REASON_FIELD = "forebet_reason"
-CHECKED_FIELD = "forebet_checked_at"
 _LIVESCORE_CACHE: str | None | bool = False
+_AVAILABILITY: dict[str, dict[str, str]] = {}
+
+FIELDS = [
+    "checked_at_hkt", "match_date", "kickoff_hkt", "hkjc_event_id", "league_zh",
+    "home_en", "away_en", "state", "reason",
+]
 
 
 def _clean_line(value: str) -> str:
@@ -103,9 +106,6 @@ def _fixture_ids(production, body: str | None, targets: list[dict]) -> set[str]:
             hs = production.feed.team_score(line, home)
             if hs < 0.68:
                 continue
-            # Livescore renders a compact fixture block: time/status, home,
-            # score/separator, away, id. Keep the window tight so standings
-            # or unrelated team mentions cannot establish fixture presence.
             for j in range(i + 1, min(len(lines), i + 6)):
                 aws = production.feed.team_score(lines[j], away)
                 avg = (hs + aws) / 2
@@ -118,28 +118,16 @@ def _fixture_ids(production, body: str | None, targets: list[dict]) -> set[str]:
     return found
 
 
-def _write_states(production, states: dict[str, tuple[str, str]]) -> None:
-    path = Path(production.DIRECT_TARGETS)
-    if not path.exists():
-        return
-    with path.open(encoding="utf-8-sig", newline="") as fh:
-        reader = csv.DictReader(fh)
-        rows = list(reader)
-        fields = list(reader.fieldnames or [])
-    for field in (STATE_FIELD, REASON_FIELD, CHECKED_FIELD):
-        if field not in fields:
-            fields.append(field)
-
-    checked_at = datetime.now(HKT).isoformat(timespec="seconds")
-    for row in rows:
-        event_id = str(row.get("hkjc_event_id") or "").strip()
-        if event_id in states:
-            row[STATE_FIELD], row[REASON_FIELD] = states[event_id]
-            row[CHECKED_FIELD] = checked_at
-
-    tmp = path.with_suffix(".availability.tmp")
+def _write_availability(production) -> None:
+    path = Path(production.DIRECT_TARGETS).parent / "forebet_availability.csv"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    rows = sorted(
+        _AVAILABILITY.values(),
+        key=lambda row: (row.get("kickoff_hkt", ""), row.get("hkjc_event_id", "")),
+    )
+    tmp = path.with_suffix(".tmp")
     with tmp.open("w", encoding="utf-8-sig", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore")
+        writer = csv.DictWriter(fh, fieldnames=FIELDS, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
     tmp.replace(path)
@@ -170,7 +158,8 @@ def install(production) -> None:
                 unresolved_targets,
             )
 
-        states: dict[str, tuple[str, str]] = {}
+        checked_at = datetime.now(HKT).isoformat(timespec="seconds")
+        counts = {"MODEL": 0, "FIXTURE_ONLY": 0, "UNRESOLVED": 0}
         for target in targets:
             event_id = str(target.get("hkjc_event_id") or "").strip()
             if not event_id:
@@ -184,7 +173,18 @@ def install(production) -> None:
             else:
                 state = "UNRESOLVED"
                 reason = "not_resolved_on_forebet_prediction_or_livescore_surfaces"
-            states[event_id] = (state, reason)
+            counts[state] += 1
+            _AVAILABILITY[event_id] = {
+                "checked_at_hkt": checked_at,
+                "match_date": str(target.get("match_date") or ""),
+                "kickoff_hkt": str(target.get("kickoff_hkt") or ""),
+                "hkjc_event_id": event_id,
+                "league_zh": str(target.get("league_zh") or ""),
+                "home_en": str(target.get("home_en") or ""),
+                "away_en": str(target.get("away_en") or ""),
+                "state": state,
+                "reason": reason,
+            }
             if state != "MODEL":
                 print(
                     f"FOREBET_{state} event={event_id} "
@@ -193,13 +193,11 @@ def install(production) -> None:
                     flush=True,
                 )
 
-        _write_states(production, states)
+        _write_availability(production)
         print(
             f"FOREBET_AVAILABILITY date={match_date} targets={len(targets)} "
-            f"model={sum(v[0] == 'MODEL' for v in states.values())} "
-            f"fixture_only={sum(v[0] == 'FIXTURE_ONLY' for v in states.values())} "
-            f"unresolved={sum(v[0] == 'UNRESOLVED' for v in states.values())} "
-            f"checked_at={datetime.now(HKT).isoformat(timespec='seconds')}",
+            f"model={counts['MODEL']} fixture_only={counts['FIXTURE_ONLY']} "
+            f"unresolved={counts['UNRESOLVED']} checked_at={checked_at}",
             flush=True,
         )
         return html, cost
