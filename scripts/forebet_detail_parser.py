@@ -23,7 +23,12 @@ def _probability_triple(line: str) -> tuple[int, int, int] | None:
     numbers = [int(x) for x in re.findall(r"(?<!\d)(\d{1,3})(?!\d)", line)]
     if len(numbers) != 3:
         return None
-    if any(x < 0 or x > 100 for x in numbers) or sum(numbers) != 100:
+    # Forebet publishes integer-rounded probabilities. Three independently
+    # rounded percentages can legitimately total 99, 100 or 101 (for example
+    # AC Oulu vs Inter Turku is rendered as 31/25/45). Keep this tolerance
+    # narrow; fixture/table anchoring still guards against unrelated triples.
+    total = sum(numbers)
+    if any(x < 0 or x > 100 for x in numbers) or not 99 <= total <= 101:
         return None
     return numbers[0], numbers[1], numbers[2]
 
