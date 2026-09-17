@@ -34,7 +34,8 @@ CURRENT_COLUMNS = [
 TARGET_COLUMNS = [
     "fetched_at_hkt", "match_date", "kickoff_hkt", "hkjc_event_id", "league_zh",
     "home_zh", "away_zh", "home_en", "away_en", "had_home", "had_draw",
-    "had_away", "mapping_source",
+    "had_away", "mapping_source", "forebet_state", "forebet_reason",
+    "forebet_checked_at",
 ]
 
 TERMINAL_STATUS_MARKERS = (
@@ -246,6 +247,11 @@ def main() -> int:
             "had_draw": target_had_draw,
             "had_away": target_had_away,
             "mapping_source": "HKJC GraphQL",
+            # Forebet owns these fields. Hourly HKJC refreshes preserve the
+            # last classification until the next Forebet run checks it again.
+            "forebet_state": old.get("forebet_state", ""),
+            "forebet_reason": old.get("forebet_reason", ""),
+            "forebet_checked_at": old.get("forebet_checked_at", ""),
         })
 
     current.sort(key=lambda r: (r["kickoff_hkt"], r["hkjc_event_id"]))
