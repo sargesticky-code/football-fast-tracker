@@ -12,6 +12,7 @@ on:
       - 'scripts/run_selective_v2.py'
       - 'scripts/forebet_match_policy.py'
       - 'scripts/forebet_target_recovery.py'
+      - 'scripts/forebet_availability.py'
       - 'scripts/restore_active_forebet.py'
       - 'scripts/update_forebet_alias_registry.py'
       - 'scripts/enrich_forebet_markets.py'
@@ -59,7 +60,11 @@ jobs:
           python -m hkjc list --format json --out /tmp/hkjc_matches.json
           python -m hkjc odds --page HAD --format json --out /tmp/hkjc_had.json
           cd "$GITHUB_WORKSPACE"
-          python scripts/normalize_hkjc.py --matches /tmp/hkjc_matches.json --had /tmp/hkjc_had.json --horizon-hours 36
+          python scripts/normalize_hkjc.py \
+            --matches /tmp/hkjc_matches.json \
+            --had /tmp/hkjc_had.json \
+            --horizon-hours 36 \
+            --live-retain-minutes 150
 
       - name: Fetch Forebet 1X2 with durable HKJC matching policy
         run: python scripts/run_selective_v2.py
@@ -77,43 +82,55 @@ jobs:
           from pathlib import Path
           targets_path = Path('data/hkjc_targets.csv')
           feed_path = Path('data/forebet_current.csv')
+          availability_path = Path('data/forebet_availability.csv')
           aliases_path = Path('data/team_alias_registry.csv')
-          for path in (targets_path, feed_path, aliases_path):
+          for path in (targets_path, feed_path, availability_path, aliases_path):
               if not path.exists(): raise SystemExit(f'missing core production file: {path}')
           def read(path):
               with path.open(encoding='utf-8-sig', newline='') as fh: return list(csv.DictReader(fh))
-          targets, feed, aliases = read(targets_path), read(feed_path), read(aliases_path)
-          if not targets or not feed: raise SystemExit('zero core production rows')
+          targets, feed = read(targets_path), read(feed_path)
+          availability, aliases = read(availability_path), read(aliases_path)
+          if not targets or not feed or not availability: raise SystemExit('zero core production rows')
           target_ids = {r.get('hkjc_event_id') for r in targets if r.get('hkjc_event_id')}
-          if any(r.get('hkjc_event_id') not in target_ids for r in feed): raise SystemExit('non-HKJC Forebet row')
-          if len(feed) != len({r.get('hkjc_event_id') for r in feed}): raise SystemExit('duplicate Forebet HKJC event')
+          availability_ids = {r.get('hkjc_event_id') for r in availability if r.get('hkjc_event_id')}
+          feed_ids = {r.get('hkjc_event_id') for r in feed if r.get('hkjc_event_id')}
+          if feed_ids - target_ids: raise SystemExit('non-HKJC Forebet row')
+          if target_ids - availability_ids: raise SystemExit('Forebet availability missing HKJC targets')
+          if len(feed) != len(feed_ids): raise SystemExit('duplicate Forebet HKJC event')
           if any(not all(r.get(k) for k in ('prob_home','prob_draw','prob_away')) for r in feed): raise SystemExit('model-empty Forebet row')
+          allowed = {'MODEL', 'FIXTURE_ONLY', 'UNRESOLVED'}
+          if any(r.get('state') not in allowed for r in availability): raise SystemExit('invalid Forebet availability state')
           active_aliases = [r for r in aliases if r.get('status') in ('ACTIVE','MANUAL')]
           if not active_aliases: raise SystemExit('alias registry has no active rows')
-          ratio = len(feed) / len(targets)
-          if ratio < 0.40: raise SystemExit(f'Forebet core coverage too low: {len(feed)}/{len(targets)} ({ratio:.1%})')
-          print(f'CORE_PASS targets={len(targets)} forebet={len(feed)} coverage={ratio:.1%} aliases={len(active_aliases)}')
+          ratio = len(feed) / len(availability)
+          states = {state: sum(r.get('state') == state for r in availability) for state in allowed}
+          if ratio < 0.40: raise SystemExit(f'Forebet core coverage too low: {len(feed)}/{len(availability)} ({ratio:.1%})')
+          print(f"CORE_PASS targets={len(availability)} forebet={len(feed)} coverage={ratio:.1%} aliases={len(active_aliases)} states={states}")
           PY
 
-      - name: Checkpoint core HKJC, Forebet and alias feeds
+      - name: Checkpoint Forebet-owned core feeds
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/hkjc_current.csv data/hkjc_targets.csv data/forebet_current.csv data/team_alias_registry.csv
+          # HKJC live/current files are owned by the 10-minute HKJC workflow.
+          # Restore them before syncing so the two automations never commit the
+          # same files and therefore cannot create data-file rebase conflicts.
+          git restore --source=HEAD -- data/hkjc_current.csv data/hkjc_targets.csv
+          git add data/forebet_current.csv data/forebet_availability.csv data/team_alias_registry.csv
           if git diff --cached --quiet; then
-            echo 'No core feed changes to checkpoint.'
+            echo 'No Forebet core feed changes to checkpoint.'
           else
-            git commit -m 'Checkpoint core HKJC and Forebet feeds [skip ci]'
+            git commit -m 'Checkpoint Forebet model and availability feeds [skip ci]'
             for attempt in 1 2 3 4; do
               git pull --rebase origin main
               if git push; then
                 break
               fi
               if [ "$attempt" -eq 4 ]; then
-                echo 'Core checkpoint push failed after retries.' >&2
+                echo 'Forebet core checkpoint push failed after retries.' >&2
                 exit 1
               fi
-              echo "Core checkpoint push raced with another writer; retrying ($attempt/4)."
+              echo "Forebet checkpoint raced with another writer; retrying ($attempt/4)."
               sleep 2
             done
           fi
@@ -140,6 +157,7 @@ jobs:
               'current': Path('data/hkjc_current.csv'),
               'targets': Path('data/hkjc_targets.csv'),
               'feed': Path('data/forebet_current.csv'),
+              'availability': Path('data/forebet_availability.csv'),
               'archive': Path('data/forebet_archive.csv'),
               'aliases': Path('data/team_alias_registry.csv'),
               'ratings': Path('data/power_ratings.csv'),
@@ -149,14 +167,18 @@ jobs:
           def read(path):
               with path.open(encoding='utf-8-sig', newline='') as fh: return list(csv.DictReader(fh))
           current, targets, feed = read(paths['current']), read(paths['targets']), read(paths['feed'])
+          availability = read(paths['availability'])
           archive, aliases, ratings = read(paths['archive']), read(paths['aliases']), read(paths['ratings'])
-          if not current or not targets or not feed: raise SystemExit('zero production rows')
-          target_ids = {r['hkjc_event_id'] for r in targets}
-          if any(r.get('hkjc_event_id') not in target_ids for r in feed): raise SystemExit('non-HKJC Forebet row')
-          if len(feed) != len({r['hkjc_event_id'] for r in feed}): raise SystemExit('duplicate Forebet HKJC event')
+          if not current or not targets or not feed or not availability: raise SystemExit('zero production rows')
+          availability_ids = {r['hkjc_event_id'] for r in availability if r.get('hkjc_event_id')}
+          feed_ids = {r['hkjc_event_id'] for r in feed if r.get('hkjc_event_id')}
+          if feed_ids - availability_ids: raise SystemExit('Forebet feed row missing from run availability universe')
+          if len(feed) != len(feed_ids): raise SystemExit('duplicate Forebet HKJC event')
           if any(not all(r.get(k) for k in ('prob_home','prob_draw','prob_away')) for r in feed): raise SystemExit('model-empty Forebet row')
           archive_ids = {r.get('hkjc_event_id') for r in archive}
           if any(r['hkjc_event_id'] not in archive_ids for r in feed): raise SystemExit('archive missing current event')
+          allowed = {'MODEL', 'FIXTURE_ONLY', 'UNRESOLVED'}
+          if any(r.get('state') not in allowed for r in availability): raise SystemExit('invalid Forebet availability state')
           active_aliases = [r for r in aliases if r.get('status') in ('ACTIVE','MANUAL')]
           if not active_aliases: raise SystemExit('alias registry has no active rows')
           if len(ratings) < 5000:
@@ -165,11 +187,13 @@ jobs:
           ou = sum(bool(r.get('prediction_ou25')) for r in feed)
           corners = sum(bool(r.get('corner_prediction')) for r in feed)
           detail = sum(bool(r.get('forebet_detail_url')) for r in feed)
-          model_ratio = len(feed) / len(targets)
+          model_ratio = len(feed) / len(availability)
           ou_ratio = ou / len(feed)
           corner_ratio = corners / len(feed)
+          fixture_only = sum(r.get('state') == 'FIXTURE_ONLY' for r in availability)
+          unresolved = sum(r.get('state') == 'UNRESOLVED' for r in availability)
           if model_ratio < 0.40:
-              raise SystemExit(f'Forebet model coverage too low: {len(feed)}/{len(targets)} ({model_ratio:.1%})')
+              raise SystemExit(f'Forebet model coverage too low: {len(feed)}/{len(availability)} ({model_ratio:.1%})')
           if ou_ratio < 0.25:
               print(f'WARN Forebet O-U coverage low: {ou}/{len(feed)} ({ou_ratio:.1%})')
           if corner_ratio < 0.25:
@@ -177,33 +201,34 @@ jobs:
           if detail and not (ou or corners):
               print('WARN Forebet detail pages resolved but no O-U/corner signals parsed')
           print(
-              f"PASS hkjc_current={len(current)} targets={len(targets)} forebet={len(feed)} "
+              f"PASS hkjc_current={len(current)} live_targets={len(targets)} run_targets={len(availability)} "
+              f"forebet={len(feed)} fixture_only={fixture_only} unresolved={unresolved} "
               f"archive={len(archive)} aliases={len(aliases)} power={rated_sides}/{len(feed)*2} "
               f"detail={detail} model_coverage={model_ratio:.1%} "
               f"ou25={ou} ({ou_ratio:.1%}) corners95={corners} ({corner_ratio:.1%}) scraperapi_credits=0"
           )
           PY
 
-      - name: Commit refreshed production feeds
+      - name: Commit refreshed Forebet production feeds
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/hkjc_current.csv data/hkjc_targets.csv data/forebet_current.csv data/forebet_archive.csv data/team_alias_registry.csv
+          git add data/forebet_current.csv data/forebet_availability.csv data/forebet_archive.csv data/team_alias_registry.csv
           if [ -f data/power_ratings.csv ]; then git add data/power_ratings.csv; fi
           if git diff --cached --quiet; then
-            echo 'No feed changes to commit.'
+            echo 'No Forebet feed changes to commit.'
           else
-            git commit -m 'Update HKJC and zero-credit Forebet model feeds [skip ci]'
+            git commit -m 'Update zero-credit Forebet model feeds [skip ci]'
             for attempt in 1 2 3 4; do
               git pull --rebase origin main
               if git push; then
                 break
               fi
               if [ "$attempt" -eq 4 ]; then
-                echo 'Final feed push failed after retries.' >&2
+                echo 'Final Forebet feed push failed after retries.' >&2
                 exit 1
               fi
-              echo "Final feed push raced with another writer; retrying ($attempt/4)."
+              echo "Final Forebet push raced with another writer; retrying ($attempt/4)."
               sleep 2
             done
           fi
