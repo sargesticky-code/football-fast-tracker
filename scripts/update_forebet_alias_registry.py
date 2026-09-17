@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import re
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -23,6 +24,11 @@ FIELDS = [
     "source",
 ]
 
+_SOURCE_NOISE = re.compile(
+    r"(^\s*Title:\s*|Prediction,\s*Stats,\s*H2H|^\s*URL Source:|^\s*Markdown Content:)",
+    re.I,
+)
+
 
 def clean(v: object) -> str:
     return str(v or "").strip()
@@ -39,19 +45,33 @@ def key(alias: str) -> str:
     return " ".join(clean(alias).casefold().split())
 
 
+def source_noise(alias: str) -> bool:
+    value = clean(alias)
+    return bool(_SOURCE_NOISE.search(value) or len(value) > 80)
+
+
 def main() -> int:
     now = datetime.now(HKT).isoformat(timespec="seconds")
     store: dict[str, dict[str, str]] = {}
+    pruned_noise = 0
 
     for row in read_csv(REGISTRY):
         alias = clean(row.get("forebet_alias"))
         canonical = clean(row.get("canonical_hkjc_name"))
+        status = clean(row.get("status")).upper()
         if not alias or not canonical:
+            continue
+        # MANUAL rows are explicit operator decisions. Auto-learned page-title
+        # wrappers and similar metadata are invalid aliases and are discarded
+        # on every rewrite so one bad parse cannot permanently poison matching.
+        if status != "MANUAL" and source_noise(alias):
+            pruned_noise += 1
             continue
         store[key(alias)] = {f: clean(row.get(f)) for f in FIELDS}
 
     learned = 0
     conflicts = 0
+    rejected_noise = 0
     for row in read_csv(CURRENT):
         pairs = (
             (clean(row.get("home_team")), clean(row.get("hkjc_home_team"))),
@@ -60,11 +80,13 @@ def main() -> int:
         for alias, canonical in pairs:
             if not alias or not canonical:
                 continue
+            if source_noise(alias):
+                rejected_noise += 1
+                continue
             confidence = team_score(alias, canonical)
-            # The production match policy removes stable source noise (country
-            # tags/articles) and handles distinctive club acronyms before this
-            # threshold is applied.  Therefore newly-seen, safely matched names
-            # can be persisted instead of needing repeated manual fixes.
+            # The production match policy removes stable source noise and
+            # handles distinctive club acronyms before this threshold. Safely
+            # matched names can therefore persist across future fixtures.
             if confidence < 0.90:
                 continue
 
@@ -107,7 +129,10 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(rows)
 
-    print(f"TEAM_ALIAS_REGISTRY rows={len(rows)} learned={learned} conflicts={conflicts}")
+    print(
+        f"TEAM_ALIAS_REGISTRY rows={len(rows)} learned={learned} conflicts={conflicts} "
+        f"pruned_noise={pruned_noise} rejected_noise={rejected_noise}"
+    )
     return 0
 
 
