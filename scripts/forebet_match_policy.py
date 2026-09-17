@@ -14,12 +14,8 @@ import scrape_forebet as feed
 
 _LEGACY_NORMALIZE = feed.normalize_team
 
-# Article/prefix noise that does not identify the club.  Keep this list small:
-# it is applied only after the legacy normalizer and alias registry.
 EXTRA_STOPWORDS = {"al"}
 
-# A shared 3-4 letter token is useful for distinctive club acronyms (AIK, PSV,
-# AEK, etc.), but these generic tokens must never be used as the sole anchor.
 SHORT_TOKEN_DENY = {
     "real", "city", "town", "utd", "club", "team", "sport", "united",
     "fc", "sc", "ac", "cf", "afc", "fk", "ca", "cd", "if", "bk", "sk",
@@ -29,17 +25,20 @@ _COUNTRY_TAG = re.compile(r"\(\s*[A-Z]{2,4}\s*\)")
 
 
 def normalize_team(value: str) -> str:
-    """Normalize source noise while preserving the registry's canonical logic.
-
-    Forebet commonly appends country disambiguators such as ``(URU)`` or
-    ``(OMA)``.  HKJC normally does not.  Removing only uppercase country tags
-    before the legacy normalization is safe and repeatable.
-    """
+    """Normalize stable provider-wide source naming differences."""
     raw = str(value or "")
     raw = _COUNTRY_TAG.sub(" ", raw)
     base = _LEGACY_NORMALIZE(raw)
     tokens = [t for t in base.split() if t not in EXTRA_STOPWORDS]
-    return " ".join(tokens).strip()
+
+    normalized: list[str] = []
+    for index, token in enumerate(tokens):
+        if token in {"st", "saint"}:
+            token = "saint"
+        elif index == len(tokens) - 1 and token in {"w", "women", "woman"}:
+            token = "women"
+        normalized.append(token)
+    return " ".join(normalized).strip()
 
 
 def team_score(a: str, b: str) -> float:
@@ -63,9 +62,6 @@ def team_score(a: str, b: str) -> float:
         token_score = 0.0
     score = max(seq, token_score)
 
-    # Distinctive acronym anchor.  This solves stable source variants such as
-    # AIK Fotboll vs AIK Solna without treating generic words like Real/City
-    # as sufficient evidence.
     shared_short = {
         t for t in (a_tokens & b_tokens)
         if 3 <= len(t) <= 4 and t not in SHORT_TOKEN_DENY and t.isalpha()
