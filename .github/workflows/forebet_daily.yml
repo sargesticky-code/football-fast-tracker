@@ -11,6 +11,7 @@ on:
       - 'scripts/run_selective.py'
       - 'scripts/run_selective_v2.py'
       - 'scripts/forebet_match_policy.py'
+      - 'scripts/forebet_target_recovery.py'
       - 'scripts/restore_active_forebet.py'
       - 'scripts/update_forebet_alias_registry.py'
       - 'scripts/enrich_forebet_markets.py'
