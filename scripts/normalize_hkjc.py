@@ -1,9 +1,15 @@
 """Normalize direct HKJC GraphQL output into stable Fast Tracker CSV feeds.
 
-Input files are produced by sososo829/hkjc-football-scraper.  The direct HKJC
+Input files are produced by sososo829/hkjc-football-scraper. The direct HKJC
 feed is authoritative for which fixtures are actually offered and for current
-HAD prices.  FBxxxx front-end ids are retained as the canonical cross-source
+HAD prices. FBxxxx front-end ids are retained as the canonical cross-source
 match key used by Fast Tracker.
+
+The modelling target universe deliberately survives kickoff for a bounded
+period. This keeps Forebet recovery aligned with the Fast Tracker LIVE window:
+a match remains eligible until HKJC reports a terminal state or the configured
+post-kickoff retention window expires. No competition-specific exceptions are
+required.
 """
 from __future__ import annotations
 
@@ -30,6 +36,11 @@ TARGET_COLUMNS = [
     "home_zh", "away_zh", "home_en", "away_en", "had_home", "had_draw",
     "had_away", "mapping_source",
 ]
+
+TERMINAL_STATUS_MARKERS = (
+    "ENDED", "FINISHED", "FULLTIME", "FULL_TIME", "RESULT", "CLOSED",
+    "CANCEL", "POSTPON", "ABANDON",
+)
 
 
 def _load_rows(path: Path, preferred: tuple[str, ...]) -> list[dict]:
@@ -63,6 +74,13 @@ def _truthy(value) -> bool:
     return str(value).strip().lower() in {"1", "true", "yes", "y"}
 
 
+def _terminal_status(status: str) -> bool:
+    value = (status or "").upper().strip()
+    if value in {"FT", "AET", "PEN"}:
+        return True
+    return any(marker in value for marker in TERMINAL_STATUS_MARKERS)
+
+
 def _previous_labels() -> dict[str, dict[str, str]]:
     if not TARGET_OUT.exists():
         return {}
@@ -93,6 +111,7 @@ def main() -> int:
     ap.add_argument("--matches", required=True)
     ap.add_argument("--had", required=True)
     ap.add_argument("--horizon-hours", type=float, default=36.0)
+    ap.add_argument("--live-retain-minutes", type=float, default=150.0)
     args = ap.parse_args()
 
     match_rows = _load_rows(Path(args.matches), ("matches", "data"))
@@ -130,7 +149,6 @@ def main() -> int:
             rec[f"had_{'draw' if selection == 'D' else 'home' if selection == 'H' else 'away'}"] = float(row.get("odds"))
         except (TypeError, ValueError):
             pass
-        # Keep the newest labels/status seen in the response.
         if row.get("home_ch"):
             rec["home_zh"] = str(row.get("home_ch")).strip()
         if row.get("away_ch"):
@@ -145,6 +163,8 @@ def main() -> int:
     targets: list[dict] = []
     now = datetime.now(HKT)
     horizon = now + timedelta(hours=args.horizon_hours)
+    live_floor = now - timedelta(minutes=args.live_retain_minutes)
+    retained_live = 0
 
     for m in match_rows:
         event_id = (m.get("front_end_id") or "").strip()
@@ -153,6 +173,7 @@ def main() -> int:
         kickoff = _parse_dt(str(m.get("kick_off") or ""))
         if kickoff is None:
             continue
+
         odds = odds_by_event.get(event_id, {})
         triplet = all(odds.get(k) not in (None, "") for k in ("had_home", "had_draw", "had_away"))
         pool_status = str(odds.get("pool_status") or "").upper()
@@ -188,12 +209,29 @@ def main() -> int:
             "odds_updated_at": odds.get("odds_updated_at", ""),
         })
 
-        # Forebet gate is pre-match only. Keep only currently offered HAD matches
-        # in the current modelling horizon. Finished/live rows remain in CURRENT.
-        if status != "PREEVENT" or not selling:
+        # Preserve the most recent pre-match HAD triplet while a match is live.
+        # HKJC often stops exposing a selling HAD line at kickoff, but Forebet
+        # recovery still needs the fixture identity during Fast Tracker's LIVE
+        # window. Current odds always take precedence over the retained snapshot.
+        target_had_home = odds.get("had_home", "") or old.get("had_home", "")
+        target_had_draw = odds.get("had_draw", "") or old.get("had_draw", "")
+        target_had_away = odds.get("had_away", "") or old.get("had_away", "")
+        target_triplet = all(v not in (None, "") for v in (target_had_home, target_had_draw, target_had_away))
+
+        if kickoff > horizon or _terminal_status(status) or not target_triplet:
             continue
-        if kickoff < now - timedelta(minutes=5) or kickoff > horizon:
+
+        preevent_eligible = status == "PREEVENT" and selling and kickoff >= live_floor
+        live_eligible = live_floor <= kickoff <= now and status != "PREEVENT"
+        # Also tolerate a stale PREEVENT status immediately after kickoff; the
+        # time window is authoritative and matches the Sheet's 150-minute cap.
+        stale_preevent_live = live_floor <= kickoff <= now and status == "PREEVENT"
+
+        if not (preevent_eligible or live_eligible or stale_preevent_live):
             continue
+        if kickoff <= now:
+            retained_live += 1
+
         targets.append({
             "fetched_at_hkt": fetched_text,
             "match_date": kickoff.date().isoformat(),
@@ -204,9 +242,9 @@ def main() -> int:
             "away_zh": away_zh,
             "home_en": home_en,
             "away_en": away_en,
-            "had_home": odds.get("had_home", ""),
-            "had_draw": odds.get("had_draw", ""),
-            "had_away": odds.get("had_away", ""),
+            "had_home": target_had_home,
+            "had_draw": target_had_draw,
+            "had_away": target_had_away,
             "mapping_source": "HKJC GraphQL",
         })
 
@@ -217,12 +255,13 @@ def main() -> int:
 
     print(
         f"HKJC_DIRECT matches={len(match_rows)} had_rows={len(had_rows)} "
-        f"current={len(current)} targets={len(targets)} horizon_h={args.horizon_hours:g}"
+        f"current={len(current)} targets={len(targets)} retained_live={retained_live} "
+        f"horizon_h={args.horizon_hours:g} live_retain_min={args.live_retain_minutes:g}"
     )
     if not current:
         raise SystemExit("HKJC normalization produced zero current rows")
     if not targets:
-        raise SystemExit("HKJC normalization produced zero pre-event HAD targets")
+        raise SystemExit("HKJC normalization produced zero active model targets")
     return 0
 
 
