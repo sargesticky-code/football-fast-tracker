@@ -1,0 +1,55 @@
+name: Prematch Player Manager Context
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '12 * * * *'
+  push:
+    paths:
+      - 'scripts/update_prematch_context.py'
+      - '.github/workflows/prematch_context.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prematch-player-manager-context
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      PREMATCH_LOOKAHEAD_HOURS: '36'
+      PREMATCH_DETAIL_WINDOW_MINUTES: '180'
+      PREMATCH_MAX_DETAIL_CALLS: '6'
+      PREMATCH_MAX_TEAM_CALLS: '6'
+      PREMATCH_TEAM_REFRESH_DAYS: '14'
+      PREMATCH_REQUEST_SLEEP: '0.35'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: python -m pip install --disable-pip-version-check requests==2.32.5
+
+      - name: Capture low-request prematch context
+        run: python scripts/update_prematch_context.py
+
+      - name: Commit context snapshots
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add             data/prematch_context_current.csv             data/prematch_players_current.csv             data/team_manager_registry.csv
+          if git diff --cached --quiet; then
+            echo 'No prematch context changes.'
+          else
+            git commit -m 'Refresh prematch player manager context [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
