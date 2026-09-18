@@ -46,7 +46,7 @@ jobs:
           expected = {
               'data/oddsmath_history.csv': {'captured_at_hkt','hkjc_event_id','fair_home','fair_draw','fair_away'},
               'data/oddsmath_current.csv': {'captured_at_hkt','hkjc_event_id','odds_home','odds_draw','odds_away'},
-              'data/odds_movement.csv': {'hkjc_event_id','move_24h_pp','move_2h_pp','vol_24h_pp','signal','alert_score'},
+              'data/odds_movement.csv': {'hkjc_event_id','move_24h_pp','move_2h_pp','move_1h_pp','vol_24h_pp','signal','alert_score'},
           }
           for name, required in expected.items():
               p = Path(name)
