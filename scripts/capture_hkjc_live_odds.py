@@ -73,6 +73,8 @@ def choose_two_way(rows, odds_type):
             continue
         if clean(r.get("comb_status")).upper() not in {"", "AVAILABLE"}:
             continue
+        if clean(r.get("pool_status")).upper() != "SELLINGSTARTED":
+            continue
         eid = clean(r.get("front_end_id"))
         if not eid:
             continue
@@ -168,7 +170,7 @@ def main():
             "odds_updated_at": clean(r.get("updated_at")),
         })
         sel = clean(r.get("selection")).upper()
-        p = price(r.get("odds"))
+        p = price(r.get("odds")) if clean(r.get("pool_status")).upper() == "SELLINGSTARTED" else ""
         if sel == "H":
             rec["had_home"] = p
         elif sel == "D":
