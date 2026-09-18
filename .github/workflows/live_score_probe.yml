@@ -51,6 +51,33 @@ jobs:
           print("targets",p["targetCount"],"matched",p["matchedCount"])
           for row in p["matches"][:20]:
               print(row["hkjc_event_id"], row["home_en"], "vs", row["away_en"], row["live_score"], row["minute"], row["source"], row["match_confidence"], row.get("detail_status"), "stats", len(row.get("team_stats") or []), "events", len(row.get("events") or []), "momentum", len(row.get("momentum") or []))
+
+          # Generic unmatched diagnostic: do not guess why a SOURCE_GAP occurs.
+          # Show the nearest FotMob daily-board candidates by team-name similarity
+          # and kickoff delta so future gaps can be fixed at the identity layer.
+          gaps=[r for r in p["matches"] if r.get("source")=="SOURCE_GAP"]
+          if gaps:
+              _, board=m.primary_matches()
+              target_map={t["hkjc_event_id"]:t for t in m.hkjc_targets(m.datetime.now(m.HKT))}
+              for gap in gaps:
+                  t=target_map.get(gap["hkjc_event_id"])
+                  if not t: continue
+                  ranked=[]
+                  for b in board:
+                      hs=m.sim(t["home_en"],b.get("home"))
+                      aws=m.sim(t["away_en"],b.get("away"))
+                      delta=9999
+                      if b.get("kickoff"):
+                          delta=abs((b["kickoff"]-t["kickoff_hkt"]).total_seconds())/60
+                      name=(hs+aws)/2
+                      if max(hs,aws)>=0.35 or name>=0.30:
+                          ranked.append((name,-delta,hs,aws,delta,b))
+                  ranked.sort(reverse=True,key=lambda x:(x[0],x[1]))
+                  print("SOURCE_GAP_DIAG",gap["hkjc_event_id"],t["home_en"],"vs",t["away_en"])
+                  for cand in ranked[:5]:
+                      b=cand[5]
+                      print("  CAND",round(cand[0],3),"hs",round(cand[2],3),"as",round(cand[3],3),"delta",round(cand[4],1),b.get("home"),"vs",b.get("away"),b.get("kickoff"),b.get("source_match_id"),b.get("status"))
+
           open("data/live_score_probe.json","w",encoding="utf-8").write(json.dumps(p,ensure_ascii=False,indent=2))
           if p["health"]["primary"].startswith("ERROR") and p["health"]["backup"].startswith("ERROR"):
               raise SystemExit("both live-score providers failed")
