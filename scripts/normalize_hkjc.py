@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -28,8 +29,10 @@ TARGET_OUT = ROOT / "data" / "hkjc_targets.csv"
 CURRENT_COLUMNS = [
     "fetched_at_hkt", "match_id", "hkjc_event_id", "kickoff_hkt", "status",
     "tournament", "home_en", "away_en", "home_zh", "away_zh", "pools",
-    "had_home", "had_draw", "had_away", "pool_status", "in_play", "selling",
-    "odds_updated_at",
+    "had_home", "had_draw", "had_away",
+    "hil_line", "hil_over", "hil_under",
+    "chl_line", "chl_over", "chl_under",
+    "pool_status", "in_play", "selling", "odds_updated_at",
 ]
 TARGET_COLUMNS = [
     "fetched_at_hkt", "match_date", "kickoff_hkt", "hkjc_event_id", "league_zh",
@@ -75,6 +78,71 @@ def _truthy(value) -> bool:
     return str(value).strip().lower() in {"1", "true", "yes", "y"}
 
 
+def _line_number(value: str) -> float | None:
+    match = re.search(r"[-+]?\d+(?:\.\d+)?", str(value or ""))
+    if not match:
+        return None
+    try:
+        return float(match.group(0))
+    except ValueError:
+        return None
+
+
+def _two_way_market_by_event(rows: list[dict], odds_type: str, preferred_line: float) -> dict[str, dict]:
+    """Aggregate H/L odds by event, preferring the model-compatible line.
+
+    H means High/Over and L means Low/Under for HKJC HIL/CHL markets.
+    If the preferred line is not offered, retain the current main line so the
+    feed still exposes the real HKJC price; the dashboard may choose not to
+    calculate edge when the line differs from the model's 2.5 / 9.5 threshold.
+    """
+    grouped: dict[tuple[str, str], dict] = {}
+    for row in rows:
+        if str(row.get("odds_type", "")).upper() != odds_type:
+            continue
+        if str(row.get("comb_status", "")).upper() not in {"", "AVAILABLE"}:
+            continue
+        event_id = (row.get("front_end_id") or "").strip()
+        selection = str(row.get("selection") or "").upper().strip()
+        if not event_id or selection not in {"H", "L"}:
+            continue
+        condition = str(row.get("condition") or "").strip()
+        rec = grouped.setdefault((event_id, condition), {
+            "event_id": event_id,
+            "line": condition,
+            "main": False,
+            "pool_status": "",
+            "updated_at": "",
+        })
+        rec["main"] = rec["main"] or _truthy(row.get("main_line"))
+        if row.get("pool_status"):
+            rec["pool_status"] = str(row.get("pool_status")).strip()
+        if row.get("updated_at"):
+            rec["updated_at"] = str(row.get("updated_at")).strip()
+        try:
+            rec["over" if selection == "H" else "under"] = float(row.get("odds"))
+        except (TypeError, ValueError):
+            pass
+
+    by_event: dict[str, list[dict]] = {}
+    for rec in grouped.values():
+        if rec.get("over") in (None, "") or rec.get("under") in (None, ""):
+            continue
+        by_event.setdefault(rec["event_id"], []).append(rec)
+
+    chosen: dict[str, dict] = {}
+    for event_id, candidates in by_event.items():
+        exact = next(
+            (r for r in candidates
+             if _line_number(r.get("line")) is not None
+             and abs(_line_number(r.get("line")) - preferred_line) < 1e-9),
+            None,
+        )
+        main = next((r for r in candidates if r.get("main")), None)
+        chosen[event_id] = exact or main or candidates[0]
+    return chosen
+
+
 def _terminal_status(status: str) -> bool:
     value = (status or "").upper().strip()
     if value in {"FT", "AET", "PEN"}:
@@ -111,12 +179,16 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--matches", required=True)
     ap.add_argument("--had", required=True)
+    ap.add_argument("--hil")
+    ap.add_argument("--chl")
     ap.add_argument("--horizon-hours", type=float, default=36.0)
     ap.add_argument("--live-retain-minutes", type=float, default=150.0)
     args = ap.parse_args()
 
     match_rows = _load_rows(Path(args.matches), ("matches", "data"))
     had_rows = _load_rows(Path(args.had), ("odds", "data"))
+    hil_rows = _load_rows(Path(args.hil), ("odds", "data")) if args.hil else []
+    chl_rows = _load_rows(Path(args.chl), ("odds", "data")) if args.chl else []
     if not match_rows:
         raise SystemExit("HKJC direct source returned zero matches")
     if not had_rows:
@@ -160,6 +232,9 @@ def main() -> int:
             rec["odds_updated_at"] = str(row.get("updated_at")).strip()
         rec["in_play"] = rec.get("in_play", False) or bool(row.get("in_play"))
 
+    hil_by_event = _two_way_market_by_event(hil_rows, "HIL", 2.5)
+    chl_by_event = _two_way_market_by_event(chl_rows, "CHL", 9.5)
+
     current: list[dict] = []
     targets: list[dict] = []
     now = datetime.now(HKT)
@@ -176,6 +251,8 @@ def main() -> int:
             continue
 
         odds = odds_by_event.get(event_id, {})
+        hil = hil_by_event.get(event_id, {})
+        chl = chl_by_event.get(event_id, {})
         triplet = all(odds.get(k) not in (None, "") for k in ("had_home", "had_draw", "had_away"))
         pool_status = str(odds.get("pool_status") or "").upper()
         selling = triplet and pool_status in {"SELLINGSTARTED", ""}
@@ -204,6 +281,12 @@ def main() -> int:
             "had_home": odds.get("had_home", ""),
             "had_draw": odds.get("had_draw", ""),
             "had_away": odds.get("had_away", ""),
+            "hil_line": hil.get("line", ""),
+            "hil_over": hil.get("over", ""),
+            "hil_under": hil.get("under", ""),
+            "chl_line": chl.get("line", ""),
+            "chl_over": chl.get("over", ""),
+            "chl_under": chl.get("under", ""),
             "pool_status": odds.get("pool_status", ""),
             "in_play": 1 if odds.get("in_play") else 0,
             "selling": 1 if selling else 0,
@@ -261,6 +344,8 @@ def main() -> int:
 
     print(
         f"HKJC_DIRECT matches={len(match_rows)} had_rows={len(had_rows)} "
+        f"hil_rows={len(hil_rows)} chl_rows={len(chl_rows)} "
+        f"hil_markets={len(hil_by_event)} chl_markets={len(chl_by_event)} "
         f"current={len(current)} targets={len(targets)} retained_live={retained_live} "
         f"horizon_h={args.horizon_hours:g} live_retain_min={args.live_retain_minutes:g}"
     )
