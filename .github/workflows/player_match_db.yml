@@ -1,0 +1,92 @@
+name: Phase 1 Player Match Database
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+  push:
+    paths:
+      - 'scripts/update_player_match_db.py'
+      - '.github/workflows/player_match_db.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase1-player-match-db
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      PLAYER_DB_LOOKBACK_DAYS: '21'
+      PLAYER_DB_MAX_DETAILS: '4'
+      PLAYER_DB_MAX_BOARD_DATES: '4'
+      PLAYER_DB_REQUEST_SLEEP: '0.45'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Sync latest main
+        run: git pull --rebase origin main
+
+      - run: python -m pip install --disable-pip-version-check requests==2.32.5
+
+      - name: Build recent post-match player database
+        run: python scripts/update_player_match_db.py
+
+      - name: Validate Phase 1 database
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+
+          idx = Path('data/player_match_db/match_index.csv')
+          if not idx.exists():
+              raise SystemExit('missing match_index.csv')
+          with idx.open(encoding='utf-8-sig', newline='') as fh:
+              rows=list(csv.DictReader(fh))
+          print('PLAYER_DB_INDEX rows=',len(rows))
+          counts={}
+          for r in rows:
+              counts[r.get('status','')]=counts.get(r.get('status',''),0)+1
+          print('PLAYER_DB_INDEX status=',counts)
+
+          month_rows=0
+          player_ids=set()
+          for p in Path('data/player_match_db').glob('20??-??.csv'):
+              with p.open(encoding='utf-8-sig', newline='') as fh:
+                  rs=list(csv.DictReader(fh))
+              month_rows += len(rs)
+              player_ids.update(r.get('player_id','') for r in rs if r.get('player_id'))
+              print('PLAYER_DB_FILE',p,'rows=',len(rs))
+          print('PLAYER_DB_TOTAL player_rows=',month_rows,'unique_player_ids=',len(player_ids))
+          PY
+
+      - name: Commit Phase 1 database
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/player_match_db/
+          if git diff --cached --quiet; then
+            echo 'No player database changes.'
+          else
+            git commit -m 'Refresh Phase 1 player match database [skip ci]'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push; then
+                exit 0
+              fi
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep 2
+            done
+          fi
