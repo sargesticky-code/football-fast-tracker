@@ -1,8 +1,12 @@
 ﻿captured_at_hkt,hkjc_event_id,kickoff_hkt,league,home,away,fotmob_match_id,match_quality,kickoff_diff_min,lineup_players,stats_players,played_players,actual_stat_rows,usable_player_rows,status,reason,source
+2026-09-19T00:34:19+08:00,FB5035,2026-09-13T03:00+08:00,BD1,Gremio,Vasco da Gama,5103630,1.000,0.0,46,46,30,30,46,OK,,FotMob matchDetails
+2026-09-19T00:34:19+08:00,FB5036,2026-09-13T03:00+08:00,BD1,Atletico Mineiro,Fluminense,5103629,0.935,0.0,45,45,32,32,45,OK,,FotMob matchDetails
+2026-09-19T00:34:19+08:00,FB5012,2026-09-13T04:28+08:00,APL,Atletico Tucuman,River Plate,5115994,0.998,2.0,46,46,30,30,46,OK,,FotMob matchDetails
+2026-09-19T00:34:19+08:00,FB5115,2026-09-13T07:05+08:00,MXL,Toluca,Atlas,1000014566,1.000,0.0,42,42,32,32,42,OK,,FotMob matchDetails
 2026-09-19T00:33:15+08:00,FB5041,2026-09-13T07:30+08:00,BD1,Botafogo,RB Bragantino,5103625,1.000,0.0,46,46,32,32,46,OK,,FotMob matchDetails
 2026-09-19T00:33:15+08:00,FB5039,2026-09-13T08:00+08:00,BD1,Santos,Cruzeiro,5103626,1.000,0.0,46,46,32,32,46,OK,,FotMob matchDetails
-2026-09-19T00:33:15+08:00,FB5108,2026-09-13T09:00+08:00,MD1,Dorados,Tapatio,5898719,1.000,0.0,41,0,0,0,30,NO_PLAYER_STATS,stats_players=0;played=0;actual_stats=0;usable_player_rows=30,FotMob matchDetails
-2026-09-19T00:33:15+08:00,FB4867,2026-09-13T17:00+08:00,JD2,Albirex Niigata,Montedio Yamagata,5836257,1.000,0.0,40,0,0,0,40,NO_PLAYER_STATS,stats_players=0;played=0;actual_stats=0;usable_player_rows=40,FotMob matchDetails
+2026-09-19T00:33:15+08:00,FB5108,2026-09-13T09:00+08:00,MD1,Dorados,Tapatio,5898719,1.000,0.0,41,0,0,0,30,NO_PLAYER_STATS_SOURCE,completed >24h; lineup available but FotMob playerStats absent,FotMob matchDetails
+2026-09-19T00:33:15+08:00,FB4867,2026-09-13T17:00+08:00,JD2,Albirex Niigata,Montedio Yamagata,5836257,1.000,0.0,40,0,0,0,40,NO_PLAYER_STATS_SOURCE,completed >24h; lineup available but FotMob playerStats absent,FotMob matchDetails
 2026-09-19T00:29:10+08:00,FB5074,2026-09-13T22:00+08:00,BFL,Genk,AA Gent,5811761,0.970,0.0,42,40,32,32,42,OK,,FotMob matchDetails
 2026-09-19T00:29:10+08:00,FB5040,2026-09-14T04:30+08:00,BD1,Flamengo,Corinthians,5103624,1.000,0.0,46,46,32,32,46,OK,,FotMob matchDetails
 2026-09-19T00:29:10+08:00,FB5199,2026-09-16T09:00+08:00,MXL,Puebla,Toluca,1000014553,1.000,0.0,42,42,32,32,42,OK,,FotMob matchDetails
