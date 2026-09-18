@@ -1,0 +1,56 @@
+name: Current Player Profile Enrichment
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '32 * * * *'
+  push:
+    paths:
+      - 'scripts/update_player_profiles.py'
+      - '.github/workflows/player_profiles.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: current-player-profile-enrichment
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PLAYER_PROFILE_MAX_CALLS: '6'
+      PLAYER_PROFILE_REFRESH_DAYS: '7'
+      PLAYER_PROFILE_TARGET_HOURS: '12'
+      PLAYER_PROFILE_REQUEST_SLEEP: '0.45'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Sync latest main
+        run: git pull --rebase origin main
+
+      - run: python -m pip install --disable-pip-version-check requests==2.32.5
+
+      - name: Refresh bounded player profiles
+        run: python scripts/update_player_profiles.py
+
+      - name: Commit player profile registry
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/player_profile_registry.csv
+          if git diff --cached --quiet; then
+            echo 'No player profile changes.'
+          else
+            git commit -m 'Refresh current player profiles [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
