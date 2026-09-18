@@ -9,6 +9,7 @@ import unicodedata
 from datetime import datetime, timedelta, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
+from urllib.parse import urljoin
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -41,7 +42,7 @@ COLUMNS = [
     "home_team", "away_team", "prob_home", "prob_draw", "prob_away",
     "prediction_1x2", "predicted_score", "avg_goals", "odds_home",
     "odds_draw", "odds_away", "prediction_ou25", "prob_over25",
-    "prob_under25", "odds_over25", "odds_under25",
+    "prob_under25", "odds_over25", "odds_under25", "forebet_detail_url",
     "hkjc_event_id", "hkjc_league", "hkjc_home_team", "hkjc_away_team",
     "hkjc_home_zh", "hkjc_away_zh", "hkjc_kickoff_hkt",
     "hkjc_had_home", "hkjc_had_draw", "hkjc_had_away", "match_score",
@@ -465,6 +466,11 @@ def parse_forebet_rows(html: str, requested_date: str) -> list[dict[str, Any]]:
         while len(odds) < 3:
             odds.append(None)
 
+        detail_url = ""
+        anchor = row.find("a", href=re.compile(r"/(?:en/)?football/matches/", re.I))
+        if anchor and anchor.get("href"):
+            detail_url = urljoin("https://www.forebet.com", str(anchor.get("href"))).split("?")[0].split("#")[0]
+
         rows.append({
             "fetched_at_hkt": fetched_at,
             "match_date": match_date,
@@ -486,6 +492,7 @@ def parse_forebet_rows(html: str, requested_date: str) -> list[dict[str, Any]]:
             "prob_under25": "",
             "odds_over25": "",
             "odds_under25": "",
+            "forebet_detail_url": detail_url,
         })
     return rows
 
