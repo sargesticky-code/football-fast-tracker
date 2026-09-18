@@ -32,6 +32,7 @@ OUT = ROOT / "data" / "prematch_context_current.csv"
 PLAYERS = ROOT / "data" / "prematch_players_current.csv"
 MANAGERS = ROOT / "data" / "team_manager_registry.csv"
 SQUADS = ROOT / "data" / "team_squad_registry.csv"
+STYLES = ROOT / "data" / "team_style_registry.csv"
 
 HKT = ZoneInfo("Asia/Hong_Kong")
 FOTMOB = os.getenv("FOTMOB_BASE_URL", "https://www.fotmob.com/api").rstrip("/")
@@ -60,13 +61,23 @@ PLAYER_COLUMNS = [
 ]
 
 MANAGER_COLUMNS = [
-    "team_id", "team_name", "manager_id", "manager_name",
+    "team_id", "team_name", "manager_id", "manager_name", "manager_start_date",
     "fetched_at_hkt", "quality", "source",
 ]
 
 SQUAD_COLUMNS = [
     "team_id", "team_name", "player_id", "player_name",
     "position_group", "fetched_at_hkt", "source",
+]
+
+STYLE_COLUMNS = [
+    "team_id", "team_name", "manager_id", "manager_name",
+    "manager_start_date", "season", "average_possession", "goals_per_match",
+    "expected_goals", "xg_conceded", "shots_on_target_per_match",
+    "big_chances_created", "possession_won_final_3rd",
+    "accurate_passes_per_match", "successful_tackles_per_match",
+    "interceptions_per_match", "selected_stats_json",
+    "fetched_at_hkt", "quality", "source",
 ]
 
 
@@ -440,6 +451,89 @@ def manager_from_team_payload(payload):
     return walk(payload) or ("", "")
 
 
+def current_coach_from_payload(payload):
+    history = ((payload.get("history") or {}).get("coachHistory") or []) if isinstance(payload, dict) else []
+    for row in history:
+        if isinstance(row, dict) and row.get("isCurrent") is True:
+            return clean(row.get("id")), clean(row.get("name")), clean(row.get("startDate"))
+    manager_id, manager_name = manager_from_team_payload(payload)
+    return manager_id, manager_name, ""
+
+
+def norm_stat_title(v):
+    s = clean(v).casefold()
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    return " ".join(s.split())
+
+
+STYLE_ALIASES = {
+    "average_possession": ("average possession", "possession"),
+    "goals_per_match": ("goals per match",),
+    "expected_goals": ("expected goals", "xg"),
+    "xg_conceded": ("xg conceded", "expected goals conceded"),
+    "shots_on_target_per_match": ("shots on target per match", "shots on target"),
+    "big_chances_created": ("big chances created",),
+    "possession_won_final_3rd": ("possession won final 3rd", "possession won final third"),
+    "accurate_passes_per_match": ("accurate passes per match", "accurate passes"),
+    "successful_tackles_per_match": ("successful tackles per match", "successful tackles"),
+    "interceptions_per_match": ("interceptions per match", "interceptions"),
+}
+
+
+def extract_team_style(payload, team_id, team_name, manager_id, manager_name, manager_start, fetched_at):
+    stats_root = payload.get("stats") if isinstance(payload, dict) else None
+    items = []
+
+    def walk(node):
+        if isinstance(node, dict):
+            title = clean(node.get("title") or node.get("name") or node.get("label"))
+            value = node.get("statValue")
+            if value is None:
+                value = node.get("value")
+            if title and value is not None and not isinstance(value, (dict, list)):
+                items.append((title, value))
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+
+    walk(stats_root)
+    chosen = {}
+    raw = {}
+    for field, aliases in STYLE_ALIASES.items():
+        best = None
+        for title, value in items:
+            n = norm_stat_title(title)
+            score = 0
+            for alias in aliases:
+                a = norm_stat_title(alias)
+                if n == a:
+                    score = max(score, 3)
+                elif a in n or n in a:
+                    score = max(score, 2)
+            if score and (best is None or score > best[0]):
+                best = (score, title, value)
+        if best:
+            chosen[field] = clean(best[2])
+            raw[field] = {"title": best[1], "value": best[2]}
+
+    details = payload.get("details") or {}
+    return {
+        "team_id": team_id,
+        "team_name": team_name,
+        "manager_id": manager_id,
+        "manager_name": manager_name,
+        "manager_start_date": manager_start,
+        "season": clean(details.get("latestSeason")),
+        **chosen,
+        "selected_stats_json": json.dumps(raw, ensure_ascii=False, separators=(",", ":")),
+        "fetched_at_hkt": fetched_at,
+        "quality": "CURRENT_TEAM_STYLE_PROXY" if raw else "NO_STYLE_STATS",
+        "source": "FotMob teams current-season stats",
+    }
+
+
 def squad_from_team_payload(payload, team_id, team_name, fetched_at):
     rows = []
     seen = set()
@@ -524,6 +618,11 @@ def main():
         tid = clean(r.get("team_id"))
         if tid:
             squad_rows_by_team.setdefault(tid, []).append(r)
+    style_rows = {
+        clean(r.get("team_id")): r
+        for r in read_csv(STYLES)
+        if clean(r.get("team_id"))
+    }
 
     session = requests.Session()
     dates = {t["kickoff"].strftime("%Y%m%d") for t in targets}
@@ -692,16 +791,20 @@ def main():
         try:
             payload = get_json(session, "/data/teams", {"id": tid, "ccode3": "HKG"})
             team_calls += 1
-            manager_id, manager_name = manager_from_team_payload(payload)
+            manager_id, manager_name, manager_start = current_coach_from_payload(payload)
             manager_rows[tid] = {
                 "team_id": tid,
                 "team_name": teams[tid],
                 "manager_id": manager_id,
                 "manager_name": manager_name,
+                "manager_start_date": manager_start,
                 "fetched_at_hkt": fetched,
                 "quality": "OK" if manager_name else "NO_MANAGER_FOUND",
                 "source": "FotMob teams",
             }
+            style_rows[tid] = extract_team_style(
+                payload, tid, teams[tid], manager_id, manager_name, manager_start, fetched
+            )
             fresh_squad = squad_from_team_payload(payload, tid, teams[tid], fetched)
             if fresh_squad:
                 squad_rows_by_team[tid] = fresh_squad
@@ -752,13 +855,15 @@ def main():
     write_csv(PLAYERS, PLAYER_COLUMNS, player_rows)
     write_csv(MANAGERS, MANAGER_COLUMNS, sorted(manager_rows.values(), key=lambda r: r["team_id"]))
     write_csv(SQUADS, SQUAD_COLUMNS, all_squad_rows)
+    write_csv(STYLES, STYLE_COLUMNS, sorted(style_rows.values(), key=lambda r: r["team_id"]))
 
     print(
         f"PREMATCH_CONTEXT targets={len(targets)} matched={sum(bool(r.get('fotmob_match_id')) for r in contexts)} "
         f"detail_calls={detail_calls}/{MAX_DETAIL_CALLS} "
         f"sofa_lineup_calls={sofa_lineup_calls}/{MAX_SOFASCORE_LINEUP_CALLS} "
         f"lineup_players={len(player_rows)} team_calls={team_calls}/{MAX_TEAM_CALLS} "
-        f"manager_registry={len(manager_rows)} squad_players={len(all_squad_rows)}"
+        f"manager_registry={len(manager_rows)} squad_players={len(all_squad_rows)} "
+        f"style_teams={len(style_rows)}"
     )
     return 0
 
