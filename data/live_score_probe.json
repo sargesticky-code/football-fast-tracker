@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T19:44:22+08:00",
+  "updatedAt": "2026-09-18T20:07:01+08:00",
   "health": {
     "primary": "OK",
     "backup": "ERROR:HTTPError"
@@ -7,24 +7,6 @@
   "targetCount": 3,
   "matchedCount": 2,
   "matches": [
-    {
-      "hkjc_event_id": "FB5261",
-      "kickoff_hkt": "2026-09-18T18:00+08:00",
-      "league": "AMF",
-      "home_en": "Kuwait AM",
-      "away_en": "Uzbekistan AM",
-      "live_score": "0-2",
-      "home_score": "0",
-      "away_score": "2",
-      "minute": "87",
-      "match_status": "LIVE",
-      "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
-      "source_match_id": "6052538",
-      "source_home": "Kuwait U23",
-      "source_away": "Uzbekistan U23",
-      "match_confidence": 1.0,
-      "source_updated_at": "2026-09-18T19:44:22+08:00"
-    },
     {
       "hkjc_event_id": "FB5263",
       "kickoff_hkt": "2026-09-18T18:30+08:00",
@@ -34,14 +16,32 @@
       "live_score": "2-0",
       "home_score": "2",
       "away_score": "0",
-      "minute": "56",
+      "minute": "78",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "6052545",
       "source_home": "Saudi Arabia U23",
       "source_away": "Qatar U23",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-18T19:44:22+08:00"
+      "source_updated_at": "2026-09-18T20:07:02+08:00"
+    },
+    {
+      "hkjc_event_id": "FB5390",
+      "kickoff_hkt": "2026-09-18T20:00+08:00",
+      "league": "TL1",
+      "home_en": "Ayutthaya Utd",
+      "away_en": "Uthai Thani",
+      "live_score": "0-0",
+      "home_score": "0",
+      "away_score": "0",
+      "minute": "7",
+      "match_status": "LIVE",
+      "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
+      "source_match_id": "1000017733",
+      "source_home": "Ayutthaya United FC",
+      "source_away": "Uthai Thani FC",
+      "match_confidence": 0.957,
+      "source_updated_at": "2026-09-18T20:07:02+08:00"
     }
   ],
   "attribution": {
