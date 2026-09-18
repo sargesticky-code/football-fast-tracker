@@ -45,3 +45,20 @@ After deployment, use:
 `https://<project>.vercel.app/api/live_scores?format=csv`
 
 Paste that CSV endpoint into `LiveScoreFeed!B1` in Fast Tracker.
+
+
+## Safe full-stat capture
+
+The live endpoint reuses one FotMob `matchDetails` payload per selected live match to capture every available two-sided team stat dynamically, plus live events and momentum. With `?include=full`, the same payload also exposes shot map, lineup and match facts.
+
+Safety policy:
+- Only HKJC-targeted live fixtures are considered.
+- One FotMob live-list request per endpoint refresh.
+- At most 8 `matchDetails` requests per refresh.
+- If more than 8 live matches exist, detail requests rotate across successive minutes.
+- HTTP 403/429 stops further heavy detail calls immediately for that refresh.
+- Vercel response caching is 55s with stale-while-revalidate 65s.
+- CSV stays compact; heavy nested data is returned only in JSON.
+- No paid API key is used.
+
+Verified on 2026-09-18 with FB5390: one detail response yielded 86 team-stat entries, 33 momentum points, plus shot-map data.
