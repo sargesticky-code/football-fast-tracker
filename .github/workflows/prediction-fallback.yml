@@ -1,0 +1,32 @@
+name: Prediction fallback refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 06:30 and 18:30 Hong Kong time (UTC+8)
+    - cron: "30 22,10 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check requests==2.32.5
+      - run: python scripts/update_prediction_fallback.py
+      - name: Commit refreshed fallback CSV
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/prediction_fallback_current.csv
+          if git diff --cached --quiet; then
+            echo "No fallback feed changes"
+          else
+            git commit -m "Refresh prediction fallback feed"
+            git push
+          fi
