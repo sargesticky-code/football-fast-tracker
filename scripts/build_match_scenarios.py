@@ -200,7 +200,7 @@ def main():
     context = []
     for r in read_csv(CONTEXT):
         kick = parse_dt(r.get("kickoff_hkt"))
-        if kick is None or not (now - timedelta(minutes=20) <= kick <= upper):
+        if kick is None or not (now - timedelta(hours=4) <= kick <= upper):
             continue
         context.append(r)
 
