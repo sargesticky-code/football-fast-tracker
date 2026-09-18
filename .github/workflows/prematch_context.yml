@@ -14,7 +14,7 @@ permissions:
 
 concurrency:
   group: prematch-player-manager-context
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -35,6 +35,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Sync latest main before capture
+        run: git pull --rebase origin main
 
       - run: python -m pip install --disable-pip-version-check requests==2.32.5
 
