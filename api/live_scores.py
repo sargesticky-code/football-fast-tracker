@@ -432,28 +432,20 @@ def sofascore_minute(event, now):
 
 
 def sofascore_matches():
-    """Coverage fallback for leagues/matches missing from FotMob.
+    """Coverage fallback for live leagues/matches missing from FotMob.
 
-    One scheduled-events request per date is reused for all HKJC targets.
-    Only events explicitly reported in-progress are returned.
+    Prefer Sofascore's dedicated football live board. Only if that endpoint
+    fails do we fall back to today's scheduled-events board and filter to
+    explicit in-progress rows. This keeps request volume low and improves
+    minor-league / women's-football coverage.
     """
     now = datetime.now(HKT)
-    dates = [now.strftime("%Y-%m-%d")]
-    if now.hour < 3:
-        dates.append((now - timedelta(days=1)).strftime("%Y-%m-%d"))
-
-    out = []
-    seen = set()
     headers = sofascore_headers()
-    for ymd in dates:
-        r = requests.get(
-            SOFASCORE + f"/sport/football/scheduled-events/{ymd}",
-            headers=headers,
-            timeout=12,
-        )
-        r.raise_for_status()
-        data = r.json()
-        for event in data.get("events") or []:
+
+    def parse_events(events):
+        out = []
+        seen = set()
+        for event in events or []:
             status = event.get("status") or {}
             stype = clean(status.get("type")).lower()
             if stype not in ("inprogress", "live"):
@@ -474,7 +466,9 @@ def sofascore_matches():
             try:
                 ts = event.get("startTimestamp")
                 if ts:
-                    kickoff = datetime.fromtimestamp(float(ts), tz=timezone.utc).astimezone(HKT)
+                    kickoff = datetime.fromtimestamp(
+                        float(ts), tz=timezone.utc
+                    ).astimezone(HKT)
             except Exception:
                 kickoff = None
 
@@ -490,8 +484,36 @@ def sofascore_matches():
                 "status": "LIVE",
                 "updated_at": now.isoformat(timespec="seconds"),
             })
-    return out
+        return out
 
+    # Correct live-first discovery path.
+    try:
+        r = requests.get(
+            SOFASCORE + "/sport/football/events/live",
+            headers=headers,
+            timeout=12,
+        )
+        r.raise_for_status()
+        live = parse_events((r.json() or {}).get("events") or [])
+        return live
+    except Exception:
+        pass
+
+    # Conservative fallback if live-board access changes temporarily.
+    dates = [now.strftime("%Y-%m-%d")]
+    if now.hour < 3:
+        dates.append((now - timedelta(days=1)).strftime("%Y-%m-%d"))
+
+    all_events = []
+    for ymd in dates:
+        r = requests.get(
+            SOFASCORE + f"/sport/football/scheduled-events/{ymd}",
+            headers=headers,
+            timeout=12,
+        )
+        r.raise_for_status()
+        all_events.extend((r.json() or {}).get("events") or [])
+    return parse_events(all_events)
 
 def fetch_sofascore_statistics(match_id):
     if not match_id:
