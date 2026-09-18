@@ -2,6 +2,11 @@ name: Prediction fallback refresh
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - "scripts/update_prediction_fallback.py"
+      - "data/prediction_source_registry.csv"
+      - ".github/workflows/prediction-fallback.yml"
   schedule:
     # 06:30 and 18:30 Hong Kong time (UTC+8)
     - cron: "30 22,10 * * *"
