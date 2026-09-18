@@ -32,3 +32,16 @@ The Vercel endpoint uses a short 15-second CDN cache to avoid duplicate upstream
 
 SportScore attribution must be preserved if its data is displayed publicly:
 `Powered by SportScore — https://sportscore.com/`
+
+
+## Deploy
+
+The repository is Vercel-ready through `vercel.json`.
+
+Deploy/import:
+https://vercel.com/new/clone?repository-url=https://github.com/sargesticky-code/football-fast-tracker
+
+After deployment, use:
+`https://<project>.vercel.app/api/live_scores?format=csv`
+
+Paste that CSV endpoint into `LiveScoreFeed!B1` in Fast Tracker.
