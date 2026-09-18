@@ -8,6 +8,7 @@ import json
 import os
 import re
 import unicodedata
+from pathlib import Path
 
 import requests
 
@@ -23,6 +24,7 @@ UA = "football-fast-tracker-live/1.0"
 ENDED = ("ENDED", "MATCHENDED", "FT", "AET", "PEN", "CANCEL", "VOID", "ABANDON")
 MAX_DETAIL_CALLS_PER_RUN = int(os.environ.get("MAX_DETAIL_CALLS_PER_RUN", "8"))
 SOURCE_GAP_MAX_MINUTES = int(os.environ.get("SOURCE_GAP_MAX_MINUTES", "140"))
+SCENARIO_CSV = Path(__file__).resolve().parent.parent / "data" / "match_scenario_current.csv"
 
 
 def clean(v):
@@ -316,6 +318,183 @@ def extract_live_sections(detail, include_full=False):
         result["lineup"] = None
 
     return result
+
+def minute_number(v):
+    s = clean(v)
+    if not s:
+        return None
+    z = re.match(r"^(\d+)(?:\+(\d+))?", s)
+    if not z:
+        return None
+    return int(z.group(1)) + int(z.group(2) or 0)
+
+
+def scenario_segment(minute):
+    m = minute_number(minute)
+    if m is None:
+        return ""
+    if m <= 15:
+        return "0-15"
+    if m <= 30:
+        return "16-30"
+    if m <= 45:
+        return "31-HT"
+    if m <= 60:
+        return "46-60"
+    if m <= 75:
+        return "61-75"
+    return "76-FT"
+
+
+def load_scenario_rows():
+    """Load the locally deployed pre-match scenario contract.
+
+    This adds no live upstream request. The file is generated in GitHub before
+    Vercel deploys the repository. Missing/stale data fails closed.
+    """
+    if not SCENARIO_CSV.exists():
+        return {}
+    try:
+        with SCENARIO_CSV.open(encoding="utf-8-sig", newline="") as fh:
+            rows = list(csv.DictReader(fh))
+    except Exception:
+        return {}
+    return {
+        (clean(r.get("hkjc_event_id")), clean(r.get("segment"))): r
+        for r in rows
+        if clean(r.get("hkjc_event_id")) and clean(r.get("segment"))
+    }
+
+
+def stat_number(v):
+    if v in (None, ""):
+        return None
+    z = re.search(r"-?\d+(?:\.\d+)?", clean(v))
+    return float(z.group(0)) if z else None
+
+
+def team_stat_pair(stats, keys):
+    wanted = {slug_stat(k) for k in keys}
+    # Prefer cumulative All/Match values over period-only rows.
+    ordered = sorted(
+        stats or [],
+        key=lambda r: 0 if clean(r.get("period")).lower() in ("all", "match") else 1,
+    )
+    for r in ordered:
+        if clean(r.get("key")) not in wanted:
+            continue
+        h = stat_number(r.get("home"))
+        a = stat_number(r.get("away"))
+        if h is not None and a is not None:
+            return h, a
+    return None, None
+
+
+def infer_live_control(stats):
+    """Heuristic live-state descriptor, not a betting probability.
+
+    It only says which team is controlling the observed match state. Calibration
+    later determines how predictive these deviations are.
+    """
+    signals = []
+    score = 0.0
+
+    ph, pa = team_stat_pair(stats, ("ballpossesion", "ball possession"))
+    if ph is not None and pa is not None:
+        diff = ph - pa
+        if abs(diff) >= 8:
+            w = 2.0 if diff > 0 else -2.0
+            score += w
+            signals.append(f"possession={ph:g}-{pa:g}")
+
+    sh, sa = team_stat_pair(stats, ("total_shots", "total shots"))
+    if sh is not None and sa is not None:
+        diff = sh - sa
+        if abs(diff) >= 2:
+            score += 1.0 if diff > 0 else -1.0
+            signals.append(f"shots={sh:g}-{sa:g}")
+
+    th, ta = team_stat_pair(stats, ("shotsontarget", "shots on target"))
+    if th is not None and ta is not None:
+        diff = th - ta
+        if abs(diff) >= 1:
+            score += 1.0 if diff > 0 else -1.0
+            signals.append(f"sot={th:g}-{ta:g}")
+
+    bh, ba = team_stat_pair(stats, ("touches_opp_box", "touches in opposition box"))
+    if bh is not None and ba is not None:
+        diff = bh - ba
+        if abs(diff) >= 3:
+            score += 1.0 if diff > 0 else -1.0
+            signals.append(f"box_touches={bh:g}-{ba:g}")
+
+    ch, ca = team_stat_pair(stats, ("corners",))
+    if ch is not None and ca is not None:
+        diff = ch - ca
+        if abs(diff) >= 2:
+            score += 1.0 if diff > 0 else -1.0
+            signals.append(f"corners={ch:g}-{ca:g}")
+
+    if score >= 2:
+        side = "H"
+    elif score <= -2:
+        side = "A"
+    elif signals:
+        side = "EVEN"
+    else:
+        side = "UNKNOWN"
+    return side, score, signals
+
+
+def scenario_shadow(event_id, minute, team_stats, scenario_rows):
+    segment = scenario_segment(minute)
+    row = scenario_rows.get((clean(event_id), segment)) if segment else None
+    live_side, live_score, live_signals = infer_live_control(team_stats)
+
+    if not row:
+        return {
+            "segment": segment,
+            "status": "NO_SCENARIO",
+            "expected_control_side": "",
+            "live_control_side": live_side,
+            "alignment": "UNKNOWN",
+            "betting_action": "WAIT",
+            "live_control_score": live_score,
+            "signals": live_signals,
+        }
+
+    expected = clean(row.get("macro_control_side"))
+    if expected in ("H", "A") and live_side in ("H", "A"):
+        alignment = "CONFIRMS" if expected == live_side else "CONTRADICTS"
+    elif expected == "EVEN" and live_side == "EVEN":
+        alignment = "CONFIRMS"
+    elif expected == "EVEN" and live_side in ("H", "A"):
+        alignment = "DEVIATES_FROM_BALANCED"
+    elif expected in ("CONFLICT", "UNKNOWN", ""):
+        alignment = "NO_CLEAR_PREMATCH_EXPECTATION"
+    elif live_side == "UNKNOWN":
+        alignment = "INSUFFICIENT_LIVE_STATS"
+    else:
+        alignment = "MIXED"
+
+    # Hard fail-closed while segment calibration sample is still collecting.
+    return {
+        "segment": segment,
+        "status": clean(row.get("segment_prediction_status")) or "CALIBRATING",
+        "expected_control_side": expected,
+        "control_basis": clean(row.get("control_basis")),
+        "context_coverage_score": stat_number(row.get("context_coverage_score")),
+        "model_hda_consensus": clean(row.get("model_hda_consensus")),
+        "forebet_hda": clean(row.get("forebet_hda")),
+        "dc_hda": clean(row.get("dc_hda")),
+        "pi_hda": clean(row.get("pi_hda")),
+        "live_control_side": live_side,
+        "live_control_score": live_score,
+        "alignment": alignment,
+        "signals": live_signals,
+        "betting_action": "WAIT_CALIBRATING",
+    }
+
 
 def corner_progress(total, line):
     if total in (None, "") or line in (None, ""):
@@ -692,6 +871,7 @@ def best_match(target, candidates):
 def collect(include_full=False):
     now = datetime.now(HKT)
     targets = hkjc_targets(now)
+    scenario_rows = load_scenario_rows()
     health = {"primary": "NOT_CALLED", "sofascore": "NOT_CALLED", "backup": "NOT_CALLED", "details": "NOT_CALLED"}
     try:
         primary = primary_matches()
@@ -855,6 +1035,12 @@ def collect(include_full=False):
             "lineup": detail_capture.get("lineup"),
             "match_facts": detail_capture.get("match_facts") if include_full else None,
             "content_sections": detail_capture.get("content_sections") if include_full else None,
+            "scenario_shadow": scenario_shadow(
+                t["hkjc_event_id"],
+                clean(m["minute"]),
+                detail_capture["team_stats"],
+                scenario_rows,
+            ),
         })
 
     if health["details"] == "NOT_CALLED":
@@ -866,6 +1052,12 @@ def collect(include_full=False):
         "health": health,
         "targetCount": len(targets),
         "matchedCount": len(rows),
+        "scenarioPolicy": {
+            "mode": "SHADOW_CALIBRATING",
+            "addsUpstreamRequests": False,
+            "bettingEnabled": False,
+            "scenarioRowsLoaded": len(scenario_rows),
+        },
         "detailPolicy": {
             "maxDetailCallsPerRun": MAX_DETAIL_CALLS_PER_RUN,
             "detailCandidates": len(detail_candidates),
