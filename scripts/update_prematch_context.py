@@ -188,7 +188,7 @@ def current_targets(now):
     rows = read_csv(HKJC)
     out = []
     upper = now + timedelta(hours=LOOKAHEAD_HOURS)
-    lower = now - timedelta(minutes=15)
+    lower = now - timedelta(hours=4)
     for r in rows:
         if clean(r.get("selling")).lower() not in ("1", "true", "yes"):
             continue
