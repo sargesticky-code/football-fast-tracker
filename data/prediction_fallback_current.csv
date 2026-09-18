@@ -1,6 +1,6 @@
 ﻿fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,source,source_competition,source_url,recommendation,market,match_score,status,notes
 2026-09-18T22:30:41+08:00,FB5422,2026-09-18T21:58+08:00,APLW,Newell's Old Boys Women,Gimnasia LP Women,APWIN,Campeonato de Fútbol Femenino,https://www.apwin.com/predictions/newells-old-boys-women-vs-gimnasia-esgrima-res-prediction-campeonato-futbol-femenino-18-09-2026/,Gimnasia Esgrima Res. to win,1st Half Draw,1.000,OK,
-2026-09-18T22:30:41+08:00,FB5405,2026-09-19T01:00+08:00,DK1,Lyngby,Silkeborg IF,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:45:00+08:00,FB5405,2026-09-19T01:00+08:00,DK1,Lyngby,Silkeborg IF,APWIN,Danish Superliga,https://www.apwin.com/predictions/lyngby-vs-silkeborg-prediction-superliga-18-09-2026/,Lyngby to win the 1st half,BTTS - Yes,1.000,REGRESSION_SEED,Verified APWin current match page
 2026-09-18T22:30:41+08:00,FB5301,2026-09-19T06:28+08:00,BD2,Vila Nova,America Mineiro,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
 2026-09-18T22:30:41+08:00,FB5300,2026-09-19T07:28+08:00,BD2,Ceara,Novorizontino,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
 2026-09-18T22:30:41+08:00,FB5268,2026-09-19T07:30+08:00,MLS,New York City,New York Red Bulls,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
