@@ -51,7 +51,7 @@ CURRENT_COLUMNS = HISTORY_COLUMNS
 MOVEMENT_COLUMNS = [
     "captured_at_hkt", "kickoff_hkt", "hkjc_event_id", "home", "away",
     "movement_side", "now_odds", "odds_24h", "move_24h_pp",
-    "odds_2h", "move_2h_pp", "vol_24h_pp", "signal",
+    "odds_2h", "move_2h_pp", "odds_1h", "move_1h_pp", "vol_24h_pp", "signal",
     "model_side", "model_prob", "model_alignment", "match_confidence",
     "alert_score",
 ]
@@ -333,56 +333,70 @@ def movement_rows(history: list[dict], targets: list[dict], now: datetime) -> li
         last24 = [r for r in rows if (parse_dt(r.get("captured_at_hkt", "")) or now) >= now - timedelta(hours=24)]
         b24 = nearest(rows, now - timedelta(hours=24), timedelta(hours=3))
         b2 = nearest(rows, now - timedelta(hours=2), timedelta(minutes=75))
+        b1 = nearest(rows, now - timedelta(hours=1), timedelta(minutes=40))
 
         metrics = {}
         for side, (pk, ok) in side_keys.items():
             current = f(latest, pk)
             p24 = f(b24, pk)
             p2 = f(b2, pk)
+            p1 = f(b1, pk)
             d24 = current - p24 if current is not None and p24 is not None else None
             d2 = current - p2 if current is not None and p2 is not None else None
+            d1 = current - p1 if current is not None and p1 is not None else None
             vals = [f(r, pk) for r in last24]
             vals = [x for x in vals if x is not None]
             vol = max(vals) - min(vals) if len(vals) >= 2 else None
             strength = max(abs(d24) if d24 is not None else 0.0,
                            abs(d2) if d2 is not None else 0.0,
+                           abs(d1) if d1 is not None else 0.0,
                            vol if vol is not None else 0.0)
-            metrics[side] = (strength, d24, d2, vol, current, pk, ok)
+            metrics[side] = (strength, d24, d2, d1, vol, current, pk, ok)
 
         side = max(metrics, key=lambda s: metrics[s][0])
-        _, d24, d2, vol, _, pk, ok = metrics[side]
+        _, d24, d2, d1, vol, _, pk, ok = metrics[side]
         now_odds = f(latest, ok)
         odds24 = f(b24, ok)
         odds2 = f(b2, ok)
+        odds1 = f(b1, ok)
 
         signal = "STABLE"
-        if b24 is None or b2 is None:
+        if d2 is not None and d1 is not None and d2 * d1 < 0 and abs(d2) >= 0.03 and abs(d1) >= 0.02:
+            signal = "REVERSAL"
+        elif d24 is not None and d2 is not None and d24 * d2 < 0 and abs(d24) >= 0.03 and abs(d2) >= 0.03:
+            signal = "REVERSAL"
+        elif d1 is not None and d1 >= 0.02:
+            signal = "1H STEAM"
+        elif d1 is not None and d1 <= -0.02:
+            signal = "1H DRIFT"
+        elif d2 is not None and d2 >= 0.03:
+            signal = "2H STEAM"
+        elif d2 is not None and d2 <= -0.03:
+            signal = "2H DRIFT"
+        elif d24 is not None and d24 >= 0.05:
+            signal = "24H STEAM"
+        elif d24 is not None and d24 <= -0.05:
+            signal = "24H DRIFT"
+        elif vol is not None and vol >= 0.08:
+            signal = "HIGH VOLATILITY"
+        elif b1 is None or b2 is None or b24 is None:
             signal = "COLLECTING"
-        else:
-            if d24 is not None and d2 is not None and d24 * d2 < 0 and abs(d24) >= 0.03 and abs(d2) >= 0.03:
-                signal = "REVERSAL"
-            elif d2 is not None and d2 >= 0.03:
-                signal = "LATE STEAM"
-            elif d2 is not None and d2 <= -0.03:
-                signal = "LATE DRIFT"
-            elif d24 is not None and d24 >= 0.05:
-                signal = "24H STEAM"
-            elif d24 is not None and d24 <= -0.05:
-                signal = "24H DRIFT"
-            elif vol is not None and vol >= 0.08:
-                signal = "HIGH VOLATILITY"
 
         score = max(
             abs(d24) / 0.05 if d24 is not None else 0.0,
             abs(d2) / 0.03 if d2 is not None else 0.0,
+            abs(d1) / 0.02 if d1 is not None else 0.0,
             vol / 0.08 if vol is not None else 0.0,
         )
         alert_score = score if signal not in {"STABLE", "COLLECTING"} else 0.0
 
         model_side, model_prob = models.get(event_id, ("", 0.0))
+        direction = d1 if d1 is not None else d2 if d2 is not None else d24
         if not model_side:
             align = "NO MODEL"
-        elif ((d2 if d2 is not None else d24) or 0) > 0:
+        elif direction is None:
+            align = "COLLECTING"
+        elif direction > 0:
             align = "YES" if model_side == side else "NO"
         elif model_side == side:
             align = "CONFLICT"
@@ -401,6 +415,8 @@ def movement_rows(history: list[dict], targets: list[dict], now: datetime) -> li
             "move_24h_pp": f"{d24 * 100:.2f}" if d24 is not None else "",
             "odds_2h": f"{odds2:.3f}" if odds2 else "",
             "move_2h_pp": f"{d2 * 100:.2f}" if d2 is not None else "",
+            "odds_1h": f"{odds1:.3f}" if odds1 else "",
+            "move_1h_pp": f"{d1 * 100:.2f}" if d1 is not None else "",
             "vol_24h_pp": f"{vol * 100:.2f}" if vol is not None else "",
             "signal": signal,
             "model_side": model_side,
