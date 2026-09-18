@@ -36,7 +36,10 @@ COLUMNS = [
     "position", "is_captain", "injury_status", "injury_description",
     "injury_return_date", "main_league_id", "main_league", "season",
     "tournament", "appearances", "starts", "minutes", "goals", "assists",
-    "xg", "xa", "rating", "shots", "shots_on_target", "chances_created",
+    "xg", "xa", "rating", "recent_matches", "recent_minutes",
+    "recent_goals", "recent_assists", "recent_avg_rating",
+    "recent_starts", "recent_bench", "recent_pom",
+    "shots", "shots_on_target", "chances_created",
     "touches_box", "passes", "key_passes", "tackles", "interceptions",
     "recoveries", "duels_won", "aerial_duels_won", "saves",
     "goals_prevented", "clean_sheets", "selected_stats_json",
@@ -212,6 +215,59 @@ def extract_stats(categories):
     return picked, used
 
 
+def recent_form(payload, limit=6):
+    matches = payload.get("recentMatches") or []
+    usable = []
+    for m in matches:
+        if not isinstance(m, dict) or m.get("playedInMatch") is False:
+            continue
+        date = parse_dt(((m.get("matchDate") or {}).get("utcTime")))
+        if date is None:
+            continue
+        try:
+            mins = float(m.get("minutesPlayed") or 0)
+        except (TypeError, ValueError):
+            mins = 0.0
+        try:
+            goals = float(m.get("goals") or 0)
+        except (TypeError, ValueError):
+            goals = 0.0
+        try:
+            assists = float(m.get("assists") or 0)
+        except (TypeError, ValueError):
+            assists = 0.0
+        rating = None
+        try:
+            raw = ((m.get("ratingProps") or {}).get("num"))
+            if raw not in (None, ""):
+                rating = float(raw)
+        except (TypeError, ValueError):
+            rating = None
+        usable.append({
+            "date": date,
+            "minutes": mins,
+            "goals": goals,
+            "assists": assists,
+            "rating": rating,
+            "bench": bool(m.get("onBench")),
+            "pom": bool(m.get("playerOfTheMatch")),
+        })
+
+    usable.sort(key=lambda x: x["date"], reverse=True)
+    usable = usable[:limit]
+    ratings = [x["rating"] for x in usable if x["rating"] is not None]
+    return {
+        "recent_matches": len(usable),
+        "recent_minutes": round(sum(x["minutes"] for x in usable), 1),
+        "recent_goals": round(sum(x["goals"] for x in usable), 1),
+        "recent_assists": round(sum(x["assists"] for x in usable), 1),
+        "recent_avg_rating": round(sum(ratings) / len(ratings), 3) if ratings else "",
+        "recent_starts": sum(1 for x in usable if not x["bench"] and x["minutes"] > 0),
+        "recent_bench": sum(1 for x in usable if x["bench"]),
+        "recent_pom": sum(1 for x in usable if x["pom"]),
+    }
+
+
 def player_row(payload, fallback, now):
     primary = payload.get("primaryTeam") or {}
     position = ((payload.get("positionDescription") or {}).get("primaryPosition") or {})
@@ -219,6 +275,7 @@ def player_row(payload, fallback, now):
     main = payload.get("mainLeague") or {}
     season, tournament, categories = recent_tournament(payload)
     stats, selected = extract_stats(categories)
+    recent = recent_form(payload)
 
     return {
         "fetched_at_hkt": now.isoformat(),
@@ -236,15 +293,21 @@ def player_row(payload, fallback, now):
         "season": season,
         "tournament": tournament,
         **{k: clean(v) for k, v in stats.items()},
+        **{k: clean(v) for k, v in recent.items()},
         "selected_stats_json": json.dumps(selected, ensure_ascii=False, separators=(",", ":")),
-        "quality": "OK",
+        "quality": "OK_CURRENT_STATS" if selected else ("OK_RECENT_FORM" if recent["recent_matches"] else "IDENTITY_ONLY"),
         "source": "FotMob playerData",
     }
 
 
 def profile_stale(row, now):
     dt = parse_dt(row.get("fetched_at_hkt"))
-    return dt is None or now - dt > timedelta(days=REFRESH_DAYS)
+    if dt is None:
+        return True
+    quality = clean(row.get("quality"))
+    if quality in ("OK", "IDENTITY_ONLY"):
+        return now - dt > timedelta(hours=6)
+    return now - dt > timedelta(days=REFRESH_DAYS)
 
 
 def position_priority(v):
