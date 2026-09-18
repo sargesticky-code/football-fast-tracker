@@ -467,16 +467,33 @@ def norm_stat_title(v):
 
 
 STYLE_ALIASES = {
-    "average_possession": ("average possession", "possession"),
+    "average_possession": (
+        "average possession", "possession percentage team",
+        "possession percentage", "possession pct",
+    ),
     "goals_per_match": ("goals per match",),
-    "expected_goals": ("expected goals", "xg"),
-    "xg_conceded": ("xg conceded", "expected goals conceded"),
-    "shots_on_target_per_match": ("shots on target per match", "shots on target"),
-    "big_chances_created": ("big chances created",),
-    "possession_won_final_3rd": ("possession won final 3rd", "possession won final third"),
-    "accurate_passes_per_match": ("accurate passes per match", "accurate passes"),
-    "successful_tackles_per_match": ("successful tackles per match", "successful tackles"),
-    "interceptions_per_match": ("interceptions per match", "interceptions"),
+    "expected_goals": ("expected goals", "expected goals team", "xg team"),
+    "xg_conceded": (
+        "expected goals conceded", "expected goals conceded team",
+        "xg conceded", "xg conceded team",
+    ),
+    "shots_on_target_per_match": (
+        "shots on target per match", "shots on target per match team",
+    ),
+    "big_chances_created": ("big chances created", "big chances created team"),
+    "possession_won_final_3rd": (
+        "possession won final 3rd", "possession won final third",
+        "possession won final 3rd team",
+    ),
+    "accurate_passes_per_match": (
+        "accurate passes per match", "accurate passes per match team",
+    ),
+    "successful_tackles_per_match": (
+        "successful tackles per match", "successful tackles per match team",
+    ),
+    "interceptions_per_match": (
+        "interceptions per match", "interceptions per match team",
+    ),
 }
 
 
@@ -510,7 +527,7 @@ def extract_team_style(payload, team_id, team_name, manager_id, manager_name, ma
                 a = norm_stat_title(alias)
                 if n == a:
                     score = max(score, 3)
-                elif a in n or n in a:
+                elif len(a) >= 12 and a in n:
                     score = max(score, 2)
             if score and (best is None or score > best[0]):
                 best = (score, title, value)
