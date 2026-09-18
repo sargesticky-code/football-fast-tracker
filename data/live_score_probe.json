@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T20:34:33+08:00",
+  "updatedAt": "2026-09-18T20:35:22+08:00",
   "health": {
     "primary": "OK",
     "backup": "ERROR:HTTPError",
@@ -26,14 +26,14 @@
       "live_score": "0-0",
       "home_score": "0",
       "away_score": "0",
-      "minute": "34",
+      "minute": "35",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "1000017733",
       "source_home": "Ayutthaya United FC",
       "source_away": "Uthai Thani FC",
       "match_confidence": 0.957,
-      "source_updated_at": "2026-09-18T20:34:33+08:00",
+      "source_updated_at": "2026-09-18T20:35:22+08:00",
       "home_corners": 1,
       "away_corners": 2,
       "total_corners": 3,
