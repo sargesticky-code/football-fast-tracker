@@ -1,25 +1,31 @@
-﻿team_id,team_name,manager_id,manager_name,fetched_at_hkt,quality,source
-10015,Rapid Wien,1431200,Johannes Hoff Thorup,2026-09-18T23:54:01+08:00,OK,FotMob teams
-10219,RKC Waalwijk,5063,Sander Duits,2026-09-18T23:55:18+08:00,OK,FotMob teams
-1583,WSG Tirol,1135173,Philipp Semlic,2026-09-18T23:54:01+08:00,OK,FotMob teams
-278960,Jong FC Utrecht,37182,Mark Otten,2026-09-18T23:54:01+08:00,OK,FotMob teams
-293352,Annecy FC,2888,Laurent Guyot,2026-09-18T23:56:46+08:00,OK,FotMob teams
-4116,Almere City FC,645131,Anoush Dastgir,2026-09-18T23:56:46+08:00,OK,FotMob teams
-4120,Rodez,2898,Didier Santini,2026-09-18T23:56:46+08:00,OK,FotMob teams
-4449,AC Oulu,1652442,Mikko Isokangas,2026-09-18T23:52:38+08:00,OK,FotMob teams
-6413,PEC Zwolle,22362,Henry van der Vegt,2026-09-18T23:55:18+08:00,OK,FotMob teams
-6417,Helmond Sport,149174,Frédéric Frans,2026-09-18T23:55:18+08:00,OK,FotMob teams
-6550,FC Inter Turku,7185,Vesa Vasara,2026-09-18T23:52:38+08:00,OK,FotMob teams
-8188,Magdeburg,78670,Petrik Sander,2026-09-18T23:52:38+08:00,OK,FotMob teams
-8262,Darmstadt,892594,Florian Kohfeldt,2026-09-18T23:52:38+08:00,OK,FotMob teams
-8357,Greuther Fürth,292922,Heiko Vogel,2026-09-18T23:52:38+08:00,OK,FotMob teams
-8415,Silkeborg,699547,Morten Dahm Kjærgaard,2026-09-18T23:54:01+08:00,OK,FotMob teams
-8481,Nancy,1194454,Oswald Tanchot,2026-09-18T23:56:46+08:00,OK,FotMob teams
-8674,FC Groningen,846372,Dick Lukkien,2026-09-18T23:55:18+08:00,OK,FotMob teams
-8721,Wolfsburg,1202442,Tobias Strobl,2026-09-18T23:52:38+08:00,OK,FotMob teams
-9791,Heracles,1353039,Vincent Heilmann,2026-09-18T23:56:46+08:00,OK,FotMob teams
-9835,FC Den Bosch,1627171,Bart Schreuder,2026-09-18T23:55:18+08:00,OK,FotMob teams
-9836,Dijon,1141984,Baptiste Ridira,2026-09-18T23:56:46+08:00,OK,FotMob teams
-9838,MVV Maastricht,259714,Andries Jonker,2026-09-18T23:55:18+08:00,OK,FotMob teams
-9839,VVV-Venlo,37176,Marinus Dijkhuizen,2026-09-18T23:54:01+08:00,OK,FotMob teams
-9907,Lyngby,253762,Mikkel Jespersen,2026-09-18T23:54:01+08:00,OK,FotMob teams
+﻿team_id,team_name,manager_id,manager_name,manager_start_date,fetched_at_hkt,quality,source
+10015,Rapid Wien,1431200,Johannes Hoff Thorup,,2026-09-18T23:54:01+08:00,OK,FotMob teams
+10219,RKC Waalwijk,5063,Sander Duits,,2026-09-18T23:55:18+08:00,OK,FotMob teams
+10249,Montpellier,26357,Zoumana Camara,,2026-09-18T23:58:55+08:00,OK,FotMob teams
+1583,WSG Tirol,1135173,Philipp Semlic,,2026-09-18T23:54:01+08:00,OK,FotMob teams
+278960,Jong FC Utrecht,37182,Mark Otten,,2026-09-18T23:54:01+08:00,OK,FotMob teams
+293352,Annecy FC,2888,Laurent Guyot,,2026-09-18T23:56:46+08:00,OK,FotMob teams
+4116,Almere City FC,645131,Anoush Dastgir,,2026-09-18T23:56:46+08:00,OK,FotMob teams
+4120,Rodez,2898,Didier Santini,,2026-09-18T23:56:46+08:00,OK,FotMob teams
+4449,AC Oulu,1652442,Mikko Isokangas,,2026-09-18T23:52:38+08:00,OK,FotMob teams
+6413,PEC Zwolle,22362,Henry van der Vegt,,2026-09-18T23:55:18+08:00,OK,FotMob teams
+6417,Helmond Sport,149174,Frédéric Frans,,2026-09-18T23:55:18+08:00,OK,FotMob teams
+6550,FC Inter Turku,7185,Vesa Vasara,,2026-09-18T23:52:38+08:00,OK,FotMob teams
+8149,Union Berlin,30939,Mauro Lustrinelli,,2026-09-18T23:58:55+08:00,OK,FotMob teams
+8188,Magdeburg,78670,Petrik Sander,,2026-09-18T23:52:38+08:00,OK,FotMob teams
+8262,Darmstadt,892594,Florian Kohfeldt,,2026-09-18T23:52:38+08:00,OK,FotMob teams
+8311,Clermont Foot,746012,David Guion,,2026-09-18T23:58:55+08:00,OK,FotMob teams
+8357,Greuther Fürth,292922,Heiko Vogel,,2026-09-18T23:52:38+08:00,OK,FotMob teams
+8415,Silkeborg,699547,Morten Dahm Kjærgaard,,2026-09-18T23:54:01+08:00,OK,FotMob teams
+8481,Nancy,1194454,Oswald Tanchot,,2026-09-18T23:56:46+08:00,OK,FotMob teams
+8674,FC Groningen,846372,Dick Lukkien,,2026-09-18T23:55:18+08:00,OK,FotMob teams
+8721,Wolfsburg,1202442,Tobias Strobl,,2026-09-18T23:52:38+08:00,OK,FotMob teams
+9791,Heracles,1353039,Vincent Heilmann,,2026-09-18T23:56:46+08:00,OK,FotMob teams
+9823,Bayern München,39027,Vincent Kompany,,2026-09-18T23:58:55+08:00,OK,FotMob teams
+9835,FC Den Bosch,1627171,Bart Schreuder,,2026-09-18T23:55:18+08:00,OK,FotMob teams
+9836,Dijon,1141984,Baptiste Ridira,,2026-09-18T23:56:46+08:00,OK,FotMob teams
+9837,Reims,1135660,Nicolas Usaï,,2026-09-18T23:58:55+08:00,OK,FotMob teams
+9838,MVV Maastricht,259714,Andries Jonker,,2026-09-18T23:55:18+08:00,OK,FotMob teams
+9839,VVV-Venlo,37176,Marinus Dijkhuizen,,2026-09-18T23:54:01+08:00,OK,FotMob teams
+9855,Grenoble,1381581,Olivier Frapolli,,2026-09-18T23:58:55+08:00,OK,FotMob teams
+9907,Lyngby,253762,Mikkel Jespersen,,2026-09-18T23:54:01+08:00,OK,FotMob teams

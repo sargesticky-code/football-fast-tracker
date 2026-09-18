@@ -1,4 +1,34 @@
 ﻿team_id,team_name,player_id,player_name,position_group,fetched_at_hkt,source
+10249,Montpellier,348411,Mathieu Michel,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1079544,Simon Ngapandouetnbu,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1797603,Viktor Džodić,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,2119601,Kevin Kamdem,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,882978,Nelson Sissoko,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1098243,Yanis Zouaoui,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1697720,Naoufel El Hannach,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1643774,Yaël Mouanga,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,604349,Julien Laporte,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,880618,Théo Sainte-Luce,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1727021,Wilfried Ndollo Bille,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1074657,Daylam Meddah,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,2172377,Tidiane Diallo,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,2130485,Mathis Chambon,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,319305,Florian Tardieu,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,2189224,Oscar Eyen,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1900953,Nabil Homssa,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1366624,Axel Guéguin,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,2130482,Hichem Abderrebi,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1682404,Jérémy Hatchi,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1927654,Noah Vidal-Cartoux,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1670190,Théo Chennahi,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1529945,Everson Junior,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,2119599,Gregory Ayem,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,2130483,Lacine Megnan-Pave,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1178331,Yassine Benhattab,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1167473,Mamadou Camara,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1610103,Nicolas Pays,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,1804654,Nordan Mukiele,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+10249,Montpellier,2095083,Daryll Benlahlou,attackers,2026-09-18T23:58:55+08:00,FotMob teams
 293352,Annecy FC,562994,Florian Escales,keepers,2026-09-18T23:56:46+08:00,FotMob teams
 293352,Annecy FC,953926,Thomas Callens,keepers,2026-09-18T23:56:46+08:00,FotMob teams
 293352,Annecy FC,1791801,Matéo Gonzalez,keepers,2026-09-18T23:56:46+08:00,FotMob teams
@@ -89,6 +119,65 @@
 4120,Rodez,1050814,Kelian Nsona,attackers,2026-09-18T23:56:46+08:00,FotMob teams
 4120,Rodez,1108006,Marco Essimi,attackers,2026-09-18T23:56:46+08:00,FotMob teams
 4120,Rodez,2130479,Djibril Mavounia,attackers,2026-09-18T23:56:46+08:00,FotMob teams
+8149,Union Berlin,186557,Frederik Rønnow,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,451628,Carl Klaus,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1156148,Matheo Raab,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,767800,Felix Uduokhai,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1796861,Andrik Markgraf,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1231677,Zeno Van Den Bosch,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,530858,Marvin Friedrich,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1199947,Leopold Querfeld,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1282582,Tom Rothe,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,622373,Josip Juranović,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,907495,Stanley N'Soki,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1403332,Aljoscha Kemlein,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,304348,Rani Khedira,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,949673,Woo-Yeong Jeong,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,836726,András Schäfer,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,860260,Derrick Köhn,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,304354,Janik Haberer,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,792756,Michel Aebischer,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,447959,Robert Skov,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,166733,Christopher Trimmel,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,852049,Kastriot Imeri,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1555056,Julien Friedrich,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1958812,Linus Guether,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,609504,Oliver Burke,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1520506,Livan Burcu,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,658440,Tim Skarke,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1047670,Andrej Ilić,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,1242198,Marin Ljubičić,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,783585,Emmanuel Latte Lath,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8149,Union Berlin,2062767,Mekhi Gray,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1334806,Massamba Ndiaye,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,663034,Theo Guivarch,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,916916,Andy Pelmard,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1641942,Ethan Kena Kabeya,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1698483,El Hadj Koné,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,609634,Vital N'Simba,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,593612,Yoann Salmier,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1632348,Ivan M'Bahia,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1740655,Matys Donavin,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1740657,Ibrahim Coulibaly,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,568542,Kenji Van Boto,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1586536,Abdellah Baallal,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1631397,Jean Grillot,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1358583,Yuliwes Bellache,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,581137,Junior Sambia,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1797477,Julien Astic,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,2187441,Noam Strotz,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,447107,Adrien Hunou,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,865030,Rominigue Kouamé,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1531397,Allan Ackra,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1342756,Luís Semedo,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1187449,Florian Bianchini,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1329301,Maïdine Douane,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1671490,Ousmane Diop,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1487957,Mohamed-Amine Bouchenna,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,2119514,Arthur Saintorens,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1770621,Jean Tsamouna,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,1797479,Enzo Cantero,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+8311,Clermont Foot,2119513,Christ Okou,attackers,2026-09-18T23:58:55+08:00,FotMob teams
 8481,Nancy,1332797,Yanis Kouini,keepers,2026-09-18T23:56:46+08:00,FotMob teams
 8481,Nancy,420866,Enzo Basilio,keepers,2026-09-18T23:56:46+08:00,FotMob teams
 8481,Nancy,120090,Geoffrey Lembet,keepers,2026-09-18T23:56:46+08:00,FotMob teams
@@ -155,6 +244,35 @@
 9791,Heracles,1668128,Giandro Sambo,attackers,2026-09-18T23:56:46+08:00,FotMob teams
 9791,Heracles,1838673,Sil Blokhuis,attackers,2026-09-18T23:56:46+08:00,FotMob teams
 9791,Heracles,1203188,Fodé Fofana,attackers,2026-09-18T23:56:46+08:00,FotMob teams
+9823,Bayern München,27299,Manuel Neuer,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,94841,Sven Ulreich,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1285872,Jonas Urbig,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1664982,Leon Klanac,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1432341,Tarek Buchmann,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,658554,Dayot Upamecano,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,828159,Min-Jae Kim,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,469700,Jonathan Tah,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1286183,Tom Bischof,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1395447,Nathaniel Brown,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,751202,Alphonso Davies,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,851626,Hiroki Ito,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1034808,Sacha Boey,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,526827,Konrad Laimer,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1771196,Cassiano Kiala,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,950824,Josip Stanišić,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,460632,Joshua Kimmich,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,385437,Serge Gnabry,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1156141,Jamal Musiala,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1180288,Ismael Saibari,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1904968,Erblin Osmani,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1798782,Bara Ndiaye,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1473580,Aleksandar Pavlović,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1771197,David Santos Daiber,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,194165,Harry Kane,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,860914,Luis Díaz,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1029063,Michael Olise,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1737700,Lennart Karl,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9823,Bayern München,1970833,Bastian Assomo,attackers,2026-09-18T23:58:55+08:00,FotMob teams
 9836,Dijon,109620,Paul Delecroix,keepers,2026-09-18T23:56:46+08:00,FotMob teams
 9836,Dijon,2130480,Ilan Marie-Rose,keepers,2026-09-18T23:56:46+08:00,FotMob teams
 9836,Dijon,2130498,Enzo Ketterle,keepers,2026-09-18T23:56:46+08:00,FotMob teams
@@ -184,3 +302,65 @@
 9836,Dijon,1792459,Alexis Ntamack,attackers,2026-09-18T23:56:46+08:00,FotMob teams
 9836,Dijon,1797090,Florian Rombogouera,attackers,2026-09-18T23:56:46+08:00,FotMob teams
 9836,Dijon,1843478,Ange Lago,attackers,2026-09-18T23:56:46+08:00,FotMob teams
+9837,Reims,299736,Alexis Sauvage,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1518139,Tom Hülsmann,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1186511,Edin Omeragic,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1469960,Soumaïla Sylla,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1724411,Aleksandr Guboglo,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,726442,Joseph Okumu,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,713924,Sergio Akieme,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1915948,Jean Mambuku,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1350982,Samuel Kotto,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1230286,Daouda Guindo,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1482273,Elie N'Tamon,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1210298,Armel Zohouri,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,2159206,Theo Amorim,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1244903,Jean-Philippe Célestin,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1867219,John Otomewo,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1190059,Théo Leoni,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1401227,Yaya Fofana,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1309372,Mory Gbane,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1211445,John Patrick,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1730219,Manzur Okwaro,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,2130490,Theo Deflorenne,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,2139588,Chamsedin Kouranfal,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1584084,Ange Martial Tia,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1332549,Amine Salama,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1919072,Tidiane Diarrassouba,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,965349,Mohamed Daramy,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,967093,Youssef El Kachati,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,2008019,Arone Gadou,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,2130487,Amine Kashi,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1479743,Ikechukwu Orazi,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1676541,Quentin Paris,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1703386,Hafiz Ibrahim,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9837,Reims,1123587,Sambou Soumano,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,678767,Alexandre Olliero,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,427000,Bobby Allain,keepers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1230494,Farouq Limouri,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1078287,Clément Vidal,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,968952,Allan Tchaptchet,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1669441,Christ-Owen Kouassi,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1526613,Ange-Loïc N’Gatta,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1255850,Matthéo Xantippe,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1460533,Aurélien Pelon,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1692048,Sakhalou Niakaté,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1131254,Yvann Maçon,defenders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,951972,Yohann Magnin,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1170864,Lucas Bernadou,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1310262,Baptiste Mouazan,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1244902,Mamady Bangré,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,754621,Maël Corboz,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1276328,Nesta Zahui,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1383394,Samba Diba,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1633682,Owen Martinez-Jullien,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1797589,Jules Mouton,midfielders,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1356322,Ze Leite,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,949712,Moussa Djitté,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1526207,Arthur Lallias,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,815766,Ugo Bonnet,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1226850,Leonardo Cerri,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1098784,Dillon Hoogewerf,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1602137,Mohamed Bechikh,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,2130473,Kyliann Fofana,attackers,2026-09-18T23:58:55+08:00,FotMob teams
+9855,Grenoble,1468976,Jean-Guy Akpa Akpro,attackers,2026-09-18T23:58:55+08:00,FotMob teams
