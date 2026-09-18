@@ -1,60 +1,60 @@
 ﻿fetched_at_hkt,hkjc_event_id,home,away,form_prob_home,form_prob_draw,form_prob_away,form_xg_home,form_xg_away,home_games,away_games,home_venue_games,away_venue_games,quality,model_source
-2026-09-18T23:52:00+08:00,FB5260,Brentford,Chelsea,,,,,,1,2,0,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5269,Juarez,Tigres UANL,,,,,,7,6,3,3,FORM_INSUFFICIENT:7/6,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5270,Puebla,Atlante,0.359253,0.253198,0.387549,1.36375,1.42605,34,34,14,18,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5272,SJK Seinajoki,IFK Mariehamn,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5273,Lahti,Jaro,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5274,AC Oulu,Inter Turku,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5275,Gnistan,HJK Helsinki,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5276,Wolfsburg,Darmstadt,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5277,Rapid Vienna,Tirol,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5278,Jong Ajax,Roda,,,,,,3,2,1,1,FORM_INSUFFICIENT:3/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5279,Jong Utrecht,Venlo,,,,,,1,2,1,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5280,RKC Waalwijk,Maastricht,,,,,,1,3,0,1,FORM_INSUFFICIENT:1/3,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5281,Den Bosch,Helmond,,,,,,5,2,3,1,FORM_INSUFFICIENT:5/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5282,Groningen,Zwolle,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5283,Oss,Dordrecht,,,,,,2,2,1,1,FORM_INSUFFICIENT:2/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5284,Almere City,Heracles,,,,,,44,0,21,0,FORM_INSUFFICIENT:44/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5285,Bayern Munich,Union Berlin,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5286,Albacete,Cordoba,,,,,,36,1,17,0,FORM_INSUFFICIENT:36/1,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5287,AA Gent,Standard,,,,,,46,2,23,1,FORM_INSUFFICIENT:46/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5288,Espanyol,CF Elche,,,,,,0,1,0,0,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5290,Monza,Sassuolo,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5291,CA Central Cordoba,Defensa y Justicia,,,,,,5,3,2,1,FORM_INSUFFICIENT:5/3,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5292,Racing Club,Sarmiento,,,,,,9,6,5,3,FORM_INSUFFICIENT:9/6,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5294,Sarpsborg,KFUM Oslo,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5295,Annecy FC,Dijon,,,,,,34,0,17,0,FORM_INSUFFICIENT:34/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5296,Monaco,Lens,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5297,Rodez,Nancy,,,,,,3,1,1,0,FORM_INSUFFICIENT:3/1,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5298,Reims,Montpellier,,,,,,2,2,2,1,FORM_INSUFFICIENT:2/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5299,Grenoble Foot,Clermont,,,,,,3,2,1,1,FORM_INSUFFICIENT:3/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5302,Greuther Furth,Magdeburg,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5304,Bristol City,Watford,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5305,Piratas FC,Venados,,,,,,1,5,1,1,FORM_INSUFFICIENT:1/5,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5310,Hokkaido Consadole Sapporo,Oita Trinita,,,,,,2,0,0,0,FORM_INSUFFICIENT:2/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5312,Jeonnam Dragons,Suwon FC,,,,,,0,2,0,1,FORM_INSUFFICIENT:0/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5313,Chungnam Asan,Cheonan City,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5315,Kawasaki Frontale,Kashima Antlers,,,,,,4,6,2,4,FORM_INSUFFICIENT:4/6,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5316,V-Varen Nagasaki,Cerezo Osaka,,,,,,4,4,1,2,FORM_INSUFFICIENT:4/4,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5319,Gimpo FC,Busan I'Park,,,,,,0,1,0,0,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5320,Seoul E-Land,Daegu FC,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5321,Montedio Yamagata,Kataller Toyama,,,,,,1,2,0,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5322,Albirex Niigata,Jubilo Iwata,,,,,,30,0,16,0,FORM_INSUFFICIENT:30/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5323,Sagan Tosu,Iwaki FC,,,,,,0,1,0,0,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5324,Shonan Bellmare,Blaublitz Akita,,,,,,1,0,1,0,FORM_INSUFFICIENT:1/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5325,FC Yokohama,FC Imabari,,,,,,2,2,1,1,FORM_INSUFFICIENT:2/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5326,Fagiano Okayama,Kyoto Sanga,,,,,,3,6,1,2,FORM_INSUFFICIENT:3/6,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5327,FC Tokyo,Nagoya Grampus,,,,,,5,3,2,2,FORM_INSUFFICIENT:5/3,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5329,Kaiserslautern,Braunschweig,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5330,Holstein Kiel,Osnabruck,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5342,Tottenham,Aston Villa,,,,,,3,60,2,34,FORM_INSUFFICIENT:3/60,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5387,Ventforet Kofu,Tokushima Vortis,,,,,,0,2,0,1,FORM_INSUFFICIENT:0/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5388,Fujieda MYFC,RB Omiya Ardija,,,,,,1,1,0,0,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5389,Shimizu S-Pulse,JEF United Chiba,,,,,,3,2,2,1,FORM_INSUFFICIENT:3/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5390,Ayutthaya Utd,Uthai Thani,,,,,,1,1,0,0,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5392,Karlsruher,Nurnberg,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5405,Lyngby,Silkeborg IF,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5408,Pattani,Prachuap,,,,,,0,1,0,1,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5409,Rasisalai Utd,Lamphun Warriors,,,,,,1,2,1,2,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5411,Oakleigh Cannons,Avondale,,,,,,2,37,1,18,FORM_INSUFFICIENT:2/37,HKJC matchResult · recency-weighted Team-Form Poisson
-2026-09-18T23:52:00+08:00,FB5429,Chiangrai Utd,Sisaket Utd,,,,,,1,0,1,0,FORM_INSUFFICIENT:1/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5260,Brentford,Chelsea,,,,,,44,3,19,1,FORM_INSUFFICIENT:44/3,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5269,Juarez,Tigres UANL,,,,,,7,6,3,3,FORM_INSUFFICIENT:7/6,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5270,Puebla,Atlante,0.359253,0.253198,0.387549,1.36375,1.42605,34,34,14,18,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5272,SJK Seinajoki,IFK Mariehamn,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5273,Lahti,Jaro,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5274,AC Oulu,Inter Turku,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5275,Gnistan,HJK Helsinki,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5276,Wolfsburg,Darmstadt,,,,,,2,1,1,1,FORM_INSUFFICIENT:2/1,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5277,Rapid Vienna,Tirol,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5278,Jong Ajax,Roda,,,,,,3,2,1,1,FORM_INSUFFICIENT:3/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5279,Jong Utrecht,Venlo,,,,,,1,2,1,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5280,RKC Waalwijk,Maastricht,,,,,,1,3,0,1,FORM_INSUFFICIENT:1/3,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5281,Den Bosch,Helmond,,,,,,5,2,3,1,FORM_INSUFFICIENT:5/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5282,Groningen,Zwolle,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5283,Oss,Dordrecht,,,,,,2,2,1,1,FORM_INSUFFICIENT:2/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5284,Almere City,Heracles,,,,,,44,0,21,0,FORM_INSUFFICIENT:44/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5285,Bayern Munich,Union Berlin,,,,,,56,4,25,2,FORM_INSUFFICIENT:56/4,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5286,Albacete,Cordoba,,,,,,36,1,17,0,FORM_INSUFFICIENT:36/1,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5287,AA Gent,Standard,,,,,,46,2,23,1,FORM_INSUFFICIENT:46/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5288,Espanyol,CF Elche,,,,,,0,1,0,0,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5290,Monza,Sassuolo,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5291,CA Central Cordoba,Defensa y Justicia,,,,,,5,3,2,1,FORM_INSUFFICIENT:5/3,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5292,Racing Club,Sarmiento,,,,,,9,6,5,3,FORM_INSUFFICIENT:9/6,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5294,Sarpsborg,KFUM Oslo,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5295,Annecy FC,Dijon,,,,,,34,0,17,0,FORM_INSUFFICIENT:34/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5296,Monaco,Lens,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5297,Rodez,Nancy,,,,,,3,1,1,0,FORM_INSUFFICIENT:3/1,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5298,Reims,Montpellier,,,,,,2,2,2,1,FORM_INSUFFICIENT:2/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5299,Grenoble Foot,Clermont,,,,,,3,2,1,1,FORM_INSUFFICIENT:3/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5302,Greuther Furth,Magdeburg,,,,,,1,2,1,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5304,Bristol City,Watford,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5305,Piratas FC,Venados,,,,,,1,5,1,1,FORM_INSUFFICIENT:1/5,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5310,Hokkaido Consadole Sapporo,Oita Trinita,,,,,,3,1,0,1,FORM_INSUFFICIENT:3/1,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5312,Jeonnam Dragons,Suwon FC,,,,,,0,2,0,1,FORM_INSUFFICIENT:0/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5313,Chungnam Asan,Cheonan City,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5315,Kawasaki Frontale,Kashima Antlers,,,,,,4,6,2,4,FORM_INSUFFICIENT:4/6,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5316,V-Varen Nagasaki,Cerezo Osaka,,,,,,4,4,1,2,FORM_INSUFFICIENT:4/4,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5319,Gimpo FC,Busan I'Park,,,,,,0,1,0,0,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5320,Seoul E-Land,Daegu FC,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5321,Montedio Yamagata,Kataller Toyama,,,,,,3,4,1,2,FORM_INSUFFICIENT:3/4,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5322,Albirex Niigata,Jubilo Iwata,,,,,,30,1,16,0,FORM_INSUFFICIENT:30/1,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5323,Sagan Tosu,Iwaki FC,,,,,,1,2,1,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5324,Shonan Bellmare,Blaublitz Akita,,,,,,3,32,2,14,FORM_INSUFFICIENT:3/32,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5325,FC Yokohama,FC Imabari,,,,,,4,3,2,1,FORM_INSUFFICIENT:4/3,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5326,Fagiano Okayama,Kyoto Sanga,,,,,,3,6,1,2,FORM_INSUFFICIENT:3/6,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5327,FC Tokyo,Nagoya Grampus,,,,,,5,3,2,2,FORM_INSUFFICIENT:5/3,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5329,Kaiserslautern,Braunschweig,,,,,,2,33,1,15,FORM_INSUFFICIENT:2/33,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5330,Holstein Kiel,Osnabruck,,,,,,2,2,1,0,FORM_INSUFFICIENT:2/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5342,Tottenham,Aston Villa,,,,,,6,60,3,34,FORM_INSUFFICIENT:6/60,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5387,Ventforet Kofu,Tokushima Vortis,,,,,,1,3,0,2,FORM_INSUFFICIENT:1/3,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5388,Fujieda MYFC,RB Omiya Ardija,,,,,,1,3,0,1,FORM_INSUFFICIENT:1/3,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5389,Shimizu S-Pulse,JEF United Chiba,,,,,,3,3,2,2,FORM_INSUFFICIENT:3/3,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5390,Ayutthaya Utd,Uthai Thani,,,,,,1,1,0,0,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5392,Karlsruher,Nurnberg,,,,,,1,2,0,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5405,Lyngby,Silkeborg IF,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5408,Pattani,Prachuap,,,,,,0,1,0,1,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5409,Rasisalai Utd,Lamphun Warriors,,,,,,1,2,1,2,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5411,Oakleigh Cannons,Avondale,,,,,,2,37,1,18,FORM_INSUFFICIENT:2/37,HKJC matchResult · recency-weighted Team-Form Poisson
+2026-09-19T02:04:39+08:00,FB5429,Chiangrai Utd,Sisaket Utd,,,,,,1,0,1,0,FORM_INSUFFICIENT:1/0,HKJC matchResult · recency-weighted Team-Form Poisson
