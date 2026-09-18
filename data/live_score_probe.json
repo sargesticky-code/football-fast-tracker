@@ -1,0 +1,13 @@
+{
+  "updatedAt": "2026-09-18T19:42:21+08:00",
+  "health": {
+    "primary": "ERROR:HTTPError",
+    "backup": "ERROR:HTTPError"
+  },
+  "targetCount": 3,
+  "matchedCount": 0,
+  "matches": [],
+  "attribution": {
+    "SportScore": "Powered by SportScore — https://sportscore.com/"
+  }
+}
