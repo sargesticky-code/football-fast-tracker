@@ -12,6 +12,8 @@ from pathlib import Path
 
 import requests
 
+from hkjc_live_market import fetch_live_markets
+
 HKT = timezone(timedelta(hours=8))
 FOTMOB = os.environ.get("FOTMOB_BASE_URL", "https://www.fotmob.com/api").rstrip("/")
 BACKUP = os.environ.get("SPORTSCORE_BASE", "https://sportscore.com").rstrip("/")
@@ -872,6 +874,16 @@ def collect(include_full=False):
     now = datetime.now(HKT)
     targets = hkjc_targets(now)
     scenario_rows = load_scenario_rows()
+
+    # Only matches at/just after kickoff are candidates for HKJC in-play odds.
+    # One whitelisted INPLAY_ALL GraphQL request covers every candidate and all
+    # HAD/HIL/CHL lines; no per-match or per-market fan-out.
+    market_event_ids = [
+        t["hkjc_event_id"]
+        for t in targets
+        if t["kickoff"] <= now + timedelta(minutes=5)
+    ]
+    live_markets, live_market_health = fetch_live_markets(market_event_ids)
     health = {"primary": "NOT_CALLED", "sofascore": "NOT_CALLED", "backup": "NOT_CALLED", "details": "NOT_CALLED"}
     try:
         primary = primary_matches()
@@ -1041,6 +1053,7 @@ def collect(include_full=False):
                 detail_capture["team_stats"],
                 scenario_rows,
             ),
+            "hkjc_live_market": live_markets.get(t["hkjc_event_id"]),
         })
 
     if health["details"] == "NOT_CALLED":
@@ -1057,6 +1070,13 @@ def collect(include_full=False):
             "addsUpstreamRequests": False,
             "bettingEnabled": False,
             "scenarioRowsLoaded": len(scenario_rows),
+        },
+        "liveMarketPolicy": {
+            "mode": "CAPTURE_ONLY",
+            "provider": "HKJC official GraphQL",
+            "markets": ["HAD", "HIL", "CHL"],
+            "fanout": "ONE INPLAY_ALL REQUEST FOR ALL TARGET EVENTS",
+            **live_market_health,
         },
         "detailPolicy": {
             "maxDetailCallsPerRun": MAX_DETAIL_CALLS_PER_RUN,
