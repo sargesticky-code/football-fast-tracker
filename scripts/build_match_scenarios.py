@@ -14,6 +14,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent.parent
+HKJC = ROOT / "data" / "hkjc_current.csv"
 CONTEXT = ROOT / "data" / "prematch_context_current.csv"
 FOREBET = ROOT / "data" / "forebet_current.csv"
 MODEL = ROOT / "data" / "model_current.csv"
@@ -197,12 +198,54 @@ def main():
     fetched = now.isoformat()
     upper = now + timedelta(hours=LOOKAHEAD_HOURS)
 
+    # HKJC is the canonical scenario universe. Prematch/FotMob context is an
+    # enrichment layer only, so an enrichment workflow that is one cycle late
+    # can never make a live match lose its pre-match scenario.
+    context_by_id = {
+        clean(r.get("hkjc_event_id")): r
+        for r in read_csv(CONTEXT)
+        if clean(r.get("hkjc_event_id"))
+    }
+    previous_by_event = {}
+    for r in read_csv(OUT):
+        eid = clean(r.get("hkjc_event_id"))
+        if eid and eid not in previous_by_event:
+            previous_by_event[eid] = r
+
     context = []
-    for r in read_csv(CONTEXT):
-        kick = parse_dt(r.get("kickoff_hkt"))
-        if kick is None or not (now - timedelta(hours=4) <= kick <= upper):
+    ended_tokens = ("MATCHENDED", "INPLAYMATCHENDED", "ENDED", "CANCEL", "VOID", "ABANDON")
+    for h in read_csv(HKJC):
+        eid = clean(h.get("hkjc_event_id"))
+        kick = parse_dt(h.get("kickoff_hkt"))
+        if not eid or kick is None or not (now - timedelta(hours=4) <= kick <= upper):
             continue
-        context.append(r)
+        status = clean(h.get("status")).upper()
+        in_play = clean(h.get("in_play")).lower() in ("1", "true", "yes")
+        if any(token in status for token in ended_tokens) and not in_play:
+            continue
+
+        enriched = dict(context_by_id.get(eid) or {})
+        previous = previous_by_event.get(eid) or {}
+        base = {
+            "hkjc_event_id": eid,
+            "kickoff_hkt": kick.isoformat(timespec="minutes"),
+            "league": clean(h.get("tournament")),
+            "home": clean(h.get("home_en")),
+            "away": clean(h.get("away_en")),
+        }
+        base.update({k: v for k, v in enriched.items() if clean(v)})
+
+        # Preserve slow-changing last-good context if the current enrichment
+        # pass could not resolve the live fixture after kickoff.
+        for key in (
+            "fotmob_match_id", "fotmob_home_id", "fotmob_away_id",
+            "home_manager", "away_manager", "home_formation",
+            "away_formation", "lineup_status",
+        ):
+            if not clean(base.get(key)) and clean(previous.get(key)):
+                base[key] = previous.get(key)
+
+        context.append(base)
 
     fb_by_id = {clean(r.get("hkjc_event_id")): r for r in read_csv(FOREBET) if clean(r.get("hkjc_event_id"))}
     model_by_id = {clean(r.get("hkjc_event_id")): r for r in read_csv(MODEL) if clean(r.get("hkjc_event_id"))}
