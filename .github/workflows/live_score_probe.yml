@@ -44,12 +44,13 @@ jobs:
           spec=importlib.util.spec_from_file_location("live_scores","api/live_scores.py")
           m=importlib.util.module_from_spec(spec)
           spec.loader.exec_module(m)
-          p=m.collect()
+          p=m.collect(include_full=True)
           print("updatedAt",p["updatedAt"])
           print("health",p["health"])
+          print("detailPolicy",p.get("detailPolicy"))
           print("targets",p["targetCount"],"matched",p["matchedCount"])
           for row in p["matches"][:20]:
-              print(row["hkjc_event_id"], row["home_en"], "vs", row["away_en"], row["live_score"], row["minute"], row["source"], row["match_confidence"])
+              print(row["hkjc_event_id"], row["home_en"], "vs", row["away_en"], row["live_score"], row["minute"], row["source"], row["match_confidence"], row.get("detail_status"), "stats", len(row.get("team_stats") or []), "events", len(row.get("events") or []), "momentum", len(row.get("momentum") or []))
           open("data/live_score_probe.json","w",encoding="utf-8").write(json.dumps(p,ensure_ascii=False,indent=2))
           if p["health"]["primary"].startswith("ERROR") and p["health"]["backup"].startswith("ERROR"):
               raise SystemExit("both live-score providers failed")
@@ -59,6 +60,8 @@ jobs:
         run: |
           echo "=== VERCEL ENDPOINT ==="
           curl -i -L --max-time 30 "https://football-fast-tracker-live-sargesticky-9289.vercel.app/api/live_scores?format=csv" || true
+          echo "\n=== VERCEL FULL JSON ==="
+          curl -sS -L --max-time 30 "https://football-fast-tracker-live-sargesticky-9289.vercel.app/api/live_scores?include=full" | python -m json.tool | head -n 220 || true
       - name: Publish probe result
         if: always()
         run: |
