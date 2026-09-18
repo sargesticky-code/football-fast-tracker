@@ -1,0 +1,82 @@
+name: HKJC Live Odds 5min
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+  push:
+    paths:
+      - 'scripts/capture_hkjc_live_odds.py'
+      - '.github/workflows/hkjc_live_5min.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hkjc-live-odds-5min
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      HKJC_UPSTREAM_SHA: '1d2234102dc8f1ee23d0b45c25c125dc3ef98176'
+      HKJC_SCRAPER_PATH: '/tmp/hkjc-live'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest main
+        run: git pull --rebase origin main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Checkout pinned HKJC scraper
+        run: |
+          rm -rf "$HKJC_SCRAPER_PATH"
+          git clone --filter=blob:none --no-checkout https://github.com/sososo829/hkjc-football-scraper.git "$HKJC_SCRAPER_PATH"
+          git -C "$HKJC_SCRAPER_PATH" fetch --depth 1 origin "$HKJC_UPSTREAM_SHA"
+          git -C "$HKJC_SCRAPER_PATH" checkout --detach "$HKJC_UPSTREAM_SHA"
+
+      - name: Capture current HKJC live odds
+        run: python scripts/capture_hkjc_live_odds.py
+
+      - name: Validate output
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          p=Path('data/hkjc_live_odds.csv')
+          if not p.exists():
+              raise SystemExit('missing live odds csv')
+          with p.open(encoding='utf-8-sig',newline='') as fh:
+              rows=list(csv.DictReader(fh))
+          print('HKJC_LIVE_FEED rows=',len(rows))
+          for r in rows[:12]:
+              print(r['hkjc_event_id'],r['status'],
+                    'HAD',r['had_home'],r['had_draw'],r['had_away'],
+                    'HIL',r['hil_line'],r['hil_over'],r['hil_under'],
+                    'CHL',r['chl_line'],r['chl_over'],r['chl_under'])
+          PY
+
+      - name: Commit live odds only when changed
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'fast-tracker-bot@users.noreply.github.com'
+          git add data/hkjc_live_odds.csv
+          if git diff --cached --quiet; then
+            echo 'No HKJC live odds change.'
+          else
+            git commit -m 'Refresh HKJC live odds [skip ci]'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push; then exit 0; fi
+              [ "$attempt" -eq 3 ] && exit 1
+              sleep 2
+            done
+          fi
