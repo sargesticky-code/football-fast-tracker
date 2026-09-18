@@ -32,6 +32,8 @@ COVERAGE = ROOT / "data" / "hkjc_history_coverage.csv"
 BOOTSTRAP_MONTHS = max(3, int(os.getenv("HKJC_HISTORY_BOOTSTRAP_MONTHS", "12")))
 REFRESH_MONTHS = max(1, int(os.getenv("HKJC_HISTORY_REFRESH_MONTHS", "2")))
 REQUEST_SLEEP = max(0.0, float(os.getenv("HKJC_HISTORY_REQUEST_SLEEP", "0.05")))
+MAX_BOOTSTRAP_TEAMS = max(0, int(os.getenv("HKJC_HISTORY_MAX_BOOTSTRAP_TEAMS", "4")))
+MAX_REFRESH_TEAMS = max(0, int(os.getenv("HKJC_HISTORY_MAX_REFRESH_TEAMS", "24")))
 
 HISTORY_COLUMNS = [
     "match_id", "hkjc_event_id", "kickoff_hkt", "tournament",
@@ -221,7 +223,44 @@ def main() -> int:
         if str(r.get("match_id") or "").strip()
     }
 
-    current_team_ids = sorted(map_team_ids(teams))
+    all_current_team_ids = sorted(map_team_ids(teams))
+
+    # Hard daily request budget. Existing covered teams are refreshed oldest
+    # first; only a small number of new teams may enter the 12-month bootstrap
+    # on any one run. This prevents a larger HKJC slate from multiplying
+    # GraphQL calls unexpectedly.
+    bootstrapped = [
+        tid for tid in all_current_team_ids
+        if coverage.get(tid, {}).get("status") == "BOOTSTRAPPED"
+    ]
+    bootstrapped.sort(key=lambda tid: coverage.get(tid, {}).get("last_refresh_hkt") or "")
+    refresh_ids = bootstrapped[:MAX_REFRESH_TEAMS] if MAX_REFRESH_TEAMS else []
+
+    bootstrap_candidates = [
+        tid for tid in all_current_team_ids
+        if coverage.get(tid, {}).get("status") != "BOOTSTRAPPED"
+    ]
+    bootstrap_ids = bootstrap_candidates[:MAX_BOOTSTRAP_TEAMS] if MAX_BOOTSTRAP_TEAMS else []
+    deferred_ids = set(all_current_team_ids) - set(refresh_ids) - set(bootstrap_ids)
+
+    for team_id in sorted(deferred_ids):
+        if coverage.get(team_id, {}).get("status") == "BOOTSTRAPPED":
+            continue
+        row = dict(coverage.get(team_id, {})) if coverage.get(team_id) else {"team_id": team_id}
+        row["status"] = row.get("status") or "PENDING"
+        row["bootstrap_months"] = row.get("bootstrap_months") or str(BOOTSTRAP_MONTHS)
+        row["last_mode"] = "DEFERRED_BUDGET"
+        row["history_games"] = str(count_team_games(by_match, team_id))
+        coverage[team_id] = row
+
+    current_team_ids = sorted(set(refresh_ids) | set(bootstrap_ids))
+    print(
+        f"HKJC_HISTORY_BUDGET active_teams={len(all_current_team_ids)} "
+        f"refresh_selected={len(refresh_ids)}/{MAX_REFRESH_TEAMS} "
+        f"bootstrap_selected={len(bootstrap_ids)}/{MAX_BOOTSTRAP_TEAMS} "
+        f"deferred={len(deferred_ids)}"
+    )
+
     fb = HKJCFootball()
     calls = 0
     inserted = 0
@@ -288,7 +327,7 @@ def main() -> int:
     write_csv(HISTORY, HISTORY_COLUMNS, history_rows)
     write_csv(COVERAGE, COVERAGE_COLUMNS, coverage_out)
     print(
-        f"HKJC_HISTORY events={len(wanted_ids)} current_teams={len(current_team_ids)} "
+        f"HKJC_HISTORY events={len(wanted_ids)} current_teams={len(all_current_team_ids)} processed_teams={len(current_team_ids)} "
         f"rows={len(history_rows)} inserted={inserted} refreshed={refreshed} calls={calls} "
         f"coverage={len(coverage_out)} bootstrap_months={BOOTSTRAP_MONTHS} refresh_months={REFRESH_MONTHS}"
     )
