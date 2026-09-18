@@ -2,12 +2,6 @@ name: Phase 1 Player Match Database
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '17 */6 * * *'
-  push:
-    paths:
-      - 'scripts/update_player_match_db.py'
-      - '.github/workflows/player_match_db.yml'
 
 permissions:
   contents: write
