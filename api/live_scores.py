@@ -14,6 +14,7 @@ import requests
 HKT = timezone(timedelta(hours=8))
 FOTMOB = os.environ.get("FOTMOB_BASE_URL", "https://www.fotmob.com/api").rstrip("/")
 BACKUP = os.environ.get("SPORTSCORE_BASE", "https://sportscore.com").rstrip("/")
+SOFASCORE = os.environ.get("SOFASCORE_BASE_URL", "https://www.sofascore.com/api/v1").rstrip("/")
 HKJC_CSV = os.environ.get(
     "HKJC_CURRENT_CSV",
     "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/main/data/hkjc_current.csv",
@@ -387,6 +388,183 @@ def primary_matches():
     return out
 
 
+
+def sofascore_headers():
+    return {
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://www.sofascore.com/",
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/122.0.0.0 Safari/537.36"
+        ),
+    }
+
+
+def sofascore_minute(event, now):
+    time_info = event.get("time") or {}
+    for k in ("played", "current", "minute"):
+        v = time_info.get(k)
+        if v not in (None, ""):
+            z = re.search(r"\d+(?:\+\d+)?", clean(v))
+            if z:
+                return z.group(0)
+
+    start_ts = time_info.get("currentPeriodStartTimestamp")
+    try:
+        if start_ts:
+            elapsed = max(0, int(now.timestamp() - float(start_ts)) // 60) + 1
+            period = clean((event.get("status") or {}).get("period")).lower()
+            desc = clean((event.get("status") or {}).get("description")).lower()
+            label = " ".join((period, desc))
+            if any(x in label for x in ("period2", "second", "2nd")):
+                elapsed += 45
+            elif any(x in label for x in ("extra1", "extra time 1")):
+                elapsed += 90
+            elif any(x in label for x in ("extra2", "extra time 2")):
+                elapsed += 105
+            return str(min(elapsed, 130))
+    except Exception:
+        pass
+    return ""
+
+
+def sofascore_matches():
+    """Coverage fallback for leagues/matches missing from FotMob.
+
+    One scheduled-events request per date is reused for all HKJC targets.
+    Only events explicitly reported in-progress are returned.
+    """
+    now = datetime.now(HKT)
+    dates = [now.strftime("%Y-%m-%d")]
+    if now.hour < 3:
+        dates.append((now - timedelta(days=1)).strftime("%Y-%m-%d"))
+
+    out = []
+    seen = set()
+    headers = sofascore_headers()
+    for ymd in dates:
+        r = requests.get(
+            SOFASCORE + f"/sport/football/scheduled-events/{ymd}",
+            headers=headers,
+            timeout=12,
+        )
+        r.raise_for_status()
+        data = r.json()
+        for event in data.get("events") or []:
+            status = event.get("status") or {}
+            stype = clean(status.get("type")).lower()
+            if stype not in ("inprogress", "live"):
+                continue
+
+            eid = clean(event.get("id"))
+            if eid and eid in seen:
+                continue
+            if eid:
+                seen.add(eid)
+
+            home = event.get("homeTeam") or {}
+            away = event.get("awayTeam") or {}
+            hs = clean((event.get("homeScore") or {}).get("current"))
+            aw = clean((event.get("awayScore") or {}).get("current"))
+
+            kickoff = None
+            try:
+                ts = event.get("startTimestamp")
+                if ts:
+                    kickoff = datetime.fromtimestamp(float(ts), tz=timezone.utc).astimezone(HKT)
+            except Exception:
+                kickoff = None
+
+            out.append({
+                "source": "SOFASCORE",
+                "source_match_id": eid,
+                "home": clean(home.get("name") or home.get("shortName")),
+                "away": clean(away.get("name") or away.get("shortName")),
+                "kickoff": kickoff,
+                "home_score": hs,
+                "away_score": aw,
+                "minute": sofascore_minute(event, now),
+                "status": "LIVE",
+                "updated_at": now.isoformat(timespec="seconds"),
+            })
+    return out
+
+
+def fetch_sofascore_statistics(match_id):
+    if not match_id:
+        return None
+    r = requests.get(
+        SOFASCORE + f"/event/{clean(match_id)}/statistics",
+        headers=sofascore_headers(),
+        timeout=10,
+    )
+    r.raise_for_status()
+    return r.json()
+
+
+def extract_sofascore_sections(detail, include_full=False):
+    """Normalize Sofascore's one statistics response into our dynamic stat schema."""
+    capture = {
+        "team_stats": [],
+        "events": [],
+        "momentum": [],
+        "shotmap": None,
+        "lineup": None,
+    }
+    if not detail:
+        return capture, None
+
+    corners = None
+    seen = set()
+    for period_block in detail.get("statistics") or []:
+        period = clean(period_block.get("period") or period_block.get("periodName") or "ALL")
+        for group in period_block.get("groups") or []:
+            group_name = clean(group.get("groupName") or group.get("name"))
+            items = group.get("statisticsItems") or group.get("items") or []
+            for item in items:
+                title = clean(item.get("name") or item.get("title"))
+                if not title:
+                    continue
+                home = item.get("home")
+                away = item.get("away")
+                if home is None:
+                    home = item.get("homeValue")
+                if away is None:
+                    away = item.get("awayValue")
+                if home is None or away is None:
+                    continue
+
+                key = slug_stat(title)
+                sig = (period, key, clean(home), clean(away))
+                if sig in seen:
+                    continue
+                seen.add(sig)
+                capture["team_stats"].append({
+                    "period": period,
+                    "group": group_name,
+                    "key": key,
+                    "title": title,
+                    "home": home,
+                    "away": away,
+                })
+
+                if "corner" in key and period.upper() in ("ALL", "MATCH"):
+                    hc = parse_nonnegative(home)
+                    ac = parse_nonnegative(away)
+                    if hc is not None and ac is not None:
+                        corners = {
+                            "home_corners": hc,
+                            "away_corners": ac,
+                            "total_corners": hc + ac,
+                        }
+
+    if include_full:
+        capture["match_facts"] = {"statistics": detail.get("statistics") or []}
+        capture["content_sections"] = ["statistics"]
+    return capture, corners
+
 def get_first(d, keys):
     for k in keys:
         if k in d and d[k] not in (None, ""):
@@ -491,7 +669,7 @@ def best_match(target, candidates):
 def collect(include_full=False):
     now = datetime.now(HKT)
     targets = hkjc_targets(now)
-    health = {"primary": "NOT_CALLED", "backup": "NOT_CALLED", "details": "NOT_CALLED"}
+    health = {"primary": "NOT_CALLED", "sofascore": "NOT_CALLED", "backup": "NOT_CALLED", "details": "NOT_CALLED"}
     try:
         primary = primary_matches()
         health["primary"] = "OK"
@@ -499,12 +677,23 @@ def collect(include_full=False):
         primary = []
         health["primary"] = "ERROR:" + type(e).__name__
 
+    sofa = None
     backup = None
     staged = []
 
     # Stage identity/score matching first. No matchDetails calls yet.
     for t in targets:
         m, conf = best_match(t, primary)
+        if m is None:
+            if sofa is None:
+                try:
+                    sofa = sofascore_matches()
+                    health["sofascore"] = "OK"
+                except Exception as e:
+                    sofa = []
+                    health["sofascore"] = "ERROR:" + type(e).__name__
+            m, conf = best_match(t, sofa)
+
         if m is None:
             if backup is None:
                 try:
@@ -525,7 +714,7 @@ def collect(include_full=False):
     # every match still receives full detail over successive refreshes.
     detail_candidates = [
         i for i, x in enumerate(staged)
-        if x["match"].get("source") == "FOOTBALL_LIVE_API_SELF_HOSTED"
+        if x["match"].get("source") in ("FOOTBALL_LIVE_API_SELF_HOSTED", "SOFASCORE")
     ]
     group_count = max(
         1,
@@ -562,11 +751,17 @@ def collect(include_full=False):
 
         if idx in detail_indexes and not upstream_blocked:
             try:
-                detail = fetch_fotmob_detail(m.get("source_match_id"))
+                if m.get("source") == "SOFASCORE":
+                    detail = fetch_sofascore_statistics(m.get("source_match_id"))
+                    detail_capture, live_corners = extract_sofascore_sections(
+                        detail, include_full=include_full
+                    )
+                else:
+                    detail = fetch_fotmob_detail(m.get("source_match_id"))
+                    live_corners = extract_fotmob_corners(detail)
+                    detail_capture = extract_live_sections(detail, include_full=include_full)
                 detail_fetched += 1
                 health["details"] = "OK"
-                live_corners = extract_fotmob_corners(detail)
-                detail_capture = extract_live_sections(detail, include_full=include_full)
                 detail_status = "CAPTURED"
             except requests.HTTPError as e:
                 detail_errors += 1
@@ -579,7 +774,7 @@ def collect(include_full=False):
             except Exception as e:
                 detail_errors += 1
                 detail_status = "ERROR_" + type(e).__name__
-        elif m.get("source") == "FOOTBALL_LIVE_API_SELF_HOSTED":
+        elif m.get("source") in ("FOOTBALL_LIVE_API_SELF_HOSTED", "SOFASCORE"):
             detail_status = "DEFERRED_RATE_GUARD"
 
         hc = live_corners.get("home_corners") if live_corners else ""
@@ -640,6 +835,7 @@ def collect(include_full=False):
         },
         "matches": rows,
         "attribution": {
+            "Sofascore": "Live coverage fallback — https://www.sofascore.com/",
             "SportScore": "Powered by SportScore — https://sportscore.com/"
         },
     }
