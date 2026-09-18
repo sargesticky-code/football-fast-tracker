@@ -13,16 +13,28 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: forebet-supplement-refresh
+  cancel-in-progress: true
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: python -m pip install --disable-pip-version-check requests==2.32.5 beautifulsoup4==4.12.3
-      - run: python scripts/update_forebet_supplement.py
+      - name: Refresh supplement when Forebet permits runner access
+        run: |
+          if python scripts/update_forebet_supplement.py; then
+            echo "Forebet supplement refreshed"
+          else
+            echo "Forebet blocked the GitHub runner; preserving last-good supplement"
+          fi
       - run: python scripts/merge_forebet_supplement.py
       - name: Commit supplement CSV
         run: |
@@ -33,5 +45,6 @@ jobs:
             echo "No supplement changes"
           else
             git commit -m "Refresh Forebet supplement feed"
+            git pull --rebase origin main
             git push
           fi
