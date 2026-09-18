@@ -516,14 +516,19 @@ def corner_progress(total, line):
 
 
 def primary_matches():
-    """Self-hosted Football Live API logic using FotMob directly."""
+    """Return FotMob live rows plus the unfiltered daily board from the same requests.
+
+    The board is retained because some competitions occasionally lag the
+    top-level live status flag even though matchDetails is already available.
+    """
     now = datetime.now(HKT)
     dates = [now.strftime("%Y%m%d")]
     if now.hour < 3:
         dates.append((now - timedelta(days=1)).strftime("%Y%m%d"))
 
     headers = fotmob_headers()
-    out = []
+    live = []
+    board = []
     seen = set()
     for ymd in dates:
         r = requests.get(
@@ -537,16 +542,6 @@ def primary_matches():
         for lg in data.get("leagues") or []:
             for m in lg.get("matches") or []:
                 st = m.get("status") or {}
-                is_live = (
-                    st.get("ongoing") is True
-                    or (
-                        st.get("started") is True
-                        and st.get("finished") is False
-                        and st.get("cancelled") is not True
-                    )
-                )
-                if not is_live:
-                    continue
                 mid = clean(m.get("id"))
                 if mid and mid in seen:
                     continue
@@ -555,8 +550,16 @@ def primary_matches():
                 h = m.get("home") or {}
                 a = m.get("away") or {}
                 hs, aw = score_pair(m)
-                out.append({
-                    "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
+                is_live = (
+                    st.get("ongoing") is True
+                    or (
+                        st.get("started") is True
+                        and st.get("finished") is False
+                        and st.get("cancelled") is not True
+                    )
+                )
+                rec = {
+                    "source": "FOOTBALL_LIVE_API_SELF_HOSTED" if is_live else "FOTMOB_DAILY_BOARD",
                     "source_match_id": mid,
                     "home": clean(h.get("name")),
                     "away": clean(a.get("name")),
@@ -564,11 +567,16 @@ def primary_matches():
                     "home_score": hs,
                     "away_score": aw,
                     "minute": minute_from_status(st),
-                    "status": clean(st.get("reason")) or "LIVE",
+                    "status": clean(st.get("reason")) or ("LIVE" if is_live else "BOARD"),
                     "updated_at": now.isoformat(timespec="seconds"),
-                })
-    return out
-
+                    "_board_started": st.get("started") is True,
+                    "_board_finished": st.get("finished") is True,
+                    "_board_cancelled": st.get("cancelled") is True,
+                }
+                board.append(rec)
+                if is_live:
+                    live.append(rec)
+    return live, board
 
 
 def sofascore_headers():
@@ -886,10 +894,11 @@ def collect(include_full=False):
     live_markets, live_market_health = fetch_live_markets(market_event_ids)
     health = {"primary": "NOT_CALLED", "sofascore": "NOT_CALLED", "backup": "NOT_CALLED", "details": "NOT_CALLED"}
     try:
-        primary = primary_matches()
+        primary, primary_board = primary_matches()
         health["primary"] = "OK"
     except Exception as e:
         primary = []
+        primary_board = []
         health["primary"] = "ERROR:" + type(e).__name__
 
     sofa = None
@@ -899,6 +908,21 @@ def collect(include_full=False):
     # Stage identity/score matching first. No matchDetails calls yet.
     for t in targets:
         m, conf = best_match(t, primary)
+
+        # Long-term continuity fallback: if FotMob knows the fixture on its
+        # daily board but its live flag is late/missing, keep the FotMob match
+        # id and ask matchDetails for the actual stats. This uses no extra
+        # daily-board request because primary_matches already fetched it.
+        if m is None:
+            age_min = (now - t["kickoff_hkt"]).total_seconds() / 60
+            if 0 <= age_min <= SOURCE_GAP_MAX_MINUTES:
+                board_match, board_conf = best_match(t, primary_board)
+                if board_match and not board_match.get("_board_cancelled") and not board_match.get("_board_finished"):
+                    m = dict(board_match)
+                    m["source"] = "FOTMOB_BOARD_FALLBACK"
+                    m["status"] = "BOARD_FALLBACK"
+                    conf = board_conf
+
         if m is None:
             if sofa is None:
                 try:
@@ -948,7 +972,7 @@ def collect(include_full=False):
     # every match still receives full detail over successive refreshes.
     detail_candidates = [
         i for i, x in enumerate(staged)
-        if x["match"].get("source") in ("FOOTBALL_LIVE_API_SELF_HOSTED", "SOFASCORE")
+        if x["match"].get("source") in ("FOOTBALL_LIVE_API_SELF_HOSTED", "FOTMOB_BOARD_FALLBACK", "SOFASCORE")
     ]
     group_count = max(
         1,
@@ -1008,7 +1032,7 @@ def collect(include_full=False):
             except Exception as e:
                 detail_errors += 1
                 detail_status = "ERROR_" + type(e).__name__
-        elif m.get("source") in ("FOOTBALL_LIVE_API_SELF_HOSTED", "SOFASCORE"):
+        elif m.get("source") in ("FOOTBALL_LIVE_API_SELF_HOSTED", "FOTMOB_BOARD_FALLBACK", "SOFASCORE"):
             detail_status = "DEFERRED_RATE_GUARD"
 
         hc = live_corners.get("home_corners") if live_corners else ""
@@ -1081,6 +1105,9 @@ def collect(include_full=False):
         "detailPolicy": {
             "maxDetailCallsPerRun": MAX_DETAIL_CALLS_PER_RUN,
             "detailCandidates": len(detail_candidates),
+            "fotmobBoardFallbacks": sum(
+                1 for x in staged if x["match"].get("source") == "FOTMOB_BOARD_FALLBACK"
+            ),
             "rotationGroups": group_count,
             "rotationBucket": bucket,
             "detailFetched": detail_fetched,
