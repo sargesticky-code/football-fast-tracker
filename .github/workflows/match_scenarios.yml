@@ -2,12 +2,6 @@ name: Match Scenario Features
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '45 * * * *'
-  push:
-    paths:
-      - 'scripts/build_match_scenarios.py'
-      - '.github/workflows/match_scenarios.yml'
 
 permissions:
   contents: write
