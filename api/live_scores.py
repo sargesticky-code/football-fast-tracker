@@ -239,7 +239,12 @@ def extract_team_stats(detail):
             vals = node.get("stats")
             key = clean(node.get("key"))
             title = clean(node.get("title"))
-            if isinstance(vals, list) and len(vals) >= 2 and not isinstance(vals[0], (dict, list)):
+            scalar_pair = (
+                isinstance(vals, list)
+                and len(vals) >= 2
+                and not isinstance(vals[0], (dict, list))
+            )
+            if scalar_pair:
                 home = vals[0]
                 away = vals[1]
                 out.append({
@@ -251,7 +256,9 @@ def extract_team_stats(detail):
                     "away": away,
                 })
             for value in node.values():
-                if value is vals:
+                # Nested group objects also use the key "stats"; recurse into
+                # those lists instead of dropping the entire group.
+                if value is vals and scalar_pair:
                     continue
                 walk(value, period, group2)
         elif isinstance(node, list):
