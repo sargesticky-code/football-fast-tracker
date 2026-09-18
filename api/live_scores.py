@@ -27,6 +27,8 @@ ENDED = ("ENDED", "MATCHENDED", "FT", "AET", "PEN", "CANCEL", "VOID", "ABANDON")
 MAX_DETAIL_CALLS_PER_RUN = int(os.environ.get("MAX_DETAIL_CALLS_PER_RUN", "8"))
 SOURCE_GAP_MAX_MINUTES = int(os.environ.get("SOURCE_GAP_MAX_MINUTES", "140"))
 SCENARIO_CSV = Path(__file__).resolve().parent.parent / "data" / "match_scenario_current.csv"
+ENABLE_SCENARIO_SHADOW = os.environ.get("ENABLE_SCENARIO_SHADOW", "0") == "1"
+ENABLE_HKJC_LIVE_MARKET = os.environ.get("ENABLE_HKJC_LIVE_MARKET", "0") == "1"
 
 
 def clean(v):
@@ -881,17 +883,25 @@ def best_match(target, candidates):
 def collect(include_full=False):
     now = datetime.now(HKT)
     targets = hkjc_targets(now)
-    scenario_rows = load_scenario_rows()
+    scenario_rows = load_scenario_rows() if ENABLE_SCENARIO_SHADOW else {}
 
-    # Only matches at/just after kickoff are candidates for HKJC in-play odds.
-    # One whitelisted INPLAY_ALL GraphQL request covers every candidate and all
-    # HAD/HIL/CHL lines; no per-match or per-market fan-out.
-    market_event_ids = [
-        t["hkjc_event_id"]
-        for t in targets
-        if t["kickoff_hkt"] <= now + timedelta(minutes=5)
-    ]
-    live_markets, live_market_health = fetch_live_markets(market_event_ids)
+    # Later phase only. Keep production requests at zero until the player
+    # database and calibrated scenario layer are ready.
+    if ENABLE_HKJC_LIVE_MARKET:
+        market_event_ids = [
+            t["hkjc_event_id"]
+            for t in targets
+            if t["kickoff_hkt"] <= now + timedelta(minutes=5)
+        ]
+        live_markets, live_market_health = fetch_live_markets(market_event_ids)
+    else:
+        live_markets = {}
+        live_market_health = {
+            "status": "PHASE_PAUSED",
+            "request_count": 0,
+            "cache_hit": False,
+            "refresh_seconds": 0,
+        }
     health = {"primary": "NOT_CALLED", "sofascore": "NOT_CALLED", "backup": "NOT_CALLED", "details": "NOT_CALLED"}
     try:
         primary, primary_board = primary_matches()
@@ -1090,13 +1100,13 @@ def collect(include_full=False):
         "targetCount": len(targets),
         "matchedCount": len(rows),
         "scenarioPolicy": {
-            "mode": "SHADOW_CALIBRATING",
+            "mode": "SHADOW_CALIBRATING" if ENABLE_SCENARIO_SHADOW else "PHASE_PAUSED",
             "addsUpstreamRequests": False,
             "bettingEnabled": False,
             "scenarioRowsLoaded": len(scenario_rows),
         },
         "liveMarketPolicy": {
-            "mode": "CAPTURE_ONLY",
+            "mode": "CAPTURE_ONLY" if ENABLE_HKJC_LIVE_MARKET else "PHASE_PAUSED",
             "provider": "HKJC official GraphQL",
             "markets": ["HAD", "HIL", "CHL"],
             "fanout": "ONE INPLAY_ALL REQUEST FOR ALL TARGET EVENTS",
