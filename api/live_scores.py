@@ -20,6 +20,7 @@ HKJC_CSV = os.environ.get(
 )
 UA = "football-fast-tracker-live/1.0"
 ENDED = ("ENDED", "MATCHENDED", "FT", "AET", "PEN", "CANCEL", "VOID", "ABANDON")
+MAX_DETAIL_CALLS_PER_RUN = int(os.environ.get("MAX_DETAIL_CALLS_PER_RUN", "8"))
 
 
 def clean(v):
@@ -161,11 +162,11 @@ def parse_nonnegative(v):
     return int(n) if n.is_integer() else n
 
 
-def fetch_fotmob_corners(match_id):
-    """Return live home/away/total corners from FotMob matchDetails.
+def fetch_fotmob_detail(match_id):
+    """Fetch one FotMob matchDetails payload.
 
-    FotMob has used both flat and grouped stat layouts, so scan recursively
-    instead of depending on one exact nesting shape.
+    One payload contains corners plus the rest of the team stats/events/momentum,
+    so callers must reuse this object rather than issuing per-stat requests.
     """
     if not match_id:
         return None
@@ -176,7 +177,13 @@ def fetch_fotmob_corners(match_id):
         timeout=10,
     )
     r.raise_for_status()
-    detail = r.json()
+    return r.json()
+
+
+def extract_fotmob_corners(detail):
+    """Return live home/away/total corners from an existing matchDetails payload."""
+    if not detail:
+        return None
     stats_root = ((detail.get("content") or {}).get("stats") or {})
 
     def walk(node):
@@ -207,6 +214,99 @@ def fetch_fotmob_corners(match_id):
 
     return walk(stats_root)
 
+
+def slug_stat(v):
+    s = unicodedata.normalize("NFKD", clean(v))
+    s = "".join(ch for ch in s if not unicodedata.combining(ch)).lower()
+    s = re.sub(r"[^a-z0-9]+", "_", s).strip("_")
+    return s[:80]
+
+
+def extract_team_stats(detail):
+    """Capture every two-sided team stat FotMob exposes, for every period.
+
+    Output is a list instead of fixed columns so newly-added FotMob stats are
+    preserved automatically without a schema migration.
+    """
+    if not detail:
+        return []
+    periods = ((((detail.get("content") or {}).get("stats") or {}).get("Periods")) or {})
+    out = []
+
+    def walk(node, period, group=""):
+        if isinstance(node, dict):
+            group2 = clean(node.get("title")) or group
+            vals = node.get("stats")
+            key = clean(node.get("key"))
+            title = clean(node.get("title"))
+            if isinstance(vals, list) and len(vals) >= 2 and not isinstance(vals[0], (dict, list)):
+                home = vals[0]
+                away = vals[1]
+                out.append({
+                    "period": period,
+                    "group": group,
+                    "key": slug_stat(key or title),
+                    "title": title or key,
+                    "home": home,
+                    "away": away,
+                })
+            for value in node.values():
+                if value is vals:
+                    continue
+                walk(value, period, group2)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value, period, group)
+
+    for period, pdata in periods.items():
+        walk(pdata, clean(period), "")
+
+    # Deduplicate layouts that expose the same stat more than once.
+    seen = set()
+    deduped = []
+    for row in out:
+        sig = (row["period"], row["key"], clean(row["home"]), clean(row["away"]))
+        if sig in seen:
+            continue
+        seen.add(sig)
+        deduped.append(row)
+    return deduped
+
+
+def extract_live_sections(detail, include_full=False):
+    """Compact all useful live-analysis sections from one details payload."""
+    if not detail:
+        return {
+            "team_stats": [],
+            "events": [],
+            "momentum": [],
+            "shotmap": None,
+            "lineup": None,
+        }
+
+    content = detail.get("content") or {}
+    header = detail.get("header") or {}
+    facts = content.get("matchFacts") or {}
+    momentum = (((facts.get("momentum") or {}).get("main") or {}).get("data") or [])
+
+    result = {
+        "team_stats": extract_team_stats(detail),
+        "events": header.get("events") or [],
+        "momentum": momentum,
+    }
+
+    # Heavy sections are opt-in. They come from the same upstream response,
+    # so enabling them adds response bandwidth but no extra FotMob request.
+    if include_full:
+        result["shotmap"] = content.get("shotmap") or {}
+        result["lineup"] = content.get("lineup") or {}
+        result["match_facts"] = facts
+        result["content_sections"] = sorted(content.keys())
+    else:
+        result["shotmap"] = None
+        result["lineup"] = None
+
+    return result
 
 def corner_progress(total, line):
     if total in (None, "") or line in (None, ""):
@@ -381,10 +481,10 @@ def best_match(target, candidates):
     return best[1], best[0]
 
 
-def collect():
+def collect(include_full=False):
     now = datetime.now(HKT)
     targets = hkjc_targets(now)
-    health = {"primary": "NOT_CALLED", "backup": "NOT_CALLED"}
+    health = {"primary": "NOT_CALLED", "backup": "NOT_CALLED", "details": "NOT_CALLED"}
     try:
         primary = primary_matches()
         health["primary"] = "OK"
@@ -393,7 +493,9 @@ def collect():
         health["primary"] = "ERROR:" + type(e).__name__
 
     backup = None
-    rows = []
+    staged = []
+
+    # Stage identity/score matching first. No matchDetails calls yet.
     for t in targets:
         m, conf = best_match(t, primary)
         if m is None:
@@ -408,13 +510,70 @@ def collect():
 
         if m is None:
             continue
+
+        staged.append({"target": t, "match": m, "confidence": conf})
+
+    # Safety guard: at most N heavy detail calls in one refresh.
+    # If there are more live matches, rotate deterministic groups by minute so
+    # every match still receives full detail over successive refreshes.
+    detail_candidates = [
+        i for i, x in enumerate(staged)
+        if x["match"].get("source") == "FOOTBALL_LIVE_API_SELF_HOSTED"
+    ]
+    group_count = max(
+        1,
+        (len(detail_candidates) + MAX_DETAIL_CALLS_PER_RUN - 1) // MAX_DETAIL_CALLS_PER_RUN
+    )
+    bucket = now.minute % group_count
+    detail_indexes = {
+        idx for pos, idx in enumerate(detail_candidates)
+        if pos % group_count == bucket
+    }
+    detail_indexes = set(list(detail_indexes)[:MAX_DETAIL_CALLS_PER_RUN])
+
+    rows = []
+    detail_fetched = 0
+    detail_errors = 0
+    upstream_blocked = False
+
+    for idx, item in enumerate(staged):
+        t = item["target"]
+        m = item["match"]
+        conf = item["confidence"]
         hs, aw = clean(m["home_score"]), clean(m["away_score"])
+
+        detail = None
+        detail_capture = {
+            "team_stats": [],
+            "events": [],
+            "momentum": [],
+            "shotmap": None,
+            "lineup": None,
+        }
         live_corners = None
-        if m.get("source") == "FOOTBALL_LIVE_API_SELF_HOSTED":
+        detail_status = "NOT_APPLICABLE"
+
+        if idx in detail_indexes and not upstream_blocked:
             try:
-                live_corners = fetch_fotmob_corners(m.get("source_match_id"))
-            except Exception:
-                live_corners = None
+                detail = fetch_fotmob_detail(m.get("source_match_id"))
+                detail_fetched += 1
+                health["details"] = "OK"
+                live_corners = extract_fotmob_corners(detail)
+                detail_capture = extract_live_sections(detail, include_full=include_full)
+                detail_status = "CAPTURED"
+            except requests.HTTPError as e:
+                detail_errors += 1
+                code = getattr(e.response, "status_code", None)
+                detail_status = "HTTP_" + clean(code)
+                # Stop the heavy loop immediately on rate-limit/access signals.
+                if code in (403, 429):
+                    upstream_blocked = True
+                    health["details"] = "THROTTLED_" + clean(code)
+            except Exception as e:
+                detail_errors += 1
+                detail_status = "ERROR_" + type(e).__name__
+        elif m.get("source") == "FOOTBALL_LIVE_API_SELF_HOSTED":
+            detail_status = "DEFERRED_RATE_GUARD"
 
         hc = live_corners.get("home_corners") if live_corners else ""
         ac = live_corners.get("away_corners") if live_corners else ""
@@ -444,19 +603,39 @@ def collect():
             "corner_line_ref": t.get("corner_line_ref", ""),
             "corners_to_hi": cp["corners_to_hi"],
             "corner_progress": cp["corner_progress"],
+            "detail_status": detail_status,
+            "team_stats": detail_capture["team_stats"],
+            "events": detail_capture["events"],
+            "momentum": detail_capture["momentum"],
+            "shotmap": detail_capture.get("shotmap"),
+            "lineup": detail_capture.get("lineup"),
+            "match_facts": detail_capture.get("match_facts") if include_full else None,
+            "content_sections": detail_capture.get("content_sections") if include_full else None,
         })
+
+    if health["details"] == "NOT_CALLED":
+        health["details"] = "IDLE" if not detail_candidates else "DEFERRED_RATE_GUARD"
+
     rows.sort(key=lambda r: r["kickoff_hkt"])
     return {
         "updatedAt": now.isoformat(timespec="seconds"),
         "health": health,
         "targetCount": len(targets),
         "matchedCount": len(rows),
+        "detailPolicy": {
+            "maxDetailCallsPerRun": MAX_DETAIL_CALLS_PER_RUN,
+            "detailCandidates": len(detail_candidates),
+            "rotationGroups": group_count,
+            "rotationBucket": bucket,
+            "detailFetched": detail_fetched,
+            "detailErrors": detail_errors,
+            "includeFull": include_full,
+        },
         "matches": rows,
         "attribution": {
             "SportScore": "Powered by SportScore — https://sportscore.com/"
         },
     }
-
 
 def as_csv(payload):
     fields = [
@@ -481,7 +660,8 @@ class handler(BaseHTTPRequestHandler):
         qs = parse_qs(urlparse(self.path).query)
         fmt = clean((qs.get("format") or ["json"])[0]).lower()
         try:
-            payload = collect()
+            include_full = clean((qs.get("include") or [""])[0]).lower() == "full"
+            payload = collect(include_full=include_full)
             if fmt == "csv":
                 body = as_csv(payload).encode("utf-8-sig")
                 ctype = "text/csv; charset=utf-8"
@@ -490,7 +670,7 @@ class handler(BaseHTTPRequestHandler):
                 ctype = "application/json; charset=utf-8"
             self.send_response(200)
             self.send_header("Content-Type", ctype)
-            self.send_header("Cache-Control", "s-maxage=15, stale-while-revalidate=15")
+            self.send_header("Cache-Control", "s-maxage=55, stale-while-revalidate=65")
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(body)
