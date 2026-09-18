@@ -6,6 +6,7 @@ on:
     paths:
       - "api/live_scores.py"
       - "vercel.json"
+      - "pyproject.toml"
       - ".github/workflows/live_score_probe.yml"
 
 permissions:
@@ -53,6 +54,11 @@ jobs:
           if p["health"]["primary"].startswith("ERROR") and p["health"]["backup"].startswith("ERROR"):
               raise SystemExit("both live-score providers failed")
           PY
+      - name: Probe deployed Vercel endpoint
+        if: always()
+        run: |
+          echo "=== VERCEL ENDPOINT ==="
+          curl -i -L --max-time 30 "https://football-fast-tracker-live-sargesticky-9289.vercel.app/api/live_scores?format=csv" || true
       - name: Publish probe result
         if: always()
         run: |
