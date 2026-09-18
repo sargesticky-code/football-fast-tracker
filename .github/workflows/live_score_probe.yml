@@ -52,6 +52,10 @@ jobs:
           for row in p["matches"][:20]:
               print(row["hkjc_event_id"], row["home_en"], "vs", row["away_en"], row["live_score"], row["minute"], row["source"], row["match_confidence"], row.get("detail_status"), "stats", len(row.get("team_stats") or []), "events", len(row.get("events") or []), "momentum", len(row.get("momentum") or []))
           open("data/live_score_probe.json","w",encoding="utf-8").write(json.dumps(p,ensure_ascii=False,indent=2))
+          for row in p["matches"][:1]:
+              if row.get("source_match_id"):
+                  dd=requests.get("https://www.fotmob.com/api/data/matchDetails",params={"matchId":row["source_match_id"]},headers=m.fotmob_headers(),timeout=12).json()
+                  print("RAW FOTMOB STATS SHAPE",json.dumps(((dd.get("content") or {}).get("stats") or {}),ensure_ascii=False)[:12000])
           if p["health"]["primary"].startswith("ERROR") and p["health"]["backup"].startswith("ERROR"):
               raise SystemExit("both live-score providers failed")
           PY
