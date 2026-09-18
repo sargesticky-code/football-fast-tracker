@@ -52,12 +52,24 @@ def price(v):
         return ""
 
 
+def truly_live_status(v):
+    s = clean(v).upper().replace("_", "").replace(" ", "")
+    if not s:
+        return False
+    if any(x in s for x in ("PREEVENT", "ENDED", "FINISHED", "FULLTIME", "CANCEL", "POSTPON", "ABANDON")):
+        return False
+    return any(x in s for x in (
+        "FIRSTHALF", "SECONDHALF", "HALFTIME", "INPLAY",
+        "EXTRATIME", "PENALTY", "BREAK",
+    ))
+
+
 def choose_two_way(rows, odds_type):
     grouped = {}
     for r in rows:
         if clean(r.get("odds_type")).upper() != odds_type:
             continue
-        if not truthy(r.get("in_play")):
+        if not truthy(r.get("in_play")) or not truly_live_status(r.get("status")):
             continue
         if clean(r.get("comb_status")).upper() not in {"", "AVAILABLE"}:
             continue
@@ -116,6 +128,7 @@ def main():
     live_had = [
         r for r in had_rows
         if truthy(r.get("in_play"))
+        and truly_live_status(r.get("status"))
         and clean(r.get("comb_status")).upper() in {"", "AVAILABLE"}
     ]
     live_ids = sorted({clean(r.get("front_end_id")) for r in live_had if clean(r.get("front_end_id"))})
