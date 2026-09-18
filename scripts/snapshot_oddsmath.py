@@ -389,6 +389,10 @@ def movement_rows(history: list[dict], targets: list[dict], now: datetime) -> li
             vol / 0.08 if vol is not None else 0.0,
         )
         alert_score = score if signal not in {"STABLE", "COLLECTING"} else 0.0
+        match_confidence = f(latest, "match_confidence") or 0.0
+        if match_confidence < 0.88:
+            signal = "MATCH CHECK"
+            alert_score = 0.0
 
         model_side, model_prob = models.get(event_id, ("", 0.0))
         direction = d1 if d1 is not None else d2 if d2 is not None else d24
