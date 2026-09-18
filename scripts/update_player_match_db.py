@@ -42,7 +42,8 @@ SLEEP = max(0.0, float(os.getenv("PLAYER_DB_REQUEST_SLEEP", "0.45")))
 INDEX_COLUMNS = [
     "captured_at_hkt", "hkjc_event_id", "kickoff_hkt", "league",
     "home", "away", "fotmob_match_id", "match_quality", "kickoff_diff_min",
-    "lineup_players", "stats_players", "usable_player_rows", "status", "reason", "source",
+    "lineup_players", "stats_players", "played_players", "actual_stat_rows",
+    "usable_player_rows", "status", "reason", "source",
 ]
 
 PLAYER_COLUMNS = [
@@ -651,6 +652,35 @@ def merge_month(rows):
         write_csv(path, PLAYER_COLUMNS, merged)
 
 
+def existing_db_quality():
+    out = {}
+    for path in DB_DIR.glob("20??-??.csv"):
+        for r in read_csv(path):
+            eid = clean(r.get("hkjc_event_id"))
+            if not eid:
+                continue
+            q = out.setdefault(eid, {
+                "lineup_players": 0,
+                "played_players": 0,
+                "actual_stat_rows": 0,
+                "usable_player_rows": 0,
+            })
+            if clean(r.get("starter")) or clean(r.get("substitute")):
+                q["lineup_players"] += 1
+            try:
+                mins = float(clean(r.get("minutes")) or 0)
+            except ValueError:
+                mins = 0
+            if mins > 0:
+                q["played_players"] += 1
+            raw = clean(r.get("player_stats_json"))
+            if raw and raw != "{}":
+                q["actual_stat_rows"] += 1
+            if clean(r.get("player_id")) and clean(r.get("player_name")):
+                q["usable_player_rows"] += 1
+    return out
+
+
 def main():
     now = datetime.now(HKT).replace(microsecond=0)
     captured = now.isoformat()
@@ -661,6 +691,10 @@ def main():
         clean(r.get("hkjc_event_id")): r
         for r in index_rows if clean(r.get("hkjc_event_id"))
     }
+    quality_existing = existing_db_quality()
+    for eid, q in quality_existing.items():
+        if eid in index_by_id:
+            index_by_id[eid].update({k: str(v) for k, v in q.items()})
 
     targets = [
         t for t in recent_targets(now)
@@ -732,8 +766,24 @@ def main():
             detail_calls += 1
             rows, lineup_count, stats_count = player_rows_from_detail(detail, t, fm, captured)
             usable = sum(1 for r in rows if clean(r.get("player_id")) and clean(r.get("player_name")))
-            status = "OK" if stats_count >= 14 else ("PARTIAL" if stats_count > 0 else "NO_PLAYER_STATS")
-            reason = "" if status == "OK" else f"stats_players={stats_count};usable_player_rows={usable}"
+            played = 0
+            actual_stats = 0
+            for r in rows:
+                try:
+                    mins = float(clean(r.get("minutes")) or 0)
+                except ValueError:
+                    mins = 0
+                if mins > 0:
+                    played += 1
+                if clean(r.get("player_stats_json")) not in ("", "{}"):
+                    actual_stats += 1
+            status = "OK" if actual_stats >= 14 and played >= 14 else (
+                "PARTIAL" if actual_stats > 0 else "NO_PLAYER_STATS"
+            )
+            reason = "" if status == "OK" else (
+                f"stats_players={stats_count};played={played};actual_stats={actual_stats};"
+                f"usable_player_rows={usable}"
+            )
             if rows:
                 new_player_rows.extend(rows)
             index_by_id[t["event_id"]] = {
@@ -748,6 +798,8 @@ def main():
                 "kickoff_diff_min": f'{match["kickoff_diff"]:.1f}',
                 "lineup_players": lineup_count,
                 "stats_players": stats_count,
+                "played_players": played,
+                "actual_stat_rows": actual_stats,
                 "usable_player_rows": usable,
                 "status": status,
                 "reason": reason,
