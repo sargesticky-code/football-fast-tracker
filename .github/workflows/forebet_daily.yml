@@ -18,6 +18,7 @@ on:
       - 'scripts/restore_active_forebet.py'
       - 'scripts/update_forebet_alias_registry.py'
       - 'scripts/enrich_forebet_markets.py'
+      - 'scripts/enrich_forebet_form.py'
       - 'scripts/normalize_forebet_text.py'
       - 'scripts/enrich_power_ratings.py'
       - 'scripts/archive_forebet.py'
@@ -153,6 +154,10 @@ jobs:
       - name: Add Forebet O-U and corner signals from free match pages
         run: python scripts/enrich_forebet_markets.py
 
+      - name: Add recent Forebet team form from match-detail pages
+        continue-on-error: true
+        run: python scripts/enrich_forebet_form.py
+
       - name: Normalize Forebet scores for Google Sheets
         run: python scripts/normalize_forebet_text.py
 
@@ -230,6 +235,7 @@ jobs:
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add data/forebet_current.csv data/forebet_availability.csv data/forebet_archive.csv data/team_alias_registry.csv
+          if [ -f data/forebet_form_current.csv ]; then git add data/forebet_form_current.csv; fi
           if [ -f data/power_ratings.csv ]; then git add data/power_ratings.csv; fi
           if git diff --cached --quiet; then
             echo 'No Forebet feed changes to commit.'
