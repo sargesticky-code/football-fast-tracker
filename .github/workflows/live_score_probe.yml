@@ -1,0 +1,41 @@
+name: Live Score Probe
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "api/live_scores.py"
+      - "vercel.json"
+      - ".github/workflows/live_score_probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests==2.32.5
+      - name: Compile
+        run: python -m py_compile api/live_scores.py
+      - name: Probe providers and matching
+        run: |
+          python - <<'PY'
+          import importlib.util
+          spec=importlib.util.spec_from_file_location("live_scores","api/live_scores.py")
+          m=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(m)
+          p=m.collect()
+          print("updatedAt",p["updatedAt"])
+          print("health",p["health"])
+          print("targets",p["targetCount"],"matched",p["matchedCount"])
+          for row in p["matches"][:20]:
+              print(row["hkjc_event_id"], row["home_en"], "vs", row["away_en"], row["live_score"], row["minute"], row["source"], row["match_confidence"])
+          if p["health"]["primary"].startswith("ERROR") and p["health"]["backup"].startswith("ERROR"):
+              raise SystemExit("both live-score providers failed")
+          PY
