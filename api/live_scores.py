@@ -162,7 +162,11 @@ def parse_nonnegative(v):
 
 
 def fetch_fotmob_corners(match_id):
-    """Return live home/away/total corners from FotMob matchDetails."""
+    """Return live home/away/total corners from FotMob matchDetails.
+
+    FotMob has used both flat and grouped stat layouts, so scan recursively
+    instead of depending on one exact nesting shape.
+    """
     if not match_id:
         return None
     r = requests.get(
@@ -173,27 +177,35 @@ def fetch_fotmob_corners(match_id):
     )
     r.raise_for_status()
     detail = r.json()
-    periods = (((detail.get("content") or {}).get("stats") or {}).get("Periods") or {})
-    all_period = periods.get("All") or {}
-    groups = all_period.get("stats") or []
-    for group in groups:
-        for stat in (group.get("stats") or []):
-            key = clean(stat.get("key")).lower()
-            title = clean(stat.get("title")).lower()
-            if key == "corners" or title == "corners":
-                vals = stat.get("stats") or []
-                if len(vals) < 2:
-                    return None
+    stats_root = ((detail.get("content") or {}).get("stats") or {})
+
+    def walk(node):
+        if isinstance(node, dict):
+            key = clean(node.get("key")).lower()
+            title = clean(node.get("title")).lower()
+            label = " ".join(x for x in (key, title) if x)
+            vals = node.get("stats")
+            if ("corner" in label) and isinstance(vals, list) and len(vals) >= 2:
                 home = parse_nonnegative(vals[0])
                 away = parse_nonnegative(vals[1])
-                if home is None or away is None:
-                    return None
-                return {
-                    "home_corners": home,
-                    "away_corners": away,
-                    "total_corners": home + away,
-                }
-    return None
+                if home is not None and away is not None:
+                    return {
+                        "home_corners": home,
+                        "away_corners": away,
+                        "total_corners": home + away,
+                    }
+            for value in node.values():
+                found = walk(value)
+                if found:
+                    return found
+        elif isinstance(node, list):
+            for value in node:
+                found = walk(value)
+                if found:
+                    return found
+        return None
+
+    return walk(stats_root)
 
 
 def corner_progress(total, line):
