@@ -38,6 +38,7 @@ LOOKBACK_DAYS = max(3, int(os.getenv("PLAYER_DB_LOOKBACK_DAYS", "21")))
 MAX_DETAILS = max(1, int(os.getenv("PLAYER_DB_MAX_DETAILS", "4")))
 MAX_BOARD_DATES = max(1, int(os.getenv("PLAYER_DB_MAX_BOARD_DATES", "4")))
 SLEEP = max(0.0, float(os.getenv("PLAYER_DB_REQUEST_SLEEP", "0.45")))
+NO_STATS_RETRY_HOURS = max(6, int(os.getenv("PLAYER_DB_NO_STATS_RETRY_HOURS", "12")))
 
 INDEX_COLUMNS = [
     "captured_at_hkt", "hkjc_event_id", "kickoff_hkt", "league",
@@ -594,6 +595,17 @@ def player_rows_from_detail(detail, target, match_meta, captured):
     return rows, len(lineup_map), len(player_stats)
 
 
+def target_is_due(target, old, now):
+    status = clean((old or {}).get("status"))
+    if status == "OK" or status == "NO_PLAYER_STATS_SOURCE":
+        return False
+    if status == "NO_PLAYER_STATS_RETRY":
+        captured = parse_dt((old or {}).get("captured_at_hkt"))
+        if captured and now - captured < timedelta(hours=NO_STATS_RETRY_HOURS):
+            return False
+    return True
+
+
 def recent_targets(now):
     cutoff = now - timedelta(days=LOOKBACK_DAYS)
     out = []
@@ -696,9 +708,19 @@ def main():
         if eid in index_by_id:
             index_by_id[eid].update({k: str(v) for k, v in q.items()})
 
+    recent = recent_targets(now)
+    target_lookup = {t["event_id"]: t for t in recent}
+    for eid, old in index_by_id.items():
+        if clean(old.get("status")) != "NO_PLAYER_STATS":
+            continue
+        t = target_lookup.get(eid)
+        if t and now - t["kickoff"] >= timedelta(hours=24):
+            old["status"] = "NO_PLAYER_STATS_SOURCE"
+            old["reason"] = "completed >24h; lineup available but FotMob playerStats absent"
+
     targets = [
-        t for t in recent_targets(now)
-        if clean((index_by_id.get(t["event_id"]) or {}).get("status")) != "OK"
+        t for t in recent
+        if target_is_due(t, index_by_id.get(t["event_id"]) or {}, now)
     ]
     if not targets:
         write_csv(INDEX, INDEX_COLUMNS, index_rows)
@@ -777,9 +799,14 @@ def main():
                     played += 1
                 if clean(r.get("player_stats_json")) not in ("", "{}"):
                     actual_stats += 1
-            status = "OK" if actual_stats >= 14 and played >= 14 else (
-                "PARTIAL" if actual_stats > 0 else "NO_PLAYER_STATS"
-            )
+            if actual_stats >= 14 and played >= 14:
+                status = "OK"
+            elif actual_stats > 0:
+                status = "PARTIAL"
+            elif now - t["kickoff"] >= timedelta(hours=24):
+                status = "NO_PLAYER_STATS_SOURCE"
+            else:
+                status = "NO_PLAYER_STATS_RETRY"
             reason = "" if status == "OK" else (
                 f"stats_players={stats_count};played={played};actual_stats={actual_stats};"
                 f"usable_player_rows={usable}"
