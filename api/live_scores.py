@@ -12,7 +12,7 @@ import unicodedata
 import requests
 
 HKT = timezone(timedelta(hours=8))
-PRIMARY = os.environ.get("FOOTBALL_LIVE_API_BASE", "https://football-live-api.vercel.app").rstrip("/")
+FOTMOB = os.environ.get("FOTMOB_BASE_URL", "https://www.fotmob.com/api").rstrip("/")
 BACKUP = os.environ.get("SPORTSCORE_BASE", "https://sportscore.com").rstrip("/")
 HKJC_CSV = os.environ.get(
     "HKJC_CURRENT_CSV",
@@ -136,30 +136,66 @@ def minute_from_status(st):
 
 
 def primary_matches():
-    body = fetch_json(
-        PRIMARY + "/api/matches/live",
-        {"timezone": "Asia/Hong_Kong", "ccode3": "HKG"},
-    )
-    data = body.get("data") or {}
+    """Self-hosted Football Live API logic using FotMob directly."""
+    now = datetime.now(HKT)
+    dates = [now.strftime("%Y%m%d")]
+    if now.hour < 3:
+        dates.append((now - timedelta(days=1)).strftime("%Y%m%d"))
+
+    headers = {
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://www.fotmob.com/",
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/122.0.0.0 Safari/537.36"
+        ),
+    }
     out = []
-    for lg in data.get("leagues") or []:
-        for m in lg.get("matches") or []:
-            h = m.get("home") or {}
-            a = m.get("away") or {}
-            st = m.get("status") or {}
-            hs, aw = score_pair(m)
-            out.append({
-                "source": "FOOTBALL_LIVE_API",
-                "source_match_id": clean(m.get("id")),
-                "home": clean(h.get("name")),
-                "away": clean(a.get("name")),
-                "kickoff": parse_dt(st.get("utcTime") or m.get("utcTime")),
-                "home_score": hs,
-                "away_score": aw,
-                "minute": minute_from_status(st),
-                "status": clean(st.get("reason")) or "LIVE",
-                "updated_at": clean(body.get("updatedAt")),
-            })
+    seen = set()
+    for ymd in dates:
+        r = requests.get(
+            FOTMOB + "/data/matches",
+            params={"date": ymd, "timezone": "Asia/Hong_Kong", "ccode3": "HKG"},
+            headers=headers,
+            timeout=12,
+        )
+        r.raise_for_status()
+        data = r.json()
+        for lg in data.get("leagues") or []:
+            for m in lg.get("matches") or []:
+                st = m.get("status") or {}
+                is_live = (
+                    st.get("ongoing") is True
+                    or (
+                        st.get("started") is True
+                        and st.get("finished") is False
+                        and st.get("cancelled") is not True
+                    )
+                )
+                if not is_live:
+                    continue
+                mid = clean(m.get("id"))
+                if mid and mid in seen:
+                    continue
+                if mid:
+                    seen.add(mid)
+                h = m.get("home") or {}
+                a = m.get("away") or {}
+                hs, aw = score_pair(m)
+                out.append({
+                    "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
+                    "source_match_id": mid,
+                    "home": clean(h.get("name")),
+                    "away": clean(a.get("name")),
+                    "kickoff": parse_dt(st.get("utcTime") or m.get("utcTime")),
+                    "home_score": hs,
+                    "away_score": aw,
+                    "minute": minute_from_status(st),
+                    "status": clean(st.get("reason")) or "LIVE",
+                    "updated_at": now.isoformat(timespec="seconds"),
+                })
     return out
 
 
