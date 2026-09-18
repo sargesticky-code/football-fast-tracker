@@ -1,0 +1,45 @@
+name: Match Scenario Features
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 * * * *'
+  push:
+    paths:
+      - 'scripts/build_match_scenarios.py'
+      - '.github/workflows/match_scenarios.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: match-scenario-features
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest current-data registries
+        run: git pull --rebase origin main
+
+      - name: Build scenario features
+        run: python scripts/build_match_scenarios.py
+
+      - name: Commit scenario feed
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/match_scenario_current.csv
+          if git diff --cached --quiet; then
+            echo 'No scenario feature changes.'
+          else
+            git commit -m 'Refresh match scenario features [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
