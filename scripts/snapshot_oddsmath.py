@@ -256,7 +256,7 @@ def history_row(m: dict, captured: datetime, slot: datetime) -> dict:
         "captured_at_hkt": captured.isoformat(),
         "snapshot_slot_hkt": slot.isoformat(),
         "hkjc_event_id": t["event_id"],
-        "kickoff_hkt": t["kickoff"].isoformat(timespec="minutes"),
+        "kickoff_hkt": t["kickoff"].strftime("%Y-%m-%d %H:%M"),
         "home_hkjc": t["home"],
         "away_hkjc": t["away"],
         "home_oddsmath": m["home"],
