@@ -1,1 +1,1 @@
-fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,prob_home,prob_draw,prob_away,prediction_1x2,predicted_score,avg_goals,source_url,match_score,status,notes
+fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,prob_home,prob_draw,prob_away,prediction_1x2,predicted_score,avg_goals,source_url,match_score,status,notes\n2026-09-18T22:30:00+08:00,FB5405,2026-09-19T01:00+08:00,DK1,Lyngby,Silkeborg IF,29,55,16,X,1 - 1,2.40,https://www.forebet.com/en/football/matches/lyngby-bk-silkeborg-2469549,1.000,REGRESSION_SEED,Verified Forebet full-time 1X2\n
