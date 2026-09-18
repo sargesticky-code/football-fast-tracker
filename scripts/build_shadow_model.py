@@ -257,6 +257,8 @@ def fit_one(
     *,
     min_matches: int = 120,
     min_team_games: int = 20,
+    fit_cache: dict[str, tuple] | None = None,
+    cache_key: str | None = None,
 ) -> dict:
     if len(hist) < min_matches:
         raise ValueError(f"insufficient history {len(hist)}")
@@ -265,21 +267,28 @@ def fit_one(
     if len(home_games) < min_team_games or len(away_games) < min_team_games:
         raise ValueError(f"insufficient target-team history {len(home_games)}/{len(away_games)}")
 
-    weights = pb.models.dixon_coles_weights(hist["date_dt"], xi=0.001)
-    model = pb.models.DixonColesGoalModel(
-        hist["FTHG"].astype(int),
-        hist["FTAG"].astype(int),
-        hist["HomeTeam"].astype(str),
-        hist["AwayTeam"].astype(str),
-        weights=weights,
-    )
-    model.fit()
+    cached = fit_cache.get(cache_key) if fit_cache is not None and cache_key else None
+    if cached is None:
+        weights = pb.models.dixon_coles_weights(hist["date_dt"], xi=0.001)
+        model = pb.models.DixonColesGoalModel(
+            hist["FTHG"].astype(int),
+            hist["FTAG"].astype(int),
+            hist["HomeTeam"].astype(str),
+            hist["AwayTeam"].astype(str),
+            weights=weights,
+        )
+        model.fit()
+
+        pi = pb.ratings.PiRatingSystem()
+        for r in hist.sort_values("date_dt").itertuples(index=False):
+            pi.update_ratings(str(r.HomeTeam), str(r.AwayTeam), int(r.FTHG) - int(r.FTAG))
+        if fit_cache is not None and cache_key:
+            fit_cache[cache_key] = (model, pi)
+    else:
+        model, pi = cached
+
     pred = model.predict(home, away, max_goals=10)
     ph, pd_, pa = [float(x) for x in pred.home_draw_away]
-
-    pi = pb.ratings.PiRatingSystem()
-    for r in hist.sort_values("date_dt").itertuples(index=False):
-        pi.update_ratings(str(r.HomeTeam), str(r.AwayTeam), int(r.FTHG) - int(r.FTAG))
     pp = pi.calculate_match_probabilities(home, away)
     home_rating = float(pi.get_team_rating(home))
     away_rating = float(pi.get_team_rating(away))
@@ -446,6 +455,7 @@ def main() -> int:
 
     fetched = now.replace(microsecond=0).isoformat()
     out: list[dict] = []
+    football_data_fit_cache: dict[str, tuple] = {}
     modeled = 0
     modeled_fd = 0
     modeled_hkjc = 0
@@ -474,7 +484,15 @@ def main() -> int:
                 "team_match_quality": f"{quality:.3f}",
             })
             try:
-                values = fit_one(histories[dataset_key], home, away, min_matches=120, min_team_games=20)
+                values = fit_one(
+                    histories[dataset_key],
+                    home,
+                    away,
+                    min_matches=120,
+                    min_team_games=20,
+                    fit_cache=football_data_fit_cache,
+                    cache_key=dataset_key,
+                )
                 base.update(finalize_values(values))
                 base["quality"] = "MODELED"
                 base["model_source"] = (
