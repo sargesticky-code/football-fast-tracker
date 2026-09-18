@@ -28,7 +28,18 @@ jobs:
       - name: Probe providers and matching
         run: |
           python - <<'PY'
-          import importlib.util, json
+          import importlib.util, json, requests
+          tests=[
+              ("primary","https://football-live-api.vercel.app/api/matches/live?timezone=Asia%2FHong_Kong&ccode3=HKG"),
+              ("backup","https://sportscore.com/api/widget/matches/?sport=football&limit=50"),
+          ]
+          for name,url in tests:
+              try:
+                  rr=requests.get(url,timeout=12,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
+                  print("RAW",name,rr.status_code,rr.url,rr.text[:700].replace("\n"," "))
+              except Exception as e:
+                  print("RAW",name,"ERR",repr(e))
+
           spec=importlib.util.spec_from_file_location("live_scores","api/live_scores.py")
           m=importlib.util.module_from_spec(spec)
           spec.loader.exec_module(m)
@@ -43,7 +54,9 @@ jobs:
               raise SystemExit("both live-score providers failed")
           PY
       - name: Publish probe result
+        if: always()
         run: |
+          if [ ! -f data/live_score_probe.json ]; then exit 0; fi
           git config user.name "fast-tracker-bot"
           git config user.email "fast-tracker-bot@users.noreply.github.com"
           git add data/live_score_probe.json
