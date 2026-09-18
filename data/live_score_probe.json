@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T22:22:44+08:00",
+  "updatedAt": "2026-09-18T22:24:47+08:00",
   "health": {
     "primary": "OK",
     "sofascore": "ERROR:HTTPError",
@@ -34,7 +34,7 @@
       "source_home": "Newell's Old Boys Women",
       "source_away": "Gimnasia LP Women",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-18T22:22:44+08:00",
+      "source_updated_at": "2026-09-18T22:24:47+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
