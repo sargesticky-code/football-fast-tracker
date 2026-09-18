@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-19T00:20:27+08:00",
+  "updatedAt": "2026-09-19T00:22:00+08:00",
   "health": {
     "primary": "OK",
     "sofascore": "ERROR:HTTPError",
@@ -57,7 +57,7 @@
       "source_home": "SJK Seinajoki",
       "source_away": "IFK Mariehamn",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-19T00:20:27+08:00",
+      "source_updated_at": "2026-09-19T00:22:00+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
@@ -93,14 +93,14 @@
       "live_score": "1-0",
       "home_score": "1",
       "away_score": "0",
-      "minute": "61",
+      "minute": "63",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "6145902",
       "source_home": "FC Lahti",
       "source_away": "FF Jaro",
       "match_confidence": 0.95,
-      "source_updated_at": "2026-09-19T00:20:28+08:00",
+      "source_updated_at": "2026-09-19T00:22:01+08:00",
       "home_corners": 5,
       "away_corners": 3,
       "total_corners": 8,
@@ -138,7 +138,7 @@
           "group": "Top stats",
           "key": "touches_opp_box",
           "title": "Touches in opposition box",
-          "home": 23,
+          "home": 24,
           "away": 7
         },
         {
@@ -162,8 +162,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "427 (89%)",
-          "away": "72 (53%)"
+          "home": "429 (89%)",
+          "away": "73 (54%)"
         },
         {
           "period": "All",
@@ -242,8 +242,8 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 478,
-          "away": 135
+          "home": 481,
+          "away": 136
         },
         {
           "period": "All",
@@ -258,15 +258,15 @@
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 173,
-          "away": 25
+          "home": 175,
+          "away": 26
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "18 (60%)",
+          "home": "19 (61%)",
           "away": "5 (16%)"
         },
         {
@@ -323,7 +323,7 @@
           "key": "shot_blocks",
           "title": "Blocks",
           "home": 2,
-          "away": 6
+          "away": 7
         },
         {
           "period": "All",
@@ -354,7 +354,7 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 42,
+          "home": 43,
           "away": 25
         },
         {
@@ -362,8 +362,8 @@
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "37 (62%)",
-          "away": "23 (38%)"
+          "home": "38 (62%)",
+          "away": "23 (37%)"
         },
         {
           "period": "All",
@@ -378,7 +378,7 @@
           "group": "Duels",
           "key": "dribbles_succeeded",
           "title": "Successful dribbles",
-          "home": "15 (68%)",
+          "home": "16 (70%)",
           "away": "6 (75%)"
         },
         {
@@ -706,8 +706,8 @@
           "group": "Top stats",
           "key": "ballpossesion",
           "title": "Ball possession",
-          "home": 57,
-          "away": 43
+          "home": 58,
+          "away": 42
         },
         {
           "period": "SecondHalf",
@@ -730,7 +730,7 @@
           "group": "Top stats",
           "key": "touches_opp_box",
           "title": "Touches in opposition box",
-          "home": 4,
+          "home": 5,
           "away": 3
         },
         {
@@ -754,8 +754,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "62 (82%)",
-          "away": "33 (63%)"
+          "home": "64 (81%)",
+          "away": "34 (64%)"
         },
         {
           "period": "SecondHalf",
@@ -834,8 +834,8 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 76,
-          "away": 52
+          "home": 79,
+          "away": 53
         },
         {
           "period": "SecondHalf",
@@ -850,15 +850,15 @@
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 30,
-          "away": 17
+          "home": 32,
+          "away": 18
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "5 (42%)",
+          "home": "6 (46%)",
           "away": "4 (40%)"
         },
         {
@@ -915,7 +915,7 @@
           "key": "shot_blocks",
           "title": "Blocks",
           "home": 1,
-          "away": 0
+          "away": 1
         },
         {
           "period": "SecondHalf",
@@ -946,7 +946,7 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 13,
+          "home": 14,
           "away": 11
         },
         {
@@ -954,8 +954,8 @@
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "11 (52%)",
-          "away": "10 (48%)"
+          "home": "12 (55%)",
+          "away": "10 (43%)"
         },
         {
           "period": "SecondHalf",
@@ -970,7 +970,7 @@
           "group": "Duels",
           "key": "dribbles_succeeded",
           "title": "Successful dribbles",
-          "home": "3 (60%)",
+          "home": "4 (67%)",
           "away": "2 (100%)"
         },
         {
@@ -1069,7 +1069,7 @@
           "possession=77-23",
           "shots=17-4",
           "sot=3-0",
-          "box_touches=23-7",
+          "box_touches=24-7",
           "corners=5-3"
         ],
         "betting_action": "WAIT_CALIBRATING"
@@ -1085,14 +1085,14 @@
       "live_score": "0-0",
       "home_score": "0",
       "away_score": "0",
-      "minute": "20",
+      "minute": "22",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "6145872",
       "source_home": "AC Oulu",
       "source_away": "FC Inter Turku",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-19T00:20:28+08:00",
+      "source_updated_at": "2026-09-19T00:22:01+08:00",
       "home_corners": 0,
       "away_corners": 3,
       "total_corners": 3,
@@ -1154,8 +1154,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "61 (75%)",
-          "away": "65 (77%)"
+          "home": "75 (78%)",
+          "away": "76 (78%)"
         },
         {
           "period": "All",
@@ -1234,32 +1234,32 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 81,
-          "away": 84
+          "home": 96,
+          "away": 98
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "own_half_passes",
           "title": "Own half",
-          "home": 49,
-          "away": 37
+          "home": 50,
+          "away": 44
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 12,
-          "away": 28
+          "home": 25,
+          "away": 32
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "4 (29%)",
-          "away": "3 (25%)"
+          "home": "6 (38%)",
+          "away": "4 (29%)"
         },
         {
           "period": "All",
@@ -1298,7 +1298,7 @@
           "group": "Defence",
           "key": "matchstats_headers_tackles",
           "title": "Tackles",
-          "home": 2,
+          "home": 1,
           "away": 3
         },
         {
@@ -1346,7 +1346,7 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 11,
+          "home": 10,
           "away": 8
         },
         {
@@ -1354,7 +1354,7 @@
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "10 (63%)",
+          "home": "9 (60%)",
           "away": "6 (40%)"
         },
         {
@@ -1450,8 +1450,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "61 (75%)",
-          "away": "65 (77%)"
+          "home": "75 (78%)",
+          "away": "76 (78%)"
         },
         {
           "period": "FirstHalf",
@@ -1530,32 +1530,32 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 81,
-          "away": 84
+          "home": 96,
+          "away": 98
         },
         {
           "period": "FirstHalf",
           "group": "Passes",
           "key": "own_half_passes",
           "title": "Own half",
-          "home": 49,
-          "away": 37
+          "home": 50,
+          "away": 44
         },
         {
           "period": "FirstHalf",
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 12,
-          "away": 28
+          "home": 25,
+          "away": 32
         },
         {
           "period": "FirstHalf",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "4 (29%)",
-          "away": "3 (25%)"
+          "home": "6 (38%)",
+          "away": "4 (29%)"
         },
         {
           "period": "FirstHalf",
@@ -1594,7 +1594,7 @@
           "group": "Defence",
           "key": "matchstats_headers_tackles",
           "title": "Tackles",
-          "home": 2,
+          "home": 1,
           "away": 3
         },
         {
@@ -1642,7 +1642,7 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 11,
+          "home": 10,
           "away": 8
         },
         {
@@ -1650,7 +1650,7 @@
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "10 (63%)",
+          "home": "9 (60%)",
           "away": "6 (40%)"
         },
         {
@@ -1737,7 +1737,7 @@
       "source_home": "Gnistan",
       "source_away": "HJK Helsinki",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-19T00:20:27+08:00",
+      "source_updated_at": "2026-09-19T00:22:00+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
