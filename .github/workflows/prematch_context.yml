@@ -45,7 +45,8 @@ jobs:
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add             data/prematch_context_current.csv             data/prematch_players_current.csv             data/team_manager_registry.csv
+          git add             data/prematch_context_current.csv             data/prematch_players_current.csv             data/team_manager_registry.csv \
+            data/team_squad_registry.csv
           if git diff --cached --quiet; then
             echo 'No prematch context changes.'
           else
