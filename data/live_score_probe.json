@@ -1,12 +1,49 @@
 {
-  "updatedAt": "2026-09-18T19:42:21+08:00",
+  "updatedAt": "2026-09-18T19:44:14+08:00",
   "health": {
-    "primary": "ERROR:HTTPError",
+    "primary": "OK",
     "backup": "ERROR:HTTPError"
   },
   "targetCount": 3,
-  "matchedCount": 0,
-  "matches": [],
+  "matchedCount": 2,
+  "matches": [
+    {
+      "hkjc_event_id": "FB5261",
+      "kickoff_hkt": "2026-09-18T18:00+08:00",
+      "league": "AMF",
+      "home_en": "Kuwait AM",
+      "away_en": "Uzbekistan AM",
+      "live_score": "0-2",
+      "home_score": "0",
+      "away_score": "2",
+      "minute": "87",
+      "match_status": "LIVE",
+      "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
+      "source_match_id": "6052538",
+      "source_home": "Kuwait U23",
+      "source_away": "Uzbekistan U23",
+      "match_confidence": 1.0,
+      "source_updated_at": "2026-09-18T19:44:14+08:00"
+    },
+    {
+      "hkjc_event_id": "FB5263",
+      "kickoff_hkt": "2026-09-18T18:30+08:00",
+      "league": "AMF",
+      "home_en": "Saudi Arabia AM",
+      "away_en": "Qatar AM",
+      "live_score": "2-0",
+      "home_score": "2",
+      "away_score": "0",
+      "minute": "56",
+      "match_status": "LIVE",
+      "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
+      "source_match_id": "6052545",
+      "source_home": "Saudi Arabia U23",
+      "source_away": "Qatar U23",
+      "match_confidence": 1.0,
+      "source_updated_at": "2026-09-18T19:44:14+08:00"
+    }
+  ],
   "attribution": {
     "SportScore": "Powered by SportScore — https://sportscore.com/"
   }
