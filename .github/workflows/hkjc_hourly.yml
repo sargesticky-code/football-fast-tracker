@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Capture latest HKJC matches and HAD odds
+      - name: Capture latest HKJC matches and HAD / HIL / CHL odds
         run: |
           rm -rf /tmp/hkjc-direct
           git clone --filter=blob:none --no-checkout https://github.com/sososo829/hkjc-football-scraper.git /tmp/hkjc-direct
@@ -47,10 +47,14 @@ jobs:
           cd /tmp/hkjc-direct
           python -m hkjc list --format json --out /tmp/hkjc_matches.json
           python -m hkjc odds --page HAD --format json --out /tmp/hkjc_had.json
+          python -m hkjc odds --page HIL --format json --out /tmp/hkjc_hil.json
+          python -m hkjc odds --page CHL --format json --out /tmp/hkjc_chl.json
           cd "$GITHUB_WORKSPACE"
           python scripts/normalize_hkjc.py \
             --matches /tmp/hkjc_matches.json \
             --had /tmp/hkjc_had.json \
+            --hil /tmp/hkjc_hil.json \
+            --chl /tmp/hkjc_chl.json \
             --horizon-hours 36 \
             --live-retain-minutes 150
 
@@ -68,6 +72,14 @@ jobs:
               if not rows:
                   raise SystemExit(f'zero rows in {name}')
               print(f'PASS {name} rows={len(rows)}')
+              if name.endswith('hkjc_current.csv'):
+                  required = {'hil_line','hil_over','hil_under','chl_line','chl_over','chl_under'}
+                  missing = required - set(rows[0].keys())
+                  if missing:
+                      raise SystemExit(f'missing HKJC market columns: {sorted(missing)}')
+                  hil = sum(bool((r.get('hil_over') or '').strip() and (r.get('hil_under') or '').strip()) for r in rows)
+                  chl = sum(bool((r.get('chl_over') or '').strip() and (r.get('chl_under') or '').strip()) for r in rows)
+                  print(f'PASS HKJC HIL pairs={hil} CHL pairs={chl}')
           PY
 
       - name: Commit latest HKJC market state
