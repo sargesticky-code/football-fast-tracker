@@ -1,1 +1,101 @@
-fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,source,source_competition,source_url,recommendation,market,match_score,status,notes
+﻿fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,source,source_competition,source_url,recommendation,market,match_score,status,notes
+2026-09-18T22:30:41+08:00,FB5422,2026-09-18T21:58+08:00,APLW,Newell's Old Boys Women,Gimnasia LP Women,APWIN,Campeonato de Fútbol Femenino,https://www.apwin.com/predictions/newells-old-boys-women-vs-gimnasia-esgrima-res-prediction-campeonato-futbol-femenino-18-09-2026/,Gimnasia Esgrima Res. to win,1st Half Draw,1.000,OK,
+2026-09-18T22:30:41+08:00,FB5405,2026-09-19T01:00+08:00,DK1,Lyngby,Silkeborg IF,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5301,2026-09-19T06:28+08:00,BD2,Vila Nova,America Mineiro,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5300,2026-09-19T07:28+08:00,BD2,Ceara,Novorizontino,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5268,2026-09-19T07:30+08:00,MLS,New York City,New York Red Bulls,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5303,2026-09-19T07:58+08:00,BD2,Sao Bernardo,Atletico Goianiense,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5306,2026-09-19T09:00+08:00,MD1,Tepatitlan,Mineros Zacatecas,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5311,2026-09-19T15:30+08:00,KD1,Bucheon FC,Gimcheon Sangmu,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5314,2026-09-19T17:00+08:00,JD1,Avispa Fukuoka,Sanfrecce Hiroshima,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5317,2026-09-19T17:30+08:00,JD1,Urawa Reds,Tokyo Verdy,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5318,2026-09-19T18:00+08:00,KD1,FC Anyang,Ulsan HD,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5328,2026-09-19T18:30+08:00,JD1,Yokohama F.Marinos,Mito Hollyhock,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5331,2026-09-19T20:00+08:00,SFL,Osasuna,Vallecano,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5381,2026-09-19T21:00+08:00,ISA,Udinese,Cagliari,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5382,2026-09-19T21:00+08:00,ISA,Bologna,AC Torino,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5424,2026-09-19T21:00+08:00,UWW,Korea Republic Women U20,Italy Women U20,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5332,2026-09-19T21:30+08:00,GSL,Werder Bremen,Augsburg,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5370,2026-09-19T21:30+08:00,GSL,Monchengladbach,Mainz,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5373,2026-09-19T21:30+08:00,GSL,Hamburg,Cologne,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5374,2026-09-19T21:30+08:00,GSL,Frankfurt,Freiburg,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5289,2026-09-19T22:00+08:00,EPL,Brighton,Arsenal,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5340,2026-09-19T22:00+08:00,EPL,Everton,Ipswich,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5343,2026-09-19T22:00+08:00,EPL,Newcastle,Hull City,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5353,2026-09-19T22:00+08:00,SPL,Dundee,Motherwell,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5356,2026-09-19T22:00+08:00,SPL,St. Mirren,Dundee Utd,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5357,2026-09-19T22:00+08:00,SPL,Hibernian,Aberdeen,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5358,2026-09-19T22:00+08:00,SPL,St. Johnstone,Falkirk,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5412,2026-09-19T22:00+08:00,NTL,Kristiansund,Rosenborg,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5333,2026-09-19T22:15+08:00,SFL,Bilbao,Alaves,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5334,2026-09-19T22:30+08:00,DFL,Den Haag,Cambuur,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5335,2026-09-19T22:30+08:00,DF2,Vitesse,Jong PSV Eindhoven,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5393,2026-09-19T22:30+08:00,PFL,Gil Vicente,Maritimo,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5394,2026-09-19T22:30+08:00,PFL,Nacional,Famalicao,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5308,2026-09-19T22:57+08:00,UD1,Boston River,CA Progresso,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5410,2026-09-19T23:15+08:00,FFL,Paris FC,Strasbourg,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5378,2026-09-20T00:00+08:00,ISA,Roma,Inter Milan,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5403,2026-09-20T00:00+08:00,DK1,Odense,Midtjylland,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5413,2026-09-20T00:00+08:00,NTL,Molde,Aalesund,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5336,2026-09-20T00:30+08:00,GSL,Stuttgart,Dortmund,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5337,2026-09-20T00:30+08:00,SFL,Celta Vigo,Santander,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5341,2026-09-20T00:30+08:00,EPL,Nottingham Forest,Coventry,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5425,2026-09-20T00:30+08:00,UWW,Brazil Women U20,Spain Women U20,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5338,2026-09-20T00:45+08:00,DFL,Sparta Rotterdam,Heerenveen,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5354,2026-09-20T00:45+08:00,SPL,Kilmarnock,Hearts,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5395,2026-09-20T01:00+08:00,PFL,Alverca,Rio Ave,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5344,2026-09-20T02:00+08:00,DFL,Ajax,Excelsior,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5345,2026-09-20T02:30+08:00,GD2,Dresden,Hertha Berlin,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5363,2026-09-20T02:45+08:00,FFL,Le Mans,Lorient,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5364,2026-09-20T02:45+08:00,FFL,Lyon,Rennes,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5365,2026-09-20T02:45+08:00,FFL,Toulouse,Le Havre,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5367,2026-09-20T02:45+08:00,FFL,Angers SCO,Troyes,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5375,2026-09-20T02:45+08:00,ISA,Venezia,Lazio,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5346,2026-09-20T03:00+08:00,DFL,Willem II,Fortuna Sittard,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5347,2026-09-20T03:00+08:00,SFL,Sevilla,Barcelona,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5434,2026-09-20T03:00+08:00,BD1,Atletico Mineiro,Chapecoense,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5398,2026-09-20T03:30+08:00,PFL,Sporting,Arouca,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5435,2026-09-20T04:00+08:00,BD1,Mirassol,Botafogo,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5309,2026-09-20T05:27+08:00,UD1,Deportivo Maldonado,Cerro Largo,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5441,2026-09-20T05:30+08:00,BD1,Clube do Remo,Santos,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5433,2026-09-20T07:30+08:00,BD1,Vasco da Gama,Coritiba,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5436,2026-09-20T08:00+08:00,BD1,Sao Paulo,Internacional,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5385,2026-09-20T13:00+08:00,AMF,Iran AM,China AM,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5348,2026-09-20T15:30+08:00,KD1,Jeonbuk Motors,Gwangju FC,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5349,2026-09-20T15:30+08:00,KD2,Ansan Greeners,Chungbuk Cheongju,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5419,2026-09-20T15:30+08:00,KD2,Yongin FC,Gyeongnam FC,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5432,2026-09-20T15:30+08:00,KD1,Gangwon FC,Jeju SK,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5383,2026-09-20T16:00+08:00,JD1,Gamba Osaka,Vissel Kobe,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5384,2026-09-20T16:00+08:00,JD2,Tochigi City,Vegalta Sendai,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5426,2026-09-20T16:00+08:00,JD1,Machida Zelvia,Kashiwa Reysol,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5350,2026-09-20T18:00+08:00,KD1,Incheon Utd,Daejeon Citizen,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5351,2026-09-20T18:00+08:00,KD2,Seongnam FC,Hwaseong FC,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5352,2026-09-20T18:00+08:00,KD2,Gimhae FC,Paju Frontier,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5386,2026-09-20T18:00+08:00,AMF,Korea DPR AM,United Arab Emirates AM,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5420,2026-09-20T18:00+08:00,KD1,Pohang Steelers,FC Seoul,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5355,2026-09-20T18:15+08:00,DFL,Feyenoord,Utrecht,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5376,2026-09-20T18:30+08:00,ISA,Fiorentina,Napoli,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5423,2026-09-20T18:30+08:00,AMF,Japan AM,Kyrgyzstan AM,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5427,2026-09-20T19:00+08:00,TL1,Rayong,Ratchaburi,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5430,2026-09-20T19:00+08:00,TL1,Chonburi,Buriram Utd,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5359,2026-09-20T19:30+08:00,GD2,Hannover,Bochum,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5414,2026-09-20T19:30+08:00,GD2,Cottbus,St. Pauli,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5415,2026-09-20T19:30+08:00,GD2,Bielefeld,Heidenheim,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5428,2026-09-20T19:30+08:00,TL1,Sukhothai,Port FC,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5402,2026-09-20T20:00+08:00,DK1,Brondby,Copenhagen,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5404,2026-09-20T20:00+08:00,DK1,Sonderjyske,Randers,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5421,2026-09-20T20:00+08:00,TL1,Bangkok Utd,BG Pathum Utd,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5360,2026-09-20T20:30+08:00,DFL,Twente,PSV Eindhoven,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5361,2026-09-20T20:30+08:00,DFL,AZ Alkmaar,Telstar,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5417,2026-09-20T20:30+08:00,NTL,Valerenga,Fredrikstad,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5368,2026-09-20T21:00+08:00,FFL,Auxerre,Brest,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5377,2026-09-20T21:00+08:00,ISA,Parma,Genoa,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5379,2026-09-20T21:00+08:00,ISA,Frosinone,Como,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5437,2026-09-20T21:00+08:00,EPL,Bournemouth,Liverpool,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5438,2026-09-20T21:00+08:00,EPL,Leeds,Crystal Palace,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5439,2026-09-20T21:00+08:00,EPL,Manchester City,Sunderland,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5371,2026-09-20T21:30+08:00,GSL,Leverkusen,RB Leipzig,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5407,2026-09-20T22:00+08:00,DK1,Horsens,AGF Aarhus,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5362,2026-09-20T22:15+08:00,SFL,Atletico Madrid,Real Madrid,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5400,2026-09-20T22:30+08:00,PFL,Guimaraes,Moreirense,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
+2026-09-18T22:30:41+08:00,FB5401,2026-09-20T22:30+08:00,PFL,Amadora,Viseu,APWIN,,,,,,NO_APWIN_MAPPING,Add league mapping in prediction_source_registry.csv
