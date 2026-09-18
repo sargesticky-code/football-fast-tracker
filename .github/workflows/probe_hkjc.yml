@@ -52,3 +52,19 @@ jobs:
           print('HKJC_HAD_ROWS', len(rows) if hasattr(rows, '__len__') else 'unknown')
           print('HKJC_HAD_SAMPLE', json.dumps(rows[:3] if isinstance(rows, list) else obj, ensure_ascii=False)[:3500])
           PY
+
+      - name: Probe current HKJC INPLAY_ALL odds
+        run: |
+          cd /tmp/hkjc-probe
+          python -m hkjc odds --page INPLAY_ALL --format json --out /tmp/hkjc_inplay.json
+          python - <<'PY'
+          import json, pathlib
+          p = pathlib.Path('/tmp/hkjc_inplay.json')
+          obj = json.loads(p.read_text(encoding='utf-8'))
+          rows = obj if isinstance(obj, list) else obj.get('odds', obj.get('data', [])) if isinstance(obj, dict) else []
+          print('HKJC_INPLAY_FILE_BYTES', p.stat().st_size)
+          print('HKJC_INPLAY_ROWS', len(rows) if hasattr(rows, '__len__') else 'unknown')
+          live_ids=sorted({str(r.get('front_end_id') or '') for r in rows if isinstance(r,dict) and r.get('front_end_id')})
+          print('HKJC_INPLAY_EVENTS', live_ids)
+          print('HKJC_INPLAY_SAMPLE', json.dumps(rows[:12] if isinstance(rows, list) else obj, ensure_ascii=False)[:9000])
+          PY
