@@ -9,7 +9,7 @@ on:
       - ".github/workflows/live_score_probe.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   probe:
@@ -17,6 +17,8 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -26,7 +28,7 @@ jobs:
       - name: Probe providers and matching
         run: |
           python - <<'PY'
-          import importlib.util
+          import importlib.util, json
           spec=importlib.util.spec_from_file_location("live_scores","api/live_scores.py")
           m=importlib.util.module_from_spec(spec)
           spec.loader.exec_module(m)
@@ -36,6 +38,16 @@ jobs:
           print("targets",p["targetCount"],"matched",p["matchedCount"])
           for row in p["matches"][:20]:
               print(row["hkjc_event_id"], row["home_en"], "vs", row["away_en"], row["live_score"], row["minute"], row["source"], row["match_confidence"])
+          open("data/live_score_probe.json","w",encoding="utf-8").write(json.dumps(p,ensure_ascii=False,indent=2))
           if p["health"]["primary"].startswith("ERROR") and p["health"]["backup"].startswith("ERROR"):
               raise SystemExit("both live-score providers failed")
           PY
+      - name: Publish probe result
+        run: |
+          git config user.name "fast-tracker-bot"
+          git config user.email "fast-tracker-bot@users.noreply.github.com"
+          git add data/live_score_probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update live score probe"
+          git pull --rebase origin main
+          git push origin main
