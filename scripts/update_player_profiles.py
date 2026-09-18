@@ -160,20 +160,30 @@ def recent_tournament(payload):
 
 def extract_stats(categories):
     all_items = []
-    for cat in categories or []:
-        for item in cat.get("items") or []:
-            title = clean(item.get("title"))
-            if not title:
-                continue
-            all_items.append({
-                "title": title,
-                "norm": norm_title(title),
-                "value": item.get("statValue"),
-                "per90": item.get("per90"),
-                "percentile": item.get("percentileRankPer90")
-                    if item.get("percentileRankPer90") is not None
-                    else item.get("percentileRank"),
-            })
+
+    def walk(node):
+        if isinstance(node, dict):
+            title = clean(node.get("title") or node.get("name") or node.get("label"))
+            value = node.get("statValue")
+            if value is None and not isinstance(node.get("value"), (dict, list)):
+                value = node.get("value")
+            if title and value is not None and not isinstance(value, (dict, list)):
+                all_items.append({
+                    "title": title,
+                    "norm": norm_title(title),
+                    "value": value,
+                    "per90": node.get("per90"),
+                    "percentile": node.get("percentileRankPer90")
+                        if node.get("percentileRankPer90") is not None
+                        else node.get("percentileRank"),
+                })
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+
+    walk(categories)
 
     picked = {}
     used = {}
