@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import csv
 import io
+import os
 import re
 import unicodedata
 from datetime import datetime
@@ -32,6 +33,8 @@ HKJC_HISTORY = ROOT / "data" / "hkjc_history.csv"
 HKJC_TEAMS = ROOT / "data" / "hkjc_current_teams.csv"
 BASE = "https://www.football-data.co.uk/mmz4281/{season}/{code}.csv"
 TIMEOUT = 30
+MODEL_LOOKBACK_DAYS = int(os.getenv("MODEL_LOOKBACK_DAYS", "540"))
+MODEL_MAX_MATCHES = int(os.getenv("MODEL_MAX_MATCHES", "700"))
 
 LEAGUES = {
     "E0": "ENG Premier League",
@@ -247,6 +250,15 @@ def clean_history(parts: list[pd.DataFrame]) -> pd.DataFrame:
     df["date_dt"] = pd.to_datetime(df["Date"], dayfirst=True, errors="coerce")
     df = df.dropna(subset=["FTHG", "FTAG", "date_dt"])
     df = df.sort_values("date_dt").drop_duplicates(subset=["date_dt", "HomeTeam", "AwayTeam"], keep="last")
+
+    # Production models are intentionally recent. Old seasons are useful for
+    # archival research but should not dominate current tactical/player reality.
+    cutoff = pd.Timestamp.now(tz=None) - pd.Timedelta(days=MODEL_LOOKBACK_DAYS)
+    recent = df.loc[df["date_dt"] >= cutoff].copy()
+    if not recent.empty:
+        df = recent
+    if MODEL_MAX_MATCHES > 0 and len(df) > MODEL_MAX_MATCHES:
+        df = df.tail(MODEL_MAX_MATCHES)
     return df.reset_index(drop=True)
 
 
