@@ -14,11 +14,17 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: prediction-fallback-refresh
+  cancel-in-progress: true
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -33,5 +39,6 @@ jobs:
             echo "No fallback feed changes"
           else
             git commit -m "Refresh prediction fallback feed"
+            git pull --rebase origin main
             git push
           fi
