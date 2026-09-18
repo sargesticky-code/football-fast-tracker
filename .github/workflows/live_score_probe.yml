@@ -30,7 +30,7 @@ jobs:
           python - <<'PY'
           import importlib.util, json, requests
           tests=[
-              ("primary","https://football-live-api.vercel.app/api/matches/live?timezone=Asia%2FHong_Kong&ccode3=HKG"),
+              ("primary","https://www.fotmob.com/api/data/matches?date=20260918&timezone=Asia%2FHong_Kong&ccode3=HKG"),
               ("backup","https://sportscore.com/api/widget/matches/?sport=football&limit=50"),
           ]
           for name,url in tests:
