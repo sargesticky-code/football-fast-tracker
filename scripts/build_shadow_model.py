@@ -17,6 +17,7 @@ import unicodedata
 from datetime import datetime
 from difflib import SequenceMatcher
 from pathlib import Path
+from urllib.parse import urljoin
 from zoneinfo import ZoneInfo
 
 import pandas as pd
@@ -25,7 +26,7 @@ import requests
 
 HKT = ZoneInfo("Asia/Hong_Kong")
 ROOT = Path(__file__).resolve().parent.parent
-FEED = ROOT / "data" / "forebet_current.csv"
+FEED = ROOT / "data" / "hkjc_current.csv"
 OUT = ROOT / "data" / "model_current.csv"
 HKJC_HISTORY = ROOT / "data" / "hkjc_history.csv"
 HKJC_TEAMS = ROOT / "data" / "hkjc_current_teams.csv"
@@ -35,15 +36,49 @@ TIMEOUT = 30
 LEAGUES = {
     "E0": "ENG Premier League",
     "E1": "ENG Championship",
-    "SP1": "ESP La Liga",
-    "D1": "GER Bundesliga",
-    "I1": "ITA Serie A",
-    "F1": "FRA Ligue 1",
-    "N1": "NED Eredivisie",
-    "P1": "POR Primeira Liga",
+    "E2": "ENG League One",
+    "E3": "ENG League Two",
+    "EC": "ENG National League",
     "SC0": "SCO Premiership",
+    "SC1": "SCO Championship",
+    "SC2": "SCO League One",
+    "SC3": "SCO League Two",
+    "D1": "GER Bundesliga",
+    "D2": "GER Bundesliga 2",
+    "I1": "ITA Serie A",
+    "I2": "ITA Serie B",
+    "SP1": "ESP La Liga",
+    "SP2": "ESP Segunda",
+    "F1": "FRA Ligue 1",
+    "F2": "FRA Ligue 2",
+    "N1": "NED Eredivisie",
     "B1": "BEL First Division A",
+    "P1": "POR Primeira Liga",
     "T1": "TUR Super Lig",
+    "G1": "GRE Super League",
+}
+
+# Football-Data's newer country files provide long-run top-flight history for
+# additional leagues.  We discover the current CSV link from the country page
+# instead of hard-coding the file token, so a site-side filename change does
+# not silently break the model.
+EXTRA_COUNTRY_PAGES = {
+    "Argentina": "https://www.football-data.co.uk/argentina.php",
+    "Austria": "https://www.football-data.co.uk/austria.php",
+    "Brazil": "https://www.football-data.co.uk/brazil.php",
+    "China": "https://www.football-data.co.uk/china.php",
+    "Denmark": "https://www.football-data.co.uk/denmark.php",
+    "Finland": "https://www.football-data.co.uk/finland.php",
+    "Ireland": "https://www.football-data.co.uk/ireland.php",
+    "Japan": "https://www.football-data.co.uk/japan.php",
+    "Mexico": "https://www.football-data.co.uk/mexico.php",
+    "Norway": "https://www.football-data.co.uk/norway.php",
+    "Poland": "https://www.football-data.co.uk/poland.php",
+    "Romania": "https://www.football-data.co.uk/romania.php",
+    "Russia": "https://www.football-data.co.uk/russia.php",
+    "Sweden": "https://www.football-data.co.uk/sweden.php",
+    "Switzerland": "https://www.football-data.co.uk/switzerland.php",
+    "USA": "https://www.football-data.co.uk/usa.php",
 }
 
 COLUMNS = [
@@ -121,6 +156,56 @@ def fetch_csv(session: requests.Session, season: str, code: str) -> pd.DataFrame
     return df
 
 
+
+def standardize_result_frame(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalize old and new Football-Data schemas to the model's five fields."""
+    if df.empty:
+        return pd.DataFrame()
+    choices = {
+        "HomeTeam": ("HomeTeam", "Home"),
+        "AwayTeam": ("AwayTeam", "Away"),
+        "FTHG": ("FTHG", "HG"),
+        "FTAG": ("FTAG", "AG"),
+        "Date": ("Date",),
+    }
+    picked: dict[str, str] = {}
+    for target, candidates in choices.items():
+        source = next((x for x in candidates if x in df.columns), None)
+        if source is None:
+            return pd.DataFrame()
+        picked[target] = source
+    out = pd.DataFrame({target: df[source] for target, source in picked.items()})
+    return out
+
+
+def fetch_extra_country(session: requests.Session, page_url: str) -> pd.DataFrame:
+    """Resolve and fetch one Football-Data extra-league historical CSV."""
+    try:
+        page = session.get(
+            page_url,
+            timeout=TIMEOUT,
+            headers={"User-Agent": "football-fast-tracker/1.0"},
+        )
+        page.raise_for_status()
+        hrefs = re.findall(r"""href=["']([^"']+\.csv)["']""", page.text, flags=re.I)
+        candidates = [urljoin(page_url, h) for h in hrefs if "/new/" in urljoin(page_url, h)]
+        if not candidates:
+            return pd.DataFrame()
+        # Country pages expose one canonical CSV link. Prefer the shortest URL
+        # if the page happens to include more than one CSV reference.
+        csv_url = sorted(set(candidates), key=len)[0]
+        r = session.get(
+            csv_url,
+            timeout=TIMEOUT,
+            headers={"User-Agent": "football-fast-tracker/1.0"},
+        )
+        r.raise_for_status()
+        df = pd.read_csv(io.BytesIO(r.content))
+        return standardize_result_frame(df)
+    except Exception:
+        return pd.DataFrame()
+
+
 def best_name(name: str, candidates: set[str]) -> tuple[str | None, float]:
     if not candidates:
         return None, 0.0
@@ -132,8 +217,8 @@ def best_name(name: str, candidates: set[str]) -> tuple[str | None, float]:
 
 
 def discover_fixture(row: dict[str, str], current: dict[str, pd.DataFrame]):
-    source_home = row.get("hkjc_home_team") or row.get("home_team") or ""
-    source_away = row.get("hkjc_away_team") or row.get("away_team") or ""
+    source_home = row.get("hkjc_home_team") or row.get("home_en") or row.get("home_team") or ""
+    source_away = row.get("hkjc_away_team") or row.get("away_en") or row.get("away_team") or ""
     best = None
     for code, df in current.items():
         if df.empty:
@@ -307,9 +392,15 @@ def write(rows: list[dict]) -> None:
 
 def main() -> int:
     if not FEED.exists():
-        raise SystemExit("missing data/forebet_current.csv")
+        raise SystemExit("missing data/hkjc_current.csv")
     with FEED.open(encoding="utf-8-sig", newline="") as fh:
-        fixtures = list(csv.DictReader(fh))
+        raw_fixtures = list(csv.DictReader(fh))
+    fixtures = [
+        r for r in raw_fixtures
+        if str(r.get("hkjc_event_id") or "").strip()
+        and str(r.get("selling") or "").strip() in ("1", "true", "TRUE")
+        and all(str(r.get(k) or "").strip() for k in ("had_home", "had_draw", "had_away"))
+    ]
     if not fixtures:
         write([])
         print("SHADOW_MODEL fixtures=0")
@@ -319,15 +410,37 @@ def main() -> int:
     seasons = season_codes(now)
     session = requests.Session()
 
-    current: dict[str, pd.DataFrame] = {code: fetch_csv(session, seasons[0], code) for code in LEAGUES}
+    current: dict[str, pd.DataFrame] = {}
+    dataset_labels: dict[str, str] = {}
+
+    # Main European divisions: discover against the current season, then train
+    # on the current plus two preceding seasons.
+    for code, label in LEAGUES.items():
+        key = f"MAIN:{code}"
+        frame = fetch_csv(session, seasons[0], code)
+        current[key] = frame
+        dataset_labels[key] = label
+
+    # Extra leagues: each country file contains long-run top-flight history.
+    # The same frame can therefore be used both for team discovery and fitting.
+    for country, page_url in EXTRA_COUNTRY_PAGES.items():
+        key = f"EXTRA:{country}"
+        frame = fetch_extra_country(session, page_url)
+        current[key] = frame
+        dataset_labels[key] = f"{country} top flight"
+
     discovered = {r["hkjc_event_id"]: discover_fixture(r, current) for r in fixtures}
-    needed_codes = sorted({d[1] for d in discovered.values() if d})
+    needed_keys = sorted({d[1] for d in discovered.values() if d})
     histories: dict[str, pd.DataFrame] = {}
-    for code in needed_codes:
-        parts = [current.get(code, pd.DataFrame())]
-        for season in seasons[1:]:
-            parts.append(fetch_csv(session, season, code))
-        histories[code] = clean_history(parts)
+    for key in needed_keys:
+        if key.startswith("MAIN:"):
+            code = key.split(":", 1)[1]
+            parts = [current.get(key, pd.DataFrame())]
+            for season in seasons[1:]:
+                parts.append(fetch_csv(session, season, code))
+            histories[key] = clean_history(parts)
+        else:
+            histories[key] = clean_history([current.get(key, pd.DataFrame())])
 
     hkjc_hist, hkjc_maps = load_hkjc_inputs()
 
@@ -339,8 +452,8 @@ def main() -> int:
 
     for fixture in fixtures:
         event_id = fixture.get("hkjc_event_id", "")
-        source_home = fixture.get("hkjc_home_team") or fixture.get("home_team") or ""
-        source_away = fixture.get("hkjc_away_team") or fixture.get("away_team") or ""
+        source_home = fixture.get("hkjc_home_team") or fixture.get("home_en") or fixture.get("home_team") or ""
+        source_away = fixture.get("hkjc_away_team") or fixture.get("away_en") or fixture.get("away_team") or ""
         base = {
             "fetched_at_hkt": fetched,
             "hkjc_event_id": event_id,
@@ -353,18 +466,22 @@ def main() -> int:
         fd_error = None
         found = discovered.get(event_id)
         if found:
-            quality, code, home, away, _hs, _aws = found
+            quality, dataset_key, home, away, _hs, _aws = found
             base.update({
-                "model_league": LEAGUES[code],
+                "model_league": dataset_labels.get(dataset_key, dataset_key),
                 "model_home_name": home,
                 "model_away_name": away,
                 "team_match_quality": f"{quality:.3f}",
             })
             try:
-                values = fit_one(histories[code], home, away, min_matches=120, min_team_games=20)
+                values = fit_one(histories[dataset_key], home, away, min_matches=120, min_team_games=20)
                 base.update(finalize_values(values))
                 base["quality"] = "MODELED"
-                base["model_source"] = "football-data.co.uk / penaltyblog 1.12.2"
+                base["model_source"] = (
+                    "football-data.co.uk extra / penaltyblog 1.12.2"
+                    if dataset_key.startswith("EXTRA:")
+                    else "football-data.co.uk main / penaltyblog 1.12.2"
+                )
                 modeled += 1
                 modeled_fd += 1
                 out.append(base)
@@ -406,7 +523,7 @@ def main() -> int:
     print(
         f"SHADOW_MODEL fixtures={len(fixtures)} modeled={modeled} "
         f"football_data={modeled_fd} hkjc_history={modeled_hkjc} "
-        f"fail_closed={len(fixtures)-modeled} fd_leagues={','.join(needed_codes) or '-'} "
+        f"fail_closed={len(fixtures)-modeled} fd_datasets={','.join(needed_keys) or '-'} "
         f"hkjc_history_rows={len(hkjc_hist)}"
     )
     return 0
