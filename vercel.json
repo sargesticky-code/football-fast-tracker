@@ -4,5 +4,6 @@
     "api/live_scores.py": {
       "maxDuration": 30
     }
-  }
+  },
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- api/ hkjc_live_market.py vendor_hkjc_queries.py requirements.txt pyproject.toml vercel.json"
 }
