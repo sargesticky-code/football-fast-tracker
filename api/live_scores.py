@@ -22,6 +22,7 @@ HKJC_CSV = os.environ.get(
 UA = "football-fast-tracker-live/1.0"
 ENDED = ("ENDED", "MATCHENDED", "FT", "AET", "PEN", "CANCEL", "VOID", "ABANDON")
 MAX_DETAIL_CALLS_PER_RUN = int(os.environ.get("MAX_DETAIL_CALLS_PER_RUN", "8"))
+SOURCE_GAP_MAX_MINUTES = int(os.environ.get("SOURCE_GAP_MAX_MINUTES", "180"))
 
 
 def clean(v):
@@ -705,7 +706,26 @@ def collect(include_full=False):
             m, conf = best_match(t, backup)
 
         if m is None:
-            continue
+            # Keep post-kickoff HKJC targets visible when every external live
+            # provider lacks coverage. This is deliberately NOT labelled LIVE
+            # and never invents a 0-0 score.
+            age_min = (now - t["kickoff_hkt"]).total_seconds() / 60
+            if 0 <= age_min <= SOURCE_GAP_MAX_MINUTES:
+                m = {
+                    "source": "SOURCE_GAP",
+                    "source_match_id": "",
+                    "home": t["home_en"],
+                    "away": t["away_en"],
+                    "kickoff": t["kickoff_hkt"],
+                    "home_score": "",
+                    "away_score": "",
+                    "minute": "",
+                    "status": "SOURCE_GAP",
+                    "updated_at": now.isoformat(timespec="seconds"),
+                }
+                conf = 1.0
+            else:
+                continue
 
         staged.append({"target": t, "match": m, "confidence": conf})
 
