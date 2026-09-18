@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T19:44:14+08:00",
+  "updatedAt": "2026-09-18T19:44:22+08:00",
   "health": {
     "primary": "OK",
     "backup": "ERROR:HTTPError"
@@ -23,7 +23,7 @@
       "source_home": "Kuwait U23",
       "source_away": "Uzbekistan U23",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-18T19:44:14+08:00"
+      "source_updated_at": "2026-09-18T19:44:22+08:00"
     },
     {
       "hkjc_event_id": "FB5263",
@@ -41,7 +41,7 @@
       "source_home": "Saudi Arabia U23",
       "source_away": "Qatar U23",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-18T19:44:14+08:00"
+      "source_updated_at": "2026-09-18T19:44:22+08:00"
     }
   ],
   "attribution": {
