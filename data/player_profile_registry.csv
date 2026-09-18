@@ -1,0 +1,7 @@
+﻿fetched_at_hkt,player_id,player_name,team_id,team_name,position,is_captain,injury_status,injury_description,injury_return_date,main_league_id,main_league,season,tournament,appearances,starts,minutes,goals,assists,xg,xa,rating,shots,shots_on_target,chances_created,touches_box,passes,key_passes,tackles,interceptions,recoveries,duels_won,aerial_duels_won,saves,goals_prevented,clean_sheets,selected_stats_json,quality,source
+2026-09-18T23:57:59+08:00,1079517,Byron Burgering,4116,Almere City FC,Right Winger,0,,,,111,Eerste Divisie,2026/2027,Eerste Divisie,,,,,,,,,,,,,,,,,,,,,,,{},OK,FotMob playerData
+2026-09-18T23:57:59+08:00,1074752,Thibault Rambaud,293352,Annecy FC,Striker,0,,,,110,Ligue 2,2026/2027,Ligue 2,,,,,,,,,,,,,,,,,,,,,,,{},OK,FotMob playerData
+2026-09-18T23:57:59+08:00,1128439,Brandon Ndezi,9836,Dijon,Left Winger,0,,,,110,Ligue 2,2026/2027,Ligue 2,,,,,,,,,,,,,,,,,,,,,,,{},OK,FotMob playerData
+2026-09-18T23:57:59+08:00,1079490,Pape Meïssa Ba,8481,Nancy,Striker,0,,,,110,Ligue 2,2026/2027,Ligue 2,,,,,,,,,,,,,,,,,,,,,,,{},OK,FotMob playerData
+2026-09-18T23:57:59+08:00,1050814,Kelian Nsona,4120,Rodez,Left Winger,0,,,,110,Ligue 2,2026/2027,Ligue 2,,,,,,,,,,,,,,,,,,,,,,,{},OK,FotMob playerData
+2026-09-18T23:57:59+08:00,1108006,Marco Essimi,4120,Rodez,Right Winger,0,,,,110,Ligue 2,2026/2027,Ligue 2,,,,,,,,,,,,,,,,,,,,,,,{},OK,FotMob playerData
