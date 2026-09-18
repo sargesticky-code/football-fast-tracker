@@ -1,0 +1,85 @@
+name: Odds Movement Snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
+  push:
+    paths:
+      - '.github/workflows/oddsmath_30min.yml'
+      - 'scripts/snapshot_oddsmath.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: oddsmath-pre-match-movement
+  cancel-in-progress: true
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Capture pre-match odds and calculate movement
+        run: python scripts/snapshot_oddsmath.py
+
+      - name: Validate movement feeds
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          expected = {
+              'data/oddsmath_history.csv': {'captured_at_hkt','hkjc_event_id','fair_home','fair_draw','fair_away'},
+              'data/oddsmath_current.csv': {'captured_at_hkt','hkjc_event_id','odds_home','odds_draw','odds_away'},
+              'data/odds_movement.csv': {'hkjc_event_id','move_24h_pp','move_2h_pp','vol_24h_pp','signal','alert_score'},
+          }
+          for name, required in expected.items():
+              p = Path(name)
+              if not p.exists():
+                  raise SystemExit(f'missing {name}')
+              with p.open(encoding='utf-8-sig', newline='') as fh:
+                  reader = csv.DictReader(fh)
+                  headers = set(reader.fieldnames or [])
+                  rows = list(reader)
+              missing = required - headers
+              if missing:
+                  raise SystemExit(f'{name} missing columns {sorted(missing)}')
+              print(f'PASS {name} rows={len(rows)}')
+          PY
+
+      - name: Commit odds movement state
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/oddsmath_history.csv data/oddsmath_current.csv data/odds_movement.csv
+          if git diff --cached --quiet; then
+            echo 'No odds movement changes to commit.'
+          else
+            git commit -m 'Refresh pre-match odds movement [skip ci]'
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push; then
+                break
+              fi
+              if [ "$attempt" -eq 4 ]; then
+                echo 'Odds movement push failed after retries.' >&2
+                exit 1
+              fi
+              sleep 2
+            done
+          fi
