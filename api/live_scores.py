@@ -858,16 +858,37 @@ def best_match(target, candidates):
     for m in candidates:
         hs = sim(target["home_en"], m["home"])
         aws = sim(target["away_en"], m["away"])
-        if min(hs, aws) < 0.58:
-            continue
+        delta = None
         ts = 0.75
         if m.get("kickoff"):
             delta = abs((m["kickoff"] - target["kickoff_hkt"]).total_seconds()) / 60
             if delta > 120:
                 continue
             ts = max(0.0, 1 - delta / 180)
-        score = 0.42 * hs + 0.42 * aws + 0.16 * ts
+
+        # Normal path: both team names independently match.
+        standard = min(hs, aws) >= 0.58
+
+        # Durable short-name/acronym path. Providers often shorten a club to a
+        # 2–3 letter identity (e.g. HJK, SJK). Only relax that one side when:
+        # - kickoff is essentially exact,
+        # - the opposite team is a strong identity anchor,
+        # - the shortened side still has non-trivial similarity.
+        # Ambiguity is still rejected below by the runner-up margin guard.
+        anchored_short = (
+            delta is not None
+            and delta <= 10
+            and max(hs, aws) >= 0.85
+            and min(hs, aws) >= 0.35
+        )
+        if not (standard or anchored_short):
+            continue
+
+        standard_score = 0.42 * hs + 0.42 * aws + 0.16 * ts
+        anchor_score = 0.55 * max(hs, aws) + 0.25 * min(hs, aws) + 0.20 * ts
+        score = max(standard_score, anchor_score if anchored_short else 0.0)
         ranked.append((score, m))
+
     if not ranked:
         return None, 0
     ranked.sort(key=lambda x: x[0], reverse=True)
