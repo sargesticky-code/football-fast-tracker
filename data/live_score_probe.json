@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-19T00:22:00+08:00",
+  "updatedAt": "2026-09-19T00:22:56+08:00",
   "health": {
     "primary": "OK",
     "sofascore": "ERROR:HTTPError",
@@ -9,13 +9,13 @@
   "targetCount": 9,
   "matchedCount": 4,
   "scenarioPolicy": {
-    "mode": "SHADOW_CALIBRATING",
+    "mode": "PHASE_PAUSED",
     "addsUpstreamRequests": false,
     "bettingEnabled": false,
-    "scenarioRowsLoaded": 1128
+    "scenarioRowsLoaded": 0
   },
   "liveMarketPolicy": {
-    "mode": "CAPTURE_ONLY",
+    "mode": "PHASE_PAUSED",
     "provider": "HKJC official GraphQL",
     "markets": [
       "HAD",
@@ -23,12 +23,10 @@
       "CHL"
     ],
     "fanout": "ONE INPLAY_ALL REQUEST FOR ALL TARGET EVENTS",
-    "status": "ERROR:RuntimeError",
-    "request_count": 1,
+    "status": "PHASE_PAUSED",
+    "request_count": 0,
     "cache_hit": false,
-    "refresh_seconds": 90,
-    "queried_event_ids": 5,
-    "returned_event_ids": 0
+    "refresh_seconds": 0
   },
   "detailPolicy": {
     "maxDetailCallsPerRun": 8,
@@ -57,7 +55,7 @@
       "source_home": "SJK Seinajoki",
       "source_away": "IFK Mariehamn",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-19T00:22:00+08:00",
+      "source_updated_at": "2026-09-19T00:22:56+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
@@ -93,14 +91,14 @@
       "live_score": "1-0",
       "home_score": "1",
       "away_score": "0",
-      "minute": "63",
+      "minute": "64",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "6145902",
       "source_home": "FC Lahti",
       "source_away": "FF Jaro",
       "match_confidence": 0.95,
-      "source_updated_at": "2026-09-19T00:22:01+08:00",
+      "source_updated_at": "2026-09-19T00:22:56+08:00",
       "home_corners": 5,
       "away_corners": 3,
       "total_corners": 8,
@@ -122,8 +120,8 @@
           "group": "Top stats",
           "key": "total_shots",
           "title": "Total shots",
-          "home": 17,
-          "away": 4
+          "home": 18,
+          "away": 5
         },
         {
           "period": "All",
@@ -138,8 +136,8 @@
           "group": "Top stats",
           "key": "touches_opp_box",
           "title": "Touches in opposition box",
-          "home": 24,
-          "away": 7
+          "home": 27,
+          "away": 8
         },
         {
           "period": "All",
@@ -162,8 +160,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "429 (89%)",
-          "away": "73 (54%)"
+          "home": "436 (89%)",
+          "away": "75 (53%)"
         },
         {
           "period": "All",
@@ -202,8 +200,8 @@
           "group": "Shots",
           "key": "blocked_shots",
           "title": "Blocked shots",
-          "home": 6,
-          "away": 2
+          "home": 7,
+          "away": 3
         },
         {
           "period": "All",
@@ -218,8 +216,8 @@
           "group": "Shots",
           "key": "shots_inside_box",
           "title": "Shots inside box",
-          "home": 11,
-          "away": 2
+          "home": 12,
+          "away": 3
         },
         {
           "period": "All",
@@ -242,32 +240,32 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 481,
-          "away": 136
+          "home": 490,
+          "away": 141
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "own_half_passes",
           "title": "Own half",
-          "home": 254,
-          "away": 47
+          "home": 259,
+          "away": 48
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 175,
-          "away": 26
+          "home": 177,
+          "away": 27
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "19 (61%)",
-          "away": "5 (16%)"
+          "home": "19 (59%)",
+          "away": "6 (17%)"
         },
         {
           "period": "All",
@@ -283,7 +281,7 @@
           "key": "player_throws",
           "title": "Throws",
           "home": 14,
-          "away": 9
+          "away": 10
         },
         {
           "period": "All",
@@ -306,15 +304,15 @@
           "group": "Defence",
           "key": "matchstats_headers_tackles",
           "title": "Tackles",
-          "home": 6,
-          "away": 14
+          "home": 5,
+          "away": 16
         },
         {
           "period": "All",
           "group": "Defence",
           "key": "interceptions",
           "title": "Interceptions",
-          "home": 5,
+          "home": 6,
           "away": 3
         },
         {
@@ -322,7 +320,7 @@
           "group": "Defence",
           "key": "shot_blocks",
           "title": "Blocks",
-          "home": 2,
+          "home": 3,
           "away": 7
         },
         {
@@ -330,8 +328,8 @@
           "group": "Defence",
           "key": "clearances",
           "title": "Clearances",
-          "home": 9,
-          "away": 19
+          "home": 10,
+          "away": 20
         },
         {
           "period": "All",
@@ -354,31 +352,31 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 43,
-          "away": 25
+          "home": 45,
+          "away": 28
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "38 (62%)",
-          "away": "23 (37%)"
+          "home": "38 (60%)",
+          "away": "25 (40%)"
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "aerials_won",
           "title": "Aerial duels won",
-          "home": "5 (71%)",
-          "away": "2 (29%)"
+          "home": "7 (70%)",
+          "away": "3 (30%)"
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "dribbles_succeeded",
           "title": "Successful dribbles",
-          "home": "16 (70%)",
+          "home": "17 (71%)",
           "away": "6 (75%)"
         },
         {
@@ -714,8 +712,8 @@
           "group": "Top stats",
           "key": "total_shots",
           "title": "Total shots",
-          "home": 3,
-          "away": 1
+          "home": 4,
+          "away": 2
         },
         {
           "period": "SecondHalf",
@@ -730,8 +728,8 @@
           "group": "Top stats",
           "key": "touches_opp_box",
           "title": "Touches in opposition box",
-          "home": 5,
-          "away": 3
+          "home": 8,
+          "away": 4
         },
         {
           "period": "SecondHalf",
@@ -754,8 +752,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "64 (81%)",
-          "away": "34 (64%)"
+          "home": "71 (81%)",
+          "away": "36 (62%)"
         },
         {
           "period": "SecondHalf",
@@ -794,8 +792,8 @@
           "group": "Shots",
           "key": "blocked_shots",
           "title": "Blocked shots",
-          "home": 0,
-          "away": 1
+          "home": 1,
+          "away": 2
         },
         {
           "period": "SecondHalf",
@@ -810,8 +808,8 @@
           "group": "Shots",
           "key": "shots_inside_box",
           "title": "Shots inside box",
-          "home": 2,
-          "away": 1
+          "home": 3,
+          "away": 2
         },
         {
           "period": "SecondHalf",
@@ -834,32 +832,32 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 79,
-          "away": 53
+          "home": 88,
+          "away": 58
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "own_half_passes",
           "title": "Own half",
-          "home": 32,
-          "away": 16
+          "home": 37,
+          "away": 17
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 32,
-          "away": 18
+          "home": 34,
+          "away": 19
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "6 (46%)",
-          "away": "4 (40%)"
+          "home": "6 (43%)",
+          "away": "5 (38%)"
         },
         {
           "period": "SecondHalf",
@@ -875,7 +873,7 @@
           "key": "player_throws",
           "title": "Throws",
           "home": 6,
-          "away": 3
+          "away": 4
         },
         {
           "period": "SecondHalf",
@@ -898,15 +896,15 @@
           "group": "Defence",
           "key": "matchstats_headers_tackles",
           "title": "Tackles",
-          "home": 2,
-          "away": 6
+          "home": 1,
+          "away": 8
         },
         {
           "period": "SecondHalf",
           "group": "Defence",
           "key": "interceptions",
           "title": "Interceptions",
-          "home": 2,
+          "home": 3,
           "away": 1
         },
         {
@@ -914,7 +912,7 @@
           "group": "Defence",
           "key": "shot_blocks",
           "title": "Blocks",
-          "home": 1,
+          "home": 2,
           "away": 1
         },
         {
@@ -922,8 +920,8 @@
           "group": "Defence",
           "key": "clearances",
           "title": "Clearances",
-          "home": 4,
-          "away": 1
+          "home": 5,
+          "away": 2
         },
         {
           "period": "SecondHalf",
@@ -946,31 +944,31 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 14,
-          "away": 11
+          "home": 16,
+          "away": 14
         },
         {
           "period": "SecondHalf",
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "12 (55%)",
-          "away": "10 (43%)"
+          "home": "12 (50%)",
+          "away": "12 (50%)"
         },
         {
           "period": "SecondHalf",
           "group": "Duels",
           "key": "aerials_won",
           "title": "Aerial duels won",
-          "home": "2 (67%)",
-          "away": "1 (33%)"
+          "home": "4 (67%)",
+          "away": "2 (33%)"
         },
         {
           "period": "SecondHalf",
           "group": "Duels",
           "key": "dribbles_succeeded",
           "title": "Successful dribbles",
-          "home": "4 (67%)",
+          "home": "5 (71%)",
           "away": "2 (100%)"
         },
         {
@@ -1054,25 +1052,19 @@
       "content_sections": null,
       "scenario_shadow": {
         "segment": "61-75",
-        "status": "CALIBRATING",
-        "expected_control_side": "H",
-        "control_basis": "HDA_MODEL_CONSENSUS",
-        "context_coverage_score": 25.0,
-        "model_hda_consensus": "H",
-        "forebet_hda": "H",
-        "dc_hda": "H",
-        "pi_hda": "H",
+        "status": "NO_SCENARIO",
+        "expected_control_side": "",
         "live_control_side": "H",
+        "alignment": "UNKNOWN",
+        "betting_action": "WAIT",
         "live_control_score": 6.0,
-        "alignment": "CONFIRMS",
         "signals": [
           "possession=77-23",
-          "shots=17-4",
+          "shots=18-5",
           "sot=3-0",
-          "box_touches=24-7",
+          "box_touches=27-8",
           "corners=5-3"
-        ],
-        "betting_action": "WAIT_CALIBRATING"
+        ]
       },
       "hkjc_live_market": null
     },
@@ -1085,14 +1077,14 @@
       "live_score": "0-0",
       "home_score": "0",
       "away_score": "0",
-      "minute": "22",
+      "minute": "23",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "6145872",
       "source_home": "AC Oulu",
       "source_away": "FC Inter Turku",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-19T00:22:01+08:00",
+      "source_updated_at": "2026-09-19T00:22:56+08:00",
       "home_corners": 0,
       "away_corners": 3,
       "total_corners": 3,
@@ -1702,22 +1694,16 @@
       "content_sections": null,
       "scenario_shadow": {
         "segment": "16-30",
-        "status": "CALIBRATING",
-        "expected_control_side": "A",
-        "control_basis": "HDA_MODEL_CONSENSUS",
-        "context_coverage_score": 55.0,
-        "model_hda_consensus": "A",
-        "forebet_hda": "A",
-        "dc_hda": "A",
-        "pi_hda": "A",
+        "status": "NO_SCENARIO",
+        "expected_control_side": "",
         "live_control_side": "EVEN",
+        "alignment": "UNKNOWN",
+        "betting_action": "WAIT",
         "live_control_score": 0.0,
-        "alignment": "MIXED",
         "signals": [
           "shots=2-0",
           "corners=0-3"
-        ],
-        "betting_action": "WAIT_CALIBRATING"
+        ]
       },
       "hkjc_live_market": null
     },
@@ -1737,7 +1723,7 @@
       "source_home": "Gnistan",
       "source_away": "HJK Helsinki",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-19T00:22:00+08:00",
+      "source_updated_at": "2026-09-19T00:22:56+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
