@@ -31,6 +31,7 @@ HKJC = ROOT / "data" / "hkjc_current.csv"
 OUT = ROOT / "data" / "prematch_context_current.csv"
 PLAYERS = ROOT / "data" / "prematch_players_current.csv"
 MANAGERS = ROOT / "data" / "team_manager_registry.csv"
+SQUADS = ROOT / "data" / "team_squad_registry.csv"
 
 HKT = ZoneInfo("Asia/Hong_Kong")
 FOTMOB = os.getenv("FOTMOB_BASE_URL", "https://www.fotmob.com/api").rstrip("/")
@@ -61,6 +62,11 @@ PLAYER_COLUMNS = [
 MANAGER_COLUMNS = [
     "team_id", "team_name", "manager_id", "manager_name",
     "fetched_at_hkt", "quality", "source",
+]
+
+SQUAD_COLUMNS = [
+    "team_id", "team_name", "player_id", "player_name",
+    "position_group", "fetched_at_hkt", "source",
 ]
 
 
@@ -434,6 +440,57 @@ def manager_from_team_payload(payload):
     return walk(payload) or ("", "")
 
 
+def squad_from_team_payload(payload, team_id, team_name, fetched_at):
+    rows = []
+    seen = set()
+
+    def walk(node, group=""):
+        if isinstance(node, dict):
+            role = clean(
+                node.get("position") or node.get("role") or
+                node.get("title") or node.get("type")
+            )
+            group2 = role or group
+            members = node.get("members")
+            if isinstance(members, list):
+                is_staff = any(x in group2.lower() for x in ("coach", "manager", "staff"))
+                if not is_staff:
+                    for m in members:
+                        if not isinstance(m, dict):
+                            continue
+                        pid = clean(m.get("id") or m.get("playerId"))
+                        name = text_name(m.get("name")) or clean(
+                            m.get("displayName") or m.get("fullName")
+                        )
+                        if not pid and not name:
+                            continue
+                        sig = pid or norm(name)
+                        if sig in seen:
+                            continue
+                        seen.add(sig)
+                        rows.append({
+                            "team_id": team_id,
+                            "team_name": team_name,
+                            "player_id": pid,
+                            "player_name": name,
+                            "position_group": clean(
+                                m.get("position") or m.get("positionString") or group2
+                            ),
+                            "fetched_at_hkt": fetched_at,
+                            "source": "FotMob teams",
+                        })
+            for key, value in node.items():
+                if key == "members":
+                    continue
+                walk(value, group2 if key == "squad" else group)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item, group)
+
+    walk(payload.get("squad") if isinstance(payload, dict) else payload)
+    return rows
+
+
 def manager_is_stale(row, now):
     dt = parse_dt(row.get("fetched_at_hkt"))
     return dt is None or now - dt > timedelta(days=TEAM_REFRESH_DAYS)
@@ -461,6 +518,12 @@ def main():
         for r in read_csv(MANAGERS)
         if clean(r.get("team_id"))
     }
+    squad_rows_existing = read_csv(SQUADS)
+    squad_rows_by_team = {}
+    for r in squad_rows_existing:
+        tid = clean(r.get("team_id"))
+        if tid:
+            squad_rows_by_team.setdefault(tid, []).append(r)
 
     session = requests.Session()
     dates = {t["kickoff"].strftime("%Y%m%d") for t in targets}
@@ -639,6 +702,9 @@ def main():
                 "quality": "OK" if manager_name else "NO_MANAGER_FOUND",
                 "source": "FotMob teams",
             }
+            fresh_squad = squad_from_team_payload(payload, tid, teams[tid], fetched)
+            if fresh_squad:
+                squad_rows_by_team[tid] = fresh_squad
         except requests.HTTPError as exc:
             code = getattr(exc.response, "status_code", None)
             if code in (403, 429):
@@ -678,16 +744,21 @@ def main():
         )
     )
 
+    all_squad_rows = []
+    for tid in sorted(squad_rows_by_team):
+        all_squad_rows.extend(squad_rows_by_team[tid])
+
     write_csv(OUT, CONTEXT_COLUMNS, contexts)
     write_csv(PLAYERS, PLAYER_COLUMNS, player_rows)
     write_csv(MANAGERS, MANAGER_COLUMNS, sorted(manager_rows.values(), key=lambda r: r["team_id"]))
+    write_csv(SQUADS, SQUAD_COLUMNS, all_squad_rows)
 
     print(
         f"PREMATCH_CONTEXT targets={len(targets)} matched={sum(bool(r.get('fotmob_match_id')) for r in contexts)} "
         f"detail_calls={detail_calls}/{MAX_DETAIL_CALLS} "
         f"sofa_lineup_calls={sofa_lineup_calls}/{MAX_SOFASCORE_LINEUP_CALLS} "
         f"lineup_players={len(player_rows)} team_calls={team_calls}/{MAX_TEAM_CALLS} "
-        f"manager_registry={len(manager_rows)}"
+        f"manager_registry={len(manager_rows)} squad_players={len(all_squad_rows)}"
     )
     return 0
 
