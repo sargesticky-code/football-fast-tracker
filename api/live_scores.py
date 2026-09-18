@@ -889,7 +889,7 @@ def collect(include_full=False):
     market_event_ids = [
         t["hkjc_event_id"]
         for t in targets
-        if t["kickoff"] <= now + timedelta(minutes=5)
+        if t["kickoff_hkt"] <= now + timedelta(minutes=5)
     ]
     live_markets, live_market_health = fetch_live_markets(market_event_ids)
     health = {"primary": "NOT_CALLED", "sofascore": "NOT_CALLED", "backup": "NOT_CALLED", "details": "NOT_CALLED"}
