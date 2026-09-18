@@ -18,7 +18,7 @@ FOREBET = DATA / "forebet_current.csv"
 REGISTRY = DATA / "prediction_source_registry.csv"
 OUT = DATA / "prediction_fallback_current.csv"
 HKT = timezone(timedelta(hours=8))
-UA = "football-fast-tracker-prediction-fallback/1.0"
+UA = "football-fast-tracker-apwin/1.1"
 TIMEOUT = 15
 HORIZON_HOURS = 48
 
@@ -73,17 +73,6 @@ def read_csv(path):
     with path.open("r", encoding="utf-8-sig", newline="") as f:
         return list(csv.DictReader(f))
 
-def forebet_covered_ids(rows):
-    out = set()
-    for r in rows:
-        eid = clean(r.get("hkjc_event_id"))
-        has_pick = any(clean(r.get(k)) for k in (
-            "prediction_1x2","predicted_score","prediction_ou25","corner_prediction"
-        ))
-        if eid and has_pick:
-            out.add(eid)
-    return out
-
 def load_registry(rows):
     reg = {}
     for r in rows:
@@ -111,10 +100,24 @@ def get(url):
     r.raise_for_status()
     return r.text
 
-def prediction_links(league_url):
-    raw = get(league_url)
+def prediction_links(page_url):
+    raw = get(page_url)
     hrefs = re.findall(r"""(?i)href=["']([^"']+/predictions/[^"'#?]+)["']""", raw)
-    return sorted({urljoin(league_url, h) for h in hrefs if "-prediction-" in h})
+    return sorted({urljoin(page_url, h) for h in hrefs if "-prediction-" in h})
+
+def global_prediction_links():
+    pages = [
+        "https://www.apwin.com/predictions/",
+        "https://www.apwin.com/predictions/denmark/",
+        "https://www.apwin.com/predictions/argentina/",
+    ]
+    links = set()
+    for page in pages:
+        try:
+            links.update(prediction_links(page))
+        except Exception:
+            pass
+    return sorted(links)
 
 def pick_link(target, links):
     kick = target["kickoff_hkt"]
@@ -154,14 +157,13 @@ def main():
     now = datetime.now(HKT)
     fetched = now.isoformat(timespec="seconds")
     hkjc = read_csv(HKJC)
-    forebet = read_csv(FOREBET) if FOREBET.exists() else []
     registry = load_registry(read_csv(REGISTRY))
-    covered = forebet_covered_ids(forebet)
+    global_links = global_prediction_links()
 
     targets = []
     for r in hkjc:
         eid = clean(r.get("hkjc_event_id"))
-        if not eid or eid in covered:
+        if not eid:
             continue
         kick = parse_dt(r.get("kickoff_hkt"))
         if not kick or not (now - timedelta(hours=2) <= kick <= now + timedelta(hours=HORIZON_HOURS)):
@@ -197,27 +199,25 @@ def main():
             "status":"",
             "notes":"",
         }
-        if not reg:
-            base["status"] = "NO_APWIN_MAPPING"
-            base["notes"] = "Add league mapping in prediction_source_registry.csv"
-            rows.append(base)
-            continue
-
-        league_url = clean(reg.get("source_url"))
-        base["source_competition"] = clean(reg.get("source_competition"))
-        if not league_url:
-            base["status"] = "NO_APWIN_URL"
-            rows.append(base)
-            continue
-
         try:
-            if league_url not in links_cache:
-                links_cache[league_url] = prediction_links(league_url)
-            link, score = pick_link(t, links_cache[league_url])
+            # First try the broad APWin prediction indexes so APWin remains a
+            # true second opinion even when Forebet already has a model.
+            link, score = pick_link(t, global_links)
+
+            # If the broad indexes do not expose the match, fall back to an
+            # optional permanent league mapping.
+            if not link and reg:
+                league_url = clean(reg.get("source_url"))
+                base["source_competition"] = clean(reg.get("source_competition"))
+                if league_url:
+                    if league_url not in links_cache:
+                        links_cache[league_url] = prediction_links(league_url)
+                    link, score = pick_link(t, links_cache[league_url])
+
             base["match_score"] = f"{score:.3f}"
             if not link:
                 base["status"] = "NO_APWIN_MATCH"
-                base["notes"] = "League page found, no confident match link"
+                base["notes"] = "No confident match link on global or mapped APWin pages"
                 rows.append(base)
                 continue
             rec, market = parse_apwin_page(link)
@@ -235,7 +235,7 @@ def main():
         w = csv.DictWriter(f, fieldnames=FIELDS)
         w.writeheader()
         w.writerows(rows)
-    print(f"wrote {len(rows)} fallback rows to {OUT}")
+    print(f"wrote {len(rows)} APWin rows to {OUT}; global_links={len(global_links)}")
 
 if __name__ == "__main__":
     main()
