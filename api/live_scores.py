@@ -22,7 +22,7 @@ HKJC_CSV = os.environ.get(
 UA = "football-fast-tracker-live/1.0"
 ENDED = ("ENDED", "MATCHENDED", "FT", "AET", "PEN", "CANCEL", "VOID", "ABANDON")
 MAX_DETAIL_CALLS_PER_RUN = int(os.environ.get("MAX_DETAIL_CALLS_PER_RUN", "8"))
-SOURCE_GAP_MAX_MINUTES = int(os.environ.get("SOURCE_GAP_MAX_MINUTES", "180"))
+SOURCE_GAP_MAX_MINUTES = int(os.environ.get("SOURCE_GAP_MAX_MINUTES", "135"))
 
 
 def clean(v):
