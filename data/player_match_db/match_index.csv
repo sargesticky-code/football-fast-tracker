@@ -1,0 +1,5 @@
+﻿captured_at_hkt,hkjc_event_id,kickoff_hkt,league,home,away,fotmob_match_id,match_quality,kickoff_diff_min,lineup_players,usable_player_rows,status,reason,source
+2026-09-19T00:26:57+08:00,FB5074,2026-09-13T22:00+08:00,BFL,Genk,AA Gent,5811761,0.970,0.0,0,0,NO_PLAYER_ROWS,usable_player_rows=0,FotMob matchDetails
+2026-09-19T00:26:57+08:00,FB5040,2026-09-14T04:30+08:00,BD1,Flamengo,Corinthians,5103624,1.000,0.0,0,0,NO_PLAYER_ROWS,usable_player_rows=0,FotMob matchDetails
+2026-09-19T00:26:57+08:00,FB5199,2026-09-16T09:00+08:00,MXL,Puebla,Toluca,1000014553,1.000,0.0,0,0,NO_PLAYER_ROWS,usable_player_rows=0,FotMob matchDetails
+2026-09-19T00:26:57+08:00,FB5183,2026-09-17T03:00+08:00,ELC,Coventry,Aston Villa,6099333,0.970,0.0,0,0,NO_PLAYER_ROWS,usable_player_rows=0,FotMob matchDetails
