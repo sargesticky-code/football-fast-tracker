@@ -98,6 +98,9 @@ def hkjc_targets(now):
             "league": clean(row.get("tournament")),
             "home_en": clean(row.get("home_en")),
             "away_en": clean(row.get("away_en")),
+            "corner_line_ref": clean(row.get("chl_line")),
+            "corner_over_ref": clean(row.get("chl_over")),
+            "corner_under_ref": clean(row.get("chl_under")),
         })
     return out
 
@@ -135,14 +138,8 @@ def minute_from_status(st):
     return z.group(0) if z else ""
 
 
-def primary_matches():
-    """Self-hosted Football Live API logic using FotMob directly."""
-    now = datetime.now(HKT)
-    dates = [now.strftime("%Y%m%d")]
-    if now.hour < 3:
-        dates.append((now - timedelta(days=1)).strftime("%Y%m%d"))
-
-    headers = {
+def fotmob_headers():
+    return {
         "Accept": "application/json, text/plain, */*",
         "Accept-Language": "en-US,en;q=0.9",
         "Referer": "https://www.fotmob.com/",
@@ -152,6 +149,78 @@ def primary_matches():
             "Chrome/122.0.0.0 Safari/537.36"
         ),
     }
+
+
+def parse_nonnegative(v):
+    if v in (None, ""):
+        return None
+    z = re.search(r"\d+(?:\.\d+)?", clean(v))
+    if not z:
+        return None
+    n = float(z.group(0))
+    return int(n) if n.is_integer() else n
+
+
+def fetch_fotmob_corners(match_id):
+    """Return live home/away/total corners from FotMob matchDetails."""
+    if not match_id:
+        return None
+    r = requests.get(
+        FOTMOB + "/data/matchDetails",
+        params={"matchId": clean(match_id)},
+        headers=fotmob_headers(),
+        timeout=10,
+    )
+    r.raise_for_status()
+    detail = r.json()
+    periods = (((detail.get("content") or {}).get("stats") or {}).get("Periods") or {})
+    all_period = periods.get("All") or {}
+    groups = all_period.get("stats") or []
+    for group in groups:
+        for stat in (group.get("stats") or []):
+            key = clean(stat.get("key")).lower()
+            title = clean(stat.get("title")).lower()
+            if key == "corners" or title == "corners":
+                vals = stat.get("stats") or []
+                if len(vals) < 2:
+                    return None
+                home = parse_nonnegative(vals[0])
+                away = parse_nonnegative(vals[1])
+                if home is None or away is None:
+                    return None
+                return {
+                    "home_corners": home,
+                    "away_corners": away,
+                    "total_corners": home + away,
+                }
+    return None
+
+
+def corner_progress(total, line):
+    if total in (None, "") or line in (None, ""):
+        return {"corners_to_hi": "", "corner_progress": ""}
+    try:
+        total_n = int(float(total))
+        line_n = float(line)
+    except Exception:
+        return {"corners_to_hi": "", "corner_progress": ""}
+    target = int(line_n // 1) + 1
+    need = max(0, target - total_n)
+    status = "HI HIT" if need == 0 else f"+{need}"
+    return {
+        "corners_to_hi": need,
+        "corner_progress": f"{total_n}/{line_n:g} · {status}",
+    }
+
+
+def primary_matches():
+    """Self-hosted Football Live API logic using FotMob directly."""
+    now = datetime.now(HKT)
+    dates = [now.strftime("%Y%m%d")]
+    if now.hour < 3:
+        dates.append((now - timedelta(days=1)).strftime("%Y%m%d"))
+
+    headers = fotmob_headers()
     out = []
     seen = set()
     for ymd in dates:
@@ -328,6 +397,18 @@ def collect():
         if m is None:
             continue
         hs, aw = clean(m["home_score"]), clean(m["away_score"])
+        live_corners = None
+        if m.get("source") == "FOOTBALL_LIVE_API_SELF_HOSTED":
+            try:
+                live_corners = fetch_fotmob_corners(m.get("source_match_id"))
+            except Exception:
+                live_corners = None
+
+        hc = live_corners.get("home_corners") if live_corners else ""
+        ac = live_corners.get("away_corners") if live_corners else ""
+        tc = live_corners.get("total_corners") if live_corners else ""
+        cp = corner_progress(tc, t.get("corner_line_ref"))
+
         rows.append({
             "hkjc_event_id": t["hkjc_event_id"],
             "kickoff_hkt": t["kickoff_hkt"].isoformat(timespec="minutes"),
@@ -345,6 +426,12 @@ def collect():
             "source_away": m["away"],
             "match_confidence": round(conf, 3),
             "source_updated_at": m["updated_at"],
+            "home_corners": hc,
+            "away_corners": ac,
+            "total_corners": tc,
+            "corner_line_ref": t.get("corner_line_ref", ""),
+            "corners_to_hi": cp["corners_to_hi"],
+            "corner_progress": cp["corner_progress"],
         })
     rows.sort(key=lambda r: r["kickoff_hkt"])
     return {
@@ -365,6 +452,8 @@ def as_csv(payload):
         "live_score", "home_score", "away_score", "minute", "match_status",
         "source", "source_match_id", "source_home", "source_away",
         "match_confidence", "source_updated_at",
+        "home_corners", "away_corners", "total_corners",
+        "corner_line_ref", "corners_to_hi", "corner_progress",
     ]
     s = io.StringIO()
     w = csv.DictWriter(s, fieldnames=fields)
