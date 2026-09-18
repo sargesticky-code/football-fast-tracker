@@ -34,10 +34,12 @@ MANAGERS = ROOT / "data" / "team_manager_registry.csv"
 
 HKT = ZoneInfo("Asia/Hong_Kong")
 FOTMOB = os.getenv("FOTMOB_BASE_URL", "https://www.fotmob.com/api").rstrip("/")
+SOFASCORE = os.getenv("SOFASCORE_BASE_URL", "https://www.sofascore.com/api/v1").rstrip("/")
 LOOKAHEAD_HOURS = max(6, int(os.getenv("PREMATCH_LOOKAHEAD_HOURS", "36")))
 DETAIL_WINDOW_MINUTES = max(30, int(os.getenv("PREMATCH_DETAIL_WINDOW_MINUTES", "180")))
 MAX_DETAIL_CALLS = max(0, int(os.getenv("PREMATCH_MAX_DETAIL_CALLS", "6")))
 MAX_TEAM_CALLS = max(0, int(os.getenv("PREMATCH_MAX_TEAM_CALLS", "6")))
+MAX_SOFASCORE_LINEUP_CALLS = max(0, int(os.getenv("PREMATCH_MAX_SOFASCORE_LINEUP_CALLS", "4")))
 TEAM_REFRESH_DAYS = max(1, int(os.getenv("PREMATCH_TEAM_REFRESH_DAYS", "14")))
 REQUEST_SLEEP = max(0.0, float(os.getenv("PREMATCH_REQUEST_SLEEP", "0.35")))
 
@@ -142,6 +144,29 @@ def get_json(session: requests.Session, endpoint: str, params=None):
     return r.json()
 
 
+def sofascore_headers():
+    return {
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://www.sofascore.com/",
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/122.0.0.0 Safari/537.36"
+        ),
+    }
+
+
+def sofa_json(session: requests.Session, endpoint: str):
+    r = session.get(
+        SOFASCORE + endpoint,
+        headers=sofascore_headers(),
+        timeout=12,
+    )
+    r.raise_for_status()
+    return r.json()
+
+
 def current_targets(now):
     rows = read_csv(HKJC)
     out = []
@@ -193,6 +218,36 @@ def fotmob_match_board(session, dates):
                     "home": clean(home.get("name")),
                     "away": clean(away.get("name")),
                 })
+        if REQUEST_SLEEP:
+            time.sleep(REQUEST_SLEEP)
+    return out
+
+
+def sofascore_board(session, dates):
+    out = []
+    for day in sorted(dates):
+        payload = sofa_json(session, f"/sport/football/scheduled-events/{day}")
+        for event in payload.get("events") or []:
+            home = event.get("homeTeam") or {}
+            away = event.get("awayTeam") or {}
+            kick = None
+            try:
+                ts = event.get("startTimestamp")
+                if ts:
+                    kick = datetime.fromtimestamp(float(ts), tz=timezone.utc).astimezone(HKT)
+            except Exception:
+                kick = None
+            if not kick:
+                continue
+            out.append({
+                "match_id": clean(event.get("id")),
+                "league_id": clean(((event.get("tournament") or {}).get("uniqueTournament") or {}).get("id")),
+                "kickoff": kick,
+                "home_id": clean(home.get("id")),
+                "away_id": clean(away.get("id")),
+                "home": clean(home.get("name") or home.get("shortName")),
+                "away": clean(away.get("name") or away.get("shortName")),
+            })
         if REQUEST_SLEEP:
             time.sleep(REQUEST_SLEEP)
     return out
@@ -307,6 +362,45 @@ def parse_lineups(detail):
     return status, parsed
 
 
+def parse_sofascore_lineup(payload, target, source_match):
+    status = "CONFIRMED" if payload.get("confirmed") is True else "PREDICTED"
+    parsed = {}
+    for side_key, source_tid, source_name in (
+        ("home", source_match.get("home_id", ""), target["home"]),
+        ("away", source_match.get("away_id", ""), target["away"]),
+    ):
+        block = payload.get(side_key) or {}
+        formation = clean(block.get("formation"))
+        players = []
+        for raw in block.get("players") or []:
+            p = raw.get("player") if isinstance(raw, dict) and isinstance(raw.get("player"), dict) else raw
+            if not isinstance(p, dict):
+                continue
+            item = {
+                "player_id": clean(p.get("id") or raw.get("playerId") if isinstance(raw, dict) else ""),
+                "player_name": text_name(p.get("name")) or clean(p.get("name") or p.get("shortName")),
+                "position": clean(p.get("position") or (raw.get("position") if isinstance(raw, dict) else "")),
+                "shirt_number": clean(
+                    (raw.get("shirtNumber") if isinstance(raw, dict) else "")
+                    or p.get("shirtNumber")
+                ),
+                "starter": "",
+            }
+            if isinstance(raw, dict):
+                sub = raw.get("substitute")
+                if sub is not None:
+                    item["starter"] = "0" if sub is True else "1"
+            if item["player_id"] or item["player_name"]:
+                players.append(item)
+        parsed[source_tid or norm(source_name)] = {
+            "team_id": source_tid,
+            "team_name": source_name,
+            "formation": formation,
+            "players": players,
+        }
+    return status, parsed
+
+
 def manager_from_team_payload(payload):
     def walk(node, inherited=""):
         if isinstance(node, dict):
@@ -356,6 +450,12 @@ def main():
         return 0
 
     previous = {clean(r.get("hkjc_event_id")): r for r in read_csv(OUT)}
+    previous_player_rows = read_csv(PLAYERS)
+    previous_players_by_event = {}
+    for r in previous_player_rows:
+        eid = clean(r.get("hkjc_event_id"))
+        if eid:
+            previous_players_by_event.setdefault(eid, []).append(r)
     manager_rows = {
         clean(r.get("team_id")): r
         for r in read_csv(MANAGERS)
@@ -365,6 +465,11 @@ def main():
     session = requests.Session()
     dates = {t["kickoff"].strftime("%Y%m%d") for t in targets}
     board = fotmob_match_board(session, dates)
+    sofa_dates = {t["kickoff"].strftime("%Y-%m-%d") for t in targets}
+    try:
+        sofa_board = sofascore_board(session, sofa_dates)
+    except Exception:
+        sofa_board = []
 
     contexts = []
     matched = []
@@ -419,7 +524,9 @@ def main():
     detail_candidates.sort(key=lambda x: x[0])
 
     player_rows = []
+    fresh_player_events = set()
     detail_calls = 0
+    sofa_lineup_calls = 0
     for _dist, t, base, m in detail_candidates[:MAX_DETAIL_CALLS]:
         try:
             detail = get_json(session, "/data/matchDetails", {"matchId": m["match_id"]})
@@ -428,13 +535,37 @@ def main():
             base["lineup_status"] = status
             base["detail_fetched_at_hkt"] = fetched
 
+            # If FotMob does not publish the pre-match lineup for this match,
+            # try the known Sofascore event-lineup endpoint under a separate,
+            # very small request budget.
+            has_players = any((v.get("players") or []) for v in lineups.values())
+            lineup_source = "FotMob matchDetails"
+            if not has_players and sofa_lineup_calls < MAX_SOFASCORE_LINEUP_CALLS and sofa_board:
+                sofa_match = match_fixture(t, sofa_board)
+                if sofa_match:
+                    _sscore, _sq, _sdiff, sm = sofa_match
+                    try:
+                        sp = sofa_json(session, f"/event/{sm['match_id']}/lineups")
+                        sofa_lineup_calls += 1
+                        s_status, s_lineups = parse_sofascore_lineup(sp, t, sm)
+                        if any((v.get("players") or []) for v in s_lineups.values()):
+                            status, lineups = s_status, s_lineups
+                            base["lineup_status"] = status
+                            lineup_source = "Sofascore lineups"
+                    except requests.HTTPError as exc:
+                        code = getattr(exc.response, "status_code", None)
+                        if code in (403, 429):
+                            sofa_lineup_calls = MAX_SOFASCORE_LINEUP_CALLS
+                    except Exception:
+                        pass
+
+            wrote_players = False
             for side, tid, tname in (
                 ("H", m["home_id"], t["home"]),
                 ("A", m["away_id"], t["away"]),
             ):
                 block = lineups.get(tid)
                 if block is None:
-                    # Fallback by normalized team name for schema variants.
                     block = next(
                         (v for v in lineups.values() if sim(tname, v.get("team_name", "")) >= 0.90),
                         None,
@@ -450,6 +581,7 @@ def main():
                     base["away_lineup_count"] = len(block.get("players") or [])
 
                 for p in block.get("players") or []:
+                    wrote_players = True
                     player_rows.append({
                         "fetched_at_hkt": fetched,
                         "hkjc_event_id": t["hkjc_event_id"],
@@ -463,8 +595,10 @@ def main():
                         "shirt_number": p.get("shirt_number", ""),
                         "starter": p.get("starter", ""),
                         "lineup_status": status,
-                        "source": "FotMob matchDetails",
+                        "source": lineup_source,
                     })
+            if wrote_players:
+                fresh_player_events.add(t["hkjc_event_id"])
         except requests.HTTPError as exc:
             code = getattr(exc.response, "status_code", None)
             base["notes"] = (clean(base.get("notes")) + f" detail_http={code}").strip()
@@ -530,14 +664,30 @@ def main():
             if not clean(row.get(key)) and clean(old.get(key)):
                 row[key] = old.get(key)
 
+    active_ids = {r["hkjc_event_id"] for r in contexts}
+    for eid, rows in previous_players_by_event.items():
+        if eid in active_ids and eid not in fresh_player_events:
+            player_rows.extend(rows)
+
+    player_rows.sort(
+        key=lambda r: (
+            clean(r.get("hkjc_event_id")),
+            clean(r.get("side")),
+            clean(r.get("starter")) != "1",
+            clean(r.get("player_name")),
+        )
+    )
+
     write_csv(OUT, CONTEXT_COLUMNS, contexts)
     write_csv(PLAYERS, PLAYER_COLUMNS, player_rows)
     write_csv(MANAGERS, MANAGER_COLUMNS, sorted(manager_rows.values(), key=lambda r: r["team_id"]))
 
     print(
         f"PREMATCH_CONTEXT targets={len(targets)} matched={sum(bool(r.get('fotmob_match_id')) for r in contexts)} "
-        f"detail_calls={detail_calls}/{MAX_DETAIL_CALLS} lineup_players={len(player_rows)} "
-        f"team_calls={team_calls}/{MAX_TEAM_CALLS} manager_registry={len(manager_rows)}"
+        f"detail_calls={detail_calls}/{MAX_DETAIL_CALLS} "
+        f"sofa_lineup_calls={sofa_lineup_calls}/{MAX_SOFASCORE_LINEUP_CALLS} "
+        f"lineup_players={len(player_rows)} team_calls={team_calls}/{MAX_TEAM_CALLS} "
+        f"manager_registry={len(manager_rows)}"
     )
     return 0
 
