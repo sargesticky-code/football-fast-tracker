@@ -42,7 +42,7 @@ SLEEP = max(0.0, float(os.getenv("PLAYER_DB_REQUEST_SLEEP", "0.45")))
 INDEX_COLUMNS = [
     "captured_at_hkt", "hkjc_event_id", "kickoff_hkt", "league",
     "home", "away", "fotmob_match_id", "match_quality", "kickoff_diff_min",
-    "lineup_players", "usable_player_rows", "status", "reason", "source",
+    "lineup_players", "stats_players", "usable_player_rows", "status", "reason", "source",
 ]
 
 PLAYER_COLUMNS = [
@@ -288,107 +288,309 @@ def player_identity(raw):
     if not isinstance(p, dict):
         return None
     pid = clean(p.get("id") or p.get("playerId") or raw.get("id") or raw.get("playerId"))
-    name = clean(
-        p.get("name") or p.get("fullName") or p.get("displayName")
-        or raw.get("name") or raw.get("fullName")
-    )
+    name_obj = p.get("name")
+    if isinstance(name_obj, dict):
+        name = clean(name_obj.get("fullName") or name_obj.get("displayName") or name_obj.get("lastName"))
+    else:
+        name = clean(
+            name_obj or p.get("fullName") or p.get("displayName")
+            or raw.get("name") or raw.get("fullName")
+        )
     if not pid and not name:
         return None
-    pos = clean(
-        p.get("position") or p.get("positionString") or p.get("positionId")
-        or raw.get("position") or raw.get("positionString")
-    )
-    shirt = clean(p.get("shirtNumber") or raw.get("shirtNumber") or raw.get("shirt"))
-    starter_raw = raw.get("starter")
-    if starter_raw is None:
-        starter_raw = raw.get("isStarter")
-    substitute_raw = raw.get("substitute")
-    if substitute_raw is None:
-        substitute_raw = raw.get("isSubstitute")
-    starter = "1" if starter_raw is True else ("0" if starter_raw is False else "")
-    substitute = "1" if substitute_raw is True else ("0" if substitute_raw is False else "")
-    if not starter and substitute:
-        starter = "0" if substitute == "1" else ""
     return {
         "player_id": pid,
         "player_name": name,
-        "position": pos,
-        "shirt_number": shirt,
-        "starter": starter,
-        "substitute": substitute,
+        "position": clean(
+            p.get("position") or p.get("positionString") or p.get("positionId")
+            or raw.get("position") or raw.get("positionString") or raw.get("positionId")
+        ),
+        "shirt_number": clean(
+            p.get("shirtNumber") or p.get("shirt")
+            or raw.get("shirtNumber") or raw.get("shirt")
+        ),
     }
 
 
-def lineup_blocks(detail):
+def _lineup_add(out, raw, side, team_id, team_name, formation, role):
+    if not isinstance(raw, dict):
+        return
+    ident = player_identity(raw)
+    if not ident:
+        return
+    key = ident["player_id"] or nk(ident["player_name"])
+    if not key:
+        return
+    perf = raw.get("performance") if isinstance(raw.get("performance"), dict) else {}
+    rating = perf.get("rating")
+    out[key] = {
+        **ident,
+        "side": side,
+        "team_id": clean(team_id),
+        "team_name": clean(team_name),
+        "formation": clean(formation),
+        "starter": "1" if role == "starter" else "0",
+        "substitute": "1" if role == "sub" else "0",
+        "lineup_rating": clean(rating),
+    }
+
+
+def extract_lineup_map(detail, target, match_meta):
+    """Return lineup metadata across current and legacy FotMob schemas."""
     lineup = ((detail.get("content") or {}).get("lineup") or {})
-    blocks = lineup.get("lineups") or []
-    return blocks if isinstance(blocks, list) else []
+    out = {}
+
+    # Current schema: content.lineup.homeTeam / awayTeam.
+    current_found = False
+    for side, key, fallback_id, fallback_name in (
+        ("H", "homeTeam", match_meta["home_id"], target["home"]),
+        ("A", "awayTeam", match_meta["away_id"], target["away"]),
+    ):
+        team = lineup.get(key)
+        if not isinstance(team, dict):
+            continue
+        current_found = True
+        tid = clean(team.get("id") or fallback_id)
+        tname = clean(team.get("name") or fallback_name)
+        formation = clean(team.get("formation"))
+        for p in team.get("starters") or []:
+            _lineup_add(out, p, side, tid, tname, formation, "starter")
+        for sub_key in ("subs", "bench", "substitutes"):
+            for p in team.get(sub_key) or []:
+                _lineup_add(out, p, side, tid, tname, formation, "sub")
+
+    if current_found:
+        return out
+
+    # Legacy schema used by older FotMob clients:
+    # content.lineup.lineup.{players,bench,teamId,teamName}
+    legacy = lineup.get("lineup")
+    if not isinstance(legacy, dict):
+        return out
+
+    team_ids = legacy.get("teamId") or []
+    team_names = legacy.get("teamName") or []
+    formations = legacy.get("formation") or []
+    starters_by_team = legacy.get("players") or []
+    bench_by_team = legacy.get("bench") or []
+
+    def team_value(values, i, fallback):
+        if isinstance(values, list) and i < len(values):
+            return values[i]
+        return fallback
+
+    def walk_player_dicts(node):
+        found = []
+        if isinstance(node, dict):
+            if node.get("id") is not None and (
+                node.get("name") is not None or node.get("shirt") is not None
+            ):
+                found.append(node)
+            else:
+                for value in node.values():
+                    found.extend(walk_player_dicts(value))
+        elif isinstance(node, list):
+            for value in node:
+                found.extend(walk_player_dicts(value))
+        return found
+
+    for i, side in enumerate(("H", "A")):
+        fallback_id = match_meta["home_id"] if side == "H" else match_meta["away_id"]
+        fallback_name = target["home"] if side == "H" else target["away"]
+        tid = team_value(team_ids, i, fallback_id)
+        tname = team_value(team_names, i, fallback_name)
+        formation = team_value(formations, i, "")
+        starters = starters_by_team[i] if isinstance(starters_by_team, list) and i < len(starters_by_team) else []
+        bench = bench_by_team[i] if isinstance(bench_by_team, list) and i < len(bench_by_team) else []
+        for p in walk_player_dicts(starters):
+            _lineup_add(out, p, side, tid, tname, formation, "starter")
+        for p in walk_player_dicts(bench):
+            _lineup_add(out, p, side, tid, tname, formation, "sub")
+    return out
+
+
+PLAYER_STAT_KEY_MAP = {
+    "minutes_played": "minutes",
+    "goals": "goals",
+    "assists": "assists",
+    "total_shots": "shots",
+    "ShotsOnTarget": "shots_on_target",
+    "shots_on_target": "shots_on_target",
+    "expected_goals": "xg",
+    "expected_assists": "xa",
+    "chances_created": "chances_created",
+    "big_chance": "big_chances",
+    "big_chances": "big_chances",
+    "touches_opp_box": "touches_box",
+    "passes": "passes",
+    "accurate_passes": "accurate_passes",
+    "key_passes": "key_passes",
+    "matchstats.headers.tackles": "tackles",
+    "tackles": "tackles",
+    "interceptions": "interceptions",
+    "recoveries": "recoveries",
+    "duel_won": "duels_won",
+    "duels_won": "duels_won",
+    "aerials_won": "aerial_duels_won",
+    "saves": "saves",
+    "keeper_saves": "saves",
+    "goals_prevented": "goals_prevented",
+    "yellow_cards": "yellow_cards",
+    "red_cards": "red_cards",
+}
+
+
+def extract_player_stats_block(pdata):
+    """Flatten content.playerStats[player].stats using FotMob's stable stat keys."""
+    raw = {}
+    selected = {}
+    for group in pdata.get("stats") or []:
+        if not isinstance(group, dict):
+            continue
+        stats_obj = group.get("stats") or {}
+        if not isinstance(stats_obj, dict):
+            continue
+        for stat_name, entry in stats_obj.items():
+            if not isinstance(entry, dict):
+                continue
+            key = clean(entry.get("key") or entry.get("title") or stat_name)
+            stat = entry.get("stat") or {}
+            if not isinstance(stat, dict):
+                continue
+            value = stat.get("value")
+            total = stat.get("total")
+            raw[key] = {
+                "value": value,
+                "total": total,
+                "title": clean(entry.get("title") or stat_name),
+            }
+            dest = PLAYER_STAT_KEY_MAP.get(key)
+            if dest and dest not in selected:
+                selected[dest] = value
+
+    # Rating may sit outside the grouped stat block depending on schema.
+    performance = pdata.get("performance") if isinstance(pdata.get("performance"), dict) else {}
+    rating = (
+        performance.get("rating")
+        if performance.get("rating") not in (None, "")
+        else pdata.get("rating")
+    )
+    if isinstance(rating, dict):
+        rating = rating.get("num") or rating.get("value")
+    if rating not in (None, ""):
+        selected["rating"] = rating
+    return selected, raw
 
 
 def player_rows_from_detail(detail, target, match_meta, captured):
+    """Use playerStats as the primary post-match table, lineup as metadata."""
+    lineup_map = extract_lineup_map(detail, target, match_meta)
+    player_stats = ((detail.get("content") or {}).get("playerStats") or {})
+    if not isinstance(player_stats, dict):
+        player_stats = {}
+
     rows = []
     seen = set()
-    blocks = lineup_blocks(detail)
 
-    for block_idx, block in enumerate(blocks):
-        if not isinstance(block, dict):
+    for pid_key, pdata in player_stats.items():
+        if not isinstance(pdata, dict):
             continue
-        team = block.get("team") if isinstance(block.get("team"), dict) else {}
-        team_id = clean(block.get("teamId") or team.get("id"))
-        team_name = clean(block.get("teamName") or team.get("name"))
-        formation = clean(block.get("formation"))
+        pid = clean(pdata.get("id") or pid_key)
+        pname_obj = pdata.get("name")
+        if isinstance(pname_obj, dict):
+            pname = clean(pname_obj.get("fullName") or pname_obj.get("displayName"))
+        else:
+            pname = clean(pname_obj)
+        lookup = pid or nk(pname)
+        lmeta = lineup_map.get(lookup, {})
 
-        if team_id and team_id == match_meta["home_id"]:
+        team_id = clean(pdata.get("teamId") or lmeta.get("team_id"))
+        team_name = clean(pdata.get("teamName") or lmeta.get("team_name"))
+        if team_id == clean(match_meta["home_id"]):
             side = "H"
             team_name = team_name or target["home"]
-        elif team_id and team_id == match_meta["away_id"]:
+        elif team_id == clean(match_meta["away_id"]):
             side = "A"
             team_name = team_name or target["away"]
         else:
-            # Team ids are preferred; name comparison is a schema fallback.
-            hsim = sim(team_name, target["home"])
-            asim = sim(team_name, target["away"])
-            side = "H" if hsim >= asim else "A"
+            side = clean(lmeta.get("side"))
+            if side not in ("H", "A"):
+                hsim = sim(team_name, target["home"])
+                asim = sim(team_name, target["away"])
+                side = "H" if hsim >= asim else "A"
 
-        raw_players = []
-        for key in ("players", "starters", "bench", "substitutes"):
-            value = block.get(key)
-            if isinstance(value, list):
-                raw_players.extend(value)
+        selected, raw_stats = extract_player_stats_block(pdata)
+        rating = selected.get("rating")
+        if rating in (None, ""):
+            rating = lmeta.get("lineup_rating", "")
 
-        for raw in raw_players:
-            if not isinstance(raw, dict):
-                continue
-            ident = player_identity(raw)
-            if not ident:
-                continue
-            sig = (side, ident["player_id"] or nk(ident["player_name"]))
-            if sig in seen:
-                continue
-            seen.add(sig)
+        row = {
+            "captured_at_hkt": captured,
+            "hkjc_event_id": target["event_id"],
+            "kickoff_hkt": target["kickoff"].isoformat(timespec="minutes"),
+            "league": target["league"],
+            "home": target["home"],
+            "away": target["away"],
+            "fotmob_match_id": match_meta["match_id"],
+            "match_quality": f'{target["match_quality"]:.3f}',
+            "side": side,
+            "team_id": team_id,
+            "team_name": team_name or (target["home"] if side == "H" else target["away"]),
+            "formation": clean(lmeta.get("formation")),
+            "player_id": pid,
+            "player_name": pname or clean(lmeta.get("player_name")),
+            "position": clean(
+                pdata.get("usualPosition") or pdata.get("positionId")
+                or lmeta.get("position")
+            ),
+            "shirt_number": clean(pdata.get("shirtNumber") or lmeta.get("shirt_number")),
+            "starter": clean(lmeta.get("starter")),
+            "substitute": clean(lmeta.get("substitute")),
+            **{k: clean(v) for k, v in selected.items() if k != "rating"},
+            "rating": clean(rating),
+            "player_stats_json": json.dumps(raw_stats, ensure_ascii=False, separators=(",", ":")),
+            "source": "FotMob matchDetails.playerStats",
+        }
+        sig = (side, pid or nk(row["player_name"]))
+        if sig in seen:
+            continue
+        seen.add(sig)
+        rows.append(row)
 
-            flat = flatten_scalars(raw)
-            stats = {field: pick_stat(flat, aliases) for field, aliases in STAT_ALIASES.items()}
-            rows.append({
-                "captured_at_hkt": captured,
-                "hkjc_event_id": target["event_id"],
-                "kickoff_hkt": target["kickoff"].isoformat(timespec="minutes"),
-                "league": target["league"],
-                "home": target["home"],
-                "away": target["away"],
-                "fotmob_match_id": match_meta["match_id"],
-                "match_quality": f'{target["match_quality"]:.3f}',
-                "side": side,
-                "team_id": team_id or (match_meta["home_id"] if side == "H" else match_meta["away_id"]),
-                "team_name": team_name or (target["home"] if side == "H" else target["away"]),
-                "formation": formation,
-                **ident,
-                **{k: clean(v) for k, v in stats.items()},
-                "player_stats_json": json.dumps(flat, ensure_ascii=False, separators=(",", ":")),
-                "source": "FotMob matchDetails",
-            })
+    # Keep lineup-only players (usually unused subs) as zero/blank-stat rows.
+    # They are useful later for selection/availability analysis but do not count
+    # toward stats_players below.
+    for lookup, meta in lineup_map.items():
+        sig = (clean(meta.get("side")), clean(meta.get("player_id")) or nk(meta.get("player_name")))
+        if sig in seen:
+            continue
+        seen.add(sig)
+        rows.append({
+            "captured_at_hkt": captured,
+            "hkjc_event_id": target["event_id"],
+            "kickoff_hkt": target["kickoff"].isoformat(timespec="minutes"),
+            "league": target["league"],
+            "home": target["home"],
+            "away": target["away"],
+            "fotmob_match_id": match_meta["match_id"],
+            "match_quality": f'{target["match_quality"]:.3f}',
+            "side": clean(meta.get("side")),
+            "team_id": clean(meta.get("team_id")),
+            "team_name": clean(meta.get("team_name")),
+            "formation": clean(meta.get("formation")),
+            "player_id": clean(meta.get("player_id")),
+            "player_name": clean(meta.get("player_name")),
+            "position": clean(meta.get("position")),
+            "shirt_number": clean(meta.get("shirt_number")),
+            "starter": clean(meta.get("starter")),
+            "substitute": clean(meta.get("substitute")),
+            "minutes": "0",
+            "rating": clean(meta.get("lineup_rating")),
+            "player_stats_json": "{}",
+            "source": "FotMob matchDetails.lineup",
+        })
 
-    return rows, len(seen)
+    return rows, len(lineup_map), len(player_stats)
 
 
 def recent_targets(now):
@@ -528,10 +730,10 @@ def main():
         try:
             detail = fetch_json(session, "/data/matchDetails", {"matchId": fm["match_id"]})
             detail_calls += 1
-            rows, lineup_count = player_rows_from_detail(detail, t, fm, captured)
+            rows, lineup_count, stats_count = player_rows_from_detail(detail, t, fm, captured)
             usable = sum(1 for r in rows if clean(r.get("player_id")) and clean(r.get("player_name")))
-            status = "OK" if usable >= 14 else ("PARTIAL" if usable > 0 else "NO_PLAYER_ROWS")
-            reason = "" if status == "OK" else f"usable_player_rows={usable}"
+            status = "OK" if stats_count >= 14 else ("PARTIAL" if stats_count > 0 else "NO_PLAYER_STATS")
+            reason = "" if status == "OK" else f"stats_players={stats_count};usable_player_rows={usable}"
             if rows:
                 new_player_rows.extend(rows)
             index_by_id[t["event_id"]] = {
@@ -545,6 +747,7 @@ def main():
                 "match_quality": f'{match["quality"]:.3f}',
                 "kickoff_diff_min": f'{match["kickoff_diff"]:.1f}',
                 "lineup_players": lineup_count,
+                "stats_players": stats_count,
                 "usable_player_rows": usable,
                 "status": status,
                 "reason": reason,
