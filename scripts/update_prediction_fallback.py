@@ -121,10 +121,13 @@ def global_prediction_links():
 
 def pick_link(target, links):
     kick = target["kickoff_hkt"]
-    date_suffix = kick.strftime("%d-%m-%Y")
+    date_suffixes = {
+        (kick + timedelta(days=delta)).strftime("%d-%m-%Y")
+        for delta in (-1, 0, 1)
+    }
     ranked = []
     for href in links:
-        if re.search(r"\d{2}-\d{2}-\d{4}", href) and date_suffix not in href:
+        if re.search(r"\d{2}-\d{2}-\d{4}", href) and not any(s in href for s in date_suffixes):
             continue
         score = slug_score(target["home_en"], target["away_en"], href)
         if score >= 0.45:
@@ -158,6 +161,12 @@ def main():
     fetched = now.isoformat(timespec="seconds")
     hkjc = read_csv(HKJC)
     registry = load_registry(read_csv(REGISTRY))
+    previous_rows = read_csv(OUT) if OUT.exists() else []
+    previous_good = {
+        clean(r.get("hkjc_event_id")): r
+        for r in previous_rows
+        if clean(r.get("hkjc_event_id")) and clean(r.get("recommendation"))
+    }
     global_links = global_prediction_links()
 
     targets = []
@@ -228,6 +237,16 @@ def main():
         except Exception as e:
             base["status"] = "ERROR_" + type(e).__name__
             base["notes"] = str(e)[:180]
+
+        if not clean(base.get("recommendation")):
+            old = previous_good.get(base["hkjc_event_id"])
+            if old:
+                for key in ("source_competition","source_url","recommendation","market","match_score"):
+                    if clean(old.get(key)):
+                        base[key] = clean(old.get(key))
+                base["status"] = "LAST_GOOD"
+                base["notes"] = "Current refresh found no advice; retained previous valid APWin recommendation"
+
         rows.append(base)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
