@@ -1,2 +1,4 @@
 fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,prob_home,prob_draw,prob_away,prediction_1x2,predicted_score,avg_goals,source_url,match_score,status,notes
 2026-09-18T22:30:00+08:00,FB5405,2026-09-19T01:00+08:00,DK1,Lyngby,Silkeborg IF,29,55,16,X,1 - 1,2.40,https://www.forebet.com/en/football/matches/lyngby-bk-silkeborg-2469549,1.000,REGRESSION_SEED,Verified Forebet full-time 1X2
+2026-09-19T09:20:00+08:00,FB5268,2026-09-19T07:30+08:00,MLS,New York City,New York Red Bulls,38,36,26,1,1 - 0,1.95,https://www.forebet.com/en/football/matches/new-york-city-fc-new-york-red-bulls-2426886,1.000,WEB_RECOVERY_SEED,"Verified Forebet full-time 1X2 after core recovery gap"
+2026-09-19T09:20:00+08:00,FB5303,2026-09-19T07:58+08:00,BD2,Sao Bernardo,Atletico Goianiense,32,30,37,2,0 - 1,1.83,https://www.forebet.com/en/football/matches/s%C3%A3o-bernardo-sp-atl%C3%A9tico-go-2442945,1.000,WEB_RECOVERY_SEED,"Verified Forebet full-time 1X2 after core recovery gap"
