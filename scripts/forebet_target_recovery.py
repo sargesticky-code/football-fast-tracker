@@ -21,7 +21,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 BASE = "https://www.forebet.com"
-MAX_DETAIL_RECOVERY = 32
+MAX_DETAIL_RECOVERY = 48  # bounded; earliest HKJC kickoffs first, avoids unlimited detail fan-out
 MATCH_LINK_RE = re.compile(r"/en/football/matches/", re.I)
 DETAIL_MIN_TEXT = 1200
 
