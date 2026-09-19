@@ -11,6 +11,7 @@ from forebet_match_policy import team_score
 ROOT = Path(__file__).resolve().parent.parent
 CURRENT = ROOT / "data" / "forebet_current.csv"
 REGISTRY = ROOT / "data" / "team_alias_registry.csv"
+MANUAL = ROOT / "data" / "team_alias_manual.csv"
 HKT = ZoneInfo("Asia/Hong_Kong")
 
 FIELDS = [
@@ -68,6 +69,29 @@ def main() -> int:
             pruned_noise += 1
             continue
         store[key(alias)] = {f: clean(row.get(f)) for f in FIELDS}
+
+    # Manual aliases are operator-verified and authoritative.  Merge them
+    # before auto-learning so future production runs can consume the same
+    # canonical decisions directly from the registry as well.
+    manual_rows = 0
+    for row in read_csv(MANUAL):
+        alias = clean(row.get("forebet_alias"))
+        canonical = clean(row.get("canonical_hkjc_name"))
+        if not alias or not canonical:
+            continue
+        k = key(alias)
+        old = store.get(k, {})
+        store[k] = {
+            "forebet_alias": alias,
+            "canonical_hkjc_name": canonical,
+            "confidence": "1.000",
+            "first_seen_hkt": clean(old.get("first_seen_hkt")) or now,
+            "last_seen_hkt": now,
+            "match_count": clean(old.get("match_count")) or "1",
+            "status": "MANUAL",
+            "source": "MANUAL_OVERRIDE",
+        }
+        manual_rows += 1
 
     learned = 0
     conflicts = 0
@@ -130,7 +154,7 @@ def main() -> int:
         writer.writerows(rows)
 
     print(
-        f"TEAM_ALIAS_REGISTRY rows={len(rows)} learned={learned} conflicts={conflicts} "
+        f"TEAM_ALIAS_REGISTRY rows={len(rows)} manual={manual_rows} learned={learned} conflicts={conflicts} "
         f"pruned_noise={pruned_noise} rejected_noise={rejected_noise}"
     )
     return 0
