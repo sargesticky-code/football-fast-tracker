@@ -25,6 +25,7 @@ HKJC_CSV = os.environ.get(
 UA = "football-fast-tracker-live/1.0"
 ENDED = ("ENDED", "MATCHENDED", "FT", "AET", "PEN", "CANCEL", "VOID", "ABANDON")
 MAX_DETAIL_CALLS_PER_RUN = int(os.environ.get("MAX_DETAIL_CALLS_PER_RUN", "8"))
+MAX_DETAIL_FALLBACK_CALLS_PER_RUN = int(os.environ.get("MAX_DETAIL_FALLBACK_CALLS_PER_RUN", "2"))
 SOURCE_GAP_MAX_MINUTES = int(os.environ.get("SOURCE_GAP_MAX_MINUTES", "140"))
 SCENARIO_CSV = Path(__file__).resolve().parent.parent / "data" / "match_scenario_current.csv"
 ENABLE_SCENARIO_SHADOW = os.environ.get("ENABLE_SCENARIO_SHADOW", "0") == "1"
@@ -1024,6 +1025,7 @@ def collect(include_full=False):
 
     rows = []
     detail_fetched = 0
+    detail_fallback_calls = 0
     detail_errors = 0
     upstream_blocked = False
 
@@ -1057,7 +1059,60 @@ def collect(include_full=False):
                     detail_capture = extract_live_sections(detail, include_full=include_full)
                 detail_fetched += 1
                 health["details"] = "OK"
-                detail_status = "CAPTURED"
+
+                detail_has_data = bool(
+                    detail_capture.get("team_stats")
+                    or detail_capture.get("events")
+                    or detail_capture.get("momentum")
+                )
+
+                # A successful HTTP response is not the same as usable detail.
+                # Some minor-league FotMob matchDetails responses return an
+                # empty payload.  In that case, make at most a tiny number of
+                # Sofascore detail fallbacks per refresh rather than claiming
+                # the match was fully captured.
+                if (
+                    not detail_has_data
+                    and m.get("source") != "SOFASCORE"
+                    and detail_fallback_calls < MAX_DETAIL_FALLBACK_CALLS_PER_RUN
+                ):
+                    if sofa is None:
+                        try:
+                            sofa = sofascore_matches()
+                            health["sofascore"] = "OK"
+                        except Exception as fallback_board_exc:
+                            sofa = []
+                            health["sofascore"] = "ERROR:" + type(fallback_board_exc).__name__
+
+                    sofa_match, _ = best_match(t, sofa)
+                    if sofa_match and sofa_match.get("source_match_id"):
+                        try:
+                            fallback_detail = fetch_sofascore_statistics(
+                                sofa_match.get("source_match_id")
+                            )
+                            fallback_capture, fallback_corners = extract_sofascore_sections(
+                                fallback_detail, include_full=include_full
+                            )
+                            detail_fallback_calls += 1
+                            fallback_has_data = bool(
+                                fallback_capture.get("team_stats")
+                                or fallback_capture.get("events")
+                                or fallback_capture.get("momentum")
+                            )
+                            if fallback_has_data:
+                                detail_capture = fallback_capture
+                                if fallback_corners:
+                                    live_corners = fallback_corners
+                                detail_status = "CAPTURED_SOFASCORE_FALLBACK"
+                            else:
+                                detail_status = "DETAIL_EMPTY"
+                        except Exception:
+                            detail_fallback_calls += 1
+                            detail_status = "DETAIL_EMPTY"
+                    else:
+                        detail_status = "DETAIL_EMPTY"
+                else:
+                    detail_status = "CAPTURED" if detail_has_data else "DETAIL_EMPTY"
             except requests.HTTPError as e:
                 detail_errors += 1
                 code = getattr(e.response, "status_code", None)
@@ -1148,6 +1203,7 @@ def collect(include_full=False):
             "rotationGroups": group_count,
             "rotationBucket": bucket,
             "detailFetched": detail_fetched,
+            "detailFallbackCalls": detail_fallback_calls,
             "detailErrors": detail_errors,
             "includeFull": include_full,
         },
