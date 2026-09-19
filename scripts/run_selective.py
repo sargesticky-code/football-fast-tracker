@@ -25,6 +25,7 @@ import scrape_forebet as feed
 DIRECT_TARGETS = Path("data/hkjc_targets.csv")
 CURRENT_FEED = Path("data/forebet_current.csv")
 ALIAS_REGISTRY = Path("data/team_alias_registry.csv")
+MANUAL_ALIAS = Path("data/team_alias_manual.csv")
 DIRECT_MAX_AGE_MINUTES = 180
 JINA_PREFIX = "https://r.jina.ai/"
 JINA_TIMEOUT = 90
@@ -75,26 +76,37 @@ feed.normalize_date = _row_date
 
 
 def _load_alias_registry() -> int:
-    if not ALIAS_REGISTRY.exists():
-        print("FOREBET_ALIAS_REGISTRY rows=0 status=missing", flush=True)
-        return 0
-    loaded = conflicts = 0
-    with ALIAS_REGISTRY.open(encoding="utf-8-sig", newline="") as fh:
-        for row in csv.DictReader(fh):
-            status = (row.get("status") or "").strip().upper()
-            if status == "CONFLICT":
-                conflicts += 1
-                continue
-            alias = (row.get("forebet_alias") or "").strip()
-            canonical = (row.get("canonical_hkjc_name") or "").strip()
-            if not alias or not canonical:
-                continue
-            alias_key = feed.normalize_team(alias)
-            canonical_value = feed.normalize_team(canonical)
-            if alias_key and canonical_value:
-                feed.ALIASES[alias_key] = canonical_value
-                loaded += 1
-    print(f"FOREBET_ALIAS_REGISTRY rows={loaded} conflicts_skipped={conflicts}", flush=True)
+    loaded = conflicts = manual_loaded = 0
+    sources = (
+        (ALIAS_REGISTRY, False),
+        (MANUAL_ALIAS, True),
+    )
+    for path, is_manual in sources:
+        if not path.exists():
+            continue
+        with path.open(encoding="utf-8-sig", newline="") as fh:
+            for row in csv.DictReader(fh):
+                status = "MANUAL" if is_manual else (row.get("status") or "").strip().upper()
+                if status == "CONFLICT":
+                    conflicts += 1
+                    continue
+                alias = (row.get("forebet_alias") or "").strip()
+                canonical = (row.get("canonical_hkjc_name") or "").strip()
+                if not alias or not canonical:
+                    continue
+                alias_key = feed.normalize_team(alias)
+                canonical_value = feed.normalize_team(canonical)
+                if alias_key and canonical_value:
+                    # Manual file is loaded last and is authoritative.
+                    feed.ALIASES[alias_key] = canonical_value
+                    loaded += 1
+                    if is_manual:
+                        manual_loaded += 1
+    print(
+        f"FOREBET_ALIAS_REGISTRY rows={loaded} manual={manual_loaded} "
+        f"conflicts_skipped={conflicts}",
+        flush=True,
+    )
     return loaded
 
 
