@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, datetime
 from enum import Enum
 from typing import Mapping
 
@@ -59,11 +59,18 @@ class SourcePrediction:
     competition: str | None
     home: str
     away: str
+
+    fixture_date: date | None = None
     source_url: str | None = None
     fetched_at: datetime | None = None
+
     probabilities: Mapping[str, float] = field(default_factory=dict)
+    recommendations: Mapping[str, str] = field(default_factory=dict)
+    odds: Mapping[str, float] = field(default_factory=dict)
+
     predicted_score: str | None = None
     market_label: str | None = None
+    source_kickoff_text: str | None = None
 
 
 @dataclass(frozen=True)
