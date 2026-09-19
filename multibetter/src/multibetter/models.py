@@ -31,11 +31,23 @@ class MatchDecision(str, Enum):
 
 @dataclass(frozen=True)
 class CanonicalFixture:
+    """HKJC fixture linked to its existing Forebet reference names.
+
+    External prediction sources match against forebet_home/forebet_away.
+    hkjc_home/hkjc_away are retained for final display/output only.
+    """
+
     event_id: str
     kickoff: datetime
     competition: str
-    home: str
-    away: str
+
+    hkjc_home: str
+    hkjc_away: str
+
+    forebet_home: str
+    forebet_away: str
+
+    forebet_competition: str | None = None
     home_class: TeamClass = TeamClass.UNKNOWN
     away_class: TeamClass = TeamClass.UNKNOWN
 
@@ -60,3 +72,5 @@ class MatchResult:
     confidence: float
     reason: str
     event_id: str | None = None
+    forebet_home: str | None = None
+    forebet_away: str | None = None
