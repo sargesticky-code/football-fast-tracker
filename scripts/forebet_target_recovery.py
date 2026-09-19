@@ -425,9 +425,31 @@ def install(production) -> None:
 
         detail_parts: list[str] = []
         recovered_detail: set[str] = set()
-        for event_id in sorted(discovered)[:MAX_DETAIL_RECOVERY]:
-            if event_id not in missing_ids:
-                continue
+
+        # Detail recovery is deliberately capped to protect Forebet from excess
+        # requests, but the cap must be spent on the most time-sensitive HKJC
+        # fixtures.  Sorting by event ID can starve matches that are about to
+        # start while recovering later fixtures first.  Prioritise the earliest
+        # kickoff, then event ID for deterministic ordering.
+        detail_candidates = [
+            event_id for event_id in discovered
+            if event_id in missing_ids
+        ]
+        detail_candidates.sort(
+            key=lambda event_id: (
+                str(target_by_id.get(event_id, {}).get("kickoff_hkt") or "9999-12-31T23:59:59+08:00"),
+                event_id,
+            )
+        )
+        print(
+            "FOREBET_DETAIL_PRIORITY "
+            f"date={match_date} candidates={len(detail_candidates)} "
+            f"cap={MAX_DETAIL_RECOVERY} "
+            f"first={','.join(detail_candidates[:5])}",
+            flush=True,
+        )
+
+        for event_id in detail_candidates[:MAX_DETAIL_RECOVERY]:
             target = target_by_id.get(event_id)
             if target is None:
                 continue
