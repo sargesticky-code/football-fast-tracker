@@ -51,10 +51,16 @@ def match_prediction(
     if source_home_class != reference_home_class or source_away_class != reference_away_class:
         return MatchResult(MatchDecision.REJECT, 0.0, "TEAM_CLASS_MISMATCH")
 
+    if candidate.fixture_date is not None and candidate.fixture_date != fixture.kickoff.date():
+        return MatchResult(MatchDecision.REJECT, 0.0, "DATE_MISMATCH")
+
     if candidate.kickoff is not None:
         if candidate.kickoff.date() != fixture.kickoff.date():
             return MatchResult(MatchDecision.REJECT, 0.0, "DATE_MISMATCH")
-        if abs(candidate.kickoff - fixture.kickoff) > kickoff_tolerance:
+        # Only compare clock time when timezone-awareness is compatible.
+        both_naive = candidate.kickoff.tzinfo is None and fixture.kickoff.tzinfo is None
+        both_aware = candidate.kickoff.tzinfo is not None and fixture.kickoff.tzinfo is not None
+        if (both_naive or both_aware) and abs(candidate.kickoff - fixture.kickoff) > kickoff_tolerance:
             return MatchResult(MatchDecision.REJECT, 0.0, "KICKOFF_MISMATCH")
 
     reference_competition = fixture.forebet_competition or fixture.competition
