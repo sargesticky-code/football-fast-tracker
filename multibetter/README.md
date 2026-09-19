@@ -2,12 +2,29 @@
 
 Multibetter is an experimental multi-source football prediction framework developed separately from Fast Tracker.
 
+## Matching architecture
+
+Multibetter uses **Forebet as the team-name matching hub**.
+
+The existing Fast Tracker Forebet -> HKJC alias bridge is already mature, so new prediction sources do not maintain their own HKJC alias tables.
+
+```text
+APWin ---------\
+Statarea -------\
+BetClan ---------> Forebet team key -> existing Forebet/HKJC alias -> HKJC event ID
+Other models ---/
+```
+
+HKJC remains the final fixture/odds/display authority, but new source matching is performed against the Forebet reference names.
+
 ## Rules
 
 - Fast Tracker remains production and is not modified by Multibetter work.
-- HKJC fixtures are the canonical fixture layer.
-- HKJC event ID is the preferred primary key.
-- Source data flows through: raw -> normalized -> matched -> consensus.
+- HKJC event ID remains the final event key.
+- Forebet team names are the canonical **matching hub** for external prediction sources.
+- Existing Forebet -> HKJC aliases are reused; do not create a separate HKJC alias table per source.
+- Each new source only needs Source -> Forebet aliases where exact names differ.
+- Source data flows through: raw -> normalized -> Forebet-matched -> HKJC-linked -> consensus.
 - NO DATA is safer than a wrong match.
 - Senior / Women / U21-U23 / reserve / B-team mismatches are rejected.
 - Source failures are isolated and must not blank other sources.
@@ -33,24 +50,33 @@ multibetter/
 
 Build a trustworthy source registry and matching layer before connecting any dashboard.
 
-The first target source is APWin because the current Fast Tracker APWin pipeline has false-positive fixture matching. Multibetter must prefer NO_MATCH over a plausible but wrong fixture.
+The first target source is APWin. APWin candidates must first resolve to the correct Forebet fixture/team key. Only after that does the existing Forebet -> HKJC bridge supply the HKJC event ID and display names.
 
 ## Planned data flow
 
 ```text
-HKJC canonical fixtures
-        |
-        +--> source adapters (Forebet / APWin / Statarea / BetClan / ...)
-        |
-        v
-normalized source records
-        |
-        v
-strict fixture matcher
-        |
-        v
+HKJC fixtures
+      ^
+      | existing Forebet/HKJC alias bridge
+      |
+Forebet reference fixtures / team keys
+      ^
+      |
+      +---- APWin
+      +---- Statarea
+      +---- BetClan
+      +---- FootballSuperTips
+      +---- future models
+      |
+      v
+strict Source -> Forebet matcher
+      |
+      v
+HKJC-linked normalized records
+      |
+      v
 market-specific consensus
-        |
-        v
+      |
+      v
 HKJC price comparison / edge layer
 ```
