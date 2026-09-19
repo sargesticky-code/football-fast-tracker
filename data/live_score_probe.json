@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-19T09:34:00+08:00",
+  "updatedAt": "2026-09-19T09:40:05+08:00",
   "health": {
     "primary": "OK",
     "sofascore": "ERROR:HTTPError",
@@ -30,11 +30,12 @@
   },
   "detailPolicy": {
     "maxDetailCallsPerRun": 8,
-    "detailCandidates": 7,
+    "detailCandidates": 5,
     "fotmobBoardFallbacks": 0,
     "rotationGroups": 1,
     "rotationBucket": 0,
-    "detailFetched": 7,
+    "detailFetched": 5,
+    "detailFallbackCalls": 0,
     "detailErrors": 0,
     "includeFull": false
   },
@@ -45,1680 +46,40 @@
       "league": "BD2",
       "home_en": "Ceara",
       "away_en": "Novorizontino",
-      "live_score": "2-1",
-      "home_score": "2",
-      "away_score": "1",
-      "minute": "98",
-      "match_status": "LIVE",
-      "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
-      "source_match_id": "5190723",
-      "source_home": "Ceará",
+      "live_score": "",
+      "home_score": "",
+      "away_score": "",
+      "minute": "",
+      "match_status": "SOURCE_GAP",
+      "source": "SOURCE_GAP",
+      "source_match_id": "",
+      "source_home": "Ceara",
       "source_away": "Novorizontino",
-      "match_confidence": 0.998,
-      "source_updated_at": "2026-09-19T09:34:01+08:00",
-      "home_corners": 2,
-      "away_corners": 9,
-      "total_corners": 11,
+      "match_confidence": 1.0,
+      "source_updated_at": "2026-09-19T09:40:05+08:00",
+      "home_corners": "",
+      "away_corners": "",
+      "total_corners": "",
       "corner_line_ref": "",
       "corners_to_hi": "",
       "corner_progress": "",
-      "detail_status": "CAPTURED",
-      "team_stats": [
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "ballpossesion",
-          "title": "Ball possession",
-          "home": 46,
-          "away": 54
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": "0.71",
-          "away": "1.99"
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "total_shots",
-          "title": "Total shots",
-          "home": 8,
-          "away": 22
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "shotsontarget",
-          "title": "Shots on target",
-          "home": 3,
-          "away": 8
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "touches_opp_box",
-          "title": "Touches in opposition box",
-          "home": 9,
-          "away": 27
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "big_chance",
-          "title": "Big chances",
-          "home": 1,
-          "away": 3
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "big_chance_missed_title",
-          "title": "Big chances missed",
-          "home": 0,
-          "away": 2
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "accurate_passes",
-          "title": "Accurate passes",
-          "home": "235 (72%)",
-          "away": "295 (79%)"
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "yellow_cards",
-          "title": "Yellow cards",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "corners",
-          "title": "Corners",
-          "home": 2,
-          "away": 9
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "shots",
-          "title": "Shots",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "shotsofftarget",
-          "title": "Shots off target",
-          "home": 3,
-          "away": 8
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "blocked_shots",
-          "title": "Blocked shots",
-          "home": 2,
-          "away": 6
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "shots_woodwork",
-          "title": "Hit woodwork",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "shots_inside_box",
-          "title": "Shots inside box",
-          "home": 6,
-          "away": 13
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "shots_outside_box",
-          "title": "Shots outside box",
-          "home": 2,
-          "away": 9
-        },
-        {
-          "period": "All",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_open_play",
-          "title": "xG open play",
-          "home": "0.68",
-          "away": "1.14"
-        },
-        {
-          "period": "All",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_set_play",
-          "title": "xG set play",
-          "home": "0.03",
-          "away": "0.86"
-        },
-        {
-          "period": "All",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_non_penalty",
-          "title": "xG non-penalty",
-          "home": "0.71",
-          "away": "1.99"
-        },
-        {
-          "period": "All",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_on_target",
-          "title": "xG on target (xGOT)",
-          "home": "1.10",
-          "away": "1.89"
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": 326,
-          "away": 374
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "own_half_passes",
-          "title": "Own half",
-          "home": 143,
-          "away": 112
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "opposition_half_passes",
-          "title": "Opposition half",
-          "home": 92,
-          "away": 183
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "long_balls_accurate",
-          "title": "Accurate long balls",
-          "home": "15 (31%)",
-          "away": "14 (45%)"
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "accurate_crosses",
-          "title": "Accurate crosses",
-          "home": "3 (27%)",
-          "away": "7 (23%)"
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "player_throws",
-          "title": "Throws",
-          "home": 30,
-          "away": 23
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "offsides",
-          "title": "Offsides",
-          "home": 4,
-          "away": 2
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "defense",
-          "title": "Defence",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "matchstats_headers_tackles",
-          "title": "Tackles",
-          "home": 18,
-          "away": 21
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "interceptions",
-          "title": "Interceptions",
-          "home": 12,
-          "away": 10
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "shot_blocks",
-          "title": "Blocks",
-          "home": 5,
-          "away": 2
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "clearances",
-          "title": "Clearances",
-          "home": 34,
-          "away": 35
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "keeper_saves",
-          "title": "Keeper saves",
-          "home": 7,
-          "away": 1
-        },
-        {
-          "period": "All",
-          "group": "Duels",
-          "key": "duels",
-          "title": "Duels",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Duels",
-          "key": "duel_won",
-          "title": "Duels won",
-          "home": 53,
-          "away": 64
-        },
-        {
-          "period": "All",
-          "group": "Duels",
-          "key": "ground_duels_won",
-          "title": "Ground duels won",
-          "home": "38 (53%)",
-          "away": "34 (47%)"
-        },
-        {
-          "period": "All",
-          "group": "Duels",
-          "key": "aerials_won",
-          "title": "Aerial duels won",
-          "home": "15 (33%)",
-          "away": "30 (67%)"
-        },
-        {
-          "period": "All",
-          "group": "Duels",
-          "key": "dribbles_succeeded",
-          "title": "Successful dribbles",
-          "home": "9 (43%)",
-          "away": "4 (27%)"
-        },
-        {
-          "period": "All",
-          "group": "Discipline",
-          "key": "discipline",
-          "title": "Discipline",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Discipline",
-          "key": "red_cards",
-          "title": "Red cards",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "All",
-          "group": "Discipline",
-          "key": "fouls",
-          "title": "Fouls committed",
-          "home": 10,
-          "away": 12
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "ballpossesion",
-          "title": "Ball possession",
-          "home": 52,
-          "away": 48
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": "0.13",
-          "away": "1.31"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "total_shots",
-          "title": "Total shots",
-          "home": 4,
-          "away": 8
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "shotsontarget",
-          "title": "Shots on target",
-          "home": 0,
-          "away": 3
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "touches_opp_box",
-          "title": "Touches in opposition box",
-          "home": 3,
-          "away": 11
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "big_chance",
-          "title": "Big chances",
-          "home": 0,
-          "away": 2
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "big_chance_missed_title",
-          "title": "Big chances missed",
-          "home": 0,
-          "away": 1
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "accurate_passes",
-          "title": "Accurate passes",
-          "home": "134 (74%)",
-          "away": "123 (75%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "yellow_cards",
-          "title": "Yellow cards",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "corners",
-          "title": "Corners",
-          "home": 2,
-          "away": 5
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "shots",
-          "title": "Shots",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "shotsofftarget",
-          "title": "Shots off target",
-          "home": 3,
-          "away": 3
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "blocked_shots",
-          "title": "Blocked shots",
-          "home": 1,
-          "away": 2
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "shots_woodwork",
-          "title": "Hit woodwork",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "shots_inside_box",
-          "title": "Shots inside box",
-          "home": 2,
-          "away": 6
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "shots_outside_box",
-          "title": "Shots outside box",
-          "home": 2,
-          "away": 2
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_open_play",
-          "title": "xG open play",
-          "home": "0.10",
-          "away": "0.80"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_set_play",
-          "title": "xG set play",
-          "home": "0.03",
-          "away": "0.50"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_non_penalty",
-          "title": "xG non-penalty",
-          "home": "0.13",
-          "away": "1.31"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_on_target",
-          "title": "xG on target (xGOT)",
-          "home": "0.00",
-          "away": "0.91"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": 182,
-          "away": 164
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "own_half_passes",
-          "title": "Own half",
-          "home": 85,
-          "away": 45
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "opposition_half_passes",
-          "title": "Opposition half",
-          "home": 49,
-          "away": 78
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "long_balls_accurate",
-          "title": "Accurate long balls",
-          "home": "11 (41%)",
-          "away": "7 (37%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "accurate_crosses",
-          "title": "Accurate crosses",
-          "home": "2 (29%)",
-          "away": "4 (36%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "player_throws",
-          "title": "Throws",
-          "home": 16,
-          "away": 10
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "offsides",
-          "title": "Offsides",
-          "home": 2,
-          "away": 1
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "defense",
-          "title": "Defence",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "matchstats_headers_tackles",
-          "title": "Tackles",
-          "home": 11,
-          "away": 13
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "interceptions",
-          "title": "Interceptions",
-          "home": 3,
-          "away": 6
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "shot_blocks",
-          "title": "Blocks",
-          "home": 2,
-          "away": 1
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "clearances",
-          "title": "Clearances",
-          "home": 13,
-          "away": 18
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "keeper_saves",
-          "title": "Keeper saves",
-          "home": 2,
-          "away": 0
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Duels",
-          "key": "duels",
-          "title": "Duels",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Duels",
-          "key": "duel_won",
-          "title": "Duels won",
-          "home": 27,
-          "away": 32
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Duels",
-          "key": "ground_duels_won",
-          "title": "Ground duels won",
-          "home": "21 (53%)",
-          "away": "19 (48%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Duels",
-          "key": "aerials_won",
-          "title": "Aerial duels won",
-          "home": "6 (32%)",
-          "away": "13 (68%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Duels",
-          "key": "dribbles_succeeded",
-          "title": "Successful dribbles",
-          "home": "4 (29%)",
-          "away": "2 (29%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Discipline",
-          "key": "discipline",
-          "title": "Discipline",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Discipline",
-          "key": "red_cards",
-          "title": "Red cards",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Discipline",
-          "key": "fouls",
-          "title": "Fouls committed",
-          "home": 5,
-          "away": 6
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "ballpossesion",
-          "title": "Ball possession",
-          "home": 39,
-          "away": 61
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": "0.59",
-          "away": "0.69"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "total_shots",
-          "title": "Total shots",
-          "home": 4,
-          "away": 14
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "shotsontarget",
-          "title": "Shots on target",
-          "home": 3,
-          "away": 5
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "touches_opp_box",
-          "title": "Touches in opposition box",
-          "home": 6,
-          "away": 16
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "big_chance",
-          "title": "Big chances",
-          "home": 1,
-          "away": 1
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "big_chance_missed_title",
-          "title": "Big chances missed",
-          "home": 0,
-          "away": 1
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "accurate_passes",
-          "title": "Accurate passes",
-          "home": "101 (70%)",
-          "away": "172 (82%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "yellow_cards",
-          "title": "Yellow cards",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "corners",
-          "title": "Corners",
-          "home": 0,
-          "away": 4
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "shots",
-          "title": "Shots",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "shotsofftarget",
-          "title": "Shots off target",
-          "home": 0,
-          "away": 5
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "blocked_shots",
-          "title": "Blocked shots",
-          "home": 1,
-          "away": 4
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "shots_woodwork",
-          "title": "Hit woodwork",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "shots_inside_box",
-          "title": "Shots inside box",
-          "home": 4,
-          "away": 7
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "shots_outside_box",
-          "title": "Shots outside box",
-          "home": 0,
-          "away": 7
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_open_play",
-          "title": "xG open play",
-          "home": "0.59",
-          "away": "0.33"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_set_play",
-          "title": "xG set play",
-          "home": "0.00",
-          "away": "0.35"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_non_penalty",
-          "title": "xG non-penalty",
-          "home": "0.59",
-          "away": "0.69"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_on_target",
-          "title": "xG on target (xGOT)",
-          "home": "1.10",
-          "away": "0.98"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": 144,
-          "away": 210
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "own_half_passes",
-          "title": "Own half",
-          "home": 58,
-          "away": 67
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "opposition_half_passes",
-          "title": "Opposition half",
-          "home": 43,
-          "away": 105
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "long_balls_accurate",
-          "title": "Accurate long balls",
-          "home": "4 (18%)",
-          "away": "7 (58%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "accurate_crosses",
-          "title": "Accurate crosses",
-          "home": "1 (25%)",
-          "away": "3 (15%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "player_throws",
-          "title": "Throws",
-          "home": 14,
-          "away": 13
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "offsides",
-          "title": "Offsides",
-          "home": 2,
-          "away": 1
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "defense",
-          "title": "Defence",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "matchstats_headers_tackles",
-          "title": "Tackles",
-          "home": 7,
-          "away": 8
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "interceptions",
-          "title": "Interceptions",
-          "home": 9,
-          "away": 4
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "shot_blocks",
-          "title": "Blocks",
-          "home": 3,
-          "away": 1
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "clearances",
-          "title": "Clearances",
-          "home": 21,
-          "away": 17
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "keeper_saves",
-          "title": "Keeper saves",
-          "home": 5,
-          "away": 1
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Duels",
-          "key": "duels",
-          "title": "Duels",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Duels",
-          "key": "duel_won",
-          "title": "Duels won",
-          "home": 26,
-          "away": 32
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Duels",
-          "key": "ground_duels_won",
-          "title": "Ground duels won",
-          "home": "17 (53%)",
-          "away": "15 (47%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Duels",
-          "key": "aerials_won",
-          "title": "Aerial duels won",
-          "home": "9 (35%)",
-          "away": "17 (65%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Duels",
-          "key": "dribbles_succeeded",
-          "title": "Successful dribbles",
-          "home": "5 (71%)",
-          "away": "2 (25%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Discipline",
-          "key": "discipline",
-          "title": "Discipline",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Discipline",
-          "key": "red_cards",
-          "title": "Red cards",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Discipline",
-          "key": "fouls",
-          "title": "Fouls committed",
-          "home": 5,
-          "away": 6
-        }
-      ],
-      "events": {
-        "homeTeamGoals": {
-          "Melk": [
-            {
-              "reactKey": "048Goal1905640undefinedtrue",
-              "timeStr": 48,
-              "type": "Goal",
-              "time": 48,
-              "overloadTime": null,
-              "eventId": 0,
-              "player": {
-                "id": 1905640,
-                "name": "Melk",
-                "profileUrl": "/players/1905640/melk"
-              },
-              "homeScore": 0,
-              "awayScore": 1,
-              "profileUrl": "/players/1905640/melk",
-              "overloadTimeStr": false,
-              "isHome": true,
-              "ownGoal": null,
-              "goalDescription": null,
-              "goalDescriptionKey": null,
-              "suffix": null,
-              "suffixKey": null,
-              "isPenaltyShootoutEvent": false,
-              "nameStr": "Melk",
-              "firstName": "",
-              "lastName": "Melk",
-              "fullName": "Melk",
-              "playerId": 1905640,
-              "newScore": [
-                1,
-                1
-              ],
-              "penShootoutScore": null,
-              "shotmapEvent": {
-                "id": 2971559623,
-                "eventType": "Goal",
-                "teamId": 172341,
-                "playerId": 1905640,
-                "playerName": "Melk",
-                "x": 95.2543859636,
-                "y": 39.545000001,
-                "min": 48,
-                "minAdded": null,
-                "isBlocked": false,
-                "isOnTarget": true,
-                "blockedX": null,
-                "blockedY": null,
-                "goalCrossedY": 30.95,
-                "goalCrossedZ": 0.40452631380000004,
-                "expectedGoals": 0.1285407543182373,
-                "expectedGoalsOnTarget": 0.7508854269981384,
-                "shotType": "LeftFoot",
-                "situation": "RegularPlay",
-                "period": "SecondHalf",
-                "isOwnGoal": false,
-                "onGoalShot": {
-                  "x": 1.806878306878306,
-                  "y": 0.10701754333333334,
-                  "zoomRatio": 1
-                },
-                "isSavedOffLine": false,
-                "isFromInsideBox": true,
-                "keeperId": 575381,
-                "firstName": "",
-                "lastName": "Melk",
-                "fullName": "Melk",
-                "teamColor": "#101010"
-              },
-              "assistStr": null,
-              "assistProfileUrl": null
-            }
-          ],
-          "Santana": [
-            {
-              "reactKey": "061Goal1788181undefinedtrue",
-              "timeStr": 61,
-              "type": "Goal",
-              "time": 61,
-              "overloadTime": null,
-              "eventId": 0,
-              "player": {
-                "id": 1788181,
-                "name": "Rian Santana",
-                "profileUrl": "/players/1788181/rian-santana"
-              },
-              "homeScore": 1,
-              "awayScore": 1,
-              "profileUrl": "/players/1788181/rian-santana",
-              "overloadTimeStr": false,
-              "isHome": true,
-              "ownGoal": null,
-              "goalDescription": null,
-              "goalDescriptionKey": null,
-              "suffix": null,
-              "suffixKey": null,
-              "isPenaltyShootoutEvent": false,
-              "nameStr": "Rian Santana",
-              "firstName": "Rian",
-              "lastName": "Santana",
-              "fullName": "Rian Santana",
-              "playerId": 1788181,
-              "newScore": [
-                2,
-                1
-              ],
-              "penShootoutScore": null,
-              "shotmapEvent": {
-                "id": 2971562753,
-                "eventType": "Goal",
-                "teamId": 172341,
-                "playerId": 1788181,
-                "playerName": "Rian Santana",
-                "x": 98.92105263139999,
-                "y": 33.92375,
-                "min": 61,
-                "minAdded": null,
-                "isBlocked": false,
-                "isOnTarget": true,
-                "blockedX": null,
-                "blockedY": null,
-                "goalCrossedY": 34.4575,
-                "goalCrossedZ": 1.990526306,
-                "expectedGoals": 0.4115549623966217,
-                "expectedGoalsOnTarget": 0.3042140305042267,
-                "shotType": "Header",
-                "situation": "RegularPlay",
-                "period": "SecondHalf",
-                "isOwnGoal": false,
-                "onGoalShot": {
-                  "x": 0.8789682539682532,
-                  "y": 0.5265942608465608,
-                  "zoomRatio": 1
-                },
-                "isSavedOffLine": false,
-                "isFromInsideBox": true,
-                "keeperId": 575381,
-                "firstName": "Rian",
-                "lastName": "Santana",
-                "fullName": "Rian Santana",
-                "teamColor": "#101010"
-              },
-              "assistStr": "assist by Enzo",
-              "assistProfileUrl": "/players/1905653/enzo",
-              "assistPlayerId": 1905653,
-              "assistKey": "assist_by",
-              "assistInput": "Enzo"
-            }
-          ]
-        },
-        "awayTeamGoals": {
-          "Bianqui": [
-            {
-              "reactKey": "045Goal1116650undefinedfalse",
-              "timeStr": "45 + 4",
-              "type": "Goal",
-              "time": 45,
-              "overloadTime": 4,
-              "eventId": 0,
-              "player": {
-                "id": 1116650,
-                "name": "Matheus Bianqui",
-                "profileUrl": "/players/1116650/matheus-bianqui"
-              },
-              "homeScore": 0,
-              "awayScore": 0,
-              "profileUrl": "/players/1116650/matheus-bianqui",
-              "overloadTimeStr": "+4",
-              "isHome": false,
-              "ownGoal": null,
-              "goalDescription": null,
-              "goalDescriptionKey": null,
-              "suffix": null,
-              "suffixKey": null,
-              "isPenaltyShootoutEvent": false,
-              "nameStr": "Matheus Bianqui",
-              "firstName": "Matheus",
-              "lastName": "Bianqui",
-              "fullName": "Matheus Bianqui",
-              "playerId": 1116650,
-              "newScore": [
-                0,
-                1
-              ],
-              "penShootoutScore": null,
-              "shotmapEvent": {
-                "id": 2971555207,
-                "eventType": "Goal",
-                "teamId": 581838,
-                "playerId": 1116650,
-                "playerName": "Matheus Bianqui",
-                "x": 100.06896551759999,
-                "y": 32.3225,
-                "min": 45,
-                "minAdded": 4,
-                "isBlocked": false,
-                "isOnTarget": true,
-                "blockedX": null,
-                "blockedY": null,
-                "goalCrossedY": 35.525000000000006,
-                "goalCrossedZ": 1.1365263102,
-                "expectedGoals": 0.39897671341896057,
-                "expectedGoalsOnTarget": 0.7424931526184082,
-                "shotType": "Header",
-                "situation": "SetPiece",
-                "period": "FirstHalf",
-                "isOwnGoal": false,
-                "onGoalShot": {
-                  "x": 0.5965608465608451,
-                  "y": 0.30066833603174603,
-                  "zoomRatio": 1
-                },
-                "isSavedOffLine": false,
-                "isFromInsideBox": true,
-                "keeperId": 934515,
-                "firstName": "Matheus",
-                "lastName": "Bianqui",
-                "fullName": "Matheus Bianqui",
-                "teamColor": "#e09c00"
-              },
-              "assistStr": "assist by Madson",
-              "assistProfileUrl": "/players/319973/madson",
-              "assistPlayerId": 319973,
-              "assistKey": "assist_by",
-              "assistInput": "Madson"
-            }
-          ]
-        },
-        "homeTeamRedCards": {},
-        "awayTeamRedCards": {}
-      },
-      "momentum": [
-        {
-          "minute": 1,
-          "value": 5
-        },
-        {
-          "minute": 2,
-          "value": 24
-        },
-        {
-          "minute": 3,
-          "value": 19
-        },
-        {
-          "minute": 4,
-          "value": 14
-        },
-        {
-          "minute": 5,
-          "value": 0
-        },
-        {
-          "minute": 6,
-          "value": -3
-        },
-        {
-          "minute": 7,
-          "value": 0
-        },
-        {
-          "minute": 8,
-          "value": 5
-        },
-        {
-          "minute": 9,
-          "value": 19
-        },
-        {
-          "minute": 10,
-          "value": 16
-        },
-        {
-          "minute": 11,
-          "value": 30
-        },
-        {
-          "minute": 12,
-          "value": 22
-        },
-        {
-          "minute": 13,
-          "value": 11
-        },
-        {
-          "minute": 14,
-          "value": -14
-        },
-        {
-          "minute": 15,
-          "value": -11
-        },
-        {
-          "minute": 16,
-          "value": -22
-        },
-        {
-          "minute": 17,
-          "value": -33
-        },
-        {
-          "minute": 18,
-          "value": -49
-        },
-        {
-          "minute": 19,
-          "value": -60
-        },
-        {
-          "minute": 20,
-          "value": -68
-        },
-        {
-          "minute": 21,
-          "value": -57
-        },
-        {
-          "minute": 22,
-          "value": -52
-        },
-        {
-          "minute": 23,
-          "value": -33
-        },
-        {
-          "minute": 24,
-          "value": -33
-        },
-        {
-          "minute": 25,
-          "value": -27
-        },
-        {
-          "minute": 26,
-          "value": -27
-        },
-        {
-          "minute": 27,
-          "value": -19
-        },
-        {
-          "minute": 28,
-          "value": 3
-        },
-        {
-          "minute": 29,
-          "value": 3
-        },
-        {
-          "minute": 30,
-          "value": 0
-        },
-        {
-          "minute": 31,
-          "value": 0
-        },
-        {
-          "minute": 32,
-          "value": -11
-        },
-        {
-          "minute": 33,
-          "value": -16
-        },
-        {
-          "minute": 34,
-          "value": -22
-        },
-        {
-          "minute": 35,
-          "value": -11
-        },
-        {
-          "minute": 36,
-          "value": -16
-        },
-        {
-          "minute": 37,
-          "value": 11
-        },
-        {
-          "minute": 38,
-          "value": 3
-        },
-        {
-          "minute": 39,
-          "value": 11
-        },
-        {
-          "minute": 40,
-          "value": -5
-        },
-        {
-          "minute": 41,
-          "value": -3
-        },
-        {
-          "minute": 42,
-          "value": -54
-        },
-        {
-          "minute": 43,
-          "value": -38
-        },
-        {
-          "minute": 44,
-          "value": -33
-        },
-        {
-          "minute": 45,
-          "value": 22
-        },
-        {
-          "minute": 45.5,
-          "value": -46
-        },
-        {
-          "minute": 46,
-          "value": 0
-        },
-        {
-          "minute": 47,
-          "value": -5
-        },
-        {
-          "minute": 48,
-          "value": 16
-        },
-        {
-          "minute": 49,
-          "value": 8
-        },
-        {
-          "minute": 50,
-          "value": -3
-        },
-        {
-          "minute": 51,
-          "value": -14
-        },
-        {
-          "minute": 52,
-          "value": -5
-        },
-        {
-          "minute": 53,
-          "value": 5
-        },
-        {
-          "minute": 54,
-          "value": -5
-        },
-        {
-          "minute": 55,
-          "value": -5
-        },
-        {
-          "minute": 56,
-          "value": -5
-        },
-        {
-          "minute": 57,
-          "value": -5
-        },
-        {
-          "minute": 58,
-          "value": 5
-        },
-        {
-          "minute": 59,
-          "value": -33
-        },
-        {
-          "minute": 60,
-          "value": -14
-        },
-        {
-          "minute": 61,
-          "value": 38
-        },
-        {
-          "minute": 62,
-          "value": 52
-        },
-        {
-          "minute": 63,
-          "value": 27
-        },
-        {
-          "minute": 64,
-          "value": -41
-        },
-        {
-          "minute": 65,
-          "value": -60
-        },
-        {
-          "minute": 66,
-          "value": -81
-        },
-        {
-          "minute": 67,
-          "value": -84
-        },
-        {
-          "minute": 68,
-          "value": -60
-        },
-        {
-          "minute": 69,
-          "value": -43
-        },
-        {
-          "minute": 70,
-          "value": -24
-        },
-        {
-          "minute": 71,
-          "value": 8
-        },
-        {
-          "minute": 72,
-          "value": 24
-        },
-        {
-          "minute": 73,
-          "value": -14
-        },
-        {
-          "minute": 74,
-          "value": -22
-        },
-        {
-          "minute": 75,
-          "value": -16
-        },
-        {
-          "minute": 76,
-          "value": 16
-        },
-        {
-          "minute": 77,
-          "value": 22
-        },
-        {
-          "minute": 78,
-          "value": 22
-        },
-        {
-          "minute": 79,
-          "value": 5
-        },
-        {
-          "minute": 80,
-          "value": 0
-        },
-        {
-          "minute": 81,
-          "value": -65
-        },
-        {
-          "minute": 82,
-          "value": -60
-        },
-        {
-          "minute": 83,
-          "value": -60
-        },
-        {
-          "minute": 84,
-          "value": -5
-        },
-        {
-          "minute": 85,
-          "value": -27
-        },
-        {
-          "minute": 86,
-          "value": -33
-        },
-        {
-          "minute": 87,
-          "value": -38
-        },
-        {
-          "minute": 88,
-          "value": -22
-        },
-        {
-          "minute": 89,
-          "value": -22
-        },
-        {
-          "minute": 90,
-          "value": -84
-        },
-        {
-          "minute": 90.5,
-          "value": -73
-        }
-      ],
+      "detail_status": "NOT_APPLICABLE",
+      "team_stats": [],
+      "events": [],
+      "momentum": [],
       "shotmap": null,
       "lineup": null,
       "match_facts": null,
       "content_sections": null,
       "scenario_shadow": {
-        "segment": "76-FT",
+        "segment": "",
         "status": "NO_SCENARIO",
         "expected_control_side": "",
-        "live_control_side": "A",
+        "live_control_side": "UNKNOWN",
         "alignment": "UNKNOWN",
         "betting_action": "WAIT",
-        "live_control_score": -6.0,
-        "signals": [
-          "possession=46-54",
-          "shots=8-22",
-          "sot=3-8",
-          "box_touches=9-27",
-          "corners=2-9"
-        ]
+        "live_control_score": 0.0,
+        "signals": []
       },
       "hkjc_live_market": null
     },
@@ -1728,1526 +89,40 @@
       "league": "MLS",
       "home_en": "New York City",
       "away_en": "New York Red Bulls",
-      "live_score": "0-1",
-      "home_score": "0",
-      "away_score": "1",
-      "minute": "94",
-      "match_status": "LIVE",
-      "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
-      "source_match_id": "5071366",
-      "source_home": "New York City FC",
-      "source_away": "Red Bull New York",
-      "match_confidence": 0.864,
-      "source_updated_at": "2026-09-19T09:34:01+08:00",
-      "home_corners": 6,
-      "away_corners": 7,
-      "total_corners": 13,
+      "live_score": "",
+      "home_score": "",
+      "away_score": "",
+      "minute": "",
+      "match_status": "SOURCE_GAP_INPLAY",
+      "source": "SOURCE_GAP",
+      "source_match_id": "",
+      "source_home": "New York City",
+      "source_away": "New York Red Bulls",
+      "match_confidence": 1.0,
+      "source_updated_at": "2026-09-19T09:40:05+08:00",
+      "home_corners": "",
+      "away_corners": "",
+      "total_corners": "",
       "corner_line_ref": "9.5",
-      "corners_to_hi": 0,
-      "corner_progress": "13/9.5 · HI HIT",
-      "detail_status": "CAPTURED",
-      "team_stats": [
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "ballpossesion",
-          "title": "Ball possession",
-          "home": 63,
-          "away": 37
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": "2.15",
-          "away": "1.33"
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "total_shots",
-          "title": "Total shots",
-          "home": 16,
-          "away": 10
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "shotsontarget",
-          "title": "Shots on target",
-          "home": 4,
-          "away": 1
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "touches_opp_box",
-          "title": "Touches in opposition box",
-          "home": 37,
-          "away": 13
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "big_chance",
-          "title": "Big chances",
-          "home": 3,
-          "away": 3
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "big_chance_missed_title",
-          "title": "Big chances missed",
-          "home": 3,
-          "away": 2
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "accurate_passes",
-          "title": "Accurate passes",
-          "home": "427 (85%)",
-          "away": "223 (77%)"
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "yellow_cards",
-          "title": "Yellow cards",
-          "home": 2,
-          "away": 3
-        },
-        {
-          "period": "All",
-          "group": "Top stats",
-          "key": "corners",
-          "title": "Corners",
-          "home": 6,
-          "away": 7
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "shots",
-          "title": "Shots",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "shotsofftarget",
-          "title": "Shots off target",
-          "home": 6,
-          "away": 5
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "blocked_shots",
-          "title": "Blocked shots",
-          "home": 6,
-          "away": 4
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "shots_woodwork",
-          "title": "Hit woodwork",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "shots_inside_box",
-          "title": "Shots inside box",
-          "home": 12,
-          "away": 6
-        },
-        {
-          "period": "All",
-          "group": "Shots",
-          "key": "shots_outside_box",
-          "title": "Shots outside box",
-          "home": 4,
-          "away": 4
-        },
-        {
-          "period": "All",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_open_play",
-          "title": "xG open play",
-          "home": "2.04",
-          "away": "1.10"
-        },
-        {
-          "period": "All",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_set_play",
-          "title": "xG set play",
-          "home": "0.11",
-          "away": "0.23"
-        },
-        {
-          "period": "All",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_non_penalty",
-          "title": "xG non-penalty",
-          "home": "2.15",
-          "away": "1.33"
-        },
-        {
-          "period": "All",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_on_target",
-          "title": "xG on target (xGOT)",
-          "home": "1.07",
-          "away": "0.91"
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": 503,
-          "away": 291
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "own_half_passes",
-          "title": "Own half",
-          "home": 278,
-          "away": 119
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "opposition_half_passes",
-          "title": "Opposition half",
-          "home": 149,
-          "away": 104
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "long_balls_accurate",
-          "title": "Accurate long balls",
-          "home": "33 (53%)",
-          "away": "17 (38%)"
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "accurate_crosses",
-          "title": "Accurate crosses",
-          "home": "6 (33%)",
-          "away": "2 (15%)"
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "player_throws",
-          "title": "Throws",
-          "home": 20,
-          "away": 17
-        },
-        {
-          "period": "All",
-          "group": "Passes",
-          "key": "offsides",
-          "title": "Offsides",
-          "home": 0,
-          "away": 2
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "defense",
-          "title": "Defence",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "matchstats_headers_tackles",
-          "title": "Tackles",
-          "home": 14,
-          "away": 13
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "interceptions",
-          "title": "Interceptions",
-          "home": 5,
-          "away": 7
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "shot_blocks",
-          "title": "Blocks",
-          "home": 4,
-          "away": 6
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "clearances",
-          "title": "Clearances",
-          "home": 18,
-          "away": 25
-        },
-        {
-          "period": "All",
-          "group": "Defence",
-          "key": "keeper_saves",
-          "title": "Keeper saves",
-          "home": 0,
-          "away": 4
-        },
-        {
-          "period": "All",
-          "group": "Duels",
-          "key": "duels",
-          "title": "Duels",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Duels",
-          "key": "duel_won",
-          "title": "Duels won",
-          "home": 54,
-          "away": 41
-        },
-        {
-          "period": "All",
-          "group": "Duels",
-          "key": "ground_duels_won",
-          "title": "Ground duels won",
-          "home": "42 (60%)",
-          "away": "29 (42%)"
-        },
-        {
-          "period": "All",
-          "group": "Duels",
-          "key": "aerials_won",
-          "title": "Aerial duels won",
-          "home": "12 (50%)",
-          "away": "12 (48%)"
-        },
-        {
-          "period": "All",
-          "group": "Duels",
-          "key": "dribbles_succeeded",
-          "title": "Successful dribbles",
-          "home": "8 (57%)",
-          "away": "7 (50%)"
-        },
-        {
-          "period": "All",
-          "group": "Discipline",
-          "key": "discipline",
-          "title": "Discipline",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "All",
-          "group": "Discipline",
-          "key": "red_cards",
-          "title": "Red cards",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "All",
-          "group": "Discipline",
-          "key": "fouls",
-          "title": "Fouls committed",
-          "home": 9,
-          "away": 19
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "ballpossesion",
-          "title": "Ball possession",
-          "home": 69,
-          "away": 31
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": "0.23",
-          "away": "0.30"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "total_shots",
-          "title": "Total shots",
-          "home": 6,
-          "away": 3
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "shotsontarget",
-          "title": "Shots on target",
-          "home": 1,
-          "away": 0
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "touches_opp_box",
-          "title": "Touches in opposition box",
-          "home": 11,
-          "away": 7
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "big_chance",
-          "title": "Big chances",
-          "home": 0,
-          "away": 1
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "big_chance_missed_title",
-          "title": "Big chances missed",
-          "home": 0,
-          "away": 1
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "accurate_passes",
-          "title": "Accurate passes",
-          "home": "264 (87%)",
-          "away": "102 (77%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "yellow_cards",
-          "title": "Yellow cards",
-          "home": 1,
-          "away": 3
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Top stats",
-          "key": "corners",
-          "title": "Corners",
-          "home": 4,
-          "away": 4
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "shots",
-          "title": "Shots",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "shotsofftarget",
-          "title": "Shots off target",
-          "home": 2,
-          "away": 2
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "blocked_shots",
-          "title": "Blocked shots",
-          "home": 3,
-          "away": 1
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "shots_woodwork",
-          "title": "Hit woodwork",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "shots_inside_box",
-          "title": "Shots inside box",
-          "home": 3,
-          "away": 2
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Shots",
-          "key": "shots_outside_box",
-          "title": "Shots outside box",
-          "home": 3,
-          "away": 1
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_open_play",
-          "title": "xG open play",
-          "home": "0.19",
-          "away": "0.07"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_set_play",
-          "title": "xG set play",
-          "home": "0.04",
-          "away": "0.23"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_non_penalty",
-          "title": "xG non-penalty",
-          "home": "0.23",
-          "away": "0.30"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_on_target",
-          "title": "xG on target (xGOT)",
-          "home": "0.20",
-          "away": "0.00"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": 303,
-          "away": 133
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "own_half_passes",
-          "title": "Own half",
-          "home": 178,
-          "away": 60
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "opposition_half_passes",
-          "title": "Opposition half",
-          "home": 86,
-          "away": 42
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "long_balls_accurate",
-          "title": "Accurate long balls",
-          "home": "19 (53%)",
-          "away": "8 (38%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "accurate_crosses",
-          "title": "Accurate crosses",
-          "home": "1 (17%)",
-          "away": "1 (20%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "player_throws",
-          "title": "Throws",
-          "home": 7,
-          "away": 8
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Passes",
-          "key": "offsides",
-          "title": "Offsides",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "defense",
-          "title": "Defence",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "matchstats_headers_tackles",
-          "title": "Tackles",
-          "home": 8,
-          "away": 8
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "interceptions",
-          "title": "Interceptions",
-          "home": 2,
-          "away": 3
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "shot_blocks",
-          "title": "Blocks",
-          "home": 1,
-          "away": 3
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "clearances",
-          "title": "Clearances",
-          "home": 8,
-          "away": 14
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Defence",
-          "key": "keeper_saves",
-          "title": "Keeper saves",
-          "home": 0,
-          "away": 1
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Duels",
-          "key": "duels",
-          "title": "Duels",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Duels",
-          "key": "duel_won",
-          "title": "Duels won",
-          "home": 22,
-          "away": 19
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Duels",
-          "key": "ground_duels_won",
-          "title": "Ground duels won",
-          "home": "19 (59%)",
-          "away": "13 (41%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Duels",
-          "key": "aerials_won",
-          "title": "Aerial duels won",
-          "home": "3 (33%)",
-          "away": "6 (67%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Duels",
-          "key": "dribbles_succeeded",
-          "title": "Successful dribbles",
-          "home": "1 (20%)",
-          "away": "1 (20%)"
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Discipline",
-          "key": "discipline",
-          "title": "Discipline",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Discipline",
-          "key": "red_cards",
-          "title": "Red cards",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "FirstHalf",
-          "group": "Discipline",
-          "key": "fouls",
-          "title": "Fouls committed",
-          "home": 5,
-          "away": 10
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "ballpossesion",
-          "title": "Ball possession",
-          "home": 56,
-          "away": 44
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": "1.92",
-          "away": "1.03"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "total_shots",
-          "title": "Total shots",
-          "home": 10,
-          "away": 7
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "shotsontarget",
-          "title": "Shots on target",
-          "home": 3,
-          "away": 1
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "touches_opp_box",
-          "title": "Touches in opposition box",
-          "home": 26,
-          "away": 6
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "big_chance",
-          "title": "Big chances",
-          "home": 3,
-          "away": 2
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "big_chance_missed_title",
-          "title": "Big chances missed",
-          "home": 3,
-          "away": 1
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "accurate_passes",
-          "title": "Accurate passes",
-          "home": "163 (82%)",
-          "away": "121 (77%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "yellow_cards",
-          "title": "Yellow cards",
-          "home": 1,
-          "away": 0
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Top stats",
-          "key": "corners",
-          "title": "Corners",
-          "home": 2,
-          "away": 3
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "shots",
-          "title": "Shots",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "shotsofftarget",
-          "title": "Shots off target",
-          "home": 4,
-          "away": 3
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "blocked_shots",
-          "title": "Blocked shots",
-          "home": 3,
-          "away": 3
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "shots_woodwork",
-          "title": "Hit woodwork",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "shots_inside_box",
-          "title": "Shots inside box",
-          "home": 9,
-          "away": 4
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Shots",
-          "key": "shots_outside_box",
-          "title": "Shots outside box",
-          "home": 1,
-          "away": 3
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals",
-          "title": "Expected goals (xG)",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_open_play",
-          "title": "xG open play",
-          "home": "1.85",
-          "away": "1.03"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_set_play",
-          "title": "xG set play",
-          "home": "0.08",
-          "away": "0.00"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_non_penalty",
-          "title": "xG non-penalty",
-          "home": "1.92",
-          "away": "1.03"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Expected goals (xG)",
-          "key": "expected_goals_on_target",
-          "title": "xG on target (xGOT)",
-          "home": "0.86",
-          "away": "0.91"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "passes",
-          "title": "Passes",
-          "home": 200,
-          "away": 158
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "own_half_passes",
-          "title": "Own half",
-          "home": 100,
-          "away": 59
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "opposition_half_passes",
-          "title": "Opposition half",
-          "home": 63,
-          "away": 62
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "long_balls_accurate",
-          "title": "Accurate long balls",
-          "home": "14 (54%)",
-          "away": "9 (38%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "accurate_crosses",
-          "title": "Accurate crosses",
-          "home": "5 (42%)",
-          "away": "1 (13%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "player_throws",
-          "title": "Throws",
-          "home": 13,
-          "away": 9
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Passes",
-          "key": "offsides",
-          "title": "Offsides",
-          "home": 0,
-          "away": 2
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "defense",
-          "title": "Defence",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "matchstats_headers_tackles",
-          "title": "Tackles",
-          "home": 6,
-          "away": 5
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "interceptions",
-          "title": "Interceptions",
-          "home": 3,
-          "away": 4
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "shot_blocks",
-          "title": "Blocks",
-          "home": 3,
-          "away": 3
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "clearances",
-          "title": "Clearances",
-          "home": 10,
-          "away": 11
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Defence",
-          "key": "keeper_saves",
-          "title": "Keeper saves",
-          "home": 0,
-          "away": 3
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Duels",
-          "key": "duels",
-          "title": "Duels",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Duels",
-          "key": "duel_won",
-          "title": "Duels won",
-          "home": 32,
-          "away": 22
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Duels",
-          "key": "ground_duels_won",
-          "title": "Ground duels won",
-          "home": "23 (61%)",
-          "away": "16 (43%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Duels",
-          "key": "aerials_won",
-          "title": "Aerial duels won",
-          "home": "9 (60%)",
-          "away": "6 (38%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Duels",
-          "key": "dribbles_succeeded",
-          "title": "Successful dribbles",
-          "home": "7 (78%)",
-          "away": "6 (67%)"
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Discipline",
-          "key": "discipline",
-          "title": "Discipline",
-          "home": null,
-          "away": null
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Discipline",
-          "key": "red_cards",
-          "title": "Red cards",
-          "home": 0,
-          "away": 0
-        },
-        {
-          "period": "SecondHalf",
-          "group": "Discipline",
-          "key": "fouls",
-          "title": "Fouls committed",
-          "home": 4,
-          "away": 9
-        }
-      ],
-      "events": {
-        "homeTeamGoals": {},
-        "awayTeamGoals": {
-          "Hall": [
-            {
-              "reactKey": "1445304057Goal1489675undefinedfalse",
-              "timeStr": 57,
-              "type": "Goal",
-              "time": 57,
-              "overloadTime": null,
-              "eventId": 14453040,
-              "player": {
-                "id": 1489675,
-                "name": "Julian Hall",
-                "profileUrl": "/players/1489675/julian-hall"
-              },
-              "homeScore": 0,
-              "awayScore": 0,
-              "profileUrl": "/players/1489675/julian-hall",
-              "overloadTimeStr": false,
-              "isHome": false,
-              "ownGoal": null,
-              "goalDescription": null,
-              "goalDescriptionKey": null,
-              "suffix": null,
-              "suffixKey": null,
-              "isPenaltyShootoutEvent": false,
-              "nameStr": "Julian Hall",
-              "firstName": "Julian",
-              "lastName": "Hall",
-              "fullName": "Julian Hall",
-              "playerId": 1489675,
-              "newScore": [
-                0,
-                1
-              ],
-              "penShootoutScore": null,
-              "shotmapEvent": {
-                "id": 2971562909,
-                "eventType": "Goal",
-                "teamId": 6514,
-                "playerId": 1489675,
-                "playerName": "Julian Hall",
-                "x": 86.889705882,
-                "y": 29.631666665,
-                "min": 57,
-                "minAdded": null,
-                "isBlocked": false,
-                "isOnTarget": true,
-                "blockedX": null,
-                "blockedY": null,
-                "goalCrossedY": 33.8475,
-                "goalCrossedZ": 0.1219999994,
-                "expectedGoals": 0.4721442759037018,
-                "expectedGoalsOnTarget": 0.9124767780303955,
-                "shotType": "RightFoot",
-                "situation": "RegularPlay",
-                "period": "SecondHalf",
-                "isOwnGoal": false,
-                "onGoalShot": {
-                  "x": 1.0403439153439162,
-                  "y": 0.032275132116402115,
-                  "zoomRatio": 1
-                },
-                "isSavedOffLine": false,
-                "isFromInsideBox": false,
-                "keeperId": 1026065,
-                "firstName": "Julian",
-                "lastName": "Hall",
-                "fullName": "Julian Hall",
-                "teamColor": "#da0028"
-              },
-              "assistStr": null,
-              "assistProfileUrl": null
-            }
-          ]
-        },
-        "homeTeamRedCards": {},
-        "awayTeamRedCards": {}
-      },
-      "momentum": [
-        {
-          "minute": 1,
-          "value": 0
-        },
-        {
-          "minute": 2,
-          "value": 0
-        },
-        {
-          "minute": 3,
-          "value": 0
-        },
-        {
-          "minute": 4,
-          "value": 27
-        },
-        {
-          "minute": 5,
-          "value": 30
-        },
-        {
-          "minute": 6,
-          "value": 30
-        },
-        {
-          "minute": 7,
-          "value": -3
-        },
-        {
-          "minute": 8,
-          "value": -5
-        },
-        {
-          "minute": 9,
-          "value": -5
-        },
-        {
-          "minute": 10,
-          "value": -16
-        },
-        {
-          "minute": 11,
-          "value": -22
-        },
-        {
-          "minute": 12,
-          "value": -27
-        },
-        {
-          "minute": 13,
-          "value": -5
-        },
-        {
-          "minute": 14,
-          "value": 5
-        },
-        {
-          "minute": 15,
-          "value": 27
-        },
-        {
-          "minute": 16,
-          "value": 35
-        },
-        {
-          "minute": 17,
-          "value": 24
-        },
-        {
-          "minute": 18,
-          "value": 24
-        },
-        {
-          "minute": 19,
-          "value": 19
-        },
-        {
-          "minute": 20,
-          "value": 35
-        },
-        {
-          "minute": 21,
-          "value": 14
-        },
-        {
-          "minute": 22,
-          "value": 0
-        },
-        {
-          "minute": 23,
-          "value": -11
-        },
-        {
-          "minute": 24,
-          "value": -5
-        },
-        {
-          "minute": 25,
-          "value": -38
-        },
-        {
-          "minute": 26,
-          "value": -22
-        },
-        {
-          "minute": 27,
-          "value": -16
-        },
-        {
-          "minute": 28,
-          "value": 27
-        },
-        {
-          "minute": 29,
-          "value": 22
-        },
-        {
-          "minute": 30,
-          "value": 100
-        },
-        {
-          "minute": 31,
-          "value": 100
-        },
-        {
-          "minute": 32,
-          "value": 100
-        },
-        {
-          "minute": 33,
-          "value": 0
-        },
-        {
-          "minute": 34,
-          "value": -16
-        },
-        {
-          "minute": 35,
-          "value": 11
-        },
-        {
-          "minute": 36,
-          "value": 27
-        },
-        {
-          "minute": 37,
-          "value": 92
-        },
-        {
-          "minute": 38,
-          "value": 65
-        },
-        {
-          "minute": 39,
-          "value": 60
-        },
-        {
-          "minute": 40,
-          "value": 16
-        },
-        {
-          "minute": 41,
-          "value": 16
-        },
-        {
-          "minute": 42,
-          "value": 33
-        },
-        {
-          "minute": 43,
-          "value": 33
-        },
-        {
-          "minute": 44,
-          "value": 22
-        },
-        {
-          "minute": 45,
-          "value": -54
-        },
-        {
-          "minute": 45.5,
-          "value": -91
-        },
-        {
-          "minute": 46,
-          "value": -11
-        },
-        {
-          "minute": 47,
-          "value": -54
-        },
-        {
-          "minute": 48,
-          "value": -54
-        },
-        {
-          "minute": 49,
-          "value": -27
-        },
-        {
-          "minute": 50,
-          "value": 33
-        },
-        {
-          "minute": 51,
-          "value": 54
-        },
-        {
-          "minute": 52,
-          "value": 87
-        },
-        {
-          "minute": 53,
-          "value": 60
-        },
-        {
-          "minute": 54,
-          "value": 38
-        },
-        {
-          "minute": 55,
-          "value": 5
-        },
-        {
-          "minute": 56,
-          "value": 16
-        },
-        {
-          "minute": 57,
-          "value": 16
-        },
-        {
-          "minute": 58,
-          "value": -8
-        },
-        {
-          "minute": 59,
-          "value": 0
-        },
-        {
-          "minute": 60,
-          "value": 5
-        },
-        {
-          "minute": 61,
-          "value": 8
-        },
-        {
-          "minute": 62,
-          "value": 0
-        },
-        {
-          "minute": 63,
-          "value": -5
-        },
-        {
-          "minute": 64,
-          "value": -22
-        },
-        {
-          "minute": 65,
-          "value": -27
-        },
-        {
-          "minute": 66,
-          "value": -38
-        },
-        {
-          "minute": 67,
-          "value": -11
-        },
-        {
-          "minute": 68,
-          "value": 0
-        },
-        {
-          "minute": 69,
-          "value": 5
-        },
-        {
-          "minute": 70,
-          "value": -27
-        },
-        {
-          "minute": 71,
-          "value": -5
-        },
-        {
-          "minute": 72,
-          "value": 33
-        },
-        {
-          "minute": 73,
-          "value": 60
-        },
-        {
-          "minute": 74,
-          "value": 43
-        },
-        {
-          "minute": 75,
-          "value": 5
-        },
-        {
-          "minute": 76,
-          "value": 30
-        },
-        {
-          "minute": 77,
-          "value": 30
-        },
-        {
-          "minute": 78,
-          "value": 35
-        },
-        {
-          "minute": 79,
-          "value": 11
-        },
-        {
-          "minute": 80,
-          "value": 11
-        },
-        {
-          "minute": 81,
-          "value": 35
-        },
-        {
-          "minute": 82,
-          "value": 100
-        },
-        {
-          "minute": 83,
-          "value": 100
-        },
-        {
-          "minute": 84,
-          "value": 100
-        },
-        {
-          "minute": 85,
-          "value": 33
-        },
-        {
-          "minute": 86,
-          "value": -33
-        },
-        {
-          "minute": 87,
-          "value": -49
-        },
-        {
-          "minute": 88,
-          "value": -38
-        },
-        {
-          "minute": 89,
-          "value": -27
-        },
-        {
-          "minute": 90,
-          "value": 8
-        },
-        {
-          "minute": 90.5,
-          "value": 78
-        }
-      ],
+      "corners_to_hi": "",
+      "corner_progress": "",
+      "detail_status": "NOT_APPLICABLE",
+      "team_stats": [],
+      "events": [],
+      "momentum": [],
       "shotmap": null,
       "lineup": null,
       "match_facts": null,
       "content_sections": null,
       "scenario_shadow": {
-        "segment": "76-FT",
+        "segment": "",
         "status": "NO_SCENARIO",
         "expected_control_side": "",
-        "live_control_side": "H",
+        "live_control_side": "UNKNOWN",
         "alignment": "UNKNOWN",
         "betting_action": "WAIT",
-        "live_control_score": 5.0,
-        "signals": [
-          "possession=63-37",
-          "shots=16-10",
-          "sot=4-1",
-          "box_touches=37-13"
-        ]
+        "live_control_score": 0.0,
+        "signals": []
       },
       "hkjc_live_market": null
     },
@@ -3260,17 +135,17 @@
       "live_score": "1-0",
       "home_score": "1",
       "away_score": "0",
-      "minute": "73",
+      "minute": "79",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "5190720",
       "source_home": "São Bernardo",
       "source_away": "Atlético-GO",
       "match_confidence": 0.968,
-      "source_updated_at": "2026-09-19T09:34:01+08:00",
+      "source_updated_at": "2026-09-19T09:40:05+08:00",
       "home_corners": 1,
-      "away_corners": 7,
-      "total_corners": 8,
+      "away_corners": 8,
+      "total_corners": 9,
       "corner_line_ref": "",
       "corners_to_hi": "",
       "corner_progress": "",
@@ -3281,8 +156,8 @@
           "group": "Top stats",
           "key": "ballpossesion",
           "title": "Ball possession",
-          "home": 36,
-          "away": 64
+          "home": 34,
+          "away": 66
         },
         {
           "period": "All",
@@ -3290,7 +165,7 @@
           "key": "expected_goals",
           "title": "Expected goals (xG)",
           "home": "1.02",
-          "away": "1.22"
+          "away": "1.30"
         },
         {
           "period": "All",
@@ -3298,7 +173,7 @@
           "key": "total_shots",
           "title": "Total shots",
           "home": 5,
-          "away": 16
+          "away": 19
         },
         {
           "period": "All",
@@ -3306,7 +181,7 @@
           "key": "shotsontarget",
           "title": "Shots on target",
           "home": 3,
-          "away": 4
+          "away": 5
         },
         {
           "period": "All",
@@ -3314,7 +189,7 @@
           "key": "touches_opp_box",
           "title": "Touches in opposition box",
           "home": 5,
-          "away": 23
+          "away": 25
         },
         {
           "period": "All",
@@ -3337,8 +212,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "203 (83%)",
-          "away": "371 (88%)"
+          "home": "207 (80%)",
+          "away": "421 (88%)"
         },
         {
           "period": "All",
@@ -3354,7 +229,7 @@
           "key": "corners",
           "title": "Corners",
           "home": 1,
-          "away": 7
+          "away": 8
         },
         {
           "period": "All",
@@ -3370,7 +245,7 @@
           "key": "shotsofftarget",
           "title": "Shots off target",
           "home": 1,
-          "away": 4
+          "away": 5
         },
         {
           "period": "All",
@@ -3378,7 +253,7 @@
           "key": "blocked_shots",
           "title": "Blocked shots",
           "home": 1,
-          "away": 8
+          "away": 9
         },
         {
           "period": "All",
@@ -3394,7 +269,7 @@
           "key": "shots_inside_box",
           "title": "Shots inside box",
           "home": 3,
-          "away": 11
+          "away": 12
         },
         {
           "period": "All",
@@ -3402,7 +277,7 @@
           "key": "shots_outside_box",
           "title": "Shots outside box",
           "home": 2,
-          "away": 5
+          "away": 7
         },
         {
           "period": "All",
@@ -3426,7 +301,7 @@
           "key": "expected_goals_set_play",
           "title": "xG set play",
           "home": "0.00",
-          "away": "0.12"
+          "away": "0.20"
         },
         {
           "period": "All",
@@ -3434,7 +309,7 @@
           "key": "expected_goals_non_penalty",
           "title": "xG non-penalty",
           "home": "0.23",
-          "away": "1.22"
+          "away": "1.30"
         },
         {
           "period": "All",
@@ -3442,7 +317,7 @@
           "key": "expected_goals_on_target",
           "title": "xG on target (xGOT)",
           "home": "0.93",
-          "away": "0.85"
+          "away": "1.01"
         },
         {
           "period": "All",
@@ -3457,32 +332,32 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 246,
-          "away": 420
+          "home": 259,
+          "away": 478
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "own_half_passes",
           "title": "Own half",
-          "home": 123,
-          "away": 134
+          "home": 124,
+          "away": 145
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 80,
-          "away": 237
+          "home": 83,
+          "away": 276
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "21 (47%)",
-          "away": "20 (63%)"
+          "home": "22 (43%)",
+          "away": "21 (58%)"
         },
         {
           "period": "All",
@@ -3490,15 +365,15 @@
           "key": "accurate_crosses",
           "title": "Accurate crosses",
           "home": "0 (0%)",
-          "away": "10 (32%)"
+          "away": "11 (33%)"
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "player_throws",
           "title": "Throws",
-          "home": 6,
-          "away": 19
+          "home": 8,
+          "away": 20
         },
         {
           "period": "All",
@@ -3522,22 +397,22 @@
           "key": "matchstats_headers_tackles",
           "title": "Tackles",
           "home": 9,
-          "away": 14
+          "away": 16
         },
         {
           "period": "All",
           "group": "Defence",
           "key": "interceptions",
           "title": "Interceptions",
-          "home": 3,
-          "away": 5
+          "home": 4,
+          "away": 6
         },
         {
           "period": "All",
           "group": "Defence",
           "key": "shot_blocks",
           "title": "Blocks",
-          "home": 8,
+          "home": 9,
           "away": 1
         },
         {
@@ -3545,7 +420,7 @@
           "group": "Defence",
           "key": "clearances",
           "title": "Clearances",
-          "home": 28,
+          "home": 31,
           "away": 10
         },
         {
@@ -3553,7 +428,7 @@
           "group": "Defence",
           "key": "keeper_saves",
           "title": "Keeper saves",
-          "home": 4,
+          "home": 5,
           "away": 2
         },
         {
@@ -3569,31 +444,31 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 26,
-          "away": 33
+          "home": 28,
+          "away": 37
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "22 (47%)",
-          "away": "25 (53%)"
+          "home": "23 (45%)",
+          "away": "28 (55%)"
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "aerials_won",
           "title": "Aerial duels won",
-          "home": "4 (33%)",
-          "away": "8 (67%)"
+          "home": "5 (36%)",
+          "away": "9 (64%)"
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "dribbles_succeeded",
           "title": "Successful dribbles",
-          "home": "2 (29%)",
+          "home": "2 (25%)",
           "away": "3 (60%)"
         },
         {
@@ -3617,8 +492,8 @@
           "group": "Discipline",
           "key": "fouls",
           "title": "Fouls committed",
-          "home": 8,
-          "away": 11
+          "home": 9,
+          "away": 12
         },
         {
           "period": "FirstHalf",
@@ -3969,8 +844,8 @@
           "group": "Top stats",
           "key": "ballpossesion",
           "title": "Ball possession",
-          "home": 29,
-          "away": 71
+          "home": 27,
+          "away": 73
         },
         {
           "period": "SecondHalf",
@@ -3978,7 +853,7 @@
           "key": "expected_goals",
           "title": "Expected goals (xG)",
           "home": "1.00",
-          "away": "0.33"
+          "away": "0.40"
         },
         {
           "period": "SecondHalf",
@@ -3986,7 +861,7 @@
           "key": "total_shots",
           "title": "Total shots",
           "home": 4,
-          "away": 3
+          "away": 6
         },
         {
           "period": "SecondHalf",
@@ -3994,7 +869,7 @@
           "key": "shotsontarget",
           "title": "Shots on target",
           "home": 2,
-          "away": 1
+          "away": 2
         },
         {
           "period": "SecondHalf",
@@ -4002,7 +877,7 @@
           "key": "touches_opp_box",
           "title": "Touches in opposition box",
           "home": 4,
-          "away": 4
+          "away": 6
         },
         {
           "period": "SecondHalf",
@@ -4025,8 +900,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "43 (80%)",
-          "away": "116 (88%)"
+          "home": "47 (70%)",
+          "away": "166 (87%)"
         },
         {
           "period": "SecondHalf",
@@ -4042,7 +917,7 @@
           "key": "corners",
           "title": "Corners",
           "home": 1,
-          "away": 2
+          "away": 3
         },
         {
           "period": "SecondHalf",
@@ -4058,7 +933,7 @@
           "key": "shotsofftarget",
           "title": "Shots off target",
           "home": 1,
-          "away": 0
+          "away": 1
         },
         {
           "period": "SecondHalf",
@@ -4066,7 +941,7 @@
           "key": "blocked_shots",
           "title": "Blocked shots",
           "home": 1,
-          "away": 2
+          "away": 3
         },
         {
           "period": "SecondHalf",
@@ -4082,7 +957,7 @@
           "key": "shots_inside_box",
           "title": "Shots inside box",
           "home": 3,
-          "away": 3
+          "away": 4
         },
         {
           "period": "SecondHalf",
@@ -4090,7 +965,7 @@
           "key": "shots_outside_box",
           "title": "Shots outside box",
           "home": 1,
-          "away": 0
+          "away": 2
         },
         {
           "period": "SecondHalf",
@@ -4114,7 +989,7 @@
           "key": "expected_goals_set_play",
           "title": "xG set play",
           "home": "0.00",
-          "away": "0.00"
+          "away": "0.07"
         },
         {
           "period": "SecondHalf",
@@ -4122,7 +997,7 @@
           "key": "expected_goals_non_penalty",
           "title": "xG non-penalty",
           "home": "0.21",
-          "away": "0.33"
+          "away": "0.40"
         },
         {
           "period": "SecondHalf",
@@ -4130,7 +1005,7 @@
           "key": "expected_goals_on_target",
           "title": "xG on target (xGOT)",
           "home": "0.91",
-          "away": "0.20"
+          "away": "0.36"
         },
         {
           "period": "SecondHalf",
@@ -4145,32 +1020,32 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 54,
-          "away": 132
+          "home": 67,
+          "away": 190
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "own_half_passes",
           "title": "Own half",
-          "home": 26,
-          "away": 46
+          "home": 27,
+          "away": 57
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 17,
-          "away": 70
+          "home": 20,
+          "away": 109
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "8 (57%)",
-          "away": "5 (42%)"
+          "home": "9 (45%)",
+          "away": "6 (38%)"
         },
         {
           "period": "SecondHalf",
@@ -4178,15 +1053,15 @@
           "key": "accurate_crosses",
           "title": "Accurate crosses",
           "home": "0 (0%)",
-          "away": "1 (14%)"
+          "away": "2 (22%)"
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "player_throws",
           "title": "Throws",
-          "home": 0,
-          "away": 3
+          "home": 2,
+          "away": 4
         },
         {
           "period": "SecondHalf",
@@ -4210,22 +1085,22 @@
           "key": "matchstats_headers_tackles",
           "title": "Tackles",
           "home": 3,
-          "away": 4
+          "away": 6
         },
         {
           "period": "SecondHalf",
           "group": "Defence",
           "key": "interceptions",
           "title": "Interceptions",
-          "home": 1,
-          "away": 1
+          "home": 2,
+          "away": 2
         },
         {
           "period": "SecondHalf",
           "group": "Defence",
           "key": "shot_blocks",
           "title": "Blocks",
-          "home": 2,
+          "home": 3,
           "away": 1
         },
         {
@@ -4233,7 +1108,7 @@
           "group": "Defence",
           "key": "clearances",
           "title": "Clearances",
-          "home": 5,
+          "home": 8,
           "away": 4
         },
         {
@@ -4241,7 +1116,7 @@
           "group": "Defence",
           "key": "keeper_saves",
           "title": "Keeper saves",
-          "home": 1,
+          "home": 2,
           "away": 1
         },
         {
@@ -4257,31 +1132,31 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 7,
-          "away": 10
+          "home": 9,
+          "away": 14
         },
         {
           "period": "SecondHalf",
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "7 (44%)",
-          "away": "9 (56%)"
+          "home": "8 (40%)",
+          "away": "12 (60%)"
         },
         {
           "period": "SecondHalf",
           "group": "Duels",
           "key": "aerials_won",
           "title": "Aerial duels won",
-          "home": "0 (0%)",
-          "away": "1 (100%)"
+          "home": "1 (33%)",
+          "away": "2 (67%)"
         },
         {
           "period": "SecondHalf",
           "group": "Duels",
           "key": "dribbles_succeeded",
           "title": "Successful dribbles",
-          "home": "1 (50%)",
+          "home": "1 (33%)",
           "away": "2 (67%)"
         },
         {
@@ -4305,8 +1180,8 @@
           "group": "Discipline",
           "key": "fouls",
           "title": "Fouls committed",
-          "home": 3,
-          "away": 3
+          "home": 4,
+          "away": 4
         }
       ],
       "events": {
@@ -4351,8 +1226,8 @@
                 "teamId": 231931,
                 "playerId": 162662,
                 "playerName": "Felipe Garcia",
-                "x": 93.9,
-                "y": 34.07625,
+                "x": 94,
+                "y": 34,
                 "min": 65,
                 "minAdded": null,
                 "isBlocked": false,
@@ -4673,6 +1548,38 @@
         {
           "minute": 70,
           "value": -16
+        },
+        {
+          "minute": 71,
+          "value": -27
+        },
+        {
+          "minute": 72,
+          "value": -49
+        },
+        {
+          "minute": 73,
+          "value": -38
+        },
+        {
+          "minute": 74,
+          "value": 0
+        },
+        {
+          "minute": 75,
+          "value": 5
+        },
+        {
+          "minute": 76,
+          "value": 5
+        },
+        {
+          "minute": 77,
+          "value": -57
+        },
+        {
+          "minute": 78,
+          "value": -46
         }
       ],
       "shotmap": null,
@@ -4680,7 +1587,7 @@
       "match_facts": null,
       "content_sections": null,
       "scenario_shadow": {
-        "segment": "61-75",
+        "segment": "76-FT",
         "status": "NO_SCENARIO",
         "expected_control_side": "",
         "live_control_side": "A",
@@ -4688,11 +1595,11 @@
         "betting_action": "WAIT",
         "live_control_score": -6.0,
         "signals": [
-          "possession=36-64",
-          "shots=5-16",
-          "sot=3-4",
-          "box_touches=5-23",
-          "corners=1-7"
+          "possession=34-66",
+          "shots=5-19",
+          "sot=3-5",
+          "box_touches=5-25",
+          "corners=1-8"
         ]
       },
       "hkjc_live_market": null
@@ -4706,20 +1613,20 @@
       "live_score": "2-1",
       "home_score": "2",
       "away_score": "1",
-      "minute": "61",
+      "minute": "67",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "1000019542",
       "source_home": "Racing Club",
       "source_away": "Sarmiento",
       "match_confidence": 0.998,
-      "source_updated_at": "2026-09-19T09:34:01+08:00",
-      "home_corners": 4,
-      "away_corners": 0,
-      "total_corners": 4,
+      "source_updated_at": "2026-09-19T09:40:05+08:00",
+      "home_corners": 5,
+      "away_corners": 1,
+      "total_corners": 6,
       "corner_line_ref": "9.5",
-      "corners_to_hi": 6,
-      "corner_progress": "4/9.5 · +6",
+      "corners_to_hi": 4,
+      "corner_progress": "6/9.5 · +4",
       "detail_status": "CAPTURED",
       "team_stats": [
         {
@@ -4727,24 +1634,24 @@
           "group": "Top stats",
           "key": "ballpossesion",
           "title": "Ball possession",
-          "home": 69,
-          "away": 31
+          "home": 68,
+          "away": 32
         },
         {
           "period": "All",
           "group": "Top stats",
           "key": "expected_goals",
           "title": "Expected goals (xG)",
-          "home": "0.75",
-          "away": "0.49"
+          "home": "1.25",
+          "away": "0.50"
         },
         {
           "period": "All",
           "group": "Top stats",
           "key": "total_shots",
           "title": "Total shots",
-          "home": 10,
-          "away": 4
+          "home": 11,
+          "away": 6
         },
         {
           "period": "All",
@@ -4759,15 +1666,15 @@
           "group": "Top stats",
           "key": "touches_opp_box",
           "title": "Touches in opposition box",
-          "home": 24,
-          "away": 2
+          "home": 28,
+          "away": 3
         },
         {
           "period": "All",
           "group": "Top stats",
           "key": "big_chance",
           "title": "Big chances",
-          "home": 2,
+          "home": 3,
           "away": 1
         },
         {
@@ -4775,7 +1682,7 @@
           "group": "Top stats",
           "key": "big_chance_missed_title",
           "title": "Big chances missed",
-          "home": 1,
+          "home": 2,
           "away": 0
         },
         {
@@ -4783,8 +1690,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "274 (83%)",
-          "away": "86 (56%)"
+          "home": "287 (83%)",
+          "away": "96 (57%)"
         },
         {
           "period": "All",
@@ -4799,8 +1706,8 @@
           "group": "Top stats",
           "key": "corners",
           "title": "Corners",
-          "home": 4,
-          "away": 0
+          "home": 5,
+          "away": 1
         },
         {
           "period": "All",
@@ -4815,8 +1722,8 @@
           "group": "Shots",
           "key": "shotsofftarget",
           "title": "Shots off target",
-          "home": 4,
-          "away": 2
+          "home": 5,
+          "away": 4
         },
         {
           "period": "All",
@@ -4839,7 +1746,7 @@
           "group": "Shots",
           "key": "shots_inside_box",
           "title": "Shots inside box",
-          "home": 7,
+          "home": 8,
           "away": 1
         },
         {
@@ -4848,7 +1755,7 @@
           "key": "shots_outside_box",
           "title": "Shots outside box",
           "home": 3,
-          "away": 3
+          "away": 5
         },
         {
           "period": "All",
@@ -4863,7 +1770,7 @@
           "group": "Expected goals (xG)",
           "key": "expected_goals_open_play",
           "title": "xG open play",
-          "home": "0.24",
+          "home": "0.74",
           "away": "0.49"
         },
         {
@@ -4872,15 +1779,15 @@
           "key": "expected_goals_set_play",
           "title": "xG set play",
           "home": "0.51",
-          "away": "0.00"
+          "away": "0.01"
         },
         {
           "period": "All",
           "group": "Expected goals (xG)",
           "key": "expected_goals_non_penalty",
           "title": "xG non-penalty",
-          "home": "0.75",
-          "away": "0.49"
+          "home": "1.25",
+          "away": "0.50"
         },
         {
           "period": "All",
@@ -4903,48 +1810,48 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 329,
-          "away": 154
+          "home": 346,
+          "away": 167
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "own_half_passes",
           "title": "Own half",
-          "home": 155,
-          "away": 58
+          "home": 158,
+          "away": 62
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 119,
-          "away": 28
+          "home": 129,
+          "away": 34
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "15 (39%)",
-          "away": "15 (31%)"
+          "home": "17 (41%)",
+          "away": "18 (35%)"
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "accurate_crosses",
           "title": "Accurate crosses",
-          "home": "3 (15%)",
-          "away": "1 (33%)"
+          "home": "3 (14%)",
+          "away": "1 (17%)"
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "player_throws",
           "title": "Throws",
-          "home": 18,
-          "away": 10
+          "home": 20,
+          "away": 12
         },
         {
           "period": "All",
@@ -4968,7 +1875,7 @@
           "key": "matchstats_headers_tackles",
           "title": "Tackles",
           "home": 8,
-          "away": 6
+          "away": 9
         },
         {
           "period": "All",
@@ -4991,8 +1898,8 @@
           "group": "Defence",
           "key": "clearances",
           "title": "Clearances",
-          "home": 11,
-          "away": 30
+          "home": 15,
+          "away": 35
         },
         {
           "period": "All",
@@ -5015,32 +1922,32 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 37,
-          "away": 28
+          "home": 38,
+          "away": 37
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "25 (69%)",
-          "away": "11 (31%)"
+          "home": "25 (60%)",
+          "away": "17 (40%)"
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "aerials_won",
           "title": "Aerial duels won",
-          "home": "12 (41%)",
-          "away": "17 (59%)"
+          "home": "13 (39%)",
+          "away": "20 (61%)"
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "dribbles_succeeded",
           "title": "Successful dribbles",
-          "home": "7 (88%)",
-          "away": "3 (50%)"
+          "home": "7 (70%)",
+          "away": "4 (57%)"
         },
         {
           "period": "All",
@@ -5063,7 +1970,7 @@
           "group": "Discipline",
           "key": "fouls",
           "title": "Fouls committed",
-          "home": 2,
+          "home": 5,
           "away": 11
         },
         {
@@ -5415,24 +2322,24 @@
           "group": "Top stats",
           "key": "ballpossesion",
           "title": "Ball possession",
-          "home": 64,
-          "away": 36
+          "home": 62,
+          "away": 38
         },
         {
           "period": "SecondHalf",
           "group": "Top stats",
           "key": "expected_goals",
           "title": "Expected goals (xG)",
-          "home": "0.60",
-          "away": "0.04"
+          "home": "1.10",
+          "away": "0.05"
         },
         {
           "period": "SecondHalf",
           "group": "Top stats",
           "key": "total_shots",
           "title": "Total shots",
-          "home": 5,
-          "away": 3
+          "home": 6,
+          "away": 5
         },
         {
           "period": "SecondHalf",
@@ -5447,15 +2354,15 @@
           "group": "Top stats",
           "key": "touches_opp_box",
           "title": "Touches in opposition box",
-          "home": 8,
-          "away": 1
+          "home": 12,
+          "away": 2
         },
         {
           "period": "SecondHalf",
           "group": "Top stats",
           "key": "big_chance",
           "title": "Big chances",
-          "home": 2,
+          "home": 3,
           "away": 0
         },
         {
@@ -5463,7 +2370,7 @@
           "group": "Top stats",
           "key": "big_chance_missed_title",
           "title": "Big chances missed",
-          "home": 1,
+          "home": 2,
           "away": 0
         },
         {
@@ -5471,8 +2378,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "47 (81%)",
-          "away": "23 (68%)"
+          "home": "60 (80%)",
+          "away": "33 (70%)"
         },
         {
           "period": "SecondHalf",
@@ -5487,8 +2394,8 @@
           "group": "Top stats",
           "key": "corners",
           "title": "Corners",
-          "home": 2,
-          "away": 0
+          "home": 3,
+          "away": 1
         },
         {
           "period": "SecondHalf",
@@ -5503,8 +2410,8 @@
           "group": "Shots",
           "key": "shotsofftarget",
           "title": "Shots off target",
-          "home": 2,
-          "away": 2
+          "home": 3,
+          "away": 4
         },
         {
           "period": "SecondHalf",
@@ -5527,7 +2434,7 @@
           "group": "Shots",
           "key": "shots_inside_box",
           "title": "Shots inside box",
-          "home": 4,
+          "home": 5,
           "away": 0
         },
         {
@@ -5536,7 +2443,7 @@
           "key": "shots_outside_box",
           "title": "Shots outside box",
           "home": 1,
-          "away": 3
+          "away": 5
         },
         {
           "period": "SecondHalf",
@@ -5551,7 +2458,7 @@
           "group": "Expected goals (xG)",
           "key": "expected_goals_open_play",
           "title": "xG open play",
-          "home": "0.18",
+          "home": "0.68",
           "away": "0.04"
         },
         {
@@ -5560,15 +2467,15 @@
           "key": "expected_goals_set_play",
           "title": "xG set play",
           "home": "0.42",
-          "away": "0.00"
+          "away": "0.01"
         },
         {
           "period": "SecondHalf",
           "group": "Expected goals (xG)",
           "key": "expected_goals_non_penalty",
           "title": "xG non-penalty",
-          "home": "0.60",
-          "away": "0.04"
+          "home": "1.10",
+          "away": "0.05"
         },
         {
           "period": "SecondHalf",
@@ -5591,39 +2498,39 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 58,
-          "away": 34
+          "home": 75,
+          "away": 47
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "own_half_passes",
           "title": "Own half",
-          "home": 29,
-          "away": 15
+          "home": 32,
+          "away": 19
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 18,
-          "away": 8
+          "home": 28,
+          "away": 14
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "3 (43%)",
-          "away": "2 (25%)"
+          "home": "5 (50%)",
+          "away": "5 (45%)"
         },
         {
           "period": "SecondHalf",
           "group": "Passes",
           "key": "accurate_crosses",
           "title": "Accurate crosses",
-          "home": "2 (22%)",
+          "home": "2 (20%)",
           "away": "0 (0%)"
         },
         {
@@ -5631,8 +2538,8 @@
           "group": "Passes",
           "key": "player_throws",
           "title": "Throws",
-          "home": 8,
-          "away": 2
+          "home": 10,
+          "away": 4
         },
         {
           "period": "SecondHalf",
@@ -5656,7 +2563,7 @@
           "key": "matchstats_headers_tackles",
           "title": "Tackles",
           "home": 0,
-          "away": 0
+          "away": 3
         },
         {
           "period": "SecondHalf",
@@ -5679,8 +2586,8 @@
           "group": "Defence",
           "key": "clearances",
           "title": "Clearances",
-          "home": 2,
-          "away": 13
+          "home": 6,
+          "away": 18
         },
         {
           "period": "SecondHalf",
@@ -5703,32 +2610,32 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 7,
-          "away": 5
+          "home": 8,
+          "away": 14
         },
         {
           "period": "SecondHalf",
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "5 (83%)",
-          "away": "1 (17%)"
+          "home": "5 (42%)",
+          "away": "7 (58%)"
         },
         {
           "period": "SecondHalf",
           "group": "Duels",
           "key": "aerials_won",
           "title": "Aerial duels won",
-          "home": "2 (33%)",
-          "away": "4 (67%)"
+          "home": "3 (30%)",
+          "away": "7 (70%)"
         },
         {
           "period": "SecondHalf",
           "group": "Duels",
           "key": "dribbles_succeeded",
           "title": "Successful dribbles",
-          "home": "2 (100%)",
-          "away": "1 (100%)"
+          "home": "2 (50%)",
+          "away": "2 (100%)"
         },
         {
           "period": "SecondHalf",
@@ -5751,7 +2658,7 @@
           "group": "Discipline",
           "key": "fouls",
           "title": "Fouls committed",
-          "home": 0,
+          "home": 3,
           "away": 3
         }
       ],
@@ -6235,6 +3142,34 @@
         {
           "minute": 60,
           "value": 11
+        },
+        {
+          "minute": 61,
+          "value": -11
+        },
+        {
+          "minute": 62,
+          "value": 43
+        },
+        {
+          "minute": 63,
+          "value": 41
+        },
+        {
+          "minute": 64,
+          "value": 52
+        },
+        {
+          "minute": 65,
+          "value": 11
+        },
+        {
+          "minute": 66,
+          "value": 14
+        },
+        {
+          "minute": 67,
+          "value": 8
         }
       ],
       "shotmap": null,
@@ -6250,11 +3185,11 @@
         "betting_action": "WAIT",
         "live_control_score": 6.0,
         "signals": [
-          "possession=69-31",
-          "shots=10-4",
+          "possession=68-32",
+          "shots=11-6",
           "sot=5-1",
-          "box_touches=24-2",
-          "corners=4-0"
+          "box_touches=28-3",
+          "corners=5-1"
         ]
       },
       "hkjc_live_market": null
@@ -6268,20 +3203,20 @@
       "live_score": "0-0",
       "home_score": "0",
       "away_score": "0",
-      "minute": "33",
+      "minute": "39",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "1000014571",
       "source_home": "Puebla",
       "source_away": "Atlante",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-19T09:34:01+08:00",
-      "home_corners": 2,
+      "source_updated_at": "2026-09-19T09:40:05+08:00",
+      "home_corners": 4,
       "away_corners": 2,
-      "total_corners": 4,
+      "total_corners": 6,
       "corner_line_ref": "10.5",
-      "corners_to_hi": 7,
-      "corner_progress": "4/10.5 · +7",
+      "corners_to_hi": 5,
+      "corner_progress": "6/10.5 · +5",
       "detail_status": "CAPTURED",
       "team_stats": [
         {
@@ -6289,24 +3224,24 @@
           "group": "Top stats",
           "key": "ballpossesion",
           "title": "Ball possession",
-          "home": 50,
-          "away": 50
+          "home": 51,
+          "away": 49
         },
         {
           "period": "All",
           "group": "Top stats",
           "key": "expected_goals",
           "title": "Expected goals (xG)",
-          "home": "0.05",
-          "away": "0.22"
+          "home": "0.11",
+          "away": "0.30"
         },
         {
           "period": "All",
           "group": "Top stats",
           "key": "total_shots",
           "title": "Total shots",
-          "home": 2,
-          "away": 8
+          "home": 3,
+          "away": 9
         },
         {
           "period": "All",
@@ -6321,7 +3256,7 @@
           "group": "Top stats",
           "key": "touches_opp_box",
           "title": "Touches in opposition box",
-          "home": 6,
+          "home": 10,
           "away": 15
         },
         {
@@ -6345,8 +3280,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "123 (79%)",
-          "away": "123 (83%)"
+          "home": "134 (80%)",
+          "away": "132 (82%)"
         },
         {
           "period": "All",
@@ -6361,7 +3296,7 @@
           "group": "Top stats",
           "key": "corners",
           "title": "Corners",
-          "home": 2,
+          "home": 4,
           "away": 2
         },
         {
@@ -6377,8 +3312,8 @@
           "group": "Shots",
           "key": "shotsofftarget",
           "title": "Shots off target",
-          "home": 1,
-          "away": 6
+          "home": 2,
+          "away": 7
         },
         {
           "period": "All",
@@ -6401,7 +3336,7 @@
           "group": "Shots",
           "key": "shots_inside_box",
           "title": "Shots inside box",
-          "home": 1,
+          "home": 2,
           "away": 3
         },
         {
@@ -6410,7 +3345,7 @@
           "key": "shots_outside_box",
           "title": "Shots outside box",
           "home": 1,
-          "away": 5
+          "away": 6
         },
         {
           "period": "All",
@@ -6425,8 +3360,8 @@
           "group": "Expected goals (xG)",
           "key": "expected_goals_open_play",
           "title": "xG open play",
-          "home": "0.04",
-          "away": "0.20"
+          "home": "0.09",
+          "away": "0.28"
         },
         {
           "period": "All",
@@ -6441,8 +3376,8 @@
           "group": "Expected goals (xG)",
           "key": "expected_goals_non_penalty",
           "title": "xG non-penalty",
-          "home": "0.05",
-          "away": "0.22"
+          "home": "0.11",
+          "away": "0.30"
         },
         {
           "period": "All",
@@ -6457,31 +3392,31 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 155,
-          "away": 148
+          "home": 168,
+          "away": 161
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "own_half_passes",
           "title": "Own half",
-          "home": 80,
-          "away": 66
+          "home": 87,
+          "away": 72
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 43,
-          "away": 57
+          "home": 47,
+          "away": 60
         },
         {
           "period": "All",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "12 (60%)",
+          "home": "13 (59%)",
           "away": "4 (40%)"
         },
         {
@@ -6489,7 +3424,7 @@
           "group": "Passes",
           "key": "accurate_crosses",
           "title": "Accurate crosses",
-          "home": "2 (50%)",
+          "home": "1 (17%)",
           "away": "0 (0%)"
         },
         {
@@ -6498,7 +3433,7 @@
           "key": "player_throws",
           "title": "Throws",
           "home": 9,
-          "away": 6
+          "away": 9
         },
         {
           "period": "All",
@@ -6521,15 +3456,15 @@
           "group": "Defence",
           "key": "matchstats_headers_tackles",
           "title": "Tackles",
-          "home": 5,
-          "away": 8
+          "home": 6,
+          "away": 12
         },
         {
           "period": "All",
           "group": "Defence",
           "key": "interceptions",
           "title": "Interceptions",
-          "home": 5,
+          "home": 6,
           "away": 2
         },
         {
@@ -6545,8 +3480,8 @@
           "group": "Defence",
           "key": "clearances",
           "title": "Clearances",
-          "home": 10,
-          "away": 10
+          "home": 11,
+          "away": 14
         },
         {
           "period": "All",
@@ -6569,31 +3504,31 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 24,
-          "away": 22
+          "home": 27,
+          "away": 30
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "12 (43%)",
-          "away": "16 (57%)"
+          "home": "15 (44%)",
+          "away": "20 (56%)"
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "aerials_won",
           "title": "Aerial duels won",
-          "home": "12 (67%)",
-          "away": "6 (33%)"
+          "home": "12 (55%)",
+          "away": "10 (45%)"
         },
         {
           "period": "All",
           "group": "Duels",
           "key": "dribbles_succeeded",
           "title": "Successful dribbles",
-          "home": "4 (57%)",
+          "home": "6 (67%)",
           "away": "6 (67%)"
         },
         {
@@ -6625,24 +3560,24 @@
           "group": "Top stats",
           "key": "ballpossesion",
           "title": "Ball possession",
-          "home": 50,
-          "away": 50
+          "home": 51,
+          "away": 49
         },
         {
           "period": "FirstHalf",
           "group": "Top stats",
           "key": "expected_goals",
           "title": "Expected goals (xG)",
-          "home": "0.05",
-          "away": "0.22"
+          "home": "0.11",
+          "away": "0.30"
         },
         {
           "period": "FirstHalf",
           "group": "Top stats",
           "key": "total_shots",
           "title": "Total shots",
-          "home": 2,
-          "away": 8
+          "home": 3,
+          "away": 9
         },
         {
           "period": "FirstHalf",
@@ -6657,7 +3592,7 @@
           "group": "Top stats",
           "key": "touches_opp_box",
           "title": "Touches in opposition box",
-          "home": 6,
+          "home": 10,
           "away": 15
         },
         {
@@ -6681,8 +3616,8 @@
           "group": "Top stats",
           "key": "accurate_passes",
           "title": "Accurate passes",
-          "home": "123 (79%)",
-          "away": "123 (83%)"
+          "home": "134 (80%)",
+          "away": "132 (82%)"
         },
         {
           "period": "FirstHalf",
@@ -6697,7 +3632,7 @@
           "group": "Top stats",
           "key": "corners",
           "title": "Corners",
-          "home": 2,
+          "home": 4,
           "away": 2
         },
         {
@@ -6713,8 +3648,8 @@
           "group": "Shots",
           "key": "shotsofftarget",
           "title": "Shots off target",
-          "home": 1,
-          "away": 6
+          "home": 2,
+          "away": 7
         },
         {
           "period": "FirstHalf",
@@ -6737,7 +3672,7 @@
           "group": "Shots",
           "key": "shots_inside_box",
           "title": "Shots inside box",
-          "home": 1,
+          "home": 2,
           "away": 3
         },
         {
@@ -6746,7 +3681,7 @@
           "key": "shots_outside_box",
           "title": "Shots outside box",
           "home": 1,
-          "away": 5
+          "away": 6
         },
         {
           "period": "FirstHalf",
@@ -6761,8 +3696,8 @@
           "group": "Expected goals (xG)",
           "key": "expected_goals_open_play",
           "title": "xG open play",
-          "home": "0.04",
-          "away": "0.20"
+          "home": "0.09",
+          "away": "0.28"
         },
         {
           "period": "FirstHalf",
@@ -6777,8 +3712,8 @@
           "group": "Expected goals (xG)",
           "key": "expected_goals_non_penalty",
           "title": "xG non-penalty",
-          "home": "0.05",
-          "away": "0.22"
+          "home": "0.11",
+          "away": "0.30"
         },
         {
           "period": "FirstHalf",
@@ -6793,31 +3728,31 @@
           "group": "Passes",
           "key": "passes",
           "title": "Passes",
-          "home": 155,
-          "away": 148
+          "home": 168,
+          "away": 161
         },
         {
           "period": "FirstHalf",
           "group": "Passes",
           "key": "own_half_passes",
           "title": "Own half",
-          "home": 80,
-          "away": 66
+          "home": 87,
+          "away": 72
         },
         {
           "period": "FirstHalf",
           "group": "Passes",
           "key": "opposition_half_passes",
           "title": "Opposition half",
-          "home": 43,
-          "away": 57
+          "home": 47,
+          "away": 60
         },
         {
           "period": "FirstHalf",
           "group": "Passes",
           "key": "long_balls_accurate",
           "title": "Accurate long balls",
-          "home": "12 (60%)",
+          "home": "13 (59%)",
           "away": "4 (40%)"
         },
         {
@@ -6825,7 +3760,7 @@
           "group": "Passes",
           "key": "accurate_crosses",
           "title": "Accurate crosses",
-          "home": "2 (50%)",
+          "home": "1 (17%)",
           "away": "0 (0%)"
         },
         {
@@ -6834,7 +3769,7 @@
           "key": "player_throws",
           "title": "Throws",
           "home": 9,
-          "away": 6
+          "away": 9
         },
         {
           "period": "FirstHalf",
@@ -6857,15 +3792,15 @@
           "group": "Defence",
           "key": "matchstats_headers_tackles",
           "title": "Tackles",
-          "home": 5,
-          "away": 8
+          "home": 6,
+          "away": 12
         },
         {
           "period": "FirstHalf",
           "group": "Defence",
           "key": "interceptions",
           "title": "Interceptions",
-          "home": 5,
+          "home": 6,
           "away": 2
         },
         {
@@ -6881,8 +3816,8 @@
           "group": "Defence",
           "key": "clearances",
           "title": "Clearances",
-          "home": 10,
-          "away": 10
+          "home": 11,
+          "away": 14
         },
         {
           "period": "FirstHalf",
@@ -6905,31 +3840,31 @@
           "group": "Duels",
           "key": "duel_won",
           "title": "Duels won",
-          "home": 24,
-          "away": 22
+          "home": 27,
+          "away": 30
         },
         {
           "period": "FirstHalf",
           "group": "Duels",
           "key": "ground_duels_won",
           "title": "Ground duels won",
-          "home": "12 (43%)",
-          "away": "16 (57%)"
+          "home": "15 (44%)",
+          "away": "20 (56%)"
         },
         {
           "period": "FirstHalf",
           "group": "Duels",
           "key": "aerials_won",
           "title": "Aerial duels won",
-          "home": "12 (67%)",
-          "away": "6 (33%)"
+          "home": "12 (55%)",
+          "away": "10 (45%)"
         },
         {
           "period": "FirstHalf",
           "group": "Duels",
           "key": "dribbles_succeeded",
           "title": "Successful dribbles",
-          "home": "4 (57%)",
+          "home": "6 (67%)",
           "away": "6 (67%)"
         },
         {
@@ -7085,7 +4020,27 @@
         },
         {
           "minute": 32,
-          "value": 41
+          "value": 19
+        },
+        {
+          "minute": 33,
+          "value": 0
+        },
+        {
+          "minute": 34,
+          "value": 5
+        },
+        {
+          "minute": 35,
+          "value": 0
+        },
+        {
+          "minute": 36,
+          "value": 5
+        },
+        {
+          "minute": 37,
+          "value": -5
         }
       ],
       "shotmap": null,
@@ -7096,13 +4051,14 @@
         "segment": "31-HT",
         "status": "NO_SCENARIO",
         "expected_control_side": "",
-        "live_control_side": "A",
+        "live_control_side": "EVEN",
         "alignment": "UNKNOWN",
         "betting_action": "WAIT",
-        "live_control_score": -2.0,
+        "live_control_score": -1.0,
         "signals": [
-          "shots=2-8",
-          "box_touches=6-15"
+          "shots=3-9",
+          "box_touches=10-15",
+          "corners=4-2"
         ]
       },
       "hkjc_live_market": null
@@ -7113,17 +4069,17 @@
       "league": "MD1",
       "home_en": "Piratas FC",
       "away_en": "Venados",
-      "live_score": "0-0",
-      "home_score": "0",
+      "live_score": "1-0",
+      "home_score": "1",
       "away_score": "0",
-      "minute": "33",
+      "minute": "39",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "5898727",
       "source_home": "Piratas",
       "source_away": "Venados FC",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-19T09:34:01+08:00",
+      "source_updated_at": "2026-09-19T09:40:05+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
@@ -7132,7 +4088,52 @@
       "corner_progress": "",
       "detail_status": "CAPTURED",
       "team_stats": [],
-      "events": [],
+      "events": {
+        "homeTeamGoals": {
+          "Gamboa": [
+            {
+              "reactKey": "1445317136Goal1072518undefinedtrue",
+              "timeStr": 36,
+              "type": "Goal",
+              "time": 36,
+              "overloadTime": null,
+              "eventId": 14453171,
+              "player": {
+                "id": 1072518,
+                "name": "Juan Gamboa",
+                "profileUrl": "/players/1072518/juan-gamboa"
+              },
+              "homeScore": 0,
+              "awayScore": 0,
+              "profileUrl": "/players/1072518/juan-gamboa",
+              "overloadTimeStr": false,
+              "isHome": true,
+              "ownGoal": null,
+              "goalDescription": null,
+              "goalDescriptionKey": null,
+              "suffix": null,
+              "suffixKey": null,
+              "isPenaltyShootoutEvent": false,
+              "nameStr": "Juan Gamboa",
+              "firstName": "Juan",
+              "lastName": "Gamboa",
+              "fullName": "Juan Gamboa",
+              "playerId": 1072518,
+              "newScore": [
+                1,
+                0
+              ],
+              "penShootoutScore": null,
+              "shotmapEvent": null,
+              "assistStr": null,
+              "assistProfileUrl": null
+            }
+          ]
+        },
+        "awayTeamGoals": {},
+        "homeTeamRedCards": {},
+        "awayTeamRedCards": {}
+      },
       "momentum": [],
       "shotmap": null,
       "lineup": null,
@@ -7159,21 +4160,21 @@
       "live_score": "0-0",
       "home_score": "0",
       "away_score": "0",
-      "minute": "34",
+      "minute": "40",
       "match_status": "LIVE",
       "source": "FOOTBALL_LIVE_API_SELF_HOSTED",
       "source_match_id": "5898728",
       "source_home": "Tepatitlán FC",
       "source_away": "Mineros de Zacatecas",
       "match_confidence": 0.98,
-      "source_updated_at": "2026-09-19T09:34:01+08:00",
+      "source_updated_at": "2026-09-19T09:40:05+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
       "corner_line_ref": "9.5",
       "corners_to_hi": "",
       "corner_progress": "",
-      "detail_status": "CAPTURED",
+      "detail_status": "DETAIL_EMPTY",
       "team_stats": [],
       "events": [],
       "momentum": [],
@@ -7209,7 +4210,7 @@
       "source_home": "San Diego Wave Women",
       "source_away": "Kansas City Current Women",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-19T09:34:00+08:00",
+      "source_updated_at": "2026-09-19T09:40:05+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
