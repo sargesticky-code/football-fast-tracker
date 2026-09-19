@@ -19,6 +19,7 @@ import unicodedata
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import requests
 
@@ -30,6 +31,7 @@ MIN_PAGE_TEXT = 500
 MIN_FRESH_CORNER_RATIO = 0.50
 MIN_DATE_ROWS_FOR_GATE = 5
 MIN_DATE_CORNER_RATIO = 0.35
+HKT = ZoneInfo("Asia/Hong_Kong")
 
 EXTRA_FIELDS = [
     "ou_predicted_score",
@@ -531,10 +533,18 @@ def main() -> int:
             f"FOREBET_CORNER_DATE_FINAL date={date} rows={len(date_rows)} "
             f"parsed={parsed} ratio={ratio:.1%}"
         )
+        gate_date = datetime.strptime(date, "%Y-%m-%d").date()
+        today_hkt = datetime.now(HKT).date()
         if len(date_rows) >= MIN_DATE_ROWS_FOR_GATE and ratio < MIN_DATE_CORNER_RATIO:
-            raise SystemExit(
-                f"Forebet corner date coverage too low: "
-                f"{date} {parsed}/{len(date_rows)} ({ratio:.1%})"
+            if gate_date <= today_hkt:
+                raise SystemExit(
+                    f"Forebet corner date coverage too low: "
+                    f"{date} {parsed}/{len(date_rows)} ({ratio:.1%})"
+                )
+            print(
+                f"WARN Forebet future corner page not fully published yet: "
+                f"{date} {parsed}/{len(date_rows)} ({ratio:.1%}); "
+                "preserving available rows and continuing"
             )
 
     if corner_unlisted:
