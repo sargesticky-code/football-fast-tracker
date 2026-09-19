@@ -369,7 +369,7 @@ def install(production) -> None:
         if missing_ids and match_date > today_utc:
             tomorrow_url = (
                 "https://www.forebet.com/en/"
-                "football-tips-and-predictions-for-tomorrow/predictions-1x2/"
+                "football-tips-and-predictions-for-tomorrow/predictions-1x2/by-league"
             )
             tomorrow_html = production._jina_html(
                 tomorrow_url, f"recovery_tomorrow_{match_date}"
