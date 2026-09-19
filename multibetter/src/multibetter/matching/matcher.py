@@ -19,22 +19,36 @@ def match_prediction(
     fixture: CanonicalFixture,
     candidate: SourcePrediction,
     *,
-    team_aliases: Mapping[str, str] | None = None,
+    source_to_forebet_aliases: Mapping[str, str] | None = None,
     competition_aliases: Mapping[str, str] | None = None,
     kickoff_tolerance: timedelta = timedelta(minutes=90),
 ) -> MatchResult:
-    """Strict production matcher.
+    """Match an external source prediction to the Forebet reference layer.
 
-    There is deliberately no fuzzy fallback. Ambiguous records should be REVIEW/REJECT,
-    never silently accepted into production.
+    Important architecture rule:
+    external sources DO NOT match directly to HKJC team names.
+
+    Source team -> Forebet team key -> existing Forebet/HKJC bridge -> HKJC event ID.
+
+    There is deliberately no fuzzy production fallback. Ambiguous candidates are
+    rejected/reviewed instead of being silently linked to the wrong HKJC fixture.
     """
 
     source_home_class = classify_team(candidate.home)
     source_away_class = classify_team(candidate.away)
-    fixture_home_class = fixture.home_class if fixture.home_class.value != "UNKNOWN" else classify_team(fixture.home)
-    fixture_away_class = fixture.away_class if fixture.away_class.value != "UNKNOWN" else classify_team(fixture.away)
 
-    if source_home_class != fixture_home_class or source_away_class != fixture_away_class:
+    reference_home_class = (
+        fixture.home_class
+        if fixture.home_class.value != "UNKNOWN"
+        else classify_team(fixture.forebet_home)
+    )
+    reference_away_class = (
+        fixture.away_class
+        if fixture.away_class.value != "UNKNOWN"
+        else classify_team(fixture.forebet_away)
+    )
+
+    if source_home_class != reference_home_class or source_away_class != reference_away_class:
         return MatchResult(MatchDecision.REJECT, 0.0, "TEAM_CLASS_MISMATCH")
 
     if candidate.kickoff is not None:
@@ -43,19 +57,41 @@ def match_prediction(
         if abs(candidate.kickoff - fixture.kickoff) > kickoff_tolerance:
             return MatchResult(MatchDecision.REJECT, 0.0, "KICKOFF_MISMATCH")
 
-    if not _competition_equal(fixture.competition, candidate.competition, competition_aliases):
+    reference_competition = fixture.forebet_competition or fixture.competition
+    if not _competition_equal(reference_competition, candidate.competition, competition_aliases):
         return MatchResult(MatchDecision.REJECT, 0.0, "COMPETITION_MISMATCH")
 
-    fh, _ = canonicalize_team(fixture.home, team_aliases)
-    fa, _ = canonicalize_team(fixture.away, team_aliases)
-    ch, ch_alias = canonicalize_team(candidate.home, team_aliases)
-    ca, ca_alias = canonicalize_team(candidate.away, team_aliases)
+    fh, _ = canonicalize_team(fixture.forebet_home)
+    fa, _ = canonicalize_team(fixture.forebet_away)
+
+    ch, ch_alias = canonicalize_team(candidate.home, source_to_forebet_aliases)
+    ca, ca_alias = canonicalize_team(candidate.away, source_to_forebet_aliases)
 
     if fh != ch or fa != ca:
-        return MatchResult(MatchDecision.REJECT, 0.0, "TEAM_NAME_MISMATCH")
+        return MatchResult(MatchDecision.REJECT, 0.0, "FOREBET_TEAM_MISMATCH")
 
-    used_alias = ch_alias or ca_alias or normalize_text(fixture.home) != normalize_text(candidate.home) or normalize_text(fixture.away) != normalize_text(candidate.away)
+    used_alias = (
+        ch_alias
+        or ca_alias
+        or normalize_text(fixture.forebet_home) != normalize_text(candidate.home)
+        or normalize_text(fixture.forebet_away) != normalize_text(candidate.away)
+    )
+
     if used_alias:
-        return MatchResult(MatchDecision.ALIAS, 0.90, "APPROVED_ALIAS_MATCH", fixture.event_id)
+        return MatchResult(
+            MatchDecision.ALIAS,
+            0.90,
+            "SOURCE_TO_FOREBET_ALIAS",
+            fixture.event_id,
+            fixture.forebet_home,
+            fixture.forebet_away,
+        )
 
-    return MatchResult(MatchDecision.EXACT, 1.00, "EXACT_MATCH", fixture.event_id)
+    return MatchResult(
+        MatchDecision.EXACT,
+        1.00,
+        "FOREBET_EXACT_MATCH",
+        fixture.event_id,
+        fixture.forebet_home,
+        fixture.forebet_away,
+    )
