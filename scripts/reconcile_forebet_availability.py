@@ -44,19 +44,41 @@ def main() -> int:
         for row in feed
         if str(row.get("hkjc_event_id") or "").strip()
     }
+    feed_by_id = {
+        str(row.get("hkjc_event_id") or "").strip(): row
+        for row in feed
+        if str(row.get("hkjc_event_id") or "").strip()
+    }
     by_id = {
         str(row.get("hkjc_event_id") or "").strip(): row
         for row in availability
         if str(row.get("hkjc_event_id") or "").strip()
     }
 
-    missing = sorted(feed_ids - set(by_id))
-    if missing:
-        raise SystemExit(
-            "Forebet model rows missing availability records: " + ",".join(missing)
-        )
-
     now = datetime.now(HKT).isoformat(timespec="seconds")
+    missing = sorted(feed_ids - set(by_id))
+    inserted: list[str] = []
+    for event_id in missing:
+        model = feed_by_id[event_id]
+        kickoff = str(model.get("hkjc_kickoff_hkt") or "").strip()
+        match_date = str(model.get("match_date") or "").strip()
+        if not match_date and kickoff:
+            match_date = kickoff[:10]
+        row = {
+            "checked_at_hkt": now,
+            "match_date": match_date,
+            "kickoff_hkt": kickoff,
+            "hkjc_event_id": event_id,
+            "league_zh": str(model.get("hkjc_league") or "").strip(),
+            "home_en": str(model.get("hkjc_home_team") or model.get("home_team") or "").strip(),
+            "away_en": str(model.get("hkjc_away_team") or model.get("away_team") or "").strip(),
+            "state": "MODEL",
+            "reason": "usable_forebet_prediction_model_inserted_by_reconcile",
+        }
+        availability.append(row)
+        by_id[event_id] = row
+        inserted.append(event_id)
+
     promoted: list[str] = []
     for event_id in sorted(feed_ids):
         row = by_id[event_id]
@@ -72,11 +94,19 @@ def main() -> int:
         if str(row.get("state") or "").strip().upper() == "MODEL"
     }
     stale_models = sorted(model_ids - feed_ids)
-    if stale_models:
-        raise SystemExit(
-            "Availability MODEL state without current model row: "
-            + ",".join(stale_models)
-        )
+    demoted: list[str] = []
+    for event_id in stale_models:
+        row = by_id[event_id]
+        row["state"] = "UNRESOLVED"
+        row["reason"] = "current_model_missing_after_reconcile"
+        row["checked_at_hkt"] = now
+        demoted.append(event_id)
+
+    model_ids = {
+        event_id
+        for event_id, row in by_id.items()
+        if str(row.get("state") or "").strip().upper() == "MODEL"
+    }
 
     fieldnames = list(availability[0].keys())
     tmp = AVAILABILITY.with_suffix(".tmp")
@@ -88,8 +118,11 @@ def main() -> int:
 
     print(
         f"FOREBET_AVAILABILITY_RECONCILE feed={len(feed_ids)} "
-        f"models={len(model_ids)} promoted={len(promoted)} "
-        f"promoted_ids={','.join(promoted) if promoted else '-'}"
+        f"models={len(model_ids)} inserted={len(inserted)} promoted={len(promoted)} "
+        f"demoted={len(demoted)} "
+        f"inserted_ids={','.join(inserted) if inserted else '-'} "
+        f"promoted_ids={','.join(promoted) if promoted else '-'} "
+        f"demoted_ids={','.join(demoted) if demoted else '-'}"
     )
     return 0
 
