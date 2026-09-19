@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import html as html_lib
 import re
+from datetime import datetime, timezone
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
@@ -36,6 +37,7 @@ BROAD_INDEXES = [
     ("africa", "https://www.forebet.com/en/prediction-lists/africa"),
     ("united_kingdom", "https://www.forebet.com/en/prediction-lists/united-kingdom"),
     ("top_europe", "https://www.forebet.com/en/prediction-lists/top-europe"),
+    ("all_europe", "https://www.forebet.com/en/prediction-lists/all-europe"),
     ("australia", "https://www.forebet.com/en/prediction-lists/australia"),
 ]
 
@@ -358,6 +360,40 @@ def install(production) -> None:
                 f"discovered={len(found)} remaining={len(missing_ids)}",
                 flush=True,
             )
+
+        # Forebet exposes a dedicated Tomorrow 1X2 surface.  The normal dated
+        # index can lag or omit future fixtures even when their prediction page is
+        # already live, so use Tomorrow as a first-class recovery source for a
+        # future UTC match date.  One cached page only; no per-event fan-out.
+        today_utc = datetime.now(timezone.utc).date().isoformat()
+        if missing_ids and match_date > today_utc:
+            tomorrow_url = (
+                "https://www.forebet.com/en/"
+                "football-tips-and-predictions-for-tomorrow/predictions-1x2/"
+            )
+            tomorrow_html = production._jina_html(
+                tomorrow_url, f"recovery_tomorrow_{match_date}"
+            )
+            if tomorrow_html:
+                usable = _usable_ids(production, tomorrow_html, match_date, date_targets)
+                new_ids = usable & missing_ids
+                if new_ids:
+                    extra_parts.append(tomorrow_html)
+                    covered |= new_ids
+                    missing_ids = required - covered
+                still_missing = [
+                    target_by_id[event_id]
+                    for event_id in sorted(missing_ids - set(discovered))
+                    if event_id in target_by_id
+                ]
+                found = _discover(production, tomorrow_html, still_missing)
+                discovered.update(found)
+                print(
+                    f"FOREBET_TOMORROW_RECOVERY date={match_date} "
+                    f"new={len(new_ids)} discovered={len(found)} "
+                    f"remaining={len(missing_ids)}",
+                    flush=True,
+                )
 
         for kind, index_url in BROAD_INDEXES:
             if not missing_ids:
