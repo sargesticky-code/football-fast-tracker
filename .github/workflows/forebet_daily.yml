@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '45 22 * * *' # 06:45 Hong Kong time
+    - cron: '45 2 * * *'  # 10:45 Hong Kong time · catches models published after early snapshot
     - cron: '45 10 * * *' # 18:45 Hong Kong time
   push:
     paths:
