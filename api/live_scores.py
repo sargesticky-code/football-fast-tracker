@@ -107,6 +107,8 @@ def hkjc_targets(now):
             "league": clean(row.get("tournament")),
             "home_en": clean(row.get("home_en")),
             "away_en": clean(row.get("away_en")),
+            "in_play": in_play,
+            "hkjc_status": status,
             "corner_line_ref": clean(row.get("chl_line")),
             "corner_over_ref": clean(row.get("chl_over")),
             "corner_under_ref": clean(row.get("chl_under")),
@@ -979,7 +981,7 @@ def collect(include_full=False):
             # provider lacks coverage. This is deliberately NOT labelled LIVE
             # and never invents a 0-0 score.
             age_min = (now - t["kickoff_hkt"]).total_seconds() / 60
-            if 0 <= age_min <= SOURCE_GAP_MAX_MINUTES:
+            if t.get("in_play") or 0 <= age_min <= SOURCE_GAP_MAX_MINUTES:
                 m = {
                     "source": "SOURCE_GAP",
                     "source_match_id": "",
@@ -989,7 +991,11 @@ def collect(include_full=False):
                     "home_score": "",
                     "away_score": "",
                     "minute": "",
-                    "status": "SOURCE_GAP",
+                    "status": (
+                        "SOURCE_GAP_INPLAY"
+                        if t.get("in_play")
+                        else "SOURCE_GAP"
+                    ),
                     "updated_at": now.isoformat(timespec="seconds"),
                 }
                 conf = 1.0
