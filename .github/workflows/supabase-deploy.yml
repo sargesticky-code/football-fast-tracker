@@ -20,8 +20,10 @@ jobs:
         run: pip install -r requirements.txt
       - name: Apply PostgreSQL migrations
         run: |
-          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/migrations/001_core_schema.sql
-          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/migrations/002_extended_fast_tracker.sql
+          for f in supabase/migrations/*.sql; do
+            echo "Applying $f"
+            psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f "$f"
+          done
       - name: Import primary feeds
         run: python scripts/supabase_sync.py
       - name: Import secondary and live feeds
