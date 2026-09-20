@@ -1,0 +1,76 @@
+name: Multibetter V1 Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_dir:
+        description: "Directory containing forebet.csv and optional multi-source CSVs"
+        required: true
+        default: "multibetter/incoming/current"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: multibetter-v1-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/multibetter-v1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Multibetter branch
+        uses: actions/checkout@v4
+        with:
+          ref: multibetter-v1
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: multibetter/pyproject.toml
+
+      - name: Install Multibetter
+        run: python -m pip install -e "multibetter[dev]"
+
+      - name: Run tests
+        run: pytest -q multibetter/tests
+
+      - name: Validate current source input
+        env:
+          SOURCE_DIR: ${{ inputs.source_dir }}
+        run: |
+          test -f "$SOURCE_DIR/forebet.csv" || {
+            echo "::error::Missing $SOURCE_DIR/forebet.csv"
+            exit 1
+          }
+
+      - name: Build current output
+        env:
+          SOURCE_DIR: ${{ inputs.source_dir }}
+        run: |
+          python -m multibetter.scripts.build_current             --source-dir "$SOURCE_DIR"             --our-forebet data/forebet_current.csv             --alias-cache multibetter/data/forebet_bridge_aliases.csv             --output multibetter/data/multibetter_current.csv             --health-output multibetter/data/multibetter_current_health.json
+
+      - name: Alias health
+        run: |
+          python multibetter/scripts/alias_health_report.py             --root .             --output multibetter/data/alias_health.json
+
+      - name: Commit Multibetter outputs
+        run: |
+          if git diff --quiet --             multibetter/data/multibetter_current.csv             multibetter/data/multibetter_current_health.json             multibetter/data/forebet_bridge_aliases.csv             multibetter/data/alias_health.json; then
+            echo "No Multibetter output changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add             multibetter/data/multibetter_current.csv             multibetter/data/multibetter_current_health.json             multibetter/data/forebet_bridge_aliases.csv             multibetter/data/alias_health.json
+
+          git commit -m "Update Multibetter V1 current output"
+          git push origin HEAD:multibetter-v1
