@@ -95,6 +95,56 @@ def _ratio(a: str, b: str) -> float:
     ).ratio() * 100.0
 
 
+def _orientation_scores(
+    multi: MultiSourceFixture,
+    fixture: CanonicalFixture,
+) -> tuple[float, float]:
+    """Return direct(home->home, away->away) and swapped pair scores."""
+    direct = (
+        _ratio(multi.github_forebet_home, fixture.forebet_home)
+        + _ratio(multi.github_forebet_away, fixture.forebet_away)
+    ) / 2.0
+    swapped = (
+        _ratio(multi.github_forebet_home, fixture.forebet_away)
+        + _ratio(multi.github_forebet_away, fixture.forebet_home)
+    ) / 2.0
+    return direct, swapped
+
+
+def _orientation_conflict(
+    multi: MultiSourceFixture,
+    fixture: CanonicalFixture,
+    *,
+    home_target: str | None,
+    away_target: str | None,
+    orientation_margin: float,
+) -> str | None:
+    """Protect alias learning from home/away reversal.
+
+    Explicit HOME/AWAY sources are role-strict.
+    Inferred team1/team2 sources use left=home/right=away by default, but an
+    obviously stronger swapped pairing is not auto-learned.
+    """
+    if home_target is not None and home_target == fixture.forebet_away:
+        return "HOME_TARGET_MATCHES_AWAY"
+    if away_target is not None and away_target == fixture.forebet_home:
+        return "AWAY_TARGET_MATCHES_HOME"
+    if home_target is not None and home_target != fixture.forebet_home:
+        return "HOME_TARGET_WRONG_SIDE"
+    if away_target is not None and away_target != fixture.forebet_away:
+        return "AWAY_TARGET_WRONG_SIDE"
+
+    direct, swapped = _orientation_scores(multi, fixture)
+    if swapped >= direct + orientation_margin:
+        return (
+            "HOME_AWAY_SWAP_CONFLICT:"
+            f"direct={direct:.1f},swapped={swapped:.1f},"
+            f"explicit={multi.home_away_explicit}"
+        )
+
+    return None
+
+
 def _learn_if_needed(
     source_name: str,
     target_name: str,
@@ -141,6 +191,7 @@ def resolve_fixture_cache_first(
     ] | None = None,
     pair_similarity_floor: float = 55.0,
     winner_margin: float = 8.0,
+    orientation_margin: float = 8.0,
 ) -> FixtureResolveResult:
     """Fast alias lookup first; deterministic fixture resolution only on misses.
 
@@ -243,6 +294,21 @@ def resolve_fixture_cache_first(
     if len(candidates) == 1:
         fixture = candidates[0]
 
+        orientation_error = _orientation_conflict(
+            multi,
+            fixture,
+            home_target=home_target,
+            away_target=away_target,
+            orientation_margin=orientation_margin,
+        )
+        if orientation_error:
+            return FixtureResolveResult(
+                FixtureResolveStatus.CONFLICT,
+                None,
+                candidate_count=1,
+                reason=orientation_error,
+            )
+
         if (
             classify_team(multi.github_forebet_home)
             != classify_team(fixture.forebet_home)
@@ -296,6 +362,16 @@ def resolve_fixture_cache_first(
             or classify_team(multi.github_forebet_away)
             != classify_team(fixture.forebet_away)
         ):
+            continue
+
+        orientation_error = _orientation_conflict(
+            multi,
+            fixture,
+            home_target=home_target,
+            away_target=away_target,
+            orientation_margin=orientation_margin,
+        )
+        if orientation_error:
             continue
 
         hs = _ratio(multi.github_forebet_home, fixture.forebet_home)
