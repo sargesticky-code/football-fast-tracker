@@ -112,18 +112,32 @@ def main():
             )
         else:
             kwargs = {}
-            if args.source == "BCL" and args.anchor_file.exists():
+            anchor_rows = []
+            if args.anchor_file.exists():
                 with args.anchor_file.open(
                     "r", encoding="utf-8-sig", newline=""
                 ) as fh:
                     anchor_rows = list(csv.DictReader(fh))
+
+            if args.source == "BCL":
                 kwargs["target_pairs"] = [
                     (row.get("HOME TEAM", ""), row.get("AWAY TEAM", ""))
                     for row in anchor_rows
                 ]
-            rows, requests_count, errors = COLLECTORS[args.source](
-                targets, **kwargs
-            )
+            elif args.source == "STA":
+                kwargs["anchor_rows"] = anchor_rows
+
+            collected = COLLECTORS[args.source](targets, **kwargs)
+            if len(collected) == 4:
+                rows, requests_count, errors, metadata = collected
+                if metadata:
+                    note = "calibration=" + json.dumps(
+                        metadata,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    )
+            else:
+                rows, requests_count, errors = collected
 
         wrote = preserve_last_good(output, rows)
         status = (
