@@ -65,6 +65,8 @@ jobs:
             data/forebet_availability.csv
             data/forebet_archive.csv
             data/evaluation_summary.csv
+            data/hkjc_live_odds.csv
+            data/team_form_summary.csv
           )
 
           for file in "${files[@]}"; do
