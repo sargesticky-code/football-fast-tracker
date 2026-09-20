@@ -137,3 +137,5 @@ a{color:inherit;text-decoration:none}
   .health-strip b{font-size:17px}
   .match-topline{gap:6px}
 }
+
+.totals-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.total-market{background:#091510;border:1px solid #1d3028;border-radius:12px;padding:12px}.total-market>span{display:block;color:var(--muted);font-size:10px;margin-bottom:9px}.total-market>div{display:flex;justify-content:space-between;gap:8px}.total-market b{font-size:12px}@media(max-width:520px){.totals-grid{grid-template-columns:1fr}}
