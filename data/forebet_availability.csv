@@ -1,110 +1,116 @@
 ﻿checked_at_hkt,match_date,kickoff_hkt,hkjc_event_id,league_zh,home_en,away_en,state,reason
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 18:00,FB5350,KD1,Incheon Utd,Daejeon Citizen,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 18:00,FB5351,KD2,Seongnam FC,Hwaseong FC,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 18:00,FB5352,KD2,Gimhae FC,Paju Frontier,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 18:00,FB5386,AMF,Korea DPR AM,United Arab Emirates AM,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 18:00,FB5420,KD1,Pohang Steelers,FC Seoul,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 18:15,FB5355,DFL,Feyenoord,Utrecht,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 18:30,FB5376,ISA,Fiorentina,Napoli,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 18:30,FB5423,AMF,Japan AM,Kyrgyzstan AM,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 19:00,FB5427,TL1,Rayong,Ratchaburi,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 19:00,FB5430,TL1,Chonburi,Buriram Utd,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 19:00,FB5481,SPL,Celtic,Rangers,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 19:00,FB5536,ED1,Wolves,West Bromwich,FIXTURE_ONLY,previously_observed_forebet_fixture_without_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 19:30,FB5359,GD2,Hannover,Bochum,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 19:30,FB5414,GD2,Cottbus,St. Pauli,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 19:30,FB5415,GD2,Bielefeld,Heidenheim,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 19:30,FB5428,TL1,Sukhothai,Port FC,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 19:30,FB5484,BFL,Antwerp,Union Saint Gilloise,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 20:00,FB5402,DK1,Brondby,Copenhagen,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 20:00,FB5404,DK1,Sonderjyske,Randers,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 20:00,FB5421,TL1,Bangkok Utd,BG Pathum Utd,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 20:00,FB5485,SU1,Vaduz,Thun,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 20:00,FB5486,SFL,Getafe,Malaga,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 20:00,FB5514,SAL,Djurgardens,Elfsborg,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 20:00,FB5515,SAL,Kalmar,Hacken,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 20:00,FB5516,SAL,Halmstads,AIK Solna,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 20:30,FB5360,DFL,Twente,PSV Eindhoven,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 20:30,FB5361,DFL,AZ Alkmaar,Telstar,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 20:30,FB5417,NTL,Valerenga,Fredrikstad,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 20:30,FB5483,AT1,Hartberg,LASK Linz,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 20:30,FB5537,ED1,Norwich,Bolton,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 21:00,FB5368,FFL,Auxerre,Brest,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 21:00,FB5377,ISA,Parma,Genoa,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 21:00,FB5379,ISA,Frosinone,Como,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 21:00,FB5437,EPL,Bournemouth,Liverpool,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 21:00,FB5438,EPL,Leeds,Crystal Palace,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 21:00,FB5439,EPL,Manchester City,Sunderland,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 21:00,FB5566,UWW,Nigeria Women U20,Colombia Women U20,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 21:30,FB5371,GSL,Leverkusen,RB Leipzig,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 21:30,FB5561,ULP,Al Nasr SC,Dubai United FC,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 22:00,FB5407,DK1,Horsens,AGF Aarhus,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 22:00,FB5469,BD1,Gremio,Palmeiras,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 22:00,FB5487,BFL,Sint Truiden,Westerlo,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 22:15,FB5362,SFL,Atletico Madrid,Real Madrid,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 22:15,FB5488,SF2,Ceuta,Valladolid,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 22:30,FB5400,PFL,Guimaraes,Moreirense,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 22:30,FB5401,PFL,Amadora,Viseu,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 22:30,FB5489,SU1,Lausanne,Lugano,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 22:30,FB5490,SU1,Basel,St. Gallen,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 22:30,FB5554,SAL,Mjallby,GAIS,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 22:30,FB5555,SAL,Degerfors,Hammarby,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 22:45,FB5366,DF2,De Graafschap,NAC,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 22:45,FB5491,DFL,NEC Nijmegen,Go Ahead Eagles,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 23:00,FB5416,NTL,Tromso,Ham-Kam,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 23:00,FB5418,NTL,Sandefjord,Start,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 23:00,FB5482,AT1,Salzburg,Sturm Graz,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-20 23:00,FB5545,NTL,Viking,Lillestrom,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 23:15,FB5369,FFL,Nice,Lille,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 23:30,FB5339,EPL,Fulham,Manchester Utd,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-20 23:30,FB5372,GSL,Schalke 04,Elversberg,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-21 00:00,FB5406,DK1,Viborg,Nordsjaelland,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 00:00,FB5497,ISA,Juventus,Atalanta,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 00:15,FB5548,ULP,Al Jazira,Al Wahda,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-21 00:15,FB5549,ULP,Al Dhafra,Baniyas,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 00:30,FB5492,SFL,Deportivo,Betis,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 00:30,FB5493,BFL,Bruges,Genk,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 00:30,FB5494,SFL,Villarreal,Levante,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 00:30,FB5495,SF2,Las Palmas,Burgos,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 00:30,FB5565,UWW,Korea DPR Women U20,Canada Women U20,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 01:00,FB5396,PFL,Santa Clara,Braga,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-21 01:00,FB5397,PFL,Estoril,Casa Pia AC,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 01:15,FB5391,NTL,Brann,Bodo Glimt,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-21 01:15,FB5496,BFL,KV Kortrijk,SK Beveren,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 01:30,FB5511,GSL,Paderborn,Hoffenheim,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 01:43,FB5500,APL,San Lorenzo,Boca Juniors,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 02:45,FB5380,ISA,AC Milan,Lecce,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 02:45,FB5440,FFL,Marseille,Paris Saint Germain,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-21 03:00,FB5465,BD1,Corinthians,Fluminense,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-21 03:00,FB5466,BD1,Vitoria,Cruzeiro,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 03:00,FB5509,SFL,Valencia,Real Sociedad,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 03:00,FB5510,SF2,Leganes,CF Granada,MODEL,usable_forebet_prediction_model
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-21 03:27,FB5307,UD1,Montevideo Nacional,Defensor Sporting,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-21 03:30,FB5399,PFL,Porto,Benfica,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-21 03:58,FB5498,APL,Rosario Central,Argentinos Juniors,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 03:58,FB5505,APL,CA Platense,Newell's Old Boys,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-20,2026-09-21 05:00,FB5551,USL,Indy Eleven,Oakland Roots,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 05:30,FB5467,BD1,Flamengo,RB Bragantino,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 06:13,FB5550,APL,Belgrano,Estudiantes Rio Cuarto,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 06:30,FB5468,BD1,Athletico Paranaense,Bahia,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 06:57,FB5443,UD1,Montevideo Liverpool,Racing Club Montevideo,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 07:00,FB5457,MLS,Inter Miami CF,San Diego FC,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 07:00,FB5546,USL,Sacramento Republic,San Antonio FC,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:30+08:00,2026-09-20,2026-09-21 07:00,FB5547,MD1,Tapatio,Tlaxcala,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-21 08:00,FB5459,MXL,Toluca,Santos Laguna,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-21 08:00,FB5460,MXL,Pachuca,Tijuana,FIXTURE_ONLY,previously_observed_forebet_fixture_without_prediction_model
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-21 08:28,FB5502,APL,Velez Sarsfield,Tigre,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-21 10:05,FB5458,MXL,Queretaro,Club Leon,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-21 15:00,FB5568,AWF,Korea Republic Women,Korea DPR Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-21 15:00,FB5569,AWF,China Women,Philippines Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-21 18:30,FB5570,AWF,Vietnam Women,Thailand Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-21 18:30,FB5571,AWF,Japan Women,Chinese Taipei Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-22 01:28,FB5501,APL,Aldosivi,Atletico Tucuman,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-22 05:58,FB5508,APL,Barracas Central,Independiente Rivadavia,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-22 06:27,FB5442,UD1,Central Espanol,Montevideo City Torque,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-21,2026-09-22 06:28,FB5572,BD2,Criciuma,Operario Ferroviario,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
-2026-09-20T18:44:37+08:00,2026-09-22,2026-09-22 08:13,FB5507,APL,Lanus,Estudiantes,UNRESOLVED,target_missing_from_forebet_scan_output
-2026-09-20T18:44:37+08:00,2026-09-22,2026-09-22 08:28,FB5573,BD2,Cuiaba,Nautico Recife,UNRESOLVED,target_missing_from_forebet_scan_output
-2026-09-20T18:44:37+08:00,2026-09-22,2026-09-22 13:00,FB5575,AMF,Vietnam AM,Uzbekistan AM,UNRESOLVED,target_missing_from_forebet_scan_output
-2026-09-20T18:44:37+08:00,2026-09-22,2026-09-22 13:00,FB5576,AMF,Philippines AM,Kuwait AM,UNRESOLVED,target_missing_from_forebet_scan_output
-2026-09-20T18:44:37+08:00,2026-09-22,2026-09-22 18:00,FB5577,AMF,Korea Republic AM,Saudi Arabia AM,UNRESOLVED,target_missing_from_forebet_scan_output
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 18:00,FB5350,KD1,Incheon Utd,Daejeon Citizen,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 18:00,FB5351,KD2,Seongnam FC,Hwaseong FC,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 18:00,FB5352,KD2,Gimhae FC,Paju Frontier,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 18:00,FB5386,AMF,Korea DPR AM,United Arab Emirates AM,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 18:00,FB5420,KD1,Pohang Steelers,FC Seoul,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 18:15,FB5355,DFL,Feyenoord,Utrecht,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 18:30,FB5376,ISA,Fiorentina,Napoli,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 18:30,FB5423,AMF,Japan AM,Kyrgyzstan AM,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 19:00,FB5427,TL1,Rayong,Ratchaburi,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 19:00,FB5430,TL1,Chonburi,Buriram Utd,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 19:00,FB5481,SPL,Celtic,Rangers,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 19:00,FB5536,ED1,Wolves,West Bromwich,FIXTURE_ONLY,previously_observed_forebet_fixture_without_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 19:30,FB5359,GD2,Hannover,Bochum,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 19:30,FB5414,GD2,Cottbus,St. Pauli,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 19:30,FB5415,GD2,Bielefeld,Heidenheim,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 19:30,FB5428,TL1,Sukhothai,Port FC,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 19:30,FB5484,BFL,Antwerp,Union Saint Gilloise,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 20:00,FB5402,DK1,Brondby,Copenhagen,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 20:00,FB5404,DK1,Sonderjyske,Randers,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 20:00,FB5421,TL1,Bangkok Utd,BG Pathum Utd,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 20:00,FB5485,SU1,Vaduz,Thun,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 20:00,FB5486,SFL,Getafe,Malaga,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 20:00,FB5514,SAL,Djurgardens,Elfsborg,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 20:00,FB5515,SAL,Kalmar,Hacken,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 20:00,FB5516,SAL,Halmstads,AIK Solna,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 20:30,FB5360,DFL,Twente,PSV Eindhoven,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 20:30,FB5361,DFL,AZ Alkmaar,Telstar,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 20:30,FB5417,NTL,Valerenga,Fredrikstad,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 20:30,FB5483,AT1,Hartberg,LASK Linz,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 20:30,FB5537,ED1,Norwich,Bolton,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 21:00,FB5368,FFL,Auxerre,Brest,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 21:00,FB5377,ISA,Parma,Genoa,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 21:00,FB5379,ISA,Frosinone,Como,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 21:00,FB5437,EPL,Bournemouth,Liverpool,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 21:00,FB5438,EPL,Leeds,Crystal Palace,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 21:00,FB5439,EPL,Manchester City,Sunderland,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 21:00,FB5566,UWW,Nigeria Women U20,Colombia Women U20,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 21:30,FB5371,GSL,Leverkusen,RB Leipzig,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 21:30,FB5561,ULP,Al Nasr SC,Dubai United FC,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 22:00,FB5407,DK1,Horsens,AGF Aarhus,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 22:00,FB5469,BD1,Gremio,Palmeiras,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 22:00,FB5487,BFL,Sint Truiden,Westerlo,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 22:15,FB5362,SFL,Atletico Madrid,Real Madrid,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 22:15,FB5488,SF2,Ceuta,Valladolid,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 22:30,FB5400,PFL,Guimaraes,Moreirense,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 22:30,FB5401,PFL,Amadora,Viseu,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 22:30,FB5489,SU1,Lausanne,Lugano,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 22:30,FB5490,SU1,Basel,St. Gallen,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 22:30,FB5554,SAL,Mjallby,GAIS,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 22:30,FB5555,SAL,Degerfors,Hammarby,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 22:45,FB5366,DF2,De Graafschap,NAC,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 22:45,FB5491,DFL,NEC Nijmegen,Go Ahead Eagles,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 23:00,FB5416,NTL,Tromso,Ham-Kam,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 23:00,FB5418,NTL,Sandefjord,Start,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 23:00,FB5482,AT1,Salzburg,Sturm Graz,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-20 23:00,FB5545,NTL,Viking,Lillestrom,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 23:15,FB5369,FFL,Nice,Lille,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 23:30,FB5339,EPL,Fulham,Manchester Utd,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-20 23:30,FB5372,GSL,Schalke 04,Elversberg,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-21 00:00,FB5406,DK1,Viborg,Nordsjaelland,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 00:00,FB5497,ISA,Juventus,Atalanta,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 00:15,FB5548,ULP,Al Jazira,Al Wahda,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-21 00:15,FB5549,ULP,Al Dhafra,Baniyas,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 00:30,FB5492,SFL,Deportivo,Betis,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 00:30,FB5493,BFL,Bruges,Genk,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 00:30,FB5494,SFL,Villarreal,Levante,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 00:30,FB5495,SF2,Las Palmas,Burgos,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 00:30,FB5565,UWW,Korea DPR Women U20,Canada Women U20,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 01:00,FB5396,PFL,Santa Clara,Braga,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-21 01:00,FB5397,PFL,Estoril,Casa Pia AC,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 01:15,FB5391,NTL,Brann,Bodo Glimt,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-21 01:15,FB5496,BFL,KV Kortrijk,SK Beveren,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 01:30,FB5511,GSL,Paderborn,Hoffenheim,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 01:43,FB5500,APL,San Lorenzo,Boca Juniors,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 02:00,FB5578,MXLW,Pumas UNAM Women,Puebla Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 02:45,FB5380,ISA,AC Milan,Lecce,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 02:45,FB5440,FFL,Marseille,Paris Saint Germain,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-21 03:00,FB5465,BD1,Corinthians,Fluminense,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-21 03:00,FB5466,BD1,Vitoria,Cruzeiro,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 03:00,FB5509,SFL,Valencia,Real Sociedad,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 03:00,FB5510,SF2,Leganes,CF Granada,MODEL,usable_forebet_prediction_model
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-21 03:27,FB5307,UD1,Montevideo Nacional,Defensor Sporting,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-21 03:30,FB5399,PFL,Porto,Benfica,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-21 03:58,FB5498,APL,Rosario Central,Argentinos Juniors,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 03:58,FB5505,APL,CA Platense,Newell's Old Boys,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-20,2026-09-21 05:00,FB5551,USL,Indy Eleven,Oakland Roots,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 05:30,FB5467,BD1,Flamengo,RB Bragantino,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 06:13,FB5550,APL,Belgrano,Estudiantes Rio Cuarto,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 06:30,FB5468,BD1,Athletico Paranaense,Bahia,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 06:57,FB5443,UD1,Montevideo Liverpool,Racing Club Montevideo,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 07:00,FB5457,MLS,Inter Miami CF,San Diego FC,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 07:00,FB5546,USL,Sacramento Republic,San Antonio FC,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 07:00,FB5547,MD1,Tapatio,Tlaxcala,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 07:00,FB5579,MXLW,Atletico San Luis Women,Pachuca Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 07:00,FB5580,MLSW,Utah Royals Women,Angel City Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:21+08:00,2026-09-20,2026-09-21 07:00,FB5581,MLSW,Bay FC Women,Racing Louisville Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-21 08:00,FB5459,MXL,Toluca,Santos Laguna,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-21 08:00,FB5460,MXL,Pachuca,Tijuana,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-21 08:28,FB5502,APL,Velez Sarsfield,Tigre,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-21 10:05,FB5458,MXL,Queretaro,Club Leon,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-21 15:00,FB5568,AWF,Korea Republic Women,Korea DPR Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-21 15:00,FB5569,AWF,China Women,Philippines Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-21 18:30,FB5570,AWF,Vietnam Women,Thailand Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-21 18:30,FB5571,AWF,Japan Women,Chinese Taipei Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-22 00:00,FB5582,GSLW,Werder Bremen Women,Stuttgart Women,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-22 01:28,FB5501,APL,Aldosivi,Atletico Tucuman,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-22 05:58,FB5508,APL,Barracas Central,Independiente Rivadavia,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-22 06:27,FB5442,UD1,Central Espanol,Montevideo City Torque,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-21,2026-09-22 06:28,FB5572,BD2,Criciuma,Operario Ferroviario,UNRESOLVED,not_resolved_on_forebet_prediction_or_livescore_surfaces
+2026-09-20T19:49:33+08:00,2026-09-22,2026-09-22 08:13,FB5507,APL,Lanus,Estudiantes,UNRESOLVED,target_missing_from_forebet_scan_output
+2026-09-20T19:49:33+08:00,2026-09-22,2026-09-22 08:28,FB5573,BD2,Cuiaba,Nautico Recife,UNRESOLVED,target_missing_from_forebet_scan_output
+2026-09-20T19:49:33+08:00,2026-09-22,2026-09-22 13:00,FB5575,AMF,Vietnam AM,Uzbekistan AM,UNRESOLVED,target_missing_from_forebet_scan_output
+2026-09-20T19:49:33+08:00,2026-09-22,2026-09-22 13:00,FB5576,AMF,Philippines AM,Kuwait AM,UNRESOLVED,target_missing_from_forebet_scan_output
+2026-09-20T19:49:33+08:00,2026-09-22,2026-09-22 18:00,FB5577,AMF,Korea Republic AM,Saudi Arabia AM,UNRESOLVED,target_missing_from_forebet_scan_output
+2026-09-20T19:49:33+08:00,2026-09-22,2026-09-22 08:30,FB5583,BD1W,Corinthians Women,Bahia Women,UNRESOLVED,target_missing_from_forebet_scan_output
