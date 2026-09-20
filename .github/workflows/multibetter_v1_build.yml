@@ -1,4 +1,5 @@
 name: Multibetter V1 Current Intake + Build
+# launcher revision: 3 · provider timezone normalization
 
 on:
   workflow_dispatch:
@@ -60,7 +61,7 @@ jobs:
             --our-forebet-supplement /tmp/forebet_supplement_current.csv
 
       - name: Collect ACC
-        run: python -m multibetter.scripts.collect_source --source ACC --days 2 --max-seconds 90
+        run: python -m multibetter.scripts.collect_source --source ACC --days 2 --max-seconds 180
 
       - name: Collect BCL
         run: python -m multibetter.scripts.collect_source --source BCL --days 2 --max-seconds 120
