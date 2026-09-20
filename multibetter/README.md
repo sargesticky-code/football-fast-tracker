@@ -1368,3 +1368,162 @@ Bridge identity remained:
 0 learned bridge aliases
 0 bridge conflicts
 ```
+
+
+---
+
+## 32. Google Sheet integration — added 2026-09-20
+
+Multibetter current output is now connected back into the existing Fast Tracker spreadsheet without modifying `Dashboard Board`.
+
+### Hidden raw feed
+
+Sheet:
+
+```text
+MultibetterFeed
+sheetId 1572093551
+hidden = true
+```
+
+Source:
+
+```text
+https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/multibetter-v1/multibetter/data/multibetter_current.csv
+```
+
+The feed uses a once-per-day URL cache-bust. Do not change this to a high-frequency volatile cache-bust because the scheduled Multibetter pipeline itself runs daily.
+
+The imported schema includes:
+
+```text
+HKJC event ID
+GitHub/OUR Forebet fixture identity
+source counts / source names
+HDA consensus
+O/U 2.5 consensus
+BTTS consensus
+bridge status
+build timestamp
+```
+
+### Visible analysis view
+
+Sheet:
+
+```text
+Multibetter View
+sheetId 1601748042
+visible = true
+```
+
+The view is intentionally separate from the production `Dashboard Board`.
+
+Universe:
+
+```text
+Fast Tracker Live
+    ↓
+LIVE matches
++
+PRE matches within next 24h
+```
+
+Therefore:
+
+- ENDED is excluded;
+- CLOSED is excluded;
+- matches not currently in the HKJC selling/live universe are not shown;
+- every shown HKJC match remains visible even if Multibetter has no source match;
+- missing Multibetter coverage displays `NO DATA` instead of forcing a match.
+
+### Join key
+
+The view joins Multibetter to Fast Tracker using:
+
+```text
+HKJC event ID
+```
+
+Do not join the user-facing view by row position or fuzzy team name.
+
+### Displayed analysis
+
+Current view includes:
+
+```text
+HKJC event ID
+kickoff HKT
+league
+HKJC Chinese home / away
+LIVE / PRE status
+
+HDA consensus source count
+HDA source names
+consensus H / D / A
+HKJC H / D / A odds
+
+model edge H / D / A
+best model edge
+corresponding H / D / A option
+
+O2.5 / U2.5 consensus
+BTTS Yes / No consensus
+bridge match status
+Multibetter update timestamp
+```
+
+Edge formula:
+
+```text
+model edge = HKJC decimal odds × consensus probability - 1
+```
+
+This is a model-implied price difference, not a guaranteed return.
+
+### Source-count visibility
+
+The view does not hide low-source rows.
+
+Instead:
+
+- source count is shown explicitly;
+- source names are shown explicitly;
+- top summary separately counts HDA rows with >=5 sources;
+- positive-edge summary counts only rows with >=5 HDA sources.
+
+This preserves user choice without pretending one-source and six-source consensus have equal support.
+
+### Freshness
+
+`built_at` is now written in HKT in a Google-Sheets-friendly timestamp:
+
+```text
+YYYY-MM-DD HH:MM:SS
+```
+
+The view shows:
+
+```text
+updated timestamp
+data age in hours
+STALE when age > 26h
+```
+
+A previous UTC-without-timezone timestamp display bug was fixed. Do not revert to naive UTC text because Google Sheets will display it as if it were HKT.
+
+### Safety boundary
+
+Do not use this integration as a reason to rebuild the existing production dashboard.
+
+Current boundary:
+
+```text
+GitHub Multibetter
+    ↓
+hidden MultibetterFeed
+    ↓
+separate Multibetter View
+```
+
+`Dashboard Board` remains untouched unless the user explicitly requests integration later.
