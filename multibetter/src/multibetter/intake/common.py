@@ -172,7 +172,7 @@ def utc_from_hkt(value: str) -> datetime | None:
             return None
 
     if parsed.tzinfo is None:
-        parsed = parsed.replace(timezone(timedelta(hours=8)))
+        parsed = parsed.replace(tzinfo=timezone(timedelta(hours=8)))
     return parsed.astimezone(timezone.utc).replace(tzinfo=None)
 
 
