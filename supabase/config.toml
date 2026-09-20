@@ -1,0 +1,5 @@
+[functions.sync-fast-tracker]
+verify_jwt = false
+
+[functions.app-phase1-feed]
+verify_jwt = true
