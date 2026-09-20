@@ -135,7 +135,12 @@ def test_home_away_orientation_is_part_of_identity():
     )
     result = resolve_fixture_cache_first(multi, fixtures)
     assert result.status == FixtureResolveStatus.CONFLICT
-    assert "HOME_AWAY" in result.reason or "WRONG_SIDE" in result.reason
+    assert result.reason in {
+        "HOME_TARGET_MATCHES_AWAY",
+        "AWAY_TARGET_MATCHES_HOME",
+        "HOME_TARGET_WRONG_SIDE",
+        "AWAY_TARGET_WRONG_SIDE",
+    } or result.reason.startswith("HOME_AWAY_SWAP_CONFLICT")
 
 
 def test_cached_alias_cannot_cross_home_away_roles():
