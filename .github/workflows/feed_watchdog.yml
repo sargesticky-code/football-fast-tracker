@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - '.github/workflows/feed_watchdog.yml'
+# Phase 1 recovery heartbeat 2026-09-20
 
 permissions:
   contents: read
