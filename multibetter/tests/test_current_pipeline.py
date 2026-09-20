@@ -160,3 +160,13 @@ def test_stale_preserved_source_is_not_loaded(tmp_path):
     tables = load_source_tables(source_dir, health_dir=health_dir)
     assert "FRB" in tables
     assert "BCL" not in tables
+
+
+def test_built_at_is_sheet_friendly_local_timestamp_text():
+    result = build_current(
+        our_forebet_rows=OUR,
+        source_tables=sources(),
+        cache_rows=[],
+        observed_at=datetime(2026, 9, 20, 8, 0),
+    )
+    assert result.rows[0]["built_at"] == "2026-09-20 08:00:00"
