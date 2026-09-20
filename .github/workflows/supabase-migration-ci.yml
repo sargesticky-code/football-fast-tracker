@@ -41,11 +41,9 @@ jobs:
           python -m py_compile scripts/supabase_validate.py
       - name: Create Supabase test roles
         run: |
-          psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 <<'SQL'
-          do $ begin create role anon nologin; exception when duplicate_object then null; end $;
-          do $ begin create role authenticated nologin; exception when duplicate_object then null; end $;
-          do $ begin create role service_role nologin; exception when duplicate_object then null; end $;
-          SQL
+          psql -h localhost -U postgres -d fast_tracker_test -tAc "select 1 from pg_roles where rolname='anon'" | grep -q 1 || psql -h localhost -U postgres -d fast_tracker_test -c "create role anon nologin"
+          psql -h localhost -U postgres -d fast_tracker_test -tAc "select 1 from pg_roles where rolname='authenticated'" | grep -q 1 || psql -h localhost -U postgres -d fast_tracker_test -c "create role authenticated nologin"
+          psql -h localhost -U postgres -d fast_tracker_test -tAc "select 1 from pg_roles where rolname='service_role'" | grep -q 1 || psql -h localhost -U postgres -d fast_tracker_test -c "create role service_role nologin"
       - name: SQL migrations
         run: |
           for f in supabase/migrations/*.sql; do
