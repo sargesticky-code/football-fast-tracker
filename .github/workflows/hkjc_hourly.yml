@@ -92,9 +92,22 @@ jobs:
           else
             git commit -m 'Refresh HKJC live market feed [skip ci]'
             for attempt in 1 2 3 4; do
-              git pull --rebase origin main
-              if git push; then
-                break
+              if git pull --rebase origin main; then
+                if git push; then
+                  break
+                fi
+              else
+                echo "HKJC rebase raced on generated CSV; rebuilding commit on latest main."
+                git rebase --abort || true
+                git fetch origin main
+                git reset --soft origin/main
+                git reset
+                git add data/hkjc_current.csv data/hkjc_targets.csv
+                if git diff --cached --quiet; then
+                  echo 'Latest main already contains equivalent HKJC state.'
+                  break
+                fi
+                git commit -m 'Refresh HKJC live market feed [skip ci]'
               fi
               if [ "$attempt" -eq 4 ]; then
                 echo 'HKJC live market push failed after retries.' >&2
