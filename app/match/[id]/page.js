@@ -14,7 +14,12 @@ import {
   modelCoverageCount,
 } from "@/lib/fast-tracker";
 
-export async function generateStaticParams() {\n  const feed = await import("@/data/app_snapshot.json").then((m) => m.default);\n  return (feed.matches || []).map((match) => ({ id: match.id }));\n}\n\nexport default async function MatchDetail({ params }) {
+export async function generateStaticParams() {
+  const feed = await import("@/data/app_snapshot.json").then((m) => m.default);
+  return (feed.matches || []).map((match) => ({ id: match.id }));
+}
+
+export default async function MatchDetail({ params }) {
   const { id } = await params;
   const match = await getMatch(id);
   if (!match) notFound();
