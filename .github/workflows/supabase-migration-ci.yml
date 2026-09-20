@@ -41,8 +41,10 @@ jobs:
           python -m py_compile scripts/supabase_validate.py
       - name: SQL migrations
         run: |
-          psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 -f supabase/migrations/001_core_schema.sql
-          psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 -f supabase/migrations/002_extended_fast_tracker.sql
+          for f in supabase/migrations/*.sql; do
+            echo "Applying $f"
+            psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 -f "$f"
+          done
       - name: Smoke check views
         run: |
           psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 <<'SQL'
