@@ -67,6 +67,7 @@ jobs:
             data/forebet_archive.csv
             data/evaluation_summary.csv
             data/hkjc_live_odds.csv
+            data/hkjc_power_current.csv
             data/team_form_summary.csv
           )
 
