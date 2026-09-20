@@ -3,6 +3,7 @@ import { parse } from "npm:csv-parse@7.0.2/sync";
 
 const GH = "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/main/data";
 const LIVE = "https://football-fast-tracker-live-sargesticky-9289.vercel.app/api/live_scores?format=csv";
+const MULTI = "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/multibetter-v1/multibetter/data/multibetter_current.csv";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const modern = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}");
@@ -237,6 +238,58 @@ async function syncLive() {
   return { live_score_current:n, live_stats_history:hn };
 }
 
+
+function list(v: unknown, sep="+") {
+  if (blank(v)) return [];
+  return String(v).split(sep).map(x => x.trim()).filter(Boolean);
+}
+
+async function syncMultiSource() {
+  const rows = await csv(MULTI);
+  const payload = rows.filter(r=>r.hkjc_event_id).map(r=>({
+    hkjc_event_id:text(r.hkjc_event_id),
+    built_at:ts(r.built_at),
+    external_fixture_id:text(r.external_fixture_id),
+    github_forebet_date:text(r.github_forebet_date),
+    github_forebet_time:text(r.github_forebet_time),
+    github_forebet_league:text(r.github_forebet_league),
+    github_forebet_home:text(r.github_forebet_home),
+    github_forebet_away:text(r.github_forebet_away),
+    home_away_explicit:bool(r.home_away_explicit),
+    match_status:text(r.match_status),
+    match_reason:text(r.match_reason),
+    candidate_count:int(r.candidate_count),
+    our_forebet_home:text(r.our_forebet_home),
+    our_forebet_away:text(r.our_forebet_away),
+    hkjc_home:text(r.hkjc_home),
+    hkjc_away:text(r.hkjc_away),
+    hkjc_kickoff_hkt:ts(r.hkjc_kickoff_hkt),
+    source_count_total:int(r.source_count_total),
+    sources_total:list(r.sources_total),
+    source_count_consensus:int(r.source_count_consensus),
+    sources_consensus:list(r.sources_consensus),
+    learned_alias_count:int(r.learned_alias_count),
+    learned_aliases:list(r.learned_aliases, ";"),
+    consensus_home:num(r.consensus_home),
+    consensus_draw:num(r.consensus_draw),
+    consensus_away:num(r.consensus_away),
+    consensus_over25:num(r.consensus_over25),
+    consensus_under25:num(r.consensus_under25),
+    consensus_btts_yes:num(r.consensus_btts_yes),
+    consensus_btts_no:num(r.consensus_btts_no),
+    raw:r
+  }));
+  const { data, error } = await db.rpc("ft_internal_upsert_multisource", { payload });
+  if (error) throw new Error("multisource: " + error.message);
+  return { rows: payload.length, upserted: data };
+}
+
+async function refreshCanonicalCore() {
+  const { data, error } = await db.rpc("ft_internal_refresh_phase1_core");
+  if (error) throw new Error("canonical core: " + error.message);
+  return data;
+}
+
 async function syncArchive() {
   const rows = await csv(`${GH}/forebet_archive.csv`);
   await ensureStubs(rows,{
@@ -271,9 +324,26 @@ Deno.serve(async (req) => {
     const body = req.method === "POST" ? await req.json().catch(()=>({})) : {};
     const mode = body.mode || "current";
     const started = new Date().toISOString();
-    const result = mode === "live" ? await syncLive()
-      : mode === "archive" ? await syncArchive()
-      : await syncCurrent();
+    let result: Record<string,unknown>;
+    if (mode === "live") {
+      result = await syncLive();
+    } else if (mode === "archive") {
+      result = await syncArchive();
+    } else {
+      result = await syncCurrent();
+      try {
+        result.multisource = await syncMultiSource();
+      } catch (e) {
+        const message = e instanceof Error ? e.message : String(e);
+        result.multisource = { ok:false, preserved_last_known_good:true, error:message };
+        await db.from("source_health").upsert({
+          source:"MULTISOURCE_SYNC", metric:"current", value_text:message,
+          status:"WARN", notes:"Preserved last-known-good Multi-source Intelligence Layer",
+          observed_at:new Date().toISOString(), raw:{error:message}
+        },{onConflict:"source,metric"});
+      }
+      result.canonical_core = await refreshCanonicalCore();
+    }
 
     await db.from("source_health").upsert({
       source:"SUPABASE_SYNC", metric:mode, value_text:JSON.stringify(result),
