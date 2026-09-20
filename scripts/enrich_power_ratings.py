@@ -26,7 +26,9 @@ import requests
 
 SOURCE_URL = "https://dataviz.theanalyst.com/opta-power-rankings/index.js"
 FEED_PATH = Path("data/forebet_current.csv")
+HKJC_PATH = Path("data/hkjc_current.csv")
 RATINGS_PATH = Path("data/power_ratings.csv")
+HKJC_POWER_PATH = Path("data/hkjc_power_current.csv")
 SOURCE = "Opta Power Rankings"
 REQUEST_TIMEOUT = 45
 MIN_EXPECTED_RATINGS = 5000
@@ -322,6 +324,77 @@ def enrich_feed(ratings: list[Rating]) -> tuple[int, int]:
     return matched_sides, total_sides
 
 
+
+def write_hkjc_power_feed(ratings: list[Rating]) -> tuple[int, int]:
+    """Build Opta strength by HKJC event, independent of Forebet availability."""
+    if not HKJC_PATH.exists():
+        raise RuntimeError(f"missing {HKJC_PATH}")
+
+    with HKJC_PATH.open(encoding="utf-8-sig", newline="") as fh:
+        rows = list(csv.DictReader(fh))
+
+    fields = [
+        "fetched_at_hkt", "hkjc_event_id", "kickoff_hkt", "tournament",
+        "home_en", "away_en", "home_rating", "away_rating",
+        "home_opta_name", "away_opta_name", "home_match_confidence",
+        "away_match_confidence", "home_rank", "away_rank",
+        "coverage", "source", "power_updated",
+    ]
+    now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    out = []
+    matched_sides = 0
+    total_sides = 0
+
+    for row in rows:
+        event_id = str(row.get("hkjc_event_id") or "").strip()
+        home = str(row.get("home_en") or "").strip()
+        away = str(row.get("away_en") or "").strip()
+        if not event_id or not home or not away:
+            continue
+
+        hr, hs = match_rating(home, ratings)
+        ar, ass = match_rating(away, ratings)
+        matched_sides += int(hr is not None) + int(ar is not None)
+        total_sides += 2
+
+        if hr and ar:
+            coverage = "BOTH"
+        elif hr:
+            coverage = "HOME_ONLY"
+        elif ar:
+            coverage = "AWAY_ONLY"
+        else:
+            coverage = "NONE"
+
+        out.append({
+            "fetched_at_hkt": now,
+            "hkjc_event_id": event_id,
+            "kickoff_hkt": row.get("kickoff_hkt", ""),
+            "tournament": row.get("tournament", ""),
+            "home_en": home,
+            "away_en": away,
+            "home_rating": f"{hr.score:.4f}" if hr else "",
+            "away_rating": f"{ar.score:.4f}" if ar else "",
+            "home_opta_name": hr.club if hr else "",
+            "away_opta_name": ar.club if ar else "",
+            "home_match_confidence": f"{hs:.3f}" if hr else "",
+            "away_match_confidence": f"{ass:.3f}" if ar else "",
+            "home_rank": hr.rank if hr and hr.rank else "",
+            "away_rank": ar.rank if ar and ar.rank else "",
+            "coverage": coverage,
+            "source": SOURCE,
+            "power_updated": (hr.updated if hr else (ar.updated if ar else now)),
+        })
+
+    HKJC_POWER_PATH.parent.mkdir(parents=True, exist_ok=True)
+    tmp = HKJC_POWER_PATH.with_suffix(".tmp")
+    with tmp.open("w", encoding="utf-8-sig", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(out)
+    tmp.replace(HKJC_POWER_PATH)
+    return matched_sides, total_sides
+
 def main() -> int:
     try:
         ratings = scrape_ratings()
@@ -333,7 +406,12 @@ def main() -> int:
         print(f"using cached power-rating snapshot: {len(ratings)} clubs")
 
     matched, total = enrich_feed(ratings)
-    print(f"Opta power enrichment coverage: {matched}/{total} team-sides")
+    print(f"Opta power enrichment coverage: {matched}/{total} Forebet team-sides")
+    hkjc_matched, hkjc_total = write_hkjc_power_feed(ratings)
+    print(
+        f"Opta HKJC-event coverage: {hkjc_matched}/{hkjc_total} team-sides "
+        f"wrote={HKJC_POWER_PATH}"
+    )
     return 0
 
 
