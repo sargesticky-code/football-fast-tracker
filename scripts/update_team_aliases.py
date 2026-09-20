@@ -36,9 +36,21 @@ UNRESOLVED_COLUMNS = [
     "source", "source_alias", "match_score", "reason",
 ]
 
+_SPECIAL_LATIN = str.maketrans({
+    "æ": "ae", "Æ": "AE",
+    "ø": "o", "Ø": "O",
+    "å": "a", "Å": "A",
+    "ð": "d", "Ð": "D",
+    "þ": "th", "Þ": "Th",
+    "ł": "l", "Ł": "L",
+    "đ": "d", "Đ": "D",
+    "ß": "ss",
+})
+
 
 def norm(value: str) -> str:
-    value = "".join(c for c in unicodedata.normalize("NFKD", value or "") if not unicodedata.combining(c))
+    value = (value or "").translate(_SPECIAL_LATIN)
+    value = "".join(c for c in unicodedata.normalize("NFKD", value) if not unicodedata.combining(c))
     value = value.casefold().replace("&", " and ")
     return re.sub(r"[^a-z0-9]+", " ", value).strip()
 
