@@ -10,6 +10,8 @@ import {
   modelLabel,
   sideName,
   formatUpdated,
+  freshness,
+  modelCoverageCount,
 } from "@/lib/fast-tracker";
 
 export default async function MatchDetail({ params }) {
@@ -20,6 +22,9 @@ export default async function MatchDetail({ params }) {
   const market = match.market || fairMarket(match.odds);
   const gap = divergence(match);
   const zhTitle = match.homeZh && match.awayZh ? `${match.homeZh} vs ${match.awayZh}` : null;
+  const fresh = freshness(match);
+  const evidenceCount = match.health?.evidenceChannelCount ?? modelCoverageCount(match);
+  const missingReason = match.health?.primaryMissingReason || match.health?.forebetReason || null;
 
   return (
     <main className="shell detail-shell">
@@ -67,6 +72,16 @@ export default async function MatchDetail({ params }) {
           </div>
         </section>
       )}
+
+      <section className="panel">
+        <div className="panel-title"><div><p>DATA HEALTH</p><h2>資料狀態</h2></div><span>{match.health?.status || "UNKNOWN"}</span></div>
+        <div className="source-chips">
+          <span>HKJC {match.health?.hkjcFreshness || fresh.label}</span>
+          <span>Forebet {match.health?.forebetState || "NO DATA"}</span>
+          <span>Internal {match.health?.internalModelQuality || "NO DATA"}</span>
+        </div>
+        {missingReason ? <p className="fineprint">缺資料原因：{missingReason}</p> : <p className="fineprint">Canonical evidence channels：{evidenceCount}</p>}
+      </section>
 
       <section className="panel">
         <div className="panel-title"><div><p>DIVERGENCE</p><h2>值得留意嘅差異</h2></div></div>
