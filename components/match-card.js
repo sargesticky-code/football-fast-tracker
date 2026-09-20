@@ -52,7 +52,7 @@ export default function MatchCard({ match, nowMs, focusRank = null }) {
 
       <div className="signal-line">
         <div>
-          <span className="muted">{sourceCount ? `${sourceCount} 個 evidence inputs` : "HKJC only"}</span>
+          <span className="muted">{sourceCount ? `${sourceCount} 個 evidence inputs` : "HKJC only"}{match.forebetDetail?.predictedScore ? ` · Forebet ${match.forebetDetail.predictedScore}` : ""}</span>
           {gap ? (
             <strong className={gapAbs >= 0.08 ? "gap-hot" : ""}>
               市場分歧 {sideName(match, gap.key)} {gap.value > 0 ? "+" : ""}{(gap.value * 100).toFixed(1)}pp
