@@ -1,75 +1,98 @@
 from datetime import datetime
 
-from multibetter.matching.matcher import match_prediction
-from multibetter.models import CanonicalFixture, MatchDecision, SourcePrediction
+from multibetter.matching.matcher import bridge_github_forebet_to_our_forebet
+from multibetter.models import (
+    CanonicalFixture,
+    MatchDecision,
+    MultiSourceFixture,
+    SourcePrediction,
+)
 
 
-def fixture(
-    *,
-    hkjc_home="白禮頓",
-    hkjc_away="阿仙奴",
-    forebet_home="Brighton",
-    forebet_away="Arsenal",
-):
+def our_fixture():
     return CanonicalFixture(
-        event_id="FBTEST",
+        event_id="FB1234",
         kickoff=datetime(2026, 9, 20, 20, 0),
         competition="Premier League",
-        hkjc_home=hkjc_home,
-        hkjc_away=hkjc_away,
-        forebet_home=forebet_home,
-        forebet_away=forebet_away,
+        hkjc_home="白禮頓",
+        hkjc_away="阿仙奴",
+        forebet_home="Brighton",
+        forebet_away="Arsenal",
         forebet_competition="Premier League",
     )
 
 
-def test_source_matches_forebet_not_hkjc():
-    result = match_prediction(
-        fixture(),
-        SourcePrediction(
-            source="APWIN",
-            kickoff=datetime(2026, 9, 20, 20, 0),
-            competition="Premier League",
-            home="Brighton",
-            away="Arsenal",
-        ),
+def test_exact_single_bridge():
+    multi = MultiSourceFixture(
+        kickoff=datetime(2026, 9, 20, 20, 0),
+        github_forebet_home="Brighton",
+        github_forebet_away="Arsenal",
+        github_forebet_competition="Premier League",
     )
+
+    result = bridge_github_forebet_to_our_forebet(our_fixture(), multi)
+
     assert result.decision == MatchDecision.EXACT
-    assert result.event_id == "FBTEST"
-    assert result.forebet_home == "Brighton"
+    assert result.event_id == "FB1234"
 
 
-def test_rejects_u21_false_positive():
-    result = match_prediction(
-        fixture(),
-        SourcePrediction(
-            source="APWIN",
-            kickoff=datetime(2026, 9, 20, 20, 0),
-            competition="Premier League 2",
-            home="Birmingham City U21",
-            away="Arsenal U21",
+def test_other_sources_do_not_need_own_hkjc_aliases():
+    multi = MultiSourceFixture(
+        kickoff=datetime(2026, 9, 20, 20, 0),
+        github_forebet_home="Brighton",
+        github_forebet_away="Arsenal",
+        github_forebet_competition="Premier League",
+        predictions=(
+            SourcePrediction(
+                source="BETCLAN",
+                kickoff=None,
+                competition=None,
+                home="Brighton Hove",
+                away="Arsenal FC",
+            ),
+            SourcePrediction(
+                source="STATAREA",
+                kickoff=None,
+                competition=None,
+                home="Brighton",
+                away="Arsenal",
+            ),
         ),
     )
+
+    result = bridge_github_forebet_to_our_forebet(our_fixture(), multi)
+
+    assert result.decision == MatchDecision.EXACT
+    assert len(multi.predictions) == 2
+
+
+def test_small_forebet_bridge_alias_is_allowed():
+    multi = MultiSourceFixture(
+        kickoff=datetime(2026, 9, 20, 20, 0),
+        github_forebet_home="Brighton Hove Albion",
+        github_forebet_away="Arsenal",
+        github_forebet_competition="Premier League",
+    )
+
+    result = bridge_github_forebet_to_our_forebet(
+        our_fixture(),
+        multi,
+        forebet_bridge_aliases={"Brighton Hove Albion": "Brighton"},
+    )
+
+    assert result.decision == MatchDecision.ALIAS
+    assert result.event_id == "FB1234"
+
+
+def test_u21_forebet_fixture_cannot_bridge_to_senior_fixture():
+    multi = MultiSourceFixture(
+        kickoff=datetime(2026, 9, 20, 20, 0),
+        github_forebet_home="Brighton U21",
+        github_forebet_away="Arsenal U21",
+        github_forebet_competition="Premier League 2",
+    )
+
+    result = bridge_github_forebet_to_our_forebet(our_fixture(), multi)
+
     assert result.decision == MatchDecision.REJECT
     assert result.reason == "TEAM_CLASS_MISMATCH"
-
-
-def test_source_alias_resolves_to_forebet():
-    result = match_prediction(
-        fixture(
-            hkjc_home="奧丹斯",
-            hkjc_away="米迪蘭特",
-            forebet_home="Odense",
-            forebet_away="Midtjylland",
-        ),
-        SourcePrediction(
-            source="APWIN",
-            kickoff=datetime(2026, 9, 20, 20, 0),
-            competition="Premier League",
-            home="OB",
-            away="Midtjylland",
-        ),
-        source_to_forebet_aliases={"OB": "Odense"},
-    )
-    assert result.decision == MatchDecision.ALIAS
-    assert result.event_id == "FBTEST"
