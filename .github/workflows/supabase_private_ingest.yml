@@ -91,12 +91,18 @@ jobs:
           PY
 
             echo "PUSH $file"
-            curl -fsSL \
+            if ! curl -fsSL \
               -X POST \
               -H "Authorization: Bearer $OIDC_TOKEN" \
               -H "Content-Type: application/json" \
               --data-binary @/tmp/fast-tracker-ingest.json \
-              "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/github-data-ingest"
+              "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/github-data-ingest"; then
+              if [ "$file" = "data/match_scenario_current.csv" ]; then
+                echo "::warning::Optional scenario ingest failed; continuing canonical refresh"
+                continue
+              fi
+              exit 1
+            fi
             echo
           done
 
