@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   workflow_run:
     workflows:
+      - "HKJC Live Market Feed"
       - "HKJC Live Odds 5min"
       - "Forebet Daily Feed"
       - "Football Shadow Models"
