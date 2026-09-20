@@ -241,6 +241,7 @@ jobs:
           git add data/forebet_current.csv data/forebet_availability.csv data/forebet_archive.csv data/team_alias_registry.csv
           if [ -f data/forebet_form_current.csv ]; then git add data/forebet_form_current.csv; fi
           if [ -f data/power_ratings.csv ]; then git add data/power_ratings.csv; fi
+          if [ -f data/hkjc_power_current.csv ]; then git add data/hkjc_power_current.csv; fi
           if git diff --cached --quiet; then
             echo 'No Forebet feed changes to commit.'
           else
