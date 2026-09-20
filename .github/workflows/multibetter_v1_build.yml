@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 6 · AccaGenerator target-route optimization validation
+# launcher revision: 7 · HKT build timestamp validation
 
 on:
   workflow_dispatch:
