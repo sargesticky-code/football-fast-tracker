@@ -4,14 +4,15 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Iterable, Mapping
 
-from multibetter.normalization.teams import normalize_text
+from multibetter.aliasing.registry import resolve_verified_alias
 
 
 class BridgeStatus(str, Enum):
     EXACT = "EXACT"
     ALIAS = "ALIAS"
+    CANDIDATE = "CANDIDATE"
     OUR_REFERENCE_MISSING = "OUR_REFERENCE_MISSING"
-    MISMATCH = "MISMATCH"
+    CONFLICT = "CONFLICT"
 
 
 @dataclass(frozen=True)
@@ -19,6 +20,7 @@ class TeamBridgeResult:
     source_name: str
     status: BridgeStatus
     our_forebet_name: str | None = None
+    reason: str = ""
 
 
 def bridge_team_name(
@@ -29,39 +31,55 @@ def bridge_team_name(
 ) -> TeamBridgeResult:
     """Exact-first GitHub-Forebet -> OUR-Forebet bridge.
 
-    This is deliberately not a fuzzy matcher. Both systems read Forebet names, so
-    exact identity is expected. Aliases are reserved for verified exceptions.
+    Production accepts only:
+    - exact Forebet identity, or
+    - a verified static exception alias.
+
+    Normalized/fuzzy similarities are candidates only and cannot silently enter
+    production.
     """
 
-    ours = set(our_forebet_names)
-    if github_forebet_name in ours:
+    target, status = resolve_verified_alias(
+        github_forebet_name,
+        known_our_forebet_names=our_forebet_names,
+        verified_aliases=exception_aliases or {},
+    )
+
+    if status == "EXACT":
         return TeamBridgeResult(
             github_forebet_name,
             BridgeStatus.EXACT,
-            github_forebet_name,
+            target,
+            status,
         )
 
-    if exception_aliases and github_forebet_name in exception_aliases:
-        target = exception_aliases[github_forebet_name]
-        if target in ours:
-            return TeamBridgeResult(
-                github_forebet_name,
-                BridgeStatus.ALIAS,
-                target,
-            )
+    if status == "VERIFIED_ALIAS":
+        return TeamBridgeResult(
+            github_forebet_name,
+            BridgeStatus.ALIAS,
+            target,
+            status,
+        )
 
-    # A normalized equality is diagnostic only, not automatically accepted.
-    source_norm = normalize_text(github_forebet_name)
-    for name in ours:
-        if normalize_text(name) == source_norm:
-            return TeamBridgeResult(
-                github_forebet_name,
-                BridgeStatus.MISMATCH,
-                name,
-            )
+    if status == "CANDIDATE_NORMALIZED_EQUALITY":
+        return TeamBridgeResult(
+            github_forebet_name,
+            BridgeStatus.CANDIDATE,
+            None,
+            status,
+        )
+
+    if "CONFLICT" in status:
+        return TeamBridgeResult(
+            github_forebet_name,
+            BridgeStatus.CONFLICT,
+            None,
+            status,
+        )
 
     return TeamBridgeResult(
         github_forebet_name,
         BridgeStatus.OUR_REFERENCE_MISSING,
         None,
+        status,
     )
