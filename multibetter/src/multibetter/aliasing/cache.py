@@ -62,3 +62,35 @@ def merge_learned_aliases(
         )
 
     return tuple(sorted(state.values(), key=lambda x: x.alias.lower()))
+
+
+def touch_aliases(
+    existing: Iterable[AliasCacheRow],
+    aliases_used: Iterable[str],
+    *,
+    observed_at: datetime,
+) -> tuple[AliasCacheRow, ...]:
+    """Update usage metadata for aliases that resolved through the fast path."""
+
+    used = set(aliases_used)
+    stamp = observed_at.isoformat()
+    rows: list[AliasCacheRow] = []
+
+    for row in existing:
+        if row.alias not in used:
+            rows.append(row)
+            continue
+        rows.append(
+            AliasCacheRow(
+                alias=row.alias,
+                target=row.target,
+                status=row.status,
+                confidence=row.confidence,
+                first_seen=row.first_seen or stamp,
+                last_seen=stamp,
+                observation_count=row.observation_count + 1,
+                note=row.note,
+            )
+        )
+
+    return tuple(sorted(rows, key=lambda x: x.alias.lower()))
