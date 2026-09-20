@@ -20,6 +20,8 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+import forebet_unresolved_diagnostics as unresolved_diagnostics
+
 HKT = ZoneInfo("Asia/Hong_Kong")
 LIVESCORE_URL = "https://www.forebet.com/en/livescore"
 _LIVESCORE_CACHE: str | None | bool = False
@@ -215,7 +217,16 @@ def install(production) -> None:
                 retained_fixture_only += 1
             else:
                 state = "UNRESOLVED"
-                reason = "not_resolved_on_forebet_prediction_or_livescore_surfaces"
+                diagnosis = unresolved_diagnostics.get_diagnosis(event_id)
+                reason = {
+                    "SOURCE_UNAVAILABLE": "forebet_source_surface_unavailable",
+                    "NO_SOURCE_ROWS": "no_forebet_source_rows_for_date",
+                    "NO_CLOSE_FIXTURE_ON_FETCHED_MODEL_SURFACES": "forebet_fixture_absent_from_fetched_model_surfaces",
+                    "WEAK_NAME_CANDIDATE": "weak_forebet_name_candidate_review",
+                    "ALIAS_NEAR_MISS": "forebet_alias_near_miss_review",
+                    "PUBLISHED_WITHOUT_USABLE_MODEL": "forebet_fixture_published_without_usable_model",
+                    "MATCH_POLICY_REVIEW": "forebet_match_policy_review",
+                }.get(diagnosis, "not_resolved_on_forebet_prediction_or_livescore_surfaces")
             counts[state] += 1
             _AVAILABILITY[event_id] = {
                 "checked_at_hkt": checked_at,
