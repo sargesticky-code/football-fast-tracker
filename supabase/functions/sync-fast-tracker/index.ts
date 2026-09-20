@@ -151,7 +151,7 @@ async function syncCurrent() {
     match_count:int(r.match_count), status:text(r.status), alias_source:text(r.source)
   })),"source,alias");
 
-  for (const [file, table, conflict, mapper] of [
+  const simpleFeeds: Array<[string,string,string,(r:Record<string,string>)=>Record<string,unknown>]> = [
     ["form_current.csv","form_predictions","hkjc_event_id",(r:Record<string,string>)=>({
       hkjc_event_id:text(r.hkjc_event_id), fetched_at:ts(r.fetched_at_hkt), home:text(r.home), away:text(r.away),
       form_prob_home:num(r.form_prob_home), form_prob_draw:num(r.form_prob_draw), form_prob_away:num(r.form_prob_away),
@@ -179,7 +179,8 @@ async function syncCurrent() {
       bet365_home:num(r.bet365_home), bet365_draw:num(r.bet365_draw), bet365_away:num(r.bet365_away),
       bet365_fixture_id:text(r.bet365_fixture_id), match_quality:num(r.match_quality), source:text(r.source), raw:r
     })]
-  ] as const) {
+  ];
+  for (const [file, table, conflict, mapper] of simpleFeeds) {
     const rows = await csv(`${GH}/${file}`);
     await ensureStubs(rows,{event:"hkjc_event_id",kickoff:"kickoff_hkt",league:"league",home:"home",away:"away"});
     out[table] = await upsert(table,rows.filter(r=>r.hkjc_event_id).map(mapper),conflict);
