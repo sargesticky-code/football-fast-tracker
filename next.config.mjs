@@ -1,9 +1,10 @@
 const isPages = process.env.GITHUB_ACTIONS === "true";
 const repo = "football-fast-tracker";
+
 export default {
-  output: "export",
-  trailingSlash: true,
-  images: { unoptimized: true },
+  ...(isPages ? { output: "export" } : {}),
+  trailingSlash: isPages,
+  images: { unoptimized: isPages },
   basePath: isPages ? `/${repo}` : "",
   assetPrefix: isPages ? `/${repo}/` : "",
 };
