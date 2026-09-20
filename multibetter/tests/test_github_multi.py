@@ -38,7 +38,8 @@ def test_upstream_matcher_reuses_team_similarity_and_time_window():
         target_date="20/09/2026",
         similarity_threshold=55,
     )
-    assert matched is rows[0]
+    assert matched["HOME TEAM"] == rows[0]["HOME TEAM"]
+    assert matched["__MB_MATCH_QUALITY"] in {"HIGH", "GOOD", "REVIEW"}
 
 
 def test_group_uses_forebet_as_anchor_not_hkjc():
@@ -126,8 +127,8 @@ def test_date_formats_are_normalized_across_sources():
         target_date="20/09/2026",
     )
 
-    assert sta is rows[0]
-    assert fst is rows[1]
+    assert sta["HOME TEAM"] == rows[0]["HOME TEAM"]
+    assert fst["HOME TEAM"] == rows[1]["HOME TEAM"]
 
 
 def test_unpadded_time_is_normalized():
@@ -147,4 +148,26 @@ def test_unpadded_time_is_normalized():
         target_time="00:00",
         target_date="20/09/2026",
     )
-    assert matched is rows[0]
+    assert matched["HOME TEAM"] == rows[0]["HOME TEAM"]
+
+
+def test_grouped_predictions_keep_match_quality():
+    sources = {
+        "BCL": [
+            {
+                "DATE": "20/09/2026",
+                "TIME": "21:00",
+                "HOME TEAM": "Manchester City FC",
+                "AWAY TEAM": "Sunderland",
+                "HOME PER": "61",
+                "DRAW PER": "22",
+                "AWAY PER": "17",
+                "NAME": "BCL",
+            }
+        ]
+    }
+    grouped = group_sources_around_forebet(FOREBET, sources)
+    assert grouped.predictions[0].source == "FRB"
+    assert grouped.predictions[0].match_quality == "HIGH"
+    assert grouped.predictions[1].match_similarity is not None
+    assert grouped.predictions[1].match_quality in {"HIGH", "GOOD", "REVIEW"}
