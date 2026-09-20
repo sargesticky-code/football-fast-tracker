@@ -13,6 +13,7 @@ on:
       - "Bet365 HKJC Benchmark"
       - "Forebet supplement refresh"
       - "Prediction Archive and Evaluation"
+      - "Match Scenario Features"
     types: [completed]
 
 permissions:
@@ -69,7 +70,7 @@ jobs:
             data/hkjc_live_odds.csv
             data/hkjc_power_current.csv
             data/team_form_summary.csv
-  data/match_scenario_current.csv
+            data/match_scenario_current.csv
           )
 
           for file in "${files[@]}"; do
