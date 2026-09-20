@@ -78,6 +78,63 @@ def _row_date(value: str, fallback: str) -> str:
 feed.normalize_date = _row_date
 
 
+# Forebet's rendered <time datetime> can cross a UTC/HKT date boundary even
+# when the fixture itself is the same HKJC event. Preserve strict same-date
+# matching first; only recover an adjacent-date row when BOTH team names are
+# exact after the production normalization policy and the candidate is unique.
+_legacy_attach = _original_attach
+
+def _attach_with_safe_date_rollover(row, targets):
+    selected = _legacy_attach(row, targets)
+    if selected is not None:
+        return selected
+
+    row_date_raw = str(row.get("match_date") or "").strip()
+    try:
+        row_date = datetime.fromisoformat(row_date_raw).date()
+    except ValueError:
+        return None
+
+    candidates = []
+    for target in targets:
+        target_date_raw = str(target.get("match_date") or "").strip()
+        try:
+            target_date = datetime.fromisoformat(target_date_raw).date()
+        except ValueError:
+            continue
+        if abs((target_date - row_date).days) != 1:
+            continue
+
+        hs = feed.team_score(str(row.get("home_team") or ""), str(target.get("home_en") or ""))
+        aws = feed.team_score(str(row.get("away_team") or ""), str(target.get("away_en") or ""))
+        if hs < 0.999 or aws < 0.999:
+            continue
+        candidates.append((target, hs, aws))
+
+    if len(candidates) != 1:
+        return None
+
+    target, hs, aws = candidates[0]
+    row_for_attach = dict(row)
+    row_for_attach["match_date"] = target["match_date"]
+    recovered = _legacy_attach(row_for_attach, [target])
+    if recovered is None:
+        return None
+
+    print(
+        "FOREBET_DATE_ROLLOVER_MATCH "
+        f"event={target.get('hkjc_event_id','')} "
+        f"row_date={row_date_raw} target_date={target.get('match_date','')} "
+        f"fixture={row.get('home_team','')} vs {row.get('away_team','')} "
+        f"hs={hs:.3f} aws={aws:.3f}",
+        flush=True,
+    )
+    return recovered
+
+
+_original_attach = _attach_with_safe_date_rollover
+
+
 def _load_alias_registry() -> int:
     loaded = conflicts = manual_loaded = 0
     sources = (
