@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import re
+from difflib import SequenceMatcher
+from urllib.parse import urlparse
 from datetime import date
 from typing import Sequence
 
@@ -22,11 +24,50 @@ INDEX_URLS = (
 )
 
 
+def _normalize_name(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", clean_text(value).lower()).strip()
+
+
+def _fixture_slug(url: str) -> str:
+    slug = urlparse(url).path.rstrip("/").split("/")[-1]
+    slug = slug.split("-prediction", 1)[0]
+    return _normalize_name(slug.replace("-v-", " vs ").replace("-", " "))
+
+
+def _targeted_links(
+    links: Sequence[str],
+    target_pairs: Sequence[tuple[str, str]] | None,
+    *,
+    threshold: float = 0.58,
+) -> list[str]:
+    if not target_pairs:
+        return list(links)
+
+    targets = [
+        _normalize_name(f"{home} vs {away}")
+        for home, away in target_pairs
+        if home and away
+    ]
+    selected = []
+    for link in links:
+        slug = _fixture_slug(link)
+        if not slug:
+            continue
+        best = max(
+            (SequenceMatcher(None, slug, target).ratio() for target in targets),
+            default=0.0,
+        )
+        if best >= threshold:
+            selected.append(link)
+    return selected
+
+
 def collect_betclan(
     target_dates: Sequence[date],
     *,
+    target_pairs: Sequence[tuple[str, str]] | None = None,
     timeout: int = 20,
-    delay_seconds: float = 0.15,
+    delay_seconds: float = 0.10,
 ):
     session = make_session()
     links = []
@@ -44,6 +85,8 @@ def collect_betclan(
             href = anchor["href"]
             if href.startswith("https://www.betclan.com/predictionsdetails/") and href not in links:
                 links.append(href)
+
+    links = _targeted_links(links, target_pairs)
 
     rows = []
     for url in links:
