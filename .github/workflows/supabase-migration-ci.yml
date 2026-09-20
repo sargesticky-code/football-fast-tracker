@@ -7,8 +7,8 @@ on:
     branches: [supabase-migration]
     paths:
       - "supabase/**"
-      - "scripts/supabase_sync*.py"
-      - ".github/workflows/supabase-migration-ci.yml"
+      - "scripts/supabase_*.py"
+      - ".github/workflows/supabase-*.yml"
   workflow_dispatch:
 
 jobs:
@@ -38,6 +38,7 @@ jobs:
         run: |
           python -m py_compile scripts/supabase_sync.py
           python -m py_compile scripts/supabase_sync_extended.py
+          python -m py_compile scripts/supabase_validate.py
       - name: SQL migrations
         run: |
           psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 -f supabase/migrations/001_core_schema.sql
