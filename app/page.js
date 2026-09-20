@@ -16,7 +16,9 @@ const filters = [
   ["stale", "過時"],
 ];
 
-export default async function Home() {\n  const filter = "focus";\n  const feed = await getFeed();
+export default async function Home() {
+  const filter = "focus";
+  const feed = await getFeed();
   const all = feed.matches;
   const nowMs = Date.now();
 
