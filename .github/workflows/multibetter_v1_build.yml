@@ -1,76 +1,132 @@
-name: Multibetter V1 Build
+name: Multibetter V1 Current Intake + Build
 
 on:
   workflow_dispatch:
-    inputs:
-      source_dir:
-        description: "Directory containing forebet.csv and optional multi-source CSVs"
-        required: true
-        default: "multibetter/incoming/current"
 
 permissions:
   contents: write
 
 concurrency:
-  group: multibetter-v1-build
+  group: multibetter-v1-current
   cancel-in-progress: false
 
 jobs:
-  build:
+  current:
     if: github.ref == 'refs/heads/multibetter-v1'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
 
     steps:
       - name: Checkout Multibetter branch
         uses: actions/checkout@v4
         with:
           ref: multibetter-v1
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
+          cache: pip
           cache-dependency-path: multibetter/pyproject.toml
 
       - name: Install Multibetter
         run: python -m pip install -e "multibetter[dev]"
 
-      - name: Run tests
+      - name: Run regression tests
         run: pytest -q multibetter/tests
 
-      - name: Validate current source input
-        env:
-          SOURCE_DIR: ${{ inputs.source_dir }}
+      - name: Read latest production Forebet feeds from main
         run: |
-          test -f "$SOURCE_DIR/forebet.csv" || {
-            echo "::error::Missing $SOURCE_DIR/forebet.csv"
-            exit 1
-          }
+          git fetch origin main
+          git show origin/main:data/forebet_current.csv > /tmp/forebet_current.csv
+          if git cat-file -e origin/main:data/forebet_supplement_current.csv 2>/dev/null; then
+            git show origin/main:data/forebet_supplement_current.csv > /tmp/forebet_supplement_current.csv
+          else
+            printf '' > /tmp/forebet_supplement_current.csv
+          fi
 
-      - name: Build current output
-        env:
-          SOURCE_DIR: ${{ inputs.source_dir }}
+      - name: Collect current multi-source intake
         run: |
-          python -m multibetter.scripts.build_current             --source-dir "$SOURCE_DIR"             --our-forebet data/forebet_current.csv             --alias-cache multibetter/data/forebet_bridge_aliases.csv             --output multibetter/data/multibetter_current.csv             --health-output multibetter/data/multibetter_current_health.json
+          python -m multibetter.scripts.collect_current \
+            --days 2 \
+            --our-forebet /tmp/forebet_current.csv \
+            --our-forebet-supplement /tmp/forebet_supplement_current.csv \
+            --output-dir multibetter/incoming/current \
+            --health-dir multibetter/incoming/health
+
+      - name: Show intake health
+        run: cat multibetter/incoming/health/summary.json
+
+      - name: Build Multibetter current output
+        run: |
+          python -m multibetter.scripts.build_current \
+            --source-dir multibetter/incoming/current \
+            --health-dir multibetter/incoming/health \
+            --our-forebet /tmp/forebet_current.csv \
+            --alias-cache multibetter/data/forebet_bridge_aliases.csv \
+            --output multibetter/data/multibetter_current.csv \
+            --health-output multibetter/data/multibetter_current_health.json
 
       - name: Alias health
         run: |
-          python multibetter/scripts/alias_health_report.py             --root .             --output multibetter/data/alias_health.json
+          python multibetter/scripts/alias_health_report.py \
+            --root . \
+            --output multibetter/data/alias_health.json
 
-      - name: Commit Multibetter outputs
+      - name: Validate fresh-source coverage
         run: |
-          if git diff --quiet --             multibetter/data/multibetter_current.csv             multibetter/data/multibetter_current_health.json             multibetter/data/forebet_bridge_aliases.csv             multibetter/data/alias_health.json; then
-            echo "No Multibetter output changes."
-            exit 0
-          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
 
+          health = json.loads(
+              Path("multibetter/incoming/health/summary.json").read_text()
+          )
+          sources = health["sources"]
+          if sources.get("FRB", {}).get("status") != "OK":
+              raise SystemExit("Forebet anchor is not fresh")
+
+          optional_ok = [
+              key for key in ("ACC", "BCL", "FST", "PRE", "STA")
+              if sources.get(key, {}).get("status") == "OK"
+          ]
+          print("FRESH_OPTIONAL_SOURCES", optional_ok)
+          if len(optional_ok) < 2:
+              print(
+                  "::warning::Fewer than two optional prediction sources are fresh; "
+                  "keep workflow manual and investigate parser/source health."
+              )
+          PY
+
+      - name: Commit Multibetter intake and outputs
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add             multibetter/data/multibetter_current.csv             multibetter/data/multibetter_current_health.json             multibetter/data/forebet_bridge_aliases.csv             multibetter/data/alias_health.json
+          git add \
+            multibetter/incoming/current \
+            multibetter/incoming/health \
+            multibetter/data/multibetter_current.csv \
+            multibetter/data/multibetter_current_health.json \
+            multibetter/data/forebet_bridge_aliases.csv \
+            multibetter/data/alias_health.json
 
-          git commit -m "Update Multibetter V1 current output"
-          git push origin HEAD:multibetter-v1
+          if git diff --cached --quiet; then
+            echo "No Multibetter current changes."
+            exit 0
+          fi
+
+          git commit -m "Update Multibetter current intake and output [skip ci]"
+
+          for attempt in 1 2 3 4; do
+            git pull --rebase origin multibetter-v1
+            if git push origin HEAD:multibetter-v1; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 4 ]; then
+              echo "Multibetter push failed after retries." >&2
+              exit 1
+            fi
+            sleep 2
+          done
