@@ -73,6 +73,20 @@ def build_fixture_index(
     return index
 
 
+def build_time_index(
+    fixtures: Iterable[CanonicalFixture],
+) -> dict[tuple[str, str], list[CanonicalFixture]]:
+    """Fallback index for feeds that do not yet carry competition."""
+    index: dict[tuple[str, str], list[CanonicalFixture]] = {}
+    for fixture in fixtures:
+        key = (
+            fixture.kickoff.date().isoformat(),
+            _time_key(fixture.kickoff),
+        )
+        index.setdefault(key, []).append(fixture)
+    return index
+
+
 def _ratio(a: str, b: str) -> float:
     return SequenceMatcher(
         None,
@@ -122,6 +136,9 @@ def resolve_fixture_cache_first(
     fixture_index: Mapping[
         tuple[str, str, str], Sequence[CanonicalFixture]
     ] | None = None,
+    time_index: Mapping[
+        tuple[str, str], Sequence[CanonicalFixture]
+    ] | None = None,
     pair_similarity_floor: float = 55.0,
     winner_margin: float = 8.0,
 ) -> FixtureResolveResult:
@@ -164,17 +181,34 @@ def resolve_fixture_cache_first(
             reason="ALIAS_CONFLICT",
         )
 
-    index = (
-        fixture_index
-        if fixture_index is not None
-        else build_fixture_index(fixtures, competition_aliases=competition_aliases)
-    )
-    key = _coarse_key(
-        multi.kickoff,
-        multi.github_forebet_competition,
-        competition_aliases,
-    )
-    candidates = list(index.get(key, ()))
+    if multi.github_forebet_competition:
+        index = (
+            fixture_index
+            if fixture_index is not None
+            else build_fixture_index(
+                fixtures,
+                competition_aliases=competition_aliases,
+            )
+        )
+        key = _coarse_key(
+            multi.kickoff,
+            multi.github_forebet_competition,
+            competition_aliases,
+        )
+        candidates = list(index.get(key, ()))
+        bucket_reason = "DATE_TIME_LEAGUE"
+    else:
+        fallback = (
+            time_index
+            if time_index is not None
+            else build_time_index(fixtures)
+        )
+        key2 = (
+            multi.kickoff.date().isoformat(),
+            _time_key(multi.kickoff),
+        )
+        candidates = list(fallback.get(key2, ()))
+        bucket_reason = "DATE_TIME"
 
     # Fast path: both team names already resolved by exact name / alias dictionary.
     if home_target is not None and away_target is not None:
@@ -202,7 +236,7 @@ def resolve_fixture_cache_first(
             FixtureResolveStatus.NO_FIXTURE,
             None,
             candidate_count=0,
-            reason="NO_DATE_TIME_LEAGUE_BUCKET",
+            reason=f"NO_{bucket_reason}_BUCKET",
         )
 
     # Cold path A: date + exact time + league already identify one fixture.
@@ -232,7 +266,7 @@ def resolve_fixture_cache_first(
                     source_name,
                     target_name,
                     existing_aliases=aliases,
-                    reason="UNIQUE_DATE_TIME_LEAGUE_FIXTURE",
+                    reason=f"UNIQUE_{bucket_reason}_FIXTURE",
                 )
                 if row:
                     learned.append(row)
@@ -249,7 +283,7 @@ def resolve_fixture_cache_first(
             fixture,
             learned_aliases=tuple(learned),
             candidate_count=1,
-            reason="UNIQUE_DATE_TIME_LEAGUE_FIXTURE",
+            reason=f"UNIQUE_{bucket_reason}_FIXTURE",
         )
 
     # Cold path B: same league often has several simultaneous fixtures.
@@ -301,7 +335,7 @@ def resolve_fixture_cache_first(
                 source_name,
                 target_name,
                 existing_aliases=aliases,
-                reason="UNIQUE_TEAM_PAIR_WITHIN_DATE_TIME_LEAGUE",
+                reason=f"UNIQUE_TEAM_PAIR_WITHIN_{bucket_reason}",
             )
             if row:
                 learned.append(row)
@@ -319,7 +353,7 @@ def resolve_fixture_cache_first(
         learned_aliases=tuple(learned),
         candidate_count=len(candidates),
         reason=(
-            f"UNIQUE_TEAM_PAIR_WITHIN_DATE_TIME_LEAGUE:"
+            f"UNIQUE_TEAM_PAIR_WITHIN_{bucket_reason}:"
             f"{best[1]:.1f}/{best[2]:.1f}"
         ),
     )
