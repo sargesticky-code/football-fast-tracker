@@ -1,82 +1,81 @@
 # Multibetter V1
 
-Multibetter is an experimental multi-source football prediction framework developed separately from Fast Tracker.
+Multibetter is developed separately from Fast Tracker. Fast Tracker main remains production and is not modified by Multibetter work.
 
-## Matching architecture
+## Approved V1 architecture: one bridge only
 
-Multibetter uses **Forebet as the team-name matching hub**.
+The external GitHub multi-source framework is responsible for collecting and aligning its own prediction sources.
 
-The existing Fast Tracker Forebet -> HKJC alias bridge is already mature, so new prediction sources do not maintain their own HKJC alias tables.
+Multibetter does **not** maintain separate APWin -> HKJC, BetClan -> HKJC, Statarea -> HKJC, etc. mappings.
 
 ```text
-APWin ---------\
-Statarea -------\
-BetClan ---------> Forebet team key -> existing Forebet/HKJC alias -> HKJC event ID
-Other models ---/
+External GitHub multi-source framework
+  Accumulator / BetClan / FootballSuperTips / Forebet / Prematips / Statarea / future sources
+                         |
+                         v
+              GitHub multi fixture
+                         |
+                  GitHub Forebet row
+                         |
+                         v
+        ONE bridge: GitHub Forebet -> OUR Forebet
+                         |
+                         v
+        existing OUR Forebet <-> HKJC alias
+                         |
+                         v
+                    HKJC event ID
 ```
 
-HKJC remains the final fixture/odds/display authority, but new source matching is performed against the Forebet reference names.
+HKJC remains the final fixture, price and display authority. OUR Forebet remains the existing bridge to HKJC.
 
-## Rules
+### Why this is faster
 
-- Fast Tracker remains production and is not modified by Multibetter work.
+Both sides use Forebet as the reference source, so most GitHub-Forebet -> OUR-Forebet matches should be exact. Only genuine Forebet naming/version differences need the small bridge alias table.
+
+We do not repeat team-alias work for every prediction provider.
+
+## Production matching rules
+
+- The only Multibetter-owned identity bridge is GitHub Forebet -> OUR Forebet.
 - HKJC event ID remains the final event key.
-- Forebet team names are the canonical **matching hub** for external prediction sources.
-- Existing Forebet -> HKJC aliases are reused; do not create a separate HKJC alias table per source.
-- Each new source only needs Source -> Forebet aliases where exact names differ.
-- Source data flows through: raw -> normalized -> Forebet-matched -> HKJC-linked -> consensus.
-- NO DATA is safer than a wrong match.
+- Existing OUR Forebet -> HKJC aliases are reused unchanged.
+- Date and kickoff must be compatible.
+- Home and away orientation must match.
 - Senior / Women / U21-U23 / reserve / B-team mismatches are rejected.
-- Source failures are isolated and must not blank other sources.
-- Every source result carries fetched_at, match confidence and health status.
-- Source weights are market-specific; one global source weight is not allowed.
+- NO MATCH is safer than a false match.
+- No fuzzy source-to-HKJC production fallback.
+- Source failures are isolated and must not blank the whole multi-source fixture.
 
-## Initial layout
+## Data flow
 
 ```text
-multibetter/
-  src/multibetter/
-    models.py
-    normalization/teams.py
-    matching/matcher.py
-    consensus/engine.py
-    health/status.py
-    sources/base.py
-    sources/apwin.py
-  tests/
+github_multi_raw
+      |
+      v
+github_multi_fixture
+      |
+      | contains github_forebet_home / github_forebet_away
+      v
+bridge_github_forebet_to_our_forebet()
+      |
+      v
+HKJC event_id + HKJC names + HKJC odds
+      |
+      v
+multi-source consensus
 ```
+
+## APWin note
+
+The inspected public GitHub project currently contains adapters for Accumulator Generator, Forebet, BetClan, FootballSuperTips, Prematips and Statarea. It does not currently contain an APWin adapter.
+
+The APWin collector prototype in this branch is therefore parked as an optional future source adapter. It is not part of the approved V1 identity-matching path unless APWin is first incorporated into the external multi-source fixture layer.
 
 ## V1 objective
 
-Build a trustworthy source registry and matching layer before connecting any dashboard.
-
-The first target source is APWin. APWin candidates must first resolve to the correct Forebet fixture/team key. Only after that does the existing Forebet -> HKJC bridge supply the HKJC event ID and display names.
-
-## Planned data flow
-
-```text
-HKJC fixtures
-      ^
-      | existing Forebet/HKJC alias bridge
-      |
-Forebet reference fixtures / team keys
-      ^
-      |
-      +---- APWin
-      +---- Statarea
-      +---- BetClan
-      +---- FootballSuperTips
-      +---- future models
-      |
-      v
-strict Source -> Forebet matcher
-      |
-      v
-HKJC-linked normalized records
-      |
-      v
-market-specific consensus
-      |
-      v
-HKJC price comparison / edge layer
-```
+1. Import the GitHub framework's multi-source fixture output.
+2. Read its selected Forebet fixture identity.
+3. Bridge that single Forebet identity to OUR Forebet.
+4. Reuse the existing OUR Forebet -> HKJC event mapping.
+5. Build consensus only after the fixture has a trusted HKJC event ID.
