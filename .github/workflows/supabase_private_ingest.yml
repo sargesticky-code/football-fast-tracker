@@ -2,6 +2,8 @@ name: Supabase Static Data Push
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '7,37 * * * *' # static artifact reconciliation only; no source scraping
   workflow_run:
     workflows:
       - "HKJC Live Market Feed"
@@ -22,7 +24,7 @@ permissions:
 
 concurrency:
   group: supabase-private-data-push
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   push-current-artifacts:
