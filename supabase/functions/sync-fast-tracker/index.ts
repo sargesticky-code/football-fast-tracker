@@ -2,6 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2.116.0";
 import { parse } from "npm:csv-parse@7.0.2/sync";
 
 const GH = "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/main/data";
+const INGEST_BUCKET = "fast-tracker-ingest";
 const LIVE = "https://football-fast-tracker-live-sargesticky-9289.vercel.app/api/live_scores?format=csv";
 const MULTI = "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/multibetter-v1/multibetter/data/multibetter_current.csv";
 const HKJC_ENDPOINT = "https://info.cld.hkjc.com/graphql/base/";
@@ -108,6 +109,13 @@ async function csv(url: string) {
   return parse(body, { columns: true, skip_empty_lines: true, relax_column_count: true }) as Record<string,string>[];
 }
 
+async function csvAsset(file: string) {
+  const { data, error } = await db.storage.from(INGEST_BUCKET).download(file);
+  if (error || !data) throw new Error(`storage ${file} failed ${error?.message || "missing"}`);
+  const body = (await data.text()).replace(/^\uFEFF/, "");
+  return parse(body, { columns: true, skip_empty_lines: true, relax_column_count: true }) as Record<string,string>[];
+}
+
 async function upsert(table: string, rows: Record<string,unknown>[], onConflict: string, ignoreDuplicates=false) {
   let total = 0;
   for (let i=0; i<rows.length; i+=300) {
@@ -159,7 +167,7 @@ async function ensureStubs(rows: Record<string,string>[], spec: {
 async function syncCurrent() {
   const out: Record<string,number> = {};
 
-  const h = await csv(`${GH}/hkjc_current.csv`);
+  const h = await csvAsset("hkjc_current.csv");
   const matches = h.filter(r=>r.hkjc_event_id).map(r=>({
     hkjc_event_id:text(r.hkjc_event_id), hkjc_match_id:text(r.match_id),
     kickoff_hkt:ts(r.kickoff_hkt), status:text(r.status), tournament:text(r.tournament),
@@ -175,7 +183,7 @@ async function syncCurrent() {
     fetched_at:ts(r.fetched_at_hkt), odds_updated_at:ts(r.odds_updated_at), raw:r
   })),"hkjc_event_id");
 
-  const fb = await csv(`${GH}/forebet_current.csv`);
+  const fb = await csvAsset("forebet_current.csv");
   out.forebet = await upsert("forebet_predictions",fb.filter(r=>r.hkjc_event_id).map(r=>({
     hkjc_event_id:text(r.hkjc_event_id), fetched_at:ts(r.fetched_at_hkt),
     forebet_match_date:text(r.match_date), forebet_kickoff_text:text(r.kickoff_text),
@@ -194,7 +202,7 @@ async function syncCurrent() {
     power_home_match:bool(r.power_home_match), power_away_match:bool(r.power_away_match), raw:r
   })),"hkjc_event_id");
 
-  const md = await csv(`${GH}/model_current.csv`);
+  const md = await csvAsset("model_current.csv");
   out.models = await upsert("model_predictions",md.filter(r=>r.hkjc_event_id).map(r=>({
     hkjc_event_id:text(r.hkjc_event_id), fetched_at:ts(r.fetched_at_hkt), home:text(r.home), away:text(r.away),
     model_league:text(r.model_league), model_home_name:text(r.model_home_name), model_away_name:text(r.model_away_name),
@@ -206,7 +214,7 @@ async function syncCurrent() {
     quality:text(r.quality), model_source:text(r.model_source), raw:r
   })),"hkjc_event_id");
 
-  const aliases = await csv(`${GH}/team_alias_registry.csv`);
+  const aliases = await csvAsset("team_alias_registry.csv");
   out.aliases = await upsert("team_aliases",aliases.filter(r=>r.forebet_alias && r.canonical_hkjc_name).map(r=>({
     source:"FOREBET", alias:text(r.forebet_alias), canonical_hkjc_name:text(r.canonical_hkjc_name),
     confidence:num(r.confidence), first_seen_hkt:ts(r.first_seen_hkt), last_seen_hkt:ts(r.last_seen_hkt),
@@ -243,12 +251,12 @@ async function syncCurrent() {
     })]
   ];
   for (const [file, table, conflict, mapper] of simpleFeeds) {
-    const rows = await csv(`${GH}/${file}`);
+    const rows = await csvAsset(file);
     await ensureStubs(rows,{event:"hkjc_event_id",kickoff:"kickoff_hkt",league:"league",home:"home",away:"away"});
     out[table] = await upsert(table,rows.filter(r=>r.hkjc_event_id).map(mapper),conflict);
   }
 
-  const supp = await csv(`${GH}/forebet_supplement_current.csv`);
+  const supp = await csvAsset("forebet_supplement_current.csv");
   await ensureStubs(supp,{event:"hkjc_event_id",kickoff:"kickoff_hkt",league:"hkjc_league",home:"home_en",away:"away_en"});
   out.forebet_supplement = await upsert("forebet_supplement",supp.filter(r=>r.hkjc_event_id).map(r=>({
     hkjc_event_id:text(r.hkjc_event_id), fetched_at:ts(r.fetched_at_hkt), kickoff_hkt:ts(r.kickoff_hkt),
@@ -262,7 +270,7 @@ async function syncCurrent() {
     corner_predicted_score:text(r.corner_predicted_score), avg_corners:num(r.avg_corners), raw:r
   })),"hkjc_event_id");
 
-  const av = await csv(`${GH}/forebet_availability.csv`);
+  const av = await csvAsset("forebet_availability.csv");
   await ensureStubs(av,{event:"hkjc_event_id",kickoff:"kickoff_hkt",league:"league_zh",home:"home_en",away:"away_en"});
   out.forebet_availability = await upsert("forebet_availability",av.filter(r=>r.hkjc_event_id).map(r=>({
     hkjc_event_id:text(r.hkjc_event_id), checked_at:ts(r.checked_at_hkt), match_date:text(r.match_date),
@@ -446,7 +454,7 @@ async function refreshDecisions() {
 }
 
 async function syncArchive() {
-  const rows = await csv(`${GH}/forebet_archive.csv`);
+  const rows = await csvAsset("forebet_archive.csv");
   await ensureStubs(rows,{
     event:"hkjc_event_id",kickoff:"hkjc_kickoff_hkt",league:"hkjc_league",
     home:"hkjc_home_team",away:"hkjc_away_team",homeZh:"hkjc_home_zh",awayZh:"hkjc_away_zh"
@@ -465,7 +473,7 @@ async function syncArchive() {
     avg_corners:num(r.avg_corners), forebet_detail_url:text(r.forebet_detail_url), raw:r
   })),"hkjc_event_id,captured_at");
 
-  const ev = await csv(`${GH}/evaluation_summary.csv`);
+  const ev = await csvAsset("evaluation_summary.csv");
   const en = await upsert("evaluation_summary",ev.filter(r=>r.model).map(r=>({
     model:text(r.model), as_of_hkt:ts(r.as_of_hkt), settled_matches:int(r.settled_matches),
     avg_rps:num(r.avg_rps), avg_brier:num(r.avg_brier), avg_logloss:num(r.avg_logloss), raw:r
@@ -485,8 +493,20 @@ Deno.serve(async (req) => {
     } else if (mode === "results") {
       result = await syncResultsDirect();
     } else if (mode === "archive") {
-      result = await syncArchive();
-      result.direct_results = await syncResultsDirect();
+      const directResults = await syncResultsDirect();
+      let legacyArchive: Record<string,unknown>;
+      try {
+        legacyArchive = await syncArchive();
+      } catch (e) {
+        const message = e instanceof Error ? e.message : String(e);
+        legacyArchive = { ok:false, preserved_last_known_good:true, error:message };
+        await db.from("source_health").upsert({
+          source:"GITHUB_ARCHIVE_SYNC", metric:"archive", value_text:message,
+          status:"WARN", notes:"Private GitHub archive unavailable; direct HKJC results still refreshed",
+          observed_at:new Date().toISOString(), raw:{error:message}
+        },{onConflict:"source,metric"});
+      }
+      result = { direct_results: directResults, legacy_archive: legacyArchive };
     } else {
       result = await syncCurrent();
       try {
