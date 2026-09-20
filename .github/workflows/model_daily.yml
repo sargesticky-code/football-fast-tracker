@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/model_daily.yml'
       - 'scripts/build_shadow_model.py'
+      - 'scripts/update_hkjc_history.py'
       - 'scripts/quality_gate_shadow_models.py'
       - 'scripts/build_team_form_summary.py'
       - 'requirements-model.txt'
@@ -110,8 +111,8 @@ jobs:
               raise SystemExit('DC/Pi model rows do not match current HKJC selling HAD targets')
           if len(form) != len(forebet_source) or {r['hkjc_event_id'] for r in form} != forebet_ids:
               raise SystemExit('form model rows do not match current Forebet feed')
-          if {r['hkjc_event_id'] for r in teams} != forebet_ids:
-              raise SystemExit('HKJC team-id map does not match current Forebet feed')
+          if {r['hkjc_event_id'] for r in teams} != model_target_ids:
+              raise SystemExit('HKJC team-id map does not match current HKJC selling HAD targets')
           if forebet_source and not history:
               raise SystemExit('HKJC results history is empty for non-empty Forebet source')
 
