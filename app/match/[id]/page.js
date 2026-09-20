@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import ProbabilityRow from "@/components/probability-row";
 import {
   fairMarket,
@@ -15,14 +14,14 @@ import {
 } from "@/lib/fast-tracker";
 
 export async function generateStaticParams() {
-  const feed = await import("@/data/app_snapshot.json").then((m) => m.default);
-  return (feed.matches || []).map((match) => ({ id: match.id }));
+  const feed = await import("../../../data/app_snapshot.json").then((m) => m.default);
+  return (feed.matches || []).map((match) => ({ id: String(match.id) }));
 }
 
 export default async function MatchDetail({ params }) {
   const { id } = await params;
   const match = await getMatch(id);
-  if (!match) notFound();
+  if (!match) return <main className="shell"><p>Match unavailable.</p></main>;
 
   const market = match.market || fairMarket(match.odds);
   const gap = divergence(match);
