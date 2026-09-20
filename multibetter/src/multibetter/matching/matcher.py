@@ -8,6 +8,7 @@ from multibetter.models import (
     MatchDecision,
     MatchResult,
     MultiSourceFixture,
+    TeamClass,
 )
 from multibetter.normalization.teams import canonicalize_team, classify_team, normalize_text
 
@@ -48,12 +49,12 @@ def bridge_github_forebet_to_our_forebet(
 
     our_home_class = (
         fixture.home_class
-        if fixture.home_class != fixture.home_class.UNKNOWN
+        if fixture.home_class != TeamClass.UNKNOWN
         else classify_team(fixture.forebet_home)
     )
     our_away_class = (
         fixture.away_class
-        if fixture.away_class != fixture.away_class.UNKNOWN
+        if fixture.away_class != TeamClass.UNKNOWN
         else classify_team(fixture.forebet_away)
     )
 
