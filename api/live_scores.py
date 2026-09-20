@@ -22,6 +22,10 @@ HKJC_CSV = os.environ.get(
     "HKJC_CURRENT_CSV",
     "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/main/data/hkjc_current.csv",
 )
+HKJC_LIVE_TARGETS_URL = os.environ.get(
+    "HKJC_LIVE_TARGETS_URL",
+    "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/hkjc-live-targets",
+)
 LOCAL_HKJC_CSV = Path(__file__).resolve().parent.parent / "data" / "hkjc_current.csv"
 UA = "football-fast-tracker-live/1.0"
 ENDED = ("ENDED", "MATCHENDED", "FT", "AET", "PEN", "CANCEL", "VOID", "ABANDON")
@@ -87,6 +91,45 @@ def fetch_json(url, params=None):
 
 
 def hkjc_targets(now):
+    # Primary target authority: the fresh Supabase HKJC live-market snapshot.
+    # A successful empty response means there are genuinely no HKJC live
+    # selling matches, so do NOT fall back to a stale static universe.
+    try:
+        r = requests.get(
+            HKJC_LIVE_TARGETS_URL,
+            headers={"Accept": "application/json", "User-Agent": UA},
+            timeout=8,
+        )
+        r.raise_for_status()
+        payload = r.json() or {}
+        if payload.get("ok") is True and isinstance(payload.get("rows"), list):
+            out = []
+            for row in payload.get("rows") or []:
+                kick = parse_dt(row.get("kickoff_hkt"))
+                if not kick:
+                    continue
+                status = clean(row.get("status")).upper()
+                if any(x in status for x in ENDED):
+                    continue
+                out.append({
+                    "hkjc_event_id": clean(row.get("hkjc_event_id")),
+                    "kickoff_hkt": kick,
+                    "league": clean(row.get("tournament")),
+                    "home_en": clean(row.get("home_en")),
+                    "away_en": clean(row.get("away_en")),
+                    "in_play": True,
+                    "hkjc_status": status,
+                    "corner_line_ref": clean(row.get("corner_line_ref")),
+                    "corner_over_ref": clean(row.get("corner_over_ref")),
+                    "corner_under_ref": clean(row.get("corner_under_ref")),
+                })
+            return out
+    except Exception:
+        pass
+
+    # Last-resort continuity fallback only when the fresh live-target service
+    # itself is unavailable. Keep the old bounded static source so one service
+    # failure does not make the live-score endpoint unusable.
     rows = []
     remote_error = None
     try:
@@ -104,6 +147,7 @@ def hkjc_targets(now):
         if remote_error:
             raise remote_error
         raise RuntimeError("HKJC target feed unavailable")
+
     out = []
     for row in rows:
         kick = parse_dt(row.get("kickoff_hkt"))
@@ -112,7 +156,6 @@ def hkjc_targets(now):
         status = clean(row.get("status")).upper()
         ended = any(x in status for x in ENDED)
         in_play = clean(row.get("in_play")).lower() in ("1", "true", "yes")
-        # Candidate window intentionally independent of HKJC live polling.
         if ended and not in_play:
             continue
         if not (now - timedelta(hours=4) <= kick <= now + timedelta(minutes=45)):
