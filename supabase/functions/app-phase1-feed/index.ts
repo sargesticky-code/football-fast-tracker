@@ -64,12 +64,38 @@ Deno.serve(async (req: Request) => {
       homeZh: r.home_zh,
       awayZh: r.away_zh,
       inPlay: Boolean(r.in_play),
-      odds: { home: num(r.hkjc_home_odds), draw: num(r.hkjc_draw_odds), away: num(r.hkjc_away_odds) },
-      market: { home: num(r.hkjc_novig_home), draw: num(r.hkjc_novig_draw), away: num(r.hkjc_novig_away) },
-      forebet: r.forebet_home == null ? null : { home: num(r.forebet_home), draw: num(r.forebet_draw), away: num(r.forebet_away) },
-      dc: r.dc_home == null ? null : { home: num(r.dc_home), draw: num(r.dc_draw), away: num(r.dc_away) },
-      pi: r.pi_home == null ? null : { home: num(r.pi_home), draw: num(r.pi_draw), away: num(r.pi_away) },
-      form: r.form_home == null ? null : { home: num(r.form_home), draw: num(r.form_draw), away: num(r.form_away) },
+      odds: {
+        home: num(r.hkjc_home_odds),
+        draw: num(r.hkjc_draw_odds),
+        away: num(r.hkjc_away_odds),
+      },
+      market: {
+        home: num(r.hkjc_novig_home),
+        draw: num(r.hkjc_novig_draw),
+        away: num(r.hkjc_novig_away),
+      },
+      goals: {
+        line: r.hkjc_goals_line ?? null,
+        over: num(r.hkjc_goals_over),
+        under: num(r.hkjc_goals_under),
+      },
+      corners: {
+        line: r.hkjc_corners_line ?? null,
+        over: num(r.hkjc_corners_over),
+        under: num(r.hkjc_corners_under),
+      },
+      forebet: r.forebet_home == null ? null : {
+        home: num(r.forebet_home), draw: num(r.forebet_draw), away: num(r.forebet_away),
+      },
+      dc: r.dc_home == null ? null : {
+        home: num(r.dc_home), draw: num(r.dc_draw), away: num(r.dc_away),
+      },
+      pi: r.pi_home == null ? null : {
+        home: num(r.pi_home), draw: num(r.pi_draw), away: num(r.pi_away),
+      },
+      form: r.form_home == null ? null : {
+        home: num(r.form_home), draw: num(r.form_draw), away: num(r.form_away),
+      },
       multi: r.multisource_home == null ? null : {
         home: num(r.multisource_home),
         draw: num(r.multisource_draw),
@@ -83,6 +109,7 @@ Deno.serve(async (req: Request) => {
         diagnostics: r.diagnostic_codes ?? [],
         hkjcFetchedAt: r.hkjc_fetched_at,
         hkjcPriceChangedAt: r.hkjc_price_changed_at,
+        hkjcMarketCapturedAt: r.hkjc_market_captured_at,
         hkjcFetchAgeMinutes: num(r.hkjc_fetch_age_minutes),
         hkjcFreshness: r.hkjc_freshness,
         forebetCheckedAt: r.forebet_checked_at,
@@ -111,7 +138,7 @@ Deno.serve(async (req: Request) => {
 
     return Response.json({
       generatedAt: new Date().toISOString(),
-      source: "supabase-canonical-live-private",
+      source: "supabase-canonical-live",
       windowHours: hours,
       count: matches.length,
       matches,
