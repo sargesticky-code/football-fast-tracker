@@ -10,6 +10,7 @@ from .common import (
     fetch_soup,
     make_session,
     merge_rows,
+    local_fixture_to_utc,
     pct_text,
     resolve_partial_date,
 )
@@ -86,7 +87,13 @@ def collect_accumulator(
                 if not time_match or not teams:
                     continue
 
-                match_time = time_match.group(1)
+                source_time = time_match.group(1)
+                converted = local_fixture_to_utc(
+                    match_date, source_time, "Europe/London"
+                )
+                if converted is None:
+                    continue
+                match_date_utc, match_time = converted
                 home, away = map(clean_text, teams)
                 league_box = item.find("span", class_="tips-card__league")
                 league = clean_text(
@@ -100,15 +107,15 @@ def collect_accumulator(
 
                 row = base_row(
                     source="ACC",
-                    match_date=match_date,
+                    match_date=match_date_utc,
                     match_time_utc=match_time,
                     league=league,
                     home=home,
                     away=away,
                     source_url=url,
                     source_date=source_date_text,
-                    source_time=match_time,
-                    timezone_name="GMT",
+                    source_time=source_time,
+                    timezone_name="Europe/London",
                     home_away_explicit=True,
                 )
 
