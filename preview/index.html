@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Fast Tracker 2026</title>
+<style>
+:root{
+  --bg:#09090b;--surface:#111113;--surface2:#18181b;--surface3:#202024;
+  --border:#27272a;--border2:#3f3f46;--text:#fafafa;--muted:#a1a1aa;
+  --muted2:#71717a;--accent:#10b981;--accent2:#34d399;--amber:#f59e0b;
+  --red:#f87171;--blue:#60a5fa;--radius:12px;--sidebar:236px;
+}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{min-height:100vh}button,input{font:inherit}a{color:inherit;text-decoration:none}
+.app{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);border-right:1px solid var(--border);background:#0c0c0e;padding:18px 14px;display:flex;flex-direction:column;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px}.brand-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(145deg,#10b981,#065f46);display:grid;place-items:center;font-weight:900;color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}.brand-copy b{display:block;font-size:14px}.brand-copy span{display:block;color:var(--muted2);font-size:10px;margin-top:2px}
+.nav-label{color:#52525b;font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;padding:12px 9px 7px}
+.nav{display:flex;flex-direction:column;gap:4px}.nav button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;border-radius:8px;padding:9px 10px;color:#a1a1aa;font-size:13px}.nav button:hover{background:#18181b;color:#fff}.nav button.active{background:#18181b;color:#fff}.nav-dot{width:7px;height:7px;border-radius:50%;background:#52525b}.nav button.active .nav-dot{background:var(--accent)}
+.sidebar-footer{margin-top:auto;border-top:1px solid var(--border);padding:14px 8px 0}.env{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted)}.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:6px;box-shadow:0 0 0 4px rgba(16,185,129,.09)}
+.main{grid-column:2;min-width:0}.topbar{height:58px;position:sticky;top:0;z-index:12;border-bottom:1px solid var(--border);background:rgba(9,9,11,.86);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:space-between;padding:0 24px}.crumb{font-size:12px;color:var(--muted)}.top-actions{display:flex;align-items:center;gap:9px}.status{font-size:10px;font-weight:800;color:var(--accent2);border:1px solid rgba(16,185,129,.25);background:rgba(16,185,129,.08);padding:6px 9px;border-radius:999px}.phase{font-size:10px;color:var(--muted);border:1px solid var(--border);padding:6px 9px;border-radius:999px}
+.content{max-width:1440px;margin:0 auto;padding:24px}
+.heading{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:20px}.heading h1{font-size:24px;margin:0 0 5px;letter-spacing:-.03em}.heading p{margin:0;color:var(--muted);font-size:12px}.updated{color:var(--muted2);font-size:11px;white-space:nowrap}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.kpi{border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:14px 15px}.kpi-head{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px}.kpi-icon{width:27px;height:27px;border:1px solid var(--border);border-radius:7px;display:grid;place-items:center;color:#d4d4d8;font-size:12px}.kpi-value{font-size:27px;font-weight:750;line-height:1;margin-top:12px;letter-spacing:-.04em}.kpi-sub{color:var(--muted2);font-size:10px;margin-top:7px}.warn .kpi-value{color:var(--amber)}
+.insight-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.7fr);gap:12px;margin-bottom:18px}.panel{border:1px solid var(--border);background:var(--surface);border-radius:var(--radius)}.panel-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid var(--border)}.panel-head h2{font-size:13px;margin:0}.panel-head span{font-size:10px;color:var(--muted2)}.focus-list{padding:6px}.focus-item{display:grid;grid-template-columns:30px minmax(0,1.3fr) .7fr .6fr .55fr;gap:10px;align-items:center;padding:9px 8px;border-radius:9px;cursor:pointer}.focus-item:hover{background:var(--surface2)}.rank{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:#202024;color:#d4d4d8;font-size:10px;font-weight:800}.focus-match b{font-size:12px}.focus-match span{display:block;color:var(--muted2);font-size:9px;margin-top:2px}.metric{font-size:11px;color:#d4d4d8}.metric small{display:block;color:var(--muted2);font-size:8px;margin-bottom:2px}.gap-pos{color:var(--accent2);font-weight:700}.health-body{padding:14px 15px}.health-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}.health-row span:first-child{color:var(--muted)}.bar{height:7px;border-radius:99px;background:#202024;overflow:hidden;margin-bottom:15px}.bar>i{display:block;height:100%;border-radius:99px;background:var(--accent)}.bar.amber>i{background:var(--amber)}.health-note{border-top:1px solid var(--border);padding-top:12px;color:var(--muted2);font-size:10px;line-height:1.5}
+.data-panel{border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);overflow:hidden}.toolbar{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid var(--border)}.tabs{display:flex;gap:3px;background:#0c0c0e;border:1px solid var(--border);padding:3px;border-radius:8px;overflow:auto}.tabs button{border:0;background:transparent;color:var(--muted);padding:7px 10px;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap}.tabs button.active{background:#27272a;color:#fff}.search{margin-left:auto;width:230px;background:#0c0c0e;border:1px solid var(--border);border-radius:8px;color:#fff;padding:8px 10px;font-size:11px;outline:none}.search:focus{border-color:#52525b}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:940px}th{text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#71717a;font-weight:800;padding:10px 12px;background:#0e0e10;border-bottom:1px solid var(--border);position:sticky;top:0}td{padding:11px 12px;border-bottom:1px solid #202024;font-size:11px;vertical-align:middle}tbody tr{cursor:pointer}tbody tr:hover{background:#151518}.time strong{display:block;font-size:11px}.time span{display:block;color:var(--muted2);font-size:9px;margin-top:2px}.match b{display:block;font-size:12px}.match span{display:block;color:var(--muted2);font-size:9px;margin-top:3px}.odds{display:flex;gap:4px}.odd{min-width:42px;background:#0b0b0d;border:1px solid var(--border);border-radius:6px;text-align:center;padding:5px 6px}.odd small{display:block;color:#52525b;font-size:7px}.odd b{font-size:10px}.badge{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:999px;padding:4px 7px;font-size:9px;white-space:nowrap}.badge-rich{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.22);color:#6ee7b7}.badge-model{color:#bfdbfe;background:rgba(96,165,250,.08);border-color:rgba(96,165,250,.2)}.badge-only{color:#a1a1aa}.fresh{color:#6ee7b7}.aging{color:#fbbf24}.stale{color:#fca5a5}.gap{font-weight:700}.gap.high{color:#6ee7b7}.empty{padding:44px;text-align:center;color:var(--muted);font-size:12px}
+.mobile-cards{display:none}
+.drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:49;opacity:0;pointer-events:none;transition:.18s}.drawer-backdrop.open{opacity:1;pointer-events:auto}.drawer{position:fixed;top:0;right:0;bottom:0;width:min(520px,92vw);background:#0c0c0e;border-left:1px solid var(--border);z-index:50;transform:translateX(100%);transition:.22s ease;overflow:auto}.drawer.open{transform:none}.drawer-head{position:sticky;top:0;z-index:2;background:rgba(12,12,14,.94);backdrop-filter:blur(10px);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding:14px 16px}.drawer-head b{font-size:12px}.close{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:#18181b;color:#d4d4d8;cursor:pointer}.drawer-body{padding:18px}.match-title small{color:var(--accent2);font-weight:700}.match-title h2{font-size:22px;line-height:1.15;margin:8px 0 4px}.match-title p{margin:0;color:var(--muted);font-size:11px}.section{margin-top:18px;border:1px solid var(--border);border-radius:10px;overflow:hidden}.section-title{padding:10px 12px;border-bottom:1px solid var(--border);color:#d4d4d8;font-size:11px;font-weight:700;background:#111113}.prob-row{display:grid;grid-template-columns:1fr repeat(3,70px);gap:7px;padding:9px 12px;border-bottom:1px solid #202024;align-items:center}.prob-row:last-child{border-bottom:0}.prob-row>span{font-size:10px;color:var(--muted)}.prob-cell{text-align:right;font-size:10px}.prob-cell b{display:block}.prob-cell i{height:2px;display:block;background:#27272a;border-radius:99px;margin-top:5px;overflow:hidden}.prob-cell i em{display:block;height:100%;background:var(--accent);border-radius:99px}.drawer-note{margin-top:15px;padding:11px 12px;border:1px solid #3f3f46;border-radius:9px;background:#111113;color:var(--muted);font-size:10px;line-height:1.5}
+.bottom-nav{display:none}
+@media(max-width:900px){
+  .app{display:block}.sidebar{display:none}.main{display:block}.topbar{padding:0 14px}.content{padding:16px 12px 86px}.kpis{grid-template-columns:repeat(2,1fr)}.insight-grid{grid-template-columns:1fr}.focus-item{grid-template-columns:30px minmax(0,1fr) .7fr .55fr}.focus-item .hide-md{display:none}.table-wrap{display:none}.mobile-cards{display:flex;flex-direction:column;gap:8px;padding:10px}.mcard{border:1px solid var(--border);border-radius:10px;padding:11px;background:#0f0f11}.mcard-top{display:flex;justify-content:space-between;gap:8px;color:var(--muted2);font-size:9px}.mcard-title{display:flex;justify-content:space-between;gap:14px;align-items:center;margin:10px 0}.mcard-title b{font-size:12px}.mcard-title span{color:#52525b;font-size:9px}.mcard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.mcard-grid div{background:#09090b;border:1px solid var(--border);border-radius:7px;padding:6px;text-align:center}.mcard-grid small{display:block;color:#52525b;font-size:7px}.mcard-grid b{font-size:10px}.mcard-foot{display:flex;justify-content:space-between;align-items:center;margin-top:9px}.toolbar{display:block}.tabs{width:100%}.search{width:100%;margin:8px 0 0}.bottom-nav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:10px;right:10px;bottom:10px;z-index:30;background:rgba(20,20,23,.92);backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:14px;padding:5px}.bottom-nav button{border:0;background:transparent;color:#71717a;font-size:9px;padding:9px 4px}.bottom-nav button.active{background:#27272a;color:#fff;border-radius:9px}
+}
+@media(max-width:520px){
+ .heading{align-items:flex-start}.updated{display:none}.kpi-value{font-size:23px}.focus-item{grid-template-columns:28px minmax(0,1fr) .6fr}.focus-item .hide-sm{display:none}.content{padding-top:14px}.topbar{height:52px}.crumb{font-size:11px}.phase{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">FT</div><div class="brand-copy"><b>Fast Tracker</b><span>Football Intelligence</span></div></div>
+    <div class="nav-label">Workspace</div>
+    <nav class="nav">
+      <button class="active" data-nav="matches"><span class="nav-dot"></span>Match Intelligence</button>
+      <button data-nav="live"><span class="nav-dot"></span>Live Monitor</button>
+      <button data-nav="models"><span class="nav-dot"></span>Models</button>
+      <button data-nav="health"><span class="nav-dot"></span>Data Health</button>
+    </nav>
+    <div class="nav-label">Phase</div>
+    <nav class="nav">
+      <button class="active"><span class="nav-dot"></span>Phase 1 · Pre-match</button>
+      <button><span class="nav-dot"></span>Phase 2 · Human factors</button>
+      <button><span class="nav-dot"></span>Phase 3 · Live intelligence</button>
+    </nav>
+    <div class="sidebar-footer"><div class="env"><span><i class="live-dot"></i>Supabase live</span><span>v1</span></div></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb">Fast Tracker / Match Intelligence</div>
+      <div class="top-actions"><span class="phase">Phase 1 · Calibration</span><span class="status">● LIVE SQL</span></div>
+    </header>
+
+    <div class="content">
+      <div class="heading">
+        <div><h1>Match Intelligence</h1><p>HKJC active universe · model evidence · data health</p></div>
+        <div class="updated" id="updated">Loading live data…</div>
+      </div>
+
+      <section class="kpis">
+        <div class="kpi"><div class="kpi-head"><span>24H Matches</span><span class="kpi-icon">◫</span></div><div class="kpi-value" id="kMatches">—</div><div class="kpi-sub">HKJC selling universe</div></div>
+        <div class="kpi"><div class="kpi-head"><span>Modelled</span><span class="kpi-icon">◎</span></div><div class="kpi-value" id="kModelled">—</div><div class="kpi-sub" id="kModelledSub">External evidence coverage</div></div>
+        <div class="kpi"><div class="kpi-head"><span>Data Rich</span><span class="kpi-icon">≋</span></div><div class="kpi-value" id="kRich">—</div><div class="kpi-sub">6+ evidence inputs</div></div>
+        <div class="kpi warn"><div class="kpi-head"><span>Needs Attention</span><span class="kpi-icon">!</span></div><div class="kpi-value" id="kIssues">—</div><div class="kpi-sub" id="kIssuesSub">Missing + stale data</div></div>
+      </section>
+
+      <section class="insight-grid">
+        <div class="panel">
+          <div class="panel-head"><h2>Review first</h2><span>Data priority · not a betting rank</span></div>
+          <div class="focus-list" id="focusList"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Pipeline health</h2><span>Last 24h universe</span></div>
+          <div class="health-body">
+            <div class="health-row"><span>Model coverage</span><b id="hCoverage">—</b></div><div class="bar"><i id="barCoverage" style="width:0%"></i></div>
+            <div class="health-row"><span>Fresh data</span><b id="hFresh">—</b></div><div class="bar"><i id="barFresh" style="width:0%"></i></div>
+            <div class="health-row"><span>Stale data</span><b id="hStale">—</b></div><div class="bar amber"><i id="barStale" style="width:0%"></i></div>
+            <div class="health-note">正式 betting decision 仍然 validation-gated。呢個版面只用嚟快速搵出值得檢查、資料不足或來源過時嘅賽事。</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="data-panel">
+        <div class="toolbar">
+          <div class="tabs" id="tabs">
+            <button class="active" data-filter="focus">先睇</button>
+            <button data-filter="all">全部</button>
+            <button data-filter="gaps">分歧</button>
+            <button data-filter="missing">缺資料</button>
+            <button data-filter="stale">過時</button>
+          </div>
+          <input class="search" id="search" placeholder="搜尋球隊 / 聯賽 / FB ID"/>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Kickoff</th><th>Match</th><th>HKJC 1X2</th><th>Evidence</th><th>Market gap</th><th>Freshness</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <div class="mobile-cards" id="cards"></div>
+        <div class="empty" id="empty" style="display:none">No matches found.</div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="bottom-nav">
+  <button class="active">賽事</button><button>Live</button><button>模型</button><button>系統</button>
+</div>
+
+<div class="drawer-backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><b>Match detail</b><button class="close" id="closeDrawer">×</button></div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<script>
+const FEED='https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/app-phase1-feed?hours=24';
+let state={matches:[],filter:'focus',query:''};
+const $=id=>document.getElementById(id);
+const fmtPct=v=>v==null?'—':(v*100).toFixed(1)+'%';
+const fmtOdds=v=>v==null?'—':Number(v).toFixed(2);
+const fmtTime=v=>new Intl.DateTimeFormat('zh-HK',{timeZone:'Asia/Hong_Kong',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(v));
+const fmtHM=v=>new Intl.DateTimeFormat('zh-HK',{timeZone:'Asia/Hong_Kong',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(v));
+function market(m){
+ if(m.market&&m.market.home!=null)return m.market;
+ const o=m.odds;if(!o?.home||!o?.draw||!o?.away)return null;
+ const a=1/o.home,b=1/o.draw,c=1/o.away,s=a+b+c;return{home:a/s,draw:b/s,away:c/s}
+}
+function model(m){return m.multi||m.forebet||m.dc||m.pi||m.form||null}
+function evidence(m){let n=0;if(m.forebet)n++;if(m.dc)n++;if(m.pi)n++;if(m.form)n++;if(m.multi)n+=Math.max(1,+m.multi.sources||0);return n}
+function fresh(m){if(!m.updatedAt)return{key:'stale',label:'unknown',age:1e9};const age=Math.max(0,Math.round((Date.now()-new Date(m.updatedAt))/60000));if(age<=90)return{key:'fresh',label:age<2?'now':age+'m',age};if(age<=360)return{key:'aging',label:Math.round(age/60)+'h',age};return{key:'stale',label:age<1440?Math.round(age/60)+'h':Math.round(age/1440)+'d',age}}
+function gap(m){const mo=model(m),ma=market(m);if(!mo||!ma)return null;const xs=[['H',mo.home-ma.home],['D',mo.draw-ma.draw],['A',mo.away-ma.away]];xs.sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]));return{key:xs[0][0],value:xs[0][1]}}
+function score(m){const e=evidence(m),g=gap(m),f=fresh(m);return Math.round(Math.min(55,e*8)+(g?Math.min(35,Math.abs(g.value)*250):0)+(f.key==='fresh'?10:f.key==='aging'?5:0))}
+function coverageBadge(m){const e=evidence(m);return e>=6?'<span class="badge badge-rich">DATA RICH</span>':e>0?'<span class="badge badge-model">MODEL DATA</span>':'<span class="badge badge-only">HKJC ONLY</span>'}
+function name(m){return (m.homeZh||m.home)+' vs '+(m.awayZh||m.away)}
+function subname(m){return m.homeZh?(m.home+' vs '+m.away):m.league}
+function sorted(){
+ let xs=[...state.matches];
+ if(state.filter==='focus')xs.sort((a,b)=>score(b)-score(a)||new Date(a.kickoff)-new Date(b.kickoff));
+ if(state.filter==='all')xs.sort((a,b)=>new Date(a.kickoff)-new Date(b.kickoff));
+ if(state.filter==='gaps')xs=xs.filter(gap).sort((a,b)=>Math.abs(gap(b).value)-Math.abs(gap(a).value));
+ if(state.filter==='missing')xs=xs.filter(m=>evidence(m)===0).sort((a,b)=>new Date(a.kickoff)-new Date(b.kickoff));
+ if(state.filter==='stale')xs=xs.filter(m=>fresh(m).key==='stale').sort((a,b)=>fresh(b).age-fresh(a).age);
+ const q=state.query.trim().toLowerCase();
+ if(q)xs=xs.filter(m=>[m.id,m.league,m.home,m.away,m.homeZh,m.awayZh].filter(Boolean).join(' ').toLowerCase().includes(q));
+ return xs
+}
+function renderStats(){
+ const ms=state.matches,mod=ms.filter(m=>evidence(m)>0).length,rich=ms.filter(m=>evidence(m)>=6).length,stale=ms.filter(m=>fresh(m).key==='stale').length,missing=ms.length-mod,freshN=ms.length-stale;
+ $('kMatches').textContent=ms.length;$('kModelled').textContent=mod;$('kRich').textContent=rich;$('kIssues').textContent=stale+missing;
+ $('kModelledSub').textContent=ms.length?Math.round(mod/ms.length*100)+'% external evidence coverage':'—';
+ $('kIssuesSub').textContent=missing+' missing · '+stale+' stale';
+ const cov=ms.length?Math.round(mod/ms.length*100):0,fr=ms.length?Math.round(freshN/ms.length*100):0,st=ms.length?Math.round(stale/ms.length*100):0;
+ $('hCoverage').textContent=cov+'%';$('barCoverage').style.width=cov+'%';
+ $('hFresh').textContent=fr+'%';$('barFresh').style.width=fr+'%';
+ $('hStale').textContent=st+'%';$('barStale').style.width=st+'%';
+}
+function renderFocus(){
+ const xs=[...state.matches].filter(m=>evidence(m)>0).sort((a,b)=>score(b)-score(a)).slice(0,5);
+ $('focusList').innerHTML=xs.map((m,i)=>{const g=gap(m),f=fresh(m);return '<div class="focus-item" data-id="'+m.id+'"><div class="rank">#'+(i+1)+'</div><div class="focus-match"><b>'+name(m)+'</b><span>'+fmtTime(m.kickoff)+' · '+m.league+'</span></div><div class="metric"><small>Evidence</small>'+evidence(m)+' inputs</div><div class="metric hide-sm"><small>Gap</small><span class="'+(g&&Math.abs(g.value)>=.08?'gap-pos':'')+'">'+(g?(g.value>0?'+':'')+(g.value*100).toFixed(1)+'pp':'—')+'</span></div><div class="metric hide-md"><small>Fresh</small><span class="'+f.key+'">'+f.label+'</span></div></div>'}).join('');
+ document.querySelectorAll('.focus-item').forEach(x=>x.onclick=()=>openMatch(x.dataset.id));
+}
+function renderList(){
+ const xs=sorted();$('empty').style.display=xs.length?'none':'block';
+ $('rows').innerHTML=xs.map(m=>{const g=gap(m),f=fresh(m);return '<tr data-id="'+m.id+'"><td class="time"><strong>'+fmtTime(m.kickoff).split(' ')[1]+'</strong><span>'+fmtTime(m.kickoff).split(' ')[0]+' · '+m.id+'</span></td><td class="match"><b>'+name(m)+'</b><span>'+subname(m)+' · '+m.league+'</span></td><td><div class="odds"><div class="odd"><small>H</small><b>'+fmtOdds(m.odds.home)+'</b></div><div class="odd"><small>D</small><b>'+fmtOdds(m.odds.draw)+'</b></div><div class="odd"><small>A</small><b>'+fmtOdds(m.odds.away)+'</b></div></div></td><td>'+coverageBadge(m)+'<div style="color:#71717a;font-size:8px;margin-top:4px">'+evidence(m)+' inputs</div></td><td><span class="gap '+(g&&Math.abs(g.value)>=.08?'high':'')+'">'+(g?(g.value>0?'+':'')+(g.value*100).toFixed(1)+'pp '+g.key:'—')+'</span></td><td><span class="'+f.key+'">'+f.label+'</span></td></tr>'}).join('');
+ $('cards').innerHTML=xs.map(m=>{const g=gap(m),f=fresh(m);return '<div class="mcard" data-id="'+m.id+'"><div class="mcard-top"><span>'+fmtTime(m.kickoff)+' · '+m.league+'</span><span class="'+f.key+'">'+f.label+'</span></div><div class="mcard-title"><div><b>'+name(m)+'</b><span>'+m.id+'</span></div>'+coverageBadge(m)+'</div><div class="mcard-grid"><div><small>H</small><b>'+fmtOdds(m.odds.home)+'</b></div><div><small>D</small><b>'+fmtOdds(m.odds.draw)+'</b></div><div><small>A</small><b>'+fmtOdds(m.odds.away)+'</b></div></div><div class="mcard-foot"><span style="font-size:9px;color:#71717a">'+evidence(m)+' evidence inputs</span><b class="gap '+(g&&Math.abs(g.value)>=.08?'high':'')+'" style="font-size:10px">'+(g?(g.value>0?'+':'')+(g.value*100).toFixed(1)+'pp '+g.key:'—')+'</b></div></div>'}).join('');
+ document.querySelectorAll('#rows tr,.mcard').forEach(x=>x.onclick=()=>openMatch(x.dataset.id));
+}
+function probRow(label,v,strong=false){
+ if(!v)return'';return '<div class="prob-row"><span style="'+(strong?'color:#6ee7b7;font-weight:700':'')+'">'+label+'</span>'+['home','draw','away'].map(k=>'<div class="prob-cell"><b>'+fmtPct(v[k])+'</b><i><em style="width:'+Math.max(0,Math.min(100,(v[k]||0)*100))+'%"></em></i></div>').join('')+'</div>'
+}
+function openMatch(id){
+ const m=state.matches.find(x=>x.id===id);if(!m)return;const g=gap(m),f=fresh(m),ma=market(m);
+ $('drawerBody').innerHTML='<div class="match-title"><small>'+fmtTime(m.kickoff)+' · '+m.league+' · '+m.id+'</small><h2>'+name(m)+'</h2><p>'+subname(m)+'</p></div><div class="section"><div class="section-title">HKJC 1X2</div><div class="prob-row"><span>Odds</span><div class="prob-cell"><b>'+fmtOdds(m.odds.home)+'</b></div><div class="prob-cell"><b>'+fmtOdds(m.odds.draw)+'</b></div><div class="prob-cell"><b>'+fmtOdds(m.odds.away)+'</b></div></div></div><div class="section"><div class="section-title">Probability comparison · H / D / A</div>'+probRow('HKJC no-vig',ma)+probRow('Forebet',m.forebet)+probRow('DC',m.dc)+probRow('Pi',m.pi)+probRow('Form',m.form)+probRow('Multi-source'+(m.multi?' · '+m.multi.sources+' src':''),m.multi,true)+'</div><div class="section"><div class="section-title">Review signals</div><div style="padding:12px;font-size:11px;line-height:1.8;color:#d4d4d8">Evidence inputs: <b>'+evidence(m)+'</b><br>Freshness: <b class="'+f.key+'">'+f.label+'</b><br>Largest model/market gap: <b class="'+(g&&Math.abs(g.value)>=.08?'gap-pos':'')+'">'+(g?(g.value>0?'+':'')+(g.value*100).toFixed(1)+'pp '+g.key:'—')+'</b><br>Decision: <b>'+(m.decision==='CALIBRATION_PENDING'?'CALIBRATION PENDING':m.decision||'—')+'</b></div></div><div class="drawer-note">Review priority 只係幫你搵值得先睇嘅賽事；正式 betting signal 仍然由 validation-gated decision engine 控制。</div>';
+ $('drawer').classList.add('open');$('backdrop').classList.add('open')
+}
+function closeDrawer(){$('drawer').classList.remove('open');$('backdrop').classList.remove('open')}
+$('closeDrawer').onclick=closeDrawer;$('backdrop').onclick=closeDrawer;
+$('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('tabs').querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.filter=b.dataset.filter;renderList()});
+$('search').oninput=e=>{state.query=e.target.value;renderList()};
+async function load(){
+ try{
+  const r=await fetch(FEED,{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();
+  state.matches=d.matches||[];$('updated').textContent='Live feed · '+fmtHM(d.generatedAt)+' HKT · '+state.matches.length+' matches';
+  renderStats();renderFocus();renderList();
+ }catch(e){$('updated').textContent='Feed error · '+e.message;$('empty').style.display='block';$('empty').textContent='Live feed unavailable.'}
+}
+load();setInterval(load,60000);
+</script>
+</body></html>
