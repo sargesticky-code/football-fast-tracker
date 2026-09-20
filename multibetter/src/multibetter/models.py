@@ -83,6 +83,11 @@ class MultiSourceFixture:
     github_forebet_home: str
     github_forebet_away: str
     github_forebet_competition: str | None = None
+
+    # True when the upstream source explicitly labels HOME/AWAY.
+    # False when left/team1 and right/team2 are only inferred as home/away.
+    home_away_explicit: bool = True
+
     predictions: tuple[SourcePrediction, ...] = ()
     external_fixture_id: str | None = None
 
