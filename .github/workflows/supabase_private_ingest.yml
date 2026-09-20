@@ -1,4 +1,4 @@
-name: Supabase Private Data Push
+name: Supabase Static Data Push
 
 on:
   workflow_dispatch:
