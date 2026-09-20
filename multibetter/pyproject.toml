@@ -15,3 +15,7 @@ dependencies = [
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
+
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
