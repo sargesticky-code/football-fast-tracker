@@ -5,5 +5,5 @@
       "maxDuration": 30
     }
   },
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- api/ hkjc_live_market.py vendor_hkjc_queries.py requirements.txt pyproject.toml vercel.json"
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- app/ components/ lib/ data/app_snapshot.json package.json jsconfig.json api/ hkjc_live_market.py vendor_hkjc_queries.py requirements.txt pyproject.toml vercel.json"
 }

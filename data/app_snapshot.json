@@ -1,0 +1,618 @@
+{
+  "generatedAt": "2026-09-20T05:00:48.269Z",
+  "mode": "PREVIEW_SNAPSHOT",
+  "matches": [
+    {
+      "id": "FB5567",
+      "kickoff": "2026-09-20 07:00:00+00",
+      "league": "JLCW",
+      "home": "Urawa Reds Women",
+      "away": "RB Omiya Ardija Women",
+      "odds": {
+        "home": 1.4,
+        "draw": 4,
+        "away": 5.5
+      },
+      "forebet": null,
+      "multi": null,
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-19 09:38:19.97+00"
+    },
+    {
+      "id": "FB5348",
+      "kickoff": "2026-09-20 07:30:00+00",
+      "league": "KD1",
+      "home": "Jeonbuk Motors",
+      "away": "Gwangju FC",
+      "odds": {
+        "home": 1.28,
+        "draw": 4.55,
+        "away": 7.5
+      },
+      "forebet": {
+        "home": 0.5643564356435643,
+        "draw": 0.33663366336633666,
+        "away": 0.09900990099009901
+      },
+      "multi": {
+        "home": 0.6834,
+        "draw": 0.2065,
+        "away": 0.1101,
+        "sources": 5
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5349",
+      "kickoff": "2026-09-20 07:30:00+00",
+      "league": "KD2",
+      "home": "Ansan Greeners",
+      "away": "Chungbuk Cheongju",
+      "odds": {
+        "home": 3.4,
+        "draw": 3.2,
+        "away": 1.9
+      },
+      "forebet": {
+        "home": 0.19,
+        "draw": 0.42,
+        "away": 0.39
+      },
+      "multi": {
+        "home": 0.2332,
+        "draw": 0.3754,
+        "away": 0.3914,
+        "sources": 3
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5419",
+      "kickoff": "2026-09-20 07:30:00+00",
+      "league": "KD2",
+      "home": "Yongin FC",
+      "away": "Gyeongnam FC",
+      "odds": {
+        "home": 2.48,
+        "draw": 2.93,
+        "away": 2.58
+      },
+      "forebet": {
+        "home": 0.13,
+        "draw": 0.62,
+        "away": 0.25
+      },
+      "multi": {
+        "home": 0.3592,
+        "draw": 0.4102,
+        "away": 0.2306,
+        "sources": 5
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5432",
+      "kickoff": "2026-09-20 07:30:00+00",
+      "league": "KD1",
+      "home": "Gangwon FC",
+      "away": "Jeju SK",
+      "odds": {
+        "home": 1.87,
+        "draw": 3.05,
+        "away": 3.7
+      },
+      "forebet": {
+        "home": 0.25,
+        "draw": 0.47,
+        "away": 0.28
+      },
+      "multi": {
+        "home": 0.4273572642735726,
+        "draw": 0.33226677332266774,
+        "away": 0.24037596240375964,
+        "sources": 5
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5384",
+      "kickoff": "2026-09-20 08:00:00+00",
+      "league": "JD2",
+      "home": "Tochigi City",
+      "away": "Vegalta Sendai",
+      "odds": {
+        "home": 3,
+        "draw": 3.55,
+        "away": 1.93
+      },
+      "forebet": {
+        "home": 0.23,
+        "draw": 0.29,
+        "away": 0.48
+      },
+      "multi": {
+        "home": 0.2858,
+        "draw": 0.2067,
+        "away": 0.5075,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5426",
+      "kickoff": "2026-09-20 08:00:00+00",
+      "league": "JD1",
+      "home": "Machida Zelvia",
+      "away": "Kashiwa Reysol",
+      "odds": {
+        "home": 2.21,
+        "draw": 3.25,
+        "away": 2.68
+      },
+      "forebet": {
+        "home": 0.37,
+        "draw": 0.27,
+        "away": 0.36
+      },
+      "multi": {
+        "home": 0.3488,
+        "draw": 0.3556,
+        "away": 0.2956,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5383",
+      "kickoff": "2026-09-20 08:00:00+00",
+      "league": "JD1",
+      "home": "Gamba Osaka",
+      "away": "Vissel Kobe",
+      "odds": {
+        "home": 3.15,
+        "draw": 3.3,
+        "away": 1.95
+      },
+      "forebet": {
+        "home": 0.24,
+        "draw": 0.21,
+        "away": 0.55
+      },
+      "multi": {
+        "home": 0.2175,
+        "draw": 0.267,
+        "away": 0.5155,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5350",
+      "kickoff": "2026-09-20 10:00:00+00",
+      "league": "KD1",
+      "home": "Incheon Utd",
+      "away": "Daejeon Citizen",
+      "odds": {
+        "home": 2.62,
+        "draw": 3.15,
+        "away": 2.31
+      },
+      "forebet": {
+        "home": 0.34,
+        "draw": 0.34,
+        "away": 0.32
+      },
+      "multi": {
+        "home": 0.2903,
+        "draw": 0.3128,
+        "away": 0.3969,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5420",
+      "kickoff": "2026-09-20 10:00:00+00",
+      "league": "KD1",
+      "home": "Pohang Steelers",
+      "away": "FC Seoul",
+      "odds": {
+        "home": 4.1,
+        "draw": 3.3,
+        "away": 1.7
+      },
+      "forebet": {
+        "home": 0.19,
+        "draw": 0.22,
+        "away": 0.59
+      },
+      "multi": {
+        "home": 0.22482248224822482,
+        "draw": 0.207020702070207,
+        "away": 0.5681568156815682,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5386",
+      "kickoff": "2026-09-20 10:00:00+00",
+      "league": "AMF",
+      "home": "Korea DPR AM",
+      "away": "United Arab Emirates AM",
+      "odds": {
+        "home": 1.77,
+        "draw": 3.3,
+        "away": 3.75
+      },
+      "forebet": null,
+      "multi": null,
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-19 07:33:16+00"
+    },
+    {
+      "id": "FB5352",
+      "kickoff": "2026-09-20 10:00:00+00",
+      "league": "KD2",
+      "home": "Gimhae FC",
+      "away": "Paju Frontier",
+      "odds": {
+        "home": 2.46,
+        "draw": 2.98,
+        "away": 2.56
+      },
+      "forebet": {
+        "home": 0.25,
+        "draw": 0.35,
+        "away": 0.4
+      },
+      "multi": {
+        "home": 0.2823,
+        "draw": 0.3454,
+        "away": 0.3723,
+        "sources": 2
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5351",
+      "kickoff": "2026-09-20 10:00:00+00",
+      "league": "KD2",
+      "home": "Seongnam FC",
+      "away": "Hwaseong FC",
+      "odds": {
+        "home": 2.6,
+        "draw": 2.87,
+        "away": 2.5
+      },
+      "forebet": {
+        "home": 0.32,
+        "draw": 0.35,
+        "away": 0.33
+      },
+      "multi": {
+        "home": 0.27482748274827484,
+        "draw": 0.35813581358135815,
+        "away": 0.36703670367036706,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5355",
+      "kickoff": "2026-09-20 10:15:00+00",
+      "league": "DFL",
+      "home": "Feyenoord",
+      "away": "Utrecht",
+      "odds": {
+        "home": 1.22,
+        "draw": 5.6,
+        "away": 7.25
+      },
+      "forebet": {
+        "home": 0.46534653465346537,
+        "draw": 0.36633663366336633,
+        "away": 0.16831683168316833
+      },
+      "multi": {
+        "home": 0.5974,
+        "draw": 0.2806,
+        "away": 0.122,
+        "sources": 5
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5423",
+      "kickoff": "2026-09-20 10:30:00+00",
+      "league": "AMF",
+      "home": "Japan AM",
+      "away": "Kyrgyzstan AM",
+      "odds": {
+        "home": 1.07,
+        "draw": 7.75,
+        "away": 16
+      },
+      "forebet": null,
+      "multi": null,
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-19 07:33:16+00"
+    },
+    {
+      "id": "FB5376",
+      "kickoff": "2026-09-20 10:30:00+00",
+      "league": "ISA",
+      "home": "Fiorentina",
+      "away": "Napoli",
+      "odds": {
+        "home": 3.05,
+        "draw": 3.25,
+        "away": 2.01
+      },
+      "forebet": {
+        "home": 0.27,
+        "draw": 0.29,
+        "away": 0.44
+      },
+      "multi": {
+        "home": 0.2486,
+        "draw": 0.2569,
+        "away": 0.4945,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5536",
+      "kickoff": "2026-09-20 11:00:00+00",
+      "league": "ED1",
+      "home": "Wolves",
+      "away": "West Bromwich",
+      "odds": {
+        "home": 1.68,
+        "draw": 3.5,
+        "away": 3.95
+      },
+      "forebet": null,
+      "multi": null,
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-19 07:33:16+00"
+    },
+    {
+      "id": "FB5427",
+      "kickoff": "2026-09-20 11:00:00+00",
+      "league": "TL1",
+      "home": "Rayong",
+      "away": "Ratchaburi",
+      "odds": {
+        "home": 2.8,
+        "draw": 3.35,
+        "away": 2.09
+      },
+      "forebet": {
+        "home": 0.38,
+        "draw": 0.19,
+        "away": 0.43
+      },
+      "multi": {
+        "home": 0.3128312831283128,
+        "draw": 0.2159215921592159,
+        "away": 0.47124712471247127,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5430",
+      "kickoff": "2026-09-20 11:00:00+00",
+      "league": "TL1",
+      "home": "Chonburi",
+      "away": "Buriram Utd",
+      "odds": {
+        "home": 4.95,
+        "draw": 4.05,
+        "away": 1.46
+      },
+      "forebet": {
+        "home": 0.1782178217821782,
+        "draw": 0.32673267326732675,
+        "away": 0.49504950495049505
+      },
+      "multi": {
+        "home": 0.1888,
+        "draw": 0.1871,
+        "away": 0.6241,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5481",
+      "kickoff": "2026-09-20 11:00:00+00",
+      "league": "SPL",
+      "home": "Celtic",
+      "away": "Rangers",
+      "odds": {
+        "home": 2.04,
+        "draw": 3.5,
+        "away": 2.8
+      },
+      "forebet": {
+        "home": 0.34,
+        "draw": 0.28,
+        "away": 0.38
+      },
+      "multi": {
+        "home": 0.4666,
+        "draw": 0.2537,
+        "away": 0.2797,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5414",
+      "kickoff": "2026-09-20 11:30:00+00",
+      "league": "GD2",
+      "home": "Cottbus",
+      "away": "St. Pauli",
+      "odds": {
+        "home": 2.95,
+        "draw": 3.7,
+        "away": 1.91
+      },
+      "forebet": {
+        "home": 0.23,
+        "draw": 0.52,
+        "away": 0.25
+      },
+      "multi": {
+        "home": 0.2465753424657534,
+        "draw": 0.33436656334366566,
+        "away": 0.41905809419058093,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5484",
+      "kickoff": "2026-09-20 11:30:00+00",
+      "league": "BFL",
+      "home": "Antwerp",
+      "away": "Union Saint Gilloise",
+      "odds": {
+        "home": 4.65,
+        "draw": 3.75,
+        "away": 1.53
+      },
+      "forebet": {
+        "home": 0.17,
+        "draw": 0.23,
+        "away": 0.6
+      },
+      "multi": {
+        "home": 0.20942094209420942,
+        "draw": 0.18381838183818383,
+        "away": 0.6067606760676068,
+        "sources": 5
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5415",
+      "kickoff": "2026-09-20 11:30:00+00",
+      "league": "GD2",
+      "home": "Bielefeld",
+      "away": "Heidenheim",
+      "odds": {
+        "home": 1.99,
+        "draw": 3.6,
+        "away": 2.84
+      },
+      "forebet": {
+        "home": 0.29292929292929293,
+        "draw": 0.24242424242424243,
+        "away": 0.46464646464646464
+      },
+      "multi": {
+        "home": 0.4081408140814081,
+        "draw": 0.25942594259425944,
+        "away": 0.33243324332433244,
+        "sources": 6
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    },
+    {
+      "id": "FB5428",
+      "kickoff": "2026-09-20 11:30:00+00",
+      "league": "TL1",
+      "home": "Sukhothai",
+      "away": "Port FC",
+      "odds": {
+        "home": 5.6,
+        "draw": 4.1,
+        "away": 1.4
+      },
+      "forebet": {
+        "home": 0.1782178217821782,
+        "draw": 0.15841584158415842,
+        "away": 0.6633663366336634
+      },
+      "multi": {
+        "home": 0.20272027202720272,
+        "draw": 0.18391839183918393,
+        "away": 0.6133613361336133,
+        "sources": 5
+      },
+      "decision": "CALIBRATION_PENDING",
+      "decisionSelection": null,
+      "decisionEdge": null,
+      "updatedAt": "2026-09-20 03:10:08+00"
+    }
+  ]
+}
