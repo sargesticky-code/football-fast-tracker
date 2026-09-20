@@ -198,6 +198,37 @@ def _jina_request(url: str, *, no_cache: bool) -> tuple[str | None, int, int]:
     return r.text, len(r.text), rows
 
 
+def _jina_text_probe(url: str, label: str) -> str | None:
+    """Probe Jina's default text/Markdown mode when forced-HTML is unhealthy."""
+    headers = {
+        "x-timeout": "30",
+        "User-Agent": "Mozilla/5.0",
+        "x-no-cache": "true",
+        "x-cache-tolerance": "0",
+    }
+    try:
+        r = feed.requests.get(JINA_PREFIX + url, headers=headers, timeout=JINA_TIMEOUT)
+    except Exception as exc:
+        print(f"FOREBET_JINA_TEXT_PROBE label={label} error={exc}", flush=True)
+        return None
+    body = r.text or ""
+    lower = body.casefold()
+    markers = {
+        "home_team": int("home team" in lower),
+        "away_team": int("away team" in lower),
+        "prob": int("prob" in lower),
+        "correct_score": int("correct score" in lower),
+        "forebet": int("forebet" in lower),
+    }
+    preview = " ".join(body[:900].split())
+    print(
+        f"FOREBET_JINA_TEXT_PROBE label={label} status={r.status_code} "
+        f"bytes={len(body)} markers={markers} preview={preview!r}",
+        flush=True,
+    )
+    return body if r.status_code == 200 and len(body) >= 5000 else None
+
+
 def _jina_html(url: str, label: str) -> str | None:
     if url in _JINA_CACHE:
         return _JINA_CACHE[url]
@@ -206,6 +237,10 @@ def _jina_html(url: str, label: str) -> str | None:
         print(f"FOREBET_JINA_RETRY label={label} reason=unhealthy_or_placeholder", flush=True)
         html, _, _ = _jina_request(url, no_cache=True)
     if html is None:
+        # Diagnostic/default-mode probe. Forced-HTML has occasionally returned
+        # placeholders while Jina's text renderer remained useful.
+        if label.startswith("date_"):
+            _jina_text_probe(url, label)
         print(f"FOREBET_SOURCE_UNHEALTHY label={label} url={url}", flush=True)
     else:
         print(f"FOREBET_SOURCE_HEALTHY label={label} rcnt={_rcnt_count(html)}", flush=True)
