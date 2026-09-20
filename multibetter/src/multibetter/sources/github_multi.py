@@ -118,7 +118,12 @@ def upstream_style_match(
         return None
 
     candidates.sort(key=lambda item: item[0], reverse=True)
-    return candidates[0][1]
+    score, row = candidates[0]
+    quality = "HIGH" if score >= 85 else ("GOOD" if score >= 75 else "REVIEW")
+    enriched = dict(row)
+    enriched["__MB_MATCH_SIMILARITY"] = round(score, 3)
+    enriched["__MB_MATCH_QUALITY"] = quality
+    return enriched
 
 
 def _as_float(row: Mapping[str, object], key: str) -> float | None:
@@ -161,6 +166,16 @@ def source_row_to_prediction(
         probabilities=probs,
         market_label=str(row.get("NAME", "") or source),
         source_kickoff_text=str(row.get("TIME", "") or "") or None,
+        match_similarity=(
+            float(row["__MB_MATCH_SIMILARITY"])
+            if row.get("__MB_MATCH_SIMILARITY") not in (None, "")
+            else (100.0 if source == "FRB" else None)
+        ),
+        match_quality=(
+            str(row.get("__MB_MATCH_QUALITY"))
+            if row.get("__MB_MATCH_QUALITY") not in (None, "")
+            else ("HIGH" if source == "FRB" else None)
+        ),
     )
 
 
