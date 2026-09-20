@@ -10,6 +10,7 @@ from dataclasses import asdict, dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
+from zoneinfo import ZoneInfo
 
 import requests
 from bs4 import BeautifulSoup
@@ -112,6 +113,13 @@ def parse_date_any(value: str, *, default_year: int | None = None) -> date | Non
         except ValueError:
             pass
 
+    iso_match = re.search(r"\b(\d{4}-\d{1,2}-\d{1,2})\b", text)
+    if iso_match:
+        try:
+            return datetime.strptime(iso_match.group(1), "%Y-%m-%d").date()
+        except ValueError:
+            pass
+
     match = re.search(
         r"\b(\d{1,2})[./-](\d{1,2})(?:[./-](\d{2,4}))?\b",
         text,
@@ -150,6 +158,27 @@ def resolve_partial_date(text: str, target_dates: Sequence[date]) -> date | None
 
 def fmt_date(value: date) -> str:
     return value.strftime("%d/%m/%Y")
+
+
+def local_fixture_to_utc(
+    match_date: date,
+    match_time: str,
+    zone_name: str,
+) -> tuple[date, str] | None:
+    normalized = normalize_time(match_time)
+    if normalized is None:
+        return None
+    hh, mm = map(int, normalized.split(":"))
+    local_dt = datetime(
+        match_date.year,
+        match_date.month,
+        match_date.day,
+        hh,
+        mm,
+        tzinfo=ZoneInfo(zone_name),
+    )
+    utc_dt = local_dt.astimezone(timezone.utc)
+    return utc_dt.date(), utc_dt.strftime("%H:%M")
 
 
 def utc_from_hkt(value: str) -> datetime | None:
