@@ -25,6 +25,17 @@ SHORT_TOKEN_DENY = {
 
 _COUNTRY_TAG = re.compile(r"\(\s*[A-Z]{2,4}\s*\)")
 
+_SPECIAL_LATIN = str.maketrans({
+    "æ": "ae", "Æ": "AE",
+    "ø": "o",  "Ø": "O",
+    "å": "a",  "Å": "A",
+    "ð": "d",  "Ð": "D",
+    "þ": "th", "Þ": "Th",
+    "ł": "l",  "Ł": "L",
+    "đ": "d",  "Đ": "D",
+    "ß": "ss",
+})
+
 
 def _load_manual_aliases() -> int:
     if not MANUAL_ALIAS_FILE.exists():
@@ -48,6 +59,7 @@ def normalize_team(value: str) -> str:
     """Normalize stable provider-wide source naming differences."""
     raw = str(value or "")
     raw = _COUNTRY_TAG.sub(" ", raw)
+    raw = raw.translate(_SPECIAL_LATIN)
     base = _LEGACY_NORMALIZE(raw)
     tokens = [t for t in base.split() if t not in EXTRA_STOPWORDS]
 
