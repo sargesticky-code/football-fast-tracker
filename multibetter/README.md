@@ -881,7 +881,7 @@ When resuming this project:
 9. Do not touch `Dashboard Board` unless explicitly requested.
 10. Run tests before changing persistent alias-learning logic.
 11. If adding a source, group it to GitHub Forebet first.
-12. If current collector input is not live/complete, do not enable cron.
+12. Daily cron is already enabled on the default-branch launcher; if current input becomes unhealthy, fix or fail closed rather than silently disabling the architecture.
 13. If a proposed alias is ambiguous, keep it unresolved/review instead of forcing it.
 14. Keep last-good outputs rather than writing empty current outputs.
 
@@ -896,8 +896,14 @@ multibetter/src/multibetter/models.py
 multibetter/src/multibetter/intake/
     Current intake adapters. Forebet reuses OUR production feed; ACC/BCL/FST/PRE/STA are live HTTP scrapers.
 
+multibetter/src/multibetter/scripts/collect_source.py
+    Active GitHub Actions source runner. One source per step, hard runtime guard, source-specific target/calibration inputs.
+
+multibetter/src/multibetter/scripts/summarize_intake.py
+    Builds six-source health summary after isolated source steps.
+
 multibetter/src/multibetter/scripts/collect_current.py
-    Orchestrates today + tomorrow intake, source health and last-good preservation.
+    Older combined/manual orchestrator. Do not treat it as the active scheduled GitHub Actions path.
 
 multibetter/src/multibetter/sources/github_multi.py
     Groups fresh external source rows around GitHub Forebet.
@@ -1273,11 +1279,92 @@ The Statarea page clock observed by GitHub runner can differ from ordinary geogr
 
 The full census baseline used roughly 146 active league routes and approximately 439 requests because it fetched three markets for nearly every route.
 
-A target-route optimization is being validated:
+The validated target-route design is now:
 
-- first fetch 1X2 for active routes;
+- fetch 1X2 for active routes;
 - compare oriented fixtures against the current Forebet target universe;
 - fetch O/U and BTTS only for routes containing a matchable current target;
 - preserve target coverage as the non-negotiable criterion.
 
-Do not keep an ACC optimization if it lowers current target coverage merely to save requests.
+Validated live comparison:
+
+```text
+before
+ACC rows      512
+requests      439
+grouped       75 / 84
+
+after target-route optimization
+ACC rows      512
+requests      201
+grouped       75 / 84
+```
+
+So request volume fell by about 54% with no loss of current fixture coverage.
+
+Keep this optimization unless future health evidence shows target coverage falls. Do not optimize further by skipping 1X2 route discovery unless there is a durable route cache with a safe fallback for unseen teams/leagues.
+
+
+---
+
+## 31. Dynamic Statarea clock evidence — do not hard-code
+
+Two successful live runs on the same date demonstrated why Statarea must use per-run evidence instead of a fixed timezone assumption.
+
+Earlier validated run:
+
+```text
+exact oriented calibration samples 22
+dominant samples                  22
+dominance                         1.0
+source-minus-UTC                  -240 minutes
+```
+
+Later validated run:
+
+```text
+exact oriented calibration samples 29
+dominant samples                  29
+dominance                         1.0
+source-minus-UTC                  0 minutes
+```
+
+The website/source clock therefore changed relative to canonical UTC between runs.
+
+This is not a reason to widen matching tolerance. It is evidence that the correct mechanism is:
+
+```text
+exact oriented known fixture pairs
+    ↓
+infer dominant source clock offset
+    ↓
+normalize source rows
+    ↓
+exact normalized time matching
+```
+
+If future code replaces this with a hard-coded `Europe/Berlin`, `UTC`, or fixed +/- hour rule, that is a regression.
+
+Latest validated grouped coverage after dynamic calibration and ACC optimization:
+
+```text
+84 anchor fixtures
+59 with all 6 sources
+73 with >=5 sources
+75 with >=4 sources
+
+FRB 84
+ACC 75
+BCL 75
+FST 75
+PRE 76
+STA 63
+```
+
+Bridge identity remained:
+
+```text
+84 / 84 FAST_ALIAS
+0 learned bridge aliases
+0 bridge conflicts
+```
