@@ -1021,17 +1021,31 @@ def collect(include_full=False):
         staged.append({"target": t, "match": m, "confidence": conf})
 
     # Safety guard: at most N heavy detail calls in one refresh.
-    # If there are more live matches, rotate deterministic groups by minute so
-    # every match still receives full detail over successive refreshes.
+    # Prioritize explicit live-provider rows before board fallbacks, then rotate
+    # deterministically so no genuine live match is starved across refreshes.
+    source_priority = {
+        "FOOTBALL_LIVE_API_SELF_HOSTED": 0,
+        "SOFASCORE": 1,
+        "FOTMOB_BOARD_FALLBACK": 2,
+    }
     detail_candidates = [
         i for i, x in enumerate(staged)
-        if x["match"].get("source") in ("FOOTBALL_LIVE_API_SELF_HOSTED", "FOTMOB_BOARD_FALLBACK", "SOFASCORE")
+        if x["match"].get("source") in source_priority
     ]
+    detail_candidates.sort(
+        key=lambda idx: (
+            source_priority.get(staged[idx]["match"].get("source"), 9),
+            -float(staged[idx].get("confidence") or 0),
+            clean(staged[idx]["target"].get("hkjc_event_id")),
+        )
+    )
     group_count = max(
         1,
         (len(detail_candidates) + MAX_DETAIL_CALLS_PER_RUN - 1) // MAX_DETAIL_CALLS_PER_RUN
     )
-    bucket = now.minute % group_count
+    # The upstream refresh is five minutes, so rotate once per capture cycle
+    # rather than every wall-clock minute.
+    bucket = (now.minute // 5) % group_count
     detail_indexes = {
         idx for pos, idx in enumerate(detail_candidates)
         if pos % group_count == bucket
@@ -1217,6 +1231,7 @@ def collect(include_full=False):
             ),
             "rotationGroups": group_count,
             "rotationBucket": bucket,
+            "rotationPolicy": "LIVE_PROVIDER_PRIORITY_5MIN_FAIR_ROTATION",
             "detailFetched": detail_fetched,
             "detailFallbackCalls": detail_fallback_calls,
             "detailErrors": detail_errors,
