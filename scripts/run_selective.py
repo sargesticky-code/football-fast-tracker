@@ -36,6 +36,7 @@ _legacy_load_targets = feed.load_hkjc_targets
 _original_attach = feed.attach_hkjc_target
 _ACTIVE_TARGETS: list[dict] = []
 _JINA_CACHE: dict[str, str | None] = {}
+_BROWSER_CACHE: dict[str, str | None] = {}
 _PREVIOUS_CURRENT: list[dict[str, str]] = []
 
 
@@ -212,6 +213,86 @@ def _jina_html(url: str, label: str) -> str | None:
     return html
 
 
+def _browser_html(url: str, label: str) -> str | None:
+    """Render one primary Forebet page with the runner's installed Chrome.
+
+    This is a bounded fallback for Jina outages/rate limits. It is intentionally
+    not used for every recovery surface, which would create excessive browser
+    traffic and increase blocking risk.
+    """
+    if url in _BROWSER_CACHE:
+        return _BROWSER_CACHE[url]
+
+    try:
+        from playwright.sync_api import sync_playwright
+    except Exception as exc:
+        print(f"FOREBET_BROWSER_UNAVAILABLE label={label} error={exc}", flush=True)
+        _BROWSER_CACHE[url] = None
+        return None
+
+    html = None
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                channel="chrome",
+                headless=True,
+                args=[
+                    "--no-sandbox",
+                    "--disable-setuid-sandbox",
+                    "--disable-dev-shm-usage",
+                    "--disable-blink-features=AutomationControlled",
+                ],
+            )
+            context = browser.new_context(
+                viewport={"width": 1440, "height": 1000},
+                user_agent=(
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/122.0.0.0 Safari/537.36"
+                ),
+                locale="en-US",
+                java_script_enabled=True,
+            )
+            page = context.new_page()
+            response = page.goto(url, timeout=60_000, wait_until="domcontentloaded")
+            status = response.status if response else 0
+            try:
+                page.wait_for_selector("div.rcnt", timeout=20_000)
+            except Exception:
+                pass
+
+            # Forebet can lazy-load additional rows behind scrolling/MORE.
+            for _ in range(6):
+                page.evaluate("window.scrollBy(0, document.body.scrollHeight)")
+                page.wait_for_timeout(500)
+            for _ in range(6):
+                try:
+                    more = page.locator("#mrows")
+                    if more.count() == 0 or not more.first.is_visible():
+                        break
+                    more.first.click(timeout=3_000)
+                    page.wait_for_timeout(700)
+                except Exception:
+                    break
+
+            html = page.content()
+            browser.close()
+            healthy, rows = _healthy_html(html)
+            print(
+                f"FOREBET_BROWSER_FETCH label={label} status={status} "
+                f"bytes={len(html or '')} rcnt={rows} healthy={int(healthy)} url={url}",
+                flush=True,
+            )
+            if not healthy:
+                html = None
+    except Exception as exc:
+        print(f"WARN: Forebet browser fallback failed label={label} url={url}: {exc}", flush=True)
+        html = None
+
+    _BROWSER_CACHE[url] = html
+    return html
+
+
 def _matched_target_ids(html: str, match_date: str, targets: list[dict]) -> set[str]:
     ids: set[str] = set()
     if not html:
@@ -240,6 +321,10 @@ def _fetch_forebet_generic_date(match_date: str):
         f"predictions-1x2/{match_date}/by-league"
     )
     dated = _jina_html(dated_url, f"date_{match_date}")
+    if not dated:
+        # Jina is a convenience gateway, not a production dependency. If it
+        # returns placeholders/429s, render the primary dated page in Chrome.
+        dated = _browser_html(dated_url, f"date_{match_date}")
     if dated:
         parts.append(dated)
         matched_ids |= _matched_target_ids(dated, match_date, date_targets)
