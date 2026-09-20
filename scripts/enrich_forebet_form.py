@@ -24,6 +24,7 @@ HKT = ZoneInfo("Asia/Hong_Kong")
 JINA = "https://r.jina.ai/"
 TIMEOUT = 55
 MAX_MATCHES = 30
+_JINA_CIRCUIT_OPEN = False
 
 FIELDS = [
     "fetched_at_hkt","hkjc_event_id","kickoff_hkt","home_en","away_en",
@@ -174,6 +175,9 @@ def parse_form(body):
     return out,status
 
 def fetch(url):
+    global _JINA_CIRCUIT_OPEN
+    if _JINA_CIRCUIT_OPEN:
+        raise RuntimeError("JINA_CIRCUIT_OPEN")
     headers={
         "X-Timeout":"30",
         "X-No-Cache":"true",
@@ -181,6 +185,9 @@ def fetch(url):
         "User-Agent":"Mozilla/5.0",
     }
     r=requests.get(JINA+url,headers=headers,timeout=TIMEOUT)
+    if r.status_code == 429:
+        _JINA_CIRCUIT_OPEN = True
+        print("FOREBET_FORM_JINA_CIRCUIT_OPEN status=429 action=preserve_last_good", flush=True)
     if r.status_code!=200 or len(r.text)<1200:
         raise RuntimeError(f"HTTP_{r.status_code}_BYTES_{len(r.text)}")
     return r.text
