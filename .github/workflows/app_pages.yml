@@ -31,7 +31,13 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - run: npm run build
+      - name: Build fresh Pages artifact
+        env:
+          GITHUB_ACTIONS: "true"
+        run: |
+          rm -rf out .next
+          npm run build
+          test -f out/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
