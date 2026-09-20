@@ -39,6 +39,7 @@ export default async function MatchDetail({ params }) {
         <h1>{match.home}</h1>
         <p>vs</p>
         <h1>{match.away}</h1>
+        {match.forebetDetail?.predictedScore ? <div className="predicted-score">Forebet 預測 <b>{match.forebetDetail.predictedScore}</b></div> : null}
         <div className="detail-status-row"><span className="status-pill large">校準中 · 暫不輸出正式投注指令</span><span className={`freshness freshness-${fresh.key}`}>{fresh.label}</span><span className="evidence-count">{evidenceCount} evidence inputs</span></div>
       </section>
 
@@ -54,8 +55,8 @@ export default async function MatchDetail({ params }) {
       <section className="panel">
         <div className="panel-title"><div><p>HKJC TOTALS</p><h2>入球及角球</h2></div></div>
         <div className="totals-grid">
-          <div className="total-market"><span>入球 O/U · {match.goals?.line || "—"}</span><div><b>大 {formatOdds(match.goals?.over)}</b><b>細 {formatOdds(match.goals?.under)}</b></div></div>
-          <div className="total-market"><span>角球 O/U · {match.corners?.line || "—"}</span><div><b>大 {formatOdds(match.corners?.over)}</b><b>細 {formatOdds(match.corners?.under)}</b></div></div>
+          <div className="total-market"><span>HKJC 入球 O/U · {match.goals?.line || "—"}</span><div><b>大 {formatOdds(match.goals?.over)}</b><b>細 {formatOdds(match.goals?.under)}</b></div>{match.forebetDetail?.ou25?.over != null ? <small>Forebet O2.5 {(match.forebetDetail.ou25.over*100).toFixed(0)}% · U2.5 {(match.forebetDetail.ou25.under*100).toFixed(0)}% · Avg {match.forebetDetail.ou25.avgGoals ?? "—"}</small> : <small>Forebet O/U NO DATA</small>}</div>
+          <div className="total-market"><span>HKJC 角球 O/U · {match.corners?.line || "—"}</span><div><b>大 {formatOdds(match.corners?.over)}</b><b>細 {formatOdds(match.corners?.under)}</b></div>{match.forebetDetail?.corners95?.avgCorners != null ? <small>Forebet Avg corners {Number(match.forebetDetail.corners95.avgCorners).toFixed(1)} · O9.5 {match.forebetDetail.corners95.over == null ? "—" : (match.forebetDetail.corners95.over*100).toFixed(0)+"%"}</small> : <small>Forebet corners NO DATA</small>}</div>
         </div>
       </section>
 
