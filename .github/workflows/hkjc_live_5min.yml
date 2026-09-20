@@ -1,4 +1,5 @@
 name: HKJC Live Odds 5min
+# Legacy production heartbeat: keep independent from Supabase collectors.
 
 on:
   workflow_dispatch:

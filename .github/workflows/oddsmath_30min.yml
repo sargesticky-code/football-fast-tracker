@@ -1,4 +1,5 @@
 name: Odds Movement Snapshot
+# Legacy production heartbeat: keep independent from Supabase collectors.
 
 on:
   workflow_dispatch:
