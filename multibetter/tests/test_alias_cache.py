@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from multibetter.aliasing.cache import AliasCacheRow, merge_learned_aliases
+from multibetter.aliasing.cache import AliasCacheRow, merge_learned_aliases, touch_aliases
 from multibetter.matching.fixture_resolver import LearnedAlias
 
 
@@ -42,3 +42,21 @@ def test_conflicting_relearn_is_blocked():
             [LearnedAlias("United", "Team B", "UNIQUE_FIXTURE")],
             observed_at=datetime(2026, 9, 21, 8, 0),
         )
+
+
+def test_cache_hit_updates_last_seen_and_usage_count():
+    rows = touch_aliases(
+        [
+            AliasCacheRow(
+                "Man City",
+                "Manchester City",
+                first_seen="2026-09-20T08:00:00",
+                last_seen="2026-09-20T08:00:00",
+                observation_count=3,
+            )
+        ],
+        ["Man City"],
+        observed_at=datetime(2026, 9, 25, 8, 0),
+    )
+    assert rows[0].observation_count == 4
+    assert rows[0].last_seen == "2026-09-25T08:00:00"
