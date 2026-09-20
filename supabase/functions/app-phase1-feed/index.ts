@@ -84,6 +84,15 @@ Deno.serve(async (req: Request) => {
         over: num(r.hkjc_corners_over),
         under: num(r.hkjc_corners_under),
       },
+      forebetDetail: {
+        predictedScore: r.forebet_predicted_score ?? null,
+        ou25: { over: num(r.forebet_ou_over), under: num(r.forebet_ou_under), avgGoals: num(r.forebet_avg_goals) },
+        corners95: { over: num(r.forebet_corners_over), under: num(r.forebet_corners_under), avgCorners: num(r.forebet_avg_corners) },
+      },
+      multisourceDetail: {
+        ou25: { over: num(r.multisource_ou_over), under: num(r.multisource_ou_under) },
+        btts: { yes: num(r.multisource_btts_yes), no: num(r.multisource_btts_no) },
+      },
       forebet: r.forebet_home == null ? null : {
         home: num(r.forebet_home), draw: num(r.forebet_draw), away: num(r.forebet_away),
       },
