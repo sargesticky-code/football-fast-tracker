@@ -42,8 +42,29 @@ def _similarity(a: str, b: str) -> float:
     return SequenceMatcher(None, str(a).lower(), str(b).lower()).ratio() * 100.0
 
 
+def _parse_date(value: str):
+    value = str(value or "").strip()
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d/%m/%y"):
+        try:
+            return datetime.strptime(value, fmt).date()
+        except ValueError:
+            pass
+    return None
+
+
+def _normalize_time(value: str) -> str | None:
+    value = str(value or "").strip()
+    try:
+        return datetime.strptime(value, "%H:%M").strftime("%H:%M")
+    except ValueError:
+        return None
+
+
 def _time_variants(value: str) -> set[str]:
-    dt = datetime.strptime(value, "%H:%M")
+    normalized = _normalize_time(value)
+    if normalized is None:
+        raise ValueError(f"Unsupported time format: {value}")
+    dt = datetime.strptime(normalized, "%H:%M")
     return {
         (dt - timedelta(hours=1)).strftime("%H:%M"),
         dt.strftime("%H:%M"),
@@ -72,17 +93,18 @@ def upstream_style_match(
     """
 
     valid_times = _time_variants(target_time)
+    target_date_value = _parse_date(target_date) if target_date else None
     candidates: list[tuple[float, Mapping[str, object]]] = []
 
     for row in rows:
         home = str(row.get("HOME TEAM", "") or "")
         away = str(row.get("AWAY TEAM", "") or "")
-        time_value = str(row.get("TIME", "") or "")
-        date_value = str(row.get("DATE", "") or "")
+        time_value = _normalize_time(str(row.get("TIME", "") or ""))
+        date_value = _parse_date(str(row.get("DATE", "") or ""))
 
         if not home or not away or time_value not in valid_times:
             continue
-        if target_date and date_value and date_value != target_date:
+        if target_date_value is not None and date_value is not None and date_value != target_date_value:
             continue
 
         hs = _similarity(home, target_home)
@@ -164,17 +186,14 @@ def group_sources_around_forebet(
     if not home or not away or not time_value or not date_value:
         raise ValueError("Forebet anchor requires DATE, TIME, HOME TEAM and AWAY TEAM")
 
-    parsed_date = None
-    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d/%m/%y"):
-        try:
-            parsed_date = datetime.strptime(date_value, fmt).date()
-            break
-        except ValueError:
-            pass
+    parsed_date = _parse_date(date_value)
     if parsed_date is None:
         raise ValueError(f"Unsupported Forebet DATE format: {date_value}")
 
-    kickoff_time = datetime.strptime(time_value, "%H:%M").time()
+    normalized_anchor_time = _normalize_time(time_value)
+    if normalized_anchor_time is None:
+        raise ValueError(f"Unsupported Forebet TIME format: {time_value}")
+    kickoff_time = datetime.strptime(normalized_anchor_time, "%H:%M").time()
     kickoff = datetime.combine(parsed_date, kickoff_time)
 
     predictions: list[SourcePrediction] = []
