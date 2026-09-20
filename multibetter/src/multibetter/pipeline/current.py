@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import csv
+import json
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterable, Mapping
 
@@ -51,19 +52,33 @@ def read_csv_rows(path: Path) -> list[dict[str, str]]:
 
 
 def _parse_our_forebet_kickoff(row: Mapping[str, str]) -> datetime | None:
-    # Prefer the Forebet-native time because the external multi project also
-    # anchors on Forebet. HKJC kickoff may be in a different timezone.
-    value = (row.get("kickoff_text") or "").strip()
-    for fmt in ("%d/%m/%Y %H:%M", "%Y-%m-%d %H:%M"):
-        if value:
+    """Return canonical naive UTC kickoff.
+
+    HKJC HKT is the strongest cross-source clock we already own. Convert it to
+    UTC so GMT/UTC prediction providers and our fixture resolver use one clock.
+    """
+    value = (row.get("hkjc_kickoff_hkt") or "").strip()
+    if value:
+        parsed = None
+        for fmt in ("%Y-%m-%d %H:%M", "%Y-%m-%dT%H:%M:%S"):
             try:
-                return datetime.strptime(value, fmt)
+                parsed = datetime.strptime(value[:19], fmt)
+                break
             except ValueError:
                 pass
+        if parsed is None:
+            try:
+                parsed = datetime.fromisoformat(value)
+            except ValueError:
+                parsed = None
+        if parsed is not None:
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(timezone(timedelta(hours=8)))
+            return parsed.astimezone(timezone.utc).replace(tzinfo=None)
 
-    # Fallback only when the Forebet-native value is unavailable.
-    value = (row.get("hkjc_kickoff_hkt") or "").strip()
-    for fmt in ("%Y-%m-%d %H:%M", "%Y-%m-%dT%H:%M:%S"):
+    # Legacy fallback for rows without HKJC kickoff.
+    value = (row.get("kickoff_text") or "").strip()
+    for fmt in ("%d/%m/%Y %H:%M", "%Y-%m-%d %H:%M"):
         if value:
             try:
                 return datetime.strptime(value, fmt)
@@ -107,9 +122,29 @@ def load_our_forebet_fixtures(
     return fixtures, raw_by_event
 
 
-def load_source_tables(source_dir: Path) -> dict[str, list[dict[str, str]]]:
+def load_source_tables(
+    source_dir: Path,
+    *,
+    health_dir: Path | None = None,
+) -> dict[str, list[dict[str, str]]]:
+    """Load only fresh source snapshots when health metadata is supplied.
+
+    Last-good CSVs are intentionally preserved on scrape failure, but a stale
+    preserved file must not silently enter the current consensus.
+    """
     result: dict[str, list[dict[str, str]]] = {}
     for source, filename in SOURCE_FILES.items():
+        if health_dir is not None:
+            health_path = health_dir / f"{source.lower()}.json"
+            if not health_path.exists():
+                continue
+            try:
+                health = json.loads(health_path.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                continue
+            if health.get("status") != "OK":
+                continue
+
         rows = read_csv_rows(source_dir / filename)
         if rows:
             result[source] = rows
