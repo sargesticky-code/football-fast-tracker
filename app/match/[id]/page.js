@@ -25,7 +25,7 @@ export default async function MatchDetail({ params }) {
     <main className="shell detail-shell">
       <div className="detail-top">
         <Link href="/" className="back">← 返回</Link>
-        <span>{match.id} · 更新 {formatUpdated(match.updatedAt)}</span>
+        <span>{match.id} · 更新 {formatUpdated(match.updatedAt)} · {fresh.label}</span>
       </div>
 
       <section className="detail-hero">
@@ -34,7 +34,7 @@ export default async function MatchDetail({ params }) {
         <h1>{match.home}</h1>
         <p>vs</p>
         <h1>{match.away}</h1>
-        <span className="status-pill large">校準中 · 暫不輸出正式投注指令</span>
+        <div className="detail-status-row"><span className="status-pill large">校準中 · 暫不輸出正式投注指令</span><span className={`freshness freshness-${fresh.key}`}>{fresh.label}</span><span className="evidence-count">{evidenceCount} evidence inputs</span></div>
       </section>
 
       <section className="panel">

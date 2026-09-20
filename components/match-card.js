@@ -4,28 +4,44 @@ import {
   divergence,
   formatKickoff,
   formatOdds,
-  modelLabel,
+  freshness,
+  modelCoverageCount,
+  reviewScore,
   sideName,
 } from "@/lib/fast-tracker";
 
-export default function MatchCard({ match }) {
+export default function MatchCard({ match, nowMs, focusRank = null }) {
   const gap = divergence(match);
   const gapAbs = gap ? Math.abs(gap.value) : null;
+  const fresh = freshness(match, nowMs);
+  const sourceCount = modelCoverageCount(match);
+  const score = reviewScore(match, nowMs);
+  const primaryHome = match.homeZh || match.home;
+  const primaryAway = match.awayZh || match.away;
+  const secondaryHome = match.homeZh ? match.home : null;
+  const secondaryAway = match.awayZh ? match.away : null;
 
   return (
-    <Link className="match-card" href={`/match/${match.id}`}>
+    <Link className={`match-card ${focusRank ? "focus-card" : ""}`} href={`/match/${match.id}`}>
       <div className="match-topline">
+        {focusRank ? <span className="focus-rank">#{focusRank}</span> : null}
         <span>{formatKickoff(match.kickoff)}</span>
         <span className="league">{match.league}</span>
-        <span className={`coverage coverage-${coverage(match).replaceAll(" ", "-").toLowerCase()}`}>
-          {coverage(match)}
-        </span>
+        <span className={`freshness freshness-${fresh.key}`}>{fresh.label}</span>
       </div>
 
       <div className="teams">
-        <div><b>{match.home}</b><small>主</small></div>
+        <div>
+          <b>{primaryHome}</b>
+          {secondaryHome && <em>{secondaryHome}</em>}
+          <small>主</small>
+        </div>
         <span>vs</span>
-        <div><b>{match.away}</b><small>客</small></div>
+        <div>
+          <b>{primaryAway}</b>
+          {secondaryAway && <em>{secondaryAway}</em>}
+          <small>客</small>
+        </div>
       </div>
 
       <div className="odds-strip">
@@ -36,16 +52,19 @@ export default function MatchCard({ match }) {
 
       <div className="signal-line">
         <div>
-          <span className="muted">{modelLabel(match)}</span>
+          <span className="muted">{sourceCount ? `${sourceCount} 個 evidence inputs` : "HKJC only"}</span>
           {gap ? (
             <strong className={gapAbs >= 0.08 ? "gap-hot" : ""}>
-              最大分歧 {sideName(match, gap.key)} {gap.value > 0 ? "+" : ""}{(gap.value * 100).toFixed(1)}pp
+              市場分歧 {sideName(match, gap.key)} {gap.value > 0 ? "+" : ""}{(gap.value * 100).toFixed(1)}pp
             </strong>
           ) : (
-            <strong>暫無外部模型</strong>
+            <strong>未有外部模型比較</strong>
           )}
         </div>
-        <span className="status-pill">{match.decision === "CALIBRATION_PENDING" ? "校準中" : match.decision}</span>
+        <div className="card-badges">
+          <span className={`coverage coverage-${coverage(match).replaceAll(" ", "-").toLowerCase()}`}>{coverage(match)}</span>
+          {focusRank ? <span className="review-score">Review {score}</span> : null}
+        </div>
       </div>
     </Link>
   );

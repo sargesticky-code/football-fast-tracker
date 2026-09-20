@@ -101,3 +101,39 @@ a{color:inherit;text-decoration:none}
 .zh-teams{color:var(--mint);font-size:13px;font-weight:800;margin-bottom:8px}
 .source-chips{display:flex;gap:7px;flex-wrap:wrap}
 .source-chips span{background:#091510;border:1px solid #243a31;color:#b9cbc3;border-radius:999px;padding:7px 9px;font-size:10px;font-weight:800}
+
+.compact-hero{padding-bottom:12px}
+.health-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:0 0 14px}
+.health-strip div{background:#0b1814;border:1px solid var(--line);border-radius:13px;padding:10px}
+.health-strip b{display:block;font-size:19px;line-height:1}
+.health-strip span{display:block;color:var(--muted);font-size:9px;margin-top:5px}
+.health-strip .health-warn{border-color:#685b32;background:rgba(242,196,92,.06)}
+.health-strip .health-warn b{color:var(--amber)}
+.focus-zone{margin:4px 0 18px;padding:13px;background:linear-gradient(180deg,rgba(183,245,107,.055),rgba(94,227,173,.025));border:1px solid #29483b;border-radius:20px}
+.focus-zone-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:10px}
+.focus-zone-head span{color:var(--lime);font-size:9px;font-weight:900;letter-spacing:.13em}
+.focus-zone-head h2{margin:3px 0 0;font-size:17px}
+.focus-zone-head p{margin:0;max-width:220px;text-align:right;color:var(--muted);font-size:9px;line-height:1.4}
+.focus-list{display:flex;flex-direction:column;gap:8px}
+.focus-card{border-color:#315345;background:linear-gradient(180deg,rgba(18,38,31,.98),rgba(11,25,20,.98))}
+.focus-rank{display:inline-grid;place-items:center;min-width:25px;height:22px;border-radius:8px;background:var(--lime);color:#0a1411;font-weight:900;font-size:10px}
+.freshness{margin-left:auto;border-radius:999px;padding:5px 7px;font-size:9px;font-weight:900;white-space:nowrap}
+.freshness-fresh{background:rgba(94,227,173,.10);color:var(--mint)}
+.freshness-aging{background:rgba(242,196,92,.08);color:var(--amber)}
+.freshness-stale,.freshness-missing{background:#281d18;color:#e29a75}
+.teams em{display:block;color:#71877d;font-size:9px;font-style:normal;margin-top:2px}
+.card-badges{display:flex;gap:6px;align-items:center}
+.card-badges .coverage{margin-left:0}
+.review-score{border-radius:999px;padding:5px 7px;background:#1c2d26;color:#d7e4de;font-size:9px;font-weight:900}
+.sticky-filters{position:sticky;top:0;z-index:8;padding-top:10px;background:linear-gradient(180deg,var(--bg) 70%,transparent)}
+.detail-status-row{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:12px}
+.detail-status-row .status-pill.large{margin-top:0}
+.evidence-count{border:1px solid #2a4037;border-radius:999px;padding:6px 8px;color:#9db0a8;font-size:9px;font-weight:800}
+@media(max-width:520px){
+  .focus-zone{padding:10px}
+  .focus-zone-head p{max-width:145px}
+  .health-strip{gap:5px}
+  .health-strip div{padding:9px 7px}
+  .health-strip b{font-size:17px}
+  .match-topline{gap:6px}
+}
