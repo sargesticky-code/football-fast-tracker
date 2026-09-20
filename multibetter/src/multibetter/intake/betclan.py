@@ -1,0 +1,117 @@
+from __future__ import annotations
+
+import re
+from datetime import date
+from typing import Sequence
+
+from .common import (
+    base_row,
+    clean_text,
+    fetch_soup,
+    make_session,
+    merge_rows,
+    parse_date_any,
+    pct_text,
+)
+
+
+INDEX_URLS = (
+    "https://www.betclan.com/todays-football-predictions/",
+    "https://www.betclan.com/tomorrows-football-predictions/",
+)
+
+
+def collect_betclan(
+    target_dates: Sequence[date],
+    *,
+    timeout: int = 20,
+    delay_seconds: float = 0.15,
+):
+    session = make_session()
+    links = []
+    requests_count = 0
+    errors = 0
+
+    for index_url in INDEX_URLS:
+        try:
+            soup = fetch_soup(session, index_url, timeout=timeout)
+            requests_count += 1
+        except Exception:
+            errors += 1
+            continue
+        for anchor in soup.find_all("a", href=True):
+            href = anchor["href"]
+            if href.startswith("https://www.betclan.com/predictionsdetails/") and href not in links:
+                links.append(href)
+
+    rows = []
+    for url in links:
+        try:
+            soup = fetch_soup(
+                session,
+                url,
+                timeout=timeout,
+                delay_seconds=delay_seconds,
+            )
+            requests_count += 1
+
+            stats = [
+                clean_text(x.get_text(" ", strip=True)).replace("%", "").split()
+                for x in soup.find_all(
+                    "div",
+                    class_="cell vote__stats js-vote-stats-container",
+                )
+            ]
+            date_box = soup.find("span", class_="dategamedetailsis")
+            teams_box = soup.find("div", class_="teamstop")
+            if len(stats) < 3 or not date_box or not teams_box:
+                raise ValueError("missing BetClan prediction structure")
+
+            date_text = clean_text(date_box.get_text(" ", strip=True))
+            match_date = parse_date_any(date_text)
+            time_match = re.search(r"\b(\d{1,2}:\d{2})\b", date_text)
+            if match_date not in target_dates or not time_match:
+                continue
+
+            teams = [
+                clean_text(x)
+                for x in teams_box.get_text("\n", strip=True).split("\n")
+                if clean_text(x)
+            ]
+            if len(teams) < 2:
+                continue
+
+            # Upstream structure: Home <pct> Draw <pct> Away <pct>, etc.
+            h = float(stats[0][1])
+            d = float(stats[0][3])
+            a = float(stats[0][5])
+            under = float(stats[1][1])
+            over = float(stats[1][3])
+            bts = float(stats[2][1])
+            ots = float(stats[2][3])
+
+            row = base_row(
+                source="BCL",
+                match_date=match_date,
+                match_time_utc=time_match.group(1),
+                home=teams[0],
+                away=teams[-1],
+                source_url=url,
+                source_date=date_text,
+                source_time=time_match.group(1),
+                timezone_name="UTC/GMT assumed from upstream compatibility",
+                home_away_explicit=True,
+            )
+            row["HOME PER"] = pct_text(h)
+            row["DRAW PER"] = pct_text(d)
+            row["AWAY PER"] = pct_text(a)
+            row["UNDER 2.5"] = pct_text(under)
+            row["OVER 2.5"] = pct_text(over)
+            row["BTS"] = pct_text(bts)
+            row["OTS"] = pct_text(ots)
+            row["OVER 1.5"] = pct_text(min(100.0, bts + 15.0))
+            rows.append(row)
+        except Exception:
+            errors += 1
+
+    return merge_rows(rows), requests_count, errors
