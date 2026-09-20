@@ -171,3 +171,24 @@ def test_grouped_predictions_keep_match_quality():
     assert grouped.predictions[0].match_quality == "HIGH"
     assert grouped.predictions[1].match_similarity is not None
     assert grouped.predictions[1].match_quality in {"HIGH", "GOOD", "REVIEW"}
+
+
+def test_current_normalized_mode_can_require_exact_time():
+    rows = [
+        {
+            "DATE": "20/09/2026",
+            "TIME": "20:00",
+            "HOME TEAM": "Manchester City",
+            "AWAY TEAM": "Sunderland",
+            "NAME": "BCL",
+        }
+    ]
+    matched = upstream_style_match(
+        rows,
+        target_home="Manchester City",
+        target_away="Sunderland",
+        target_time="21:00",
+        target_date="20/09/2026",
+        time_tolerance_hours=0,
+    )
+    assert matched is None
