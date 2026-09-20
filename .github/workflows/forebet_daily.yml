@@ -72,6 +72,8 @@ jobs:
             --live-retain-minutes 150
 
       - name: Fetch Forebet 1X2 with durable HKJC matching policy
+        id: forebet_fetch
+        continue-on-error: true
         run: python scripts/run_selective_v2.py
 
       - name: Restore active Forebet models from rolling archive
@@ -153,6 +155,7 @@ jobs:
         run: python scripts/enrich_power_ratings.py
 
       - name: Add Forebet O-U and corner signals from free match pages
+        continue-on-error: true
         run: python scripts/enrich_forebet_markets.py
 
       - name: Add recent Forebet team form from match-detail pages
