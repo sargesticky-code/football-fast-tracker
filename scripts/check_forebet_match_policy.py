@@ -14,6 +14,10 @@ POSITIVE = [
     ("Nacional (URU)", "Montevideo Nacional"),
     ("Shorta Baghdad", "Al Shorta SC"),
     ("Al Seeb SC", "Al Seeb"),
+    ("FC Nordsjælland", "Nordsjaelland"),
+    ("Brøndby IF", "Brondby"),
+    ("Malmö FF", "Malmo"),
+    ("ŁKS Łódź", "LKS Lodz"),
 ]
 
 NEGATIVE = [
