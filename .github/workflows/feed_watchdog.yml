@@ -3,7 +3,9 @@ name: Feed Freshness Watchdog
 on:
   workflow_dispatch:
   schedule:
-    - cron: '20 23 * * *' # 07:20 Hong Kong time; recovery only when primary feed is stale
+    - cron: '20 23 * * *' # 07:20 Hong Kong time
+    - cron: '20 3 * * *'  # 11:20 Hong Kong time
+    - cron: '20 11 * * *' # 19:20 Hong Kong time
   push:
     paths:
       - '.github/workflows/feed_watchdog.yml'
@@ -25,7 +27,7 @@ jobs:
       - name: Checkout current feed timestamps
         uses: actions/checkout@v4
 
-      - name: Decide whether production source is stale
+      - name: Decide whether production and model feeds are stale
         id: freshness
         run: |
           python - <<'PY'
@@ -36,7 +38,6 @@ jobs:
           from zoneinfo import ZoneInfo
 
           HKT = ZoneInfo('Asia/Hong_Kong')
-          MAX_AGE_MINUTES = 180
 
           def parse(value):
               value = (value or '').strip()
@@ -53,37 +54,65 @@ jobs:
                   dt = dt.replace(tzinfo=HKT)
               return dt.astimezone(timezone.utc)
 
-          stamps = []
-          diagnostics = []
-          for path in ('data/hkjc_targets.csv', 'data/forebet_current.csv'):
+          def age_minutes(path, column='fetched_at_hkt'):
               p = Path(path)
               if not p.exists():
-                  diagnostics.append(f'{path}=MISSING')
-                  continue
+                  return None
+              newest = None
               with p.open(encoding='utf-8-sig', newline='') as fh:
-                  row = next(csv.DictReader(fh), None)
-              dt = parse((row or {}).get('fetched_at_hkt', ''))
-              if dt is None:
-                  diagnostics.append(f'{path}=BAD_TIMESTAMP')
-                  continue
-              age = (datetime.now(timezone.utc) - dt).total_seconds() / 60
-              stamps.append(age)
-              diagnostics.append(f'{path}={age:.1f}m')
+                  for row in csv.DictReader(fh):
+                      dt = parse(row.get(column, ''))
+                      if dt and (newest is None or dt > newest):
+                          newest = dt
+              if newest is None:
+                  return None
+              return (datetime.now(timezone.utc) - newest).total_seconds() / 60
 
-          stale = len(stamps) < 2 or max(stamps) > MAX_AGE_MINUTES
-          print('WATCHDOG ' + ' '.join(diagnostics) + f' stale={int(stale)} threshold={MAX_AGE_MINUTES}m')
+          hkjc_age = age_minutes('data/hkjc_targets.csv')
+          forebet_age = age_minutes('data/forebet_current.csv')
+          model_age = age_minutes('data/model_current.csv')
+          form_age = age_minutes('data/form_current.csv')
+
+          # HKJC is a 12-hour capture; Forebet/model layers refresh more often.
+          source_stale = (
+              hkjc_age is None or hkjc_age > 720 or
+              forebet_age is None or forebet_age > 240
+          )
+          model_stale = (
+              model_age is None or model_age > 180 or
+              form_age is None or form_age > 180
+          )
+
+          def fmt(v):
+              return 'MISSING' if v is None else f'{v:.1f}m'
+
+          print(
+              'WATCHDOG '
+              f'hkjc={fmt(hkjc_age)} forebet={fmt(forebet_age)} '
+              f'model={fmt(model_age)} form={fmt(form_age)} '
+              f'source_stale={int(source_stale)} model_stale={int(model_stale)}'
+          )
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as fh:
-              fh.write(f'stale={str(stale).lower()}\n')
+              fh.write(f'source_stale={str(source_stale).lower()}\n')
+              fh.write(f'model_stale={str(model_stale).lower()}\n')
           PY
 
-      - name: Dispatch production Forebet/HKJC refresh only when stale
-        if: steps.freshness.outputs.stale == 'true'
+      - name: Recover Forebet/HKJC source layer when stale
+        if: steps.freshness.outputs.source_stale == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo 'Primary feed is stale; dispatching forebet_daily.yml once.'
+          echo 'Source layer is stale; dispatching forebet_daily.yml once.'
           gh workflow run forebet_daily.yml --repo "$GITHUB_REPOSITORY" --ref main
 
-      - name: Fresh feed - no recovery dispatch needed
-        if: steps.freshness.outputs.stale != 'true'
-        run: echo 'Primary feed is fresh; zero-credit production refresh is not needed.'
+      - name: Recover DC/Pi/Form model layer when stale
+        if: steps.freshness.outputs.model_stale == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo 'Model layer is stale; dispatching model_daily.yml once.'
+          gh workflow run model_daily.yml --repo "$GITHUB_REPOSITORY" --ref main
+
+      - name: Healthy feeds
+        if: steps.freshness.outputs.source_stale != 'true' && steps.freshness.outputs.model_stale != 'true'
+        run: echo 'Source and model feeds are within freshness targets.'
