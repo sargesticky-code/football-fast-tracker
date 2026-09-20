@@ -10,7 +10,8 @@ from multibetter.models import (
     MultiSourceFixture,
     TeamClass,
 )
-from multibetter.normalization.teams import canonicalize_team, classify_team, normalize_text
+from multibetter.matching.forebet_bridge import BridgeStatus, bridge_team_name
+from multibetter.normalization.teams import canonicalize_team, classify_team
 
 
 def _competition_equal(
@@ -77,33 +78,34 @@ def bridge_github_forebet_to_our_forebet(
     ):
         return MatchResult(MatchDecision.REJECT, 0.0, "COMPETITION_MISMATCH")
 
-    our_home, _ = canonicalize_team(fixture.forebet_home)
-    our_away, _ = canonicalize_team(fixture.forebet_away)
-
-    github_home, home_alias = canonicalize_team(
+    home_bridge = bridge_team_name(
         multi.github_forebet_home,
-        forebet_bridge_aliases,
+        {fixture.forebet_home},
+        exception_aliases=forebet_bridge_aliases,
     )
-    github_away, away_alias = canonicalize_team(
+    away_bridge = bridge_team_name(
         multi.github_forebet_away,
-        forebet_bridge_aliases,
+        {fixture.forebet_away},
+        exception_aliases=forebet_bridge_aliases,
     )
 
-    if our_home != github_home or our_away != github_away:
+    if home_bridge.status == BridgeStatus.CONFLICT or away_bridge.status == BridgeStatus.CONFLICT:
+        return MatchResult(MatchDecision.REJECT, 0.0, "FOREBET_BRIDGE_CONFLICT")
+
+    if home_bridge.status == BridgeStatus.CANDIDATE or away_bridge.status == BridgeStatus.CANDIDATE:
+        return MatchResult(MatchDecision.REVIEW, 0.0, "FOREBET_BRIDGE_CANDIDATE")
+
+    if (
+        home_bridge.status == BridgeStatus.OUR_REFERENCE_MISSING
+        or away_bridge.status == BridgeStatus.OUR_REFERENCE_MISSING
+    ):
         return MatchResult(MatchDecision.REJECT, 0.0, "FOREBET_BRIDGE_MISMATCH")
 
-    used_alias = (
-        home_alias
-        or away_alias
-        or normalize_text(fixture.forebet_home) != normalize_text(multi.github_forebet_home)
-        or normalize_text(fixture.forebet_away) != normalize_text(multi.github_forebet_away)
-    )
-
-    if used_alias:
+    if home_bridge.status == BridgeStatus.ALIAS or away_bridge.status == BridgeStatus.ALIAS:
         return MatchResult(
             MatchDecision.ALIAS,
             0.95,
-            "GITHUB_FOREBET_TO_OUR_FOREBET_ALIAS",
+            "GITHUB_FOREBET_TO_OUR_FOREBET_VERIFIED_ALIAS",
             fixture.event_id,
             fixture.forebet_home,
             fixture.forebet_away,
