@@ -118,6 +118,9 @@ def candidate_dates(row: dict[str, str]) -> list[str]:
 
 
 def fetch_jina(url: str, label: str, mode: str = "cheap") -> str | None:
+    global _JINA_CIRCUIT_OPEN
+    if _JINA_CIRCUIT_OPEN:
+        return None
     if mode == "browser":
         headers = {
             "X-Engine": "browser",
@@ -143,6 +146,12 @@ def fetch_jina(url: str, label: str, mode: str = "cheap") -> str | None:
         print(f"WARN Jina {label} mode={mode} failed: {exc}")
         return None
 
+    if response.status_code == 429:
+        _JINA_CIRCUIT_OPEN = True
+        print(
+            f"FOREBET_MARKET_JINA_CIRCUIT_OPEN label={label} mode={mode} "
+            "status=429 action=skip_remaining_jina_requests"
+        )
     print(
         f"FOREBET_MARKET_JINA label={label} mode={mode} "
         f"status={response.status_code} bytes={len(response.text)}"
