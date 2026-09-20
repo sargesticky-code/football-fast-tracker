@@ -24,5 +24,5 @@ def test_missing_reference_is_not_called_mismatch():
 
 def test_normalized_difference_requires_review_not_auto_accept():
     result = bridge_team_name("Atlético Madrid", {"Atletico Madrid"})
-    assert result.status == BridgeStatus.MISMATCH
+    assert result.status == BridgeStatus.CANDIDATE
     assert result.our_forebet_name == "Atletico Madrid"
