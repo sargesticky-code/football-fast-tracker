@@ -9,6 +9,7 @@ from .common import (
     fetch_soup,
     make_session,
     merge_rows,
+    local_fixture_to_utc,
     parse_date_any,
     pct_text,
 )
@@ -47,9 +48,15 @@ def _rows_from_page(soup, market: str, url: str, target_dates: Sequence[date]):
             if len(parts) < 2:
                 continue
             match_date = parse_date_any(parts[0])
-            match_time = parts[1]
+            source_time = parts[1]
             if match_date not in target_dates:
                 continue
+            converted = local_fixture_to_utc(
+                match_date, source_time, "Europe/London"
+            )
+            if converted is None:
+                continue
+            match_date, match_time = converted
         else:
             # Market pages do not need their own date/time because they merge
             # into the HDA fixture by oriented team pair later.
@@ -64,8 +71,8 @@ def _rows_from_page(soup, market: str, url: str, target_dates: Sequence[date]):
             away=aways[i],
             source_url=url,
             source_date="" if market != "hda" else parts[0],
-            source_time="" if market != "hda" else match_time,
-            timezone_name="UTC/GMT",
+            source_time="" if market != "hda" else source_time,
+            timezone_name="Europe/London",
             home_away_explicit=True,
         )
 
