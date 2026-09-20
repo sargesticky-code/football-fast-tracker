@@ -11,6 +11,13 @@ absence versus a likely alias/name near-miss without ad-hoc manual guessing.
 from __future__ import annotations
 
 
+DIAGNOSTICS: dict[str, str] = {}
+
+
+def get_diagnosis(event_id: str) -> str:
+    return DIAGNOSTICS.get(str(event_id or "").strip(), "")
+
+
 def _usable_model_ids(production, html: str | None, match_date: str, targets: list[dict]) -> set[str]:
     ids: set[str] = set()
     if not html:
@@ -47,7 +54,13 @@ def install(production) -> None:
             target for target in production._ACTIVE_TARGETS
             if str(target.get("match_date") or "") == match_date
         ]
-        if not targets or not html:
+        if not targets:
+            return html, cost
+        if not html:
+            for target in targets:
+                event_id = str(target.get("hkjc_event_id") or "").strip()
+                if event_id:
+                    DIAGNOSTICS[event_id] = "SOURCE_UNAVAILABLE"
             return html, cost
 
         rows = production.feed.parse_forebet_rows(html, match_date)
@@ -74,6 +87,7 @@ def install(production) -> None:
                     best = (average, home_score, away_score, has_probs, row)
 
             if best is None:
+                DIAGNOSTICS[event_id] = "NO_SOURCE_ROWS"
                 print(
                     f"FOREBET_UNRESOLVED_DIAG event={event_id} diagnosis=NO_SOURCE_ROWS "
                     f"fixture={target.get('home_en','')} vs {target.get('away_en','')}",
@@ -83,6 +97,7 @@ def install(production) -> None:
 
             average, home_score, away_score, has_probs, row = best
             diagnosis = _classification(home_score, away_score, average, has_probs)
+            DIAGNOSTICS[event_id] = diagnosis
             print(
                 f"FOREBET_UNRESOLVED_DIAG event={event_id} diagnosis={diagnosis} "
                 f"target={target.get('home_en','')} vs {target.get('away_en','')} "
