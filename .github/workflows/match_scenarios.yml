@@ -2,6 +2,8 @@ name: Match Scenario Features
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '25 23 * * *' # 07:25 Hong Kong time, after validated shadow models
 
 permissions:
   contents: write
