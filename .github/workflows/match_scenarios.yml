@@ -4,6 +4,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '25 23 * * *' # 07:25 Hong Kong time, after validated shadow models
+  push:
+    paths:
+      - '.github/workflows/match_scenarios.yml'
+      - 'scripts/build_match_scenarios.py'
 
 permissions:
   contents: write
