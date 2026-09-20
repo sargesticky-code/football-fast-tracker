@@ -62,15 +62,15 @@ def _normalize_time(value: str) -> str | None:
         return None
 
 
-def _time_variants(value: str) -> set[str]:
+def _time_variants(value: str, tolerance_hours: int = 1) -> set[str]:
     normalized = _normalize_time(value)
     if normalized is None:
         raise ValueError(f"Unsupported time format: {value}")
     dt = datetime.strptime(normalized, "%H:%M")
+    tolerance_hours = max(0, int(tolerance_hours))
     return {
-        (dt - timedelta(hours=1)).strftime("%H:%M"),
-        dt.strftime("%H:%M"),
-        (dt + timedelta(hours=1)).strftime("%H:%M"),
+        (dt + timedelta(hours=offset)).strftime("%H:%M")
+        for offset in range(-tolerance_hours, tolerance_hours + 1)
     }
 
 
@@ -82,6 +82,7 @@ def upstream_style_match(
     target_time: str,
     target_date: str | None = None,
     similarity_threshold: float = 55.0,
+    time_tolerance_hours: int = 1,
 ) -> Mapping[str, object] | None:
     """Reuse the public GitHub project's matching idea, anchored on Forebet.
 
@@ -94,7 +95,7 @@ def upstream_style_match(
     This reduces false positives without adding a new team-alias system.
     """
 
-    valid_times = _time_variants(target_time)
+    valid_times = _time_variants(target_time, time_tolerance_hours)
     target_date_value = _parse_date(target_date) if target_date else None
     candidates: list[tuple[float, Mapping[str, object]]] = []
 
@@ -187,6 +188,7 @@ def group_sources_around_forebet(
     *,
     similarity_threshold: float = 55.0,
     github_forebet_competition: str | None = None,
+    time_tolerance_hours: int = 1,
 ) -> MultiSourceFixture:
     """Build one grouped fixture using GitHub Forebet as the anchor.
 
@@ -228,6 +230,7 @@ def group_sources_around_forebet(
             target_time=time_value,
             target_date=date_value,
             similarity_threshold=similarity_threshold,
+            time_tolerance_hours=time_tolerance_hours,
         )
         if matched is not None:
             predictions.append(source_row_to_prediction(matched, source=source))
