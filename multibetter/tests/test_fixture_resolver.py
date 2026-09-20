@@ -3,6 +3,7 @@ from datetime import datetime
 from multibetter.matching.fixture_resolver import (
     FixtureResolveStatus,
     build_fixture_index,
+    build_time_index,
     resolve_fixture_cache_first,
 )
 from multibetter.models import CanonicalFixture, MultiSourceFixture
@@ -99,3 +100,25 @@ def test_team_class_conflict_blocks_auto_learning():
     )
     result = resolve_fixture_cache_first(multi, fixtures)
     assert result.status == FixtureResolveStatus.CONFLICT
+
+
+def test_missing_league_uses_date_time_bucket_then_team_pair():
+    fixtures = [
+        f("FB1", 21, "Manchester City", "Sunderland"),
+        f("FB2", 21, "Bournemouth", "Liverpool"),
+        f("FB3", 21, "Leeds", "Crystal Palace"),
+    ]
+    multi = MultiSourceFixture(
+        kickoff=datetime(2026, 9, 20, 21, 0),
+        github_forebet_home="Man City",
+        github_forebet_away="Sunderland AFC",
+        github_forebet_competition=None,
+    )
+    result = resolve_fixture_cache_first(
+        multi,
+        fixtures,
+        time_index=build_time_index(fixtures),
+    )
+    assert result.status == FixtureResolveStatus.DETERMINISTIC_TEAM_PAIR
+    assert result.fixture.event_id == "FB1"
+    assert result.candidate_count == 3
