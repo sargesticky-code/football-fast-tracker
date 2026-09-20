@@ -9,13 +9,15 @@ The approved production order is:
         ↓ miss
 2. Exact DATE + exact normalized TIME + LEAGUE bucket
         ↓
-3. Resolve HOME/AWAY only inside that small bucket
+3. Match HOME(team1/left) and AWAY(team2/right) orientation
+        ↓
+4. Resolve team names only inside that small bucket
         ↓ unique
-4. Match fixture
+5. Match fixture
         ↓
-5. Write newly learned team aliases back to alias cache
+6. Write newly learned team aliases back to alias cache
         ↓
-6. Next occurrence uses fast alias lookup
+7. Next occurrence uses fast alias lookup
 ```
 
 This is intentionally asymmetric: expensive matching is a **one-time learning cost**. Repeated fixtures for the same team names should use O(1) dictionary lookups.
@@ -145,3 +147,28 @@ Audit on 2026-09-20:
 - registry conflicts: 0
 - manual conflicts: 0
 - unresolved rows: 0
+
+
+## Home / away orientation is part of the fixture key
+
+The deterministic identity is treated as:
+
+```text
+DATE + exact normalized TIME + LEAGUE + HOME + AWAY
+```
+
+For sources with explicit HOME/AWAY fields, orientation is a hard rule:
+
+- source HOME can only learn/match OUR Forebet HOME
+- source AWAY can only learn/match OUR Forebet AWAY
+- a cached alias that points to the opposite side is a conflict
+- A vs B is not treated as the same oriented fixture as B vs A
+
+For generic layouts that only expose left/team1 and right/team2:
+
+- default assumption: left/team1 = HOME
+- default assumption: right/team2 = AWAY
+- mark the orientation as inferred rather than explicit
+- if the reversed pairing is materially stronger, do not auto-learn a permanent alias from that observation
+
+This makes home/away a low-cost matching signal and further reduces the need for broad fuzzy comparison.
