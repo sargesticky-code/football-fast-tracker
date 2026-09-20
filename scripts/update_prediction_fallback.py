@@ -31,8 +31,20 @@ FIELDS = [
 def clean(v):
     return "" if v is None else str(v).strip()
 
+_SPECIAL_LATIN = str.maketrans({
+    "æ": "ae", "Æ": "AE",
+    "ø": "o", "Ø": "O",
+    "å": "a", "Å": "A",
+    "ð": "d", "Ð": "D",
+    "þ": "th", "Þ": "Th",
+    "ł": "l", "Ł": "L",
+    "đ": "d", "Đ": "D",
+    "ß": "ss",
+})
+
 def norm(v):
-    s = unicodedata.normalize("NFKD", clean(v))
+    s = clean(v).translate(_SPECIAL_LATIN)
+    s = unicodedata.normalize("NFKD", s)
     s = "".join(ch for ch in s if not unicodedata.combining(ch)).lower()
     s = re.sub(r"['’`]", "", s)
     s = re.sub(r"\b(women|womens|woman|femenino|femenina|fem|res|reserve|fc|cf|sc|club)\b", " ", s)
@@ -42,15 +54,18 @@ def norm(v):
 def tokens(v):
     return {t for t in norm(v).split() if len(t) >= 3}
 
-def slug_score(target_home, target_away, href):
+def slug_scores(target_home, target_away, href):
     path = urlparse(href).path
     bag = tokens(path.replace("-", " "))
     ht, at = tokens(target_home), tokens(target_away)
     if not ht or not at:
-        return 0.0
+        return 0.0, 0.0, 0.0
     hs = len(ht & bag) / len(ht)
     ats = len(at & bag) / len(at)
-    return (hs + ats) / 2
+    return hs, ats, (hs + ats) / 2
+
+def slug_score(target_home, target_away, href):
+    return slug_scores(target_home, target_away, href)[2]
 
 def parse_dt(v):
     s = clean(v)
@@ -129,15 +144,18 @@ def pick_link(target, links):
     for href in links:
         if re.search(r"\d{2}-\d{2}-\d{4}", href) and not any(s in href for s in date_suffixes):
             continue
-        score = slug_score(target["home_en"], target["away_en"], href)
-        if score >= 0.45:
-            ranked.append((score, href))
+        home_score, away_score, score = slug_scores(target["home_en"], target["away_en"], href)
+        # Fail closed: one matching team is not enough evidence for a fixture.
+        # Accept abbreviated provider names such as "AGF" for "AGF Aarhus",
+        # but require both sides to be represented and a strong combined score.
+        if score >= 0.70 and min(home_score, away_score) >= 0.50:
+            ranked.append((score, min(home_score, away_score), href))
     ranked.sort(reverse=True)
     if not ranked:
         return "", 0.0
     if len(ranked) > 1 and ranked[0][0] < 0.85 and ranked[0][0] - ranked[1][0] < 0.15:
         return "", ranked[0][0]
-    return ranked[0][1], ranked[0][0]
+    return ranked[0][2], ranked[0][0]
 
 def parse_apwin_page(url):
     raw = get(url)
@@ -165,7 +183,9 @@ def main():
     previous_good = {
         clean(r.get("hkjc_event_id")): r
         for r in previous_rows
-        if clean(r.get("hkjc_event_id")) and clean(r.get("recommendation"))
+        if clean(r.get("hkjc_event_id"))
+        and clean(r.get("recommendation"))
+        and float(clean(r.get("match_score")) or 0) >= 0.70
     }
     global_links = global_prediction_links()
 
