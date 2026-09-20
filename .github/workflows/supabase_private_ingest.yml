@@ -2,10 +2,6 @@ name: Supabase Private Data Push
 
 on:
   workflow_dispatch:
-  push:
-    branches: ["supabase-ingest-v2"]
-    paths:
-      - ".github/workflows/supabase_private_ingest.yml"
   workflow_run:
     workflows:
       - "HKJC Live Odds 5min"
@@ -28,7 +24,7 @@ concurrency:
 
 jobs:
   push-current-artifacts:
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
