@@ -72,6 +72,8 @@ jobs:
             --live-retain-minutes 150
 
       - name: Fetch Forebet 1X2 with durable HKJC matching policy
+        id: forebet_fetch
+        continue-on-error: true
         run: python scripts/run_selective_v2.py
 
       - name: Restore active Forebet models from rolling archive
