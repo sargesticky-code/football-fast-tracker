@@ -1,5 +1,5 @@
 name: HKJC Live Odds 5min
-# Legacy production heartbeat: keep independent from Supabase collectors.
+# Production heartbeat. Successful runs fan into Supabase Static Data Push, which refreshes live odds plus the live score layer.
 
 on:
   workflow_dispatch:
