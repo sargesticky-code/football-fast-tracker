@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-20T14:43:58+08:00",
+  "updatedAt": "2026-09-20T14:44:14+08:00",
   "health": {
     "primary": "OK",
     "sofascore": "ERROR:HTTPError",
@@ -56,7 +56,7 @@
       "source_home": "CF America",
       "source_away": "Guadalajara",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-20T14:43:58+08:00",
+      "source_updated_at": "2026-09-20T14:44:14+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
@@ -99,7 +99,7 @@
       "source_home": "Iran U23",
       "source_away": "China U23",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-20T14:43:59+08:00",
+      "source_updated_at": "2026-09-20T14:44:14+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
@@ -142,7 +142,7 @@
       "source_home": "Urawa Reds Women",
       "source_away": "RB Omiya Ardija Women",
       "match_confidence": 1.0,
-      "source_updated_at": "2026-09-20T14:43:58+08:00",
+      "source_updated_at": "2026-09-20T14:44:14+08:00",
       "home_corners": "",
       "away_corners": "",
       "total_corners": "",
