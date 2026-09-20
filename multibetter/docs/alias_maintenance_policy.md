@@ -1,117 +1,147 @@
 # Long-term alias maintenance policy
 
-## Purpose
+## Core principle: cache first, deterministic fallback only on cache miss
 
-Keep Multibetter and Fast Tracker team identity stable as more leagues and sources are added.
+The approved production order is:
 
-The system must improve coverage over time without silently teaching itself bad aliases.
+```text
+1. Exact/alias cache lookup
+        ↓ miss
+2. Exact DATE + exact normalized TIME + LEAGUE bucket
+        ↓
+3. Resolve HOME/AWAY only inside that small bucket
+        ↓ unique
+4. Match fixture
+        ↓
+5. Write newly learned team aliases back to alias cache
+        ↓
+6. Next occurrence uses fast alias lookup
+```
+
+This is intentionally asymmetric: expensive matching is a **one-time learning cost**. Repeated fixtures for the same team names should use O(1) dictionary lookups.
 
 ## Authority chain
 
 ```text
 GitHub multi-source fixture
   -> GitHub Forebet name
-  -> Multibetter Forebet bridge
+  -> Multibetter alias cache
   -> OUR Forebet name
   -> existing Fast Tracker Forebet/HKJC registry
-  -> HKJC event ID / display name
+  -> HKJC event ID
 ```
 
-The existing Fast Tracker alias files remain authoritative for OUR Forebet -> HKJC:
+Fast Tracker's existing OUR Forebet -> HKJC files remain authoritative:
 
 - data/team_alias_manual.csv
 - data/team_alias_registry.csv
 - data/team_alias_unresolved.csv
 
-Multibetter maintains only the small GitHub-Forebet -> OUR-Forebet exception layer.
+Multibetter's fast cache is:
+
+- multibetter/data/forebet_bridge_aliases.csv
 
 ## Resolution order
 
-1. EXACT
-   - Same Forebet name on both sides.
-   - Accepted automatically.
-   - Not written as an alias because identity needs no alias.
+### 1. EXACT / cached alias
 
-2. VERIFIED_ALIAS
-   - Explicit entry in multibetter/data/forebet_bridge_aliases.csv.
-   - Accepted in production.
+Use the alias dictionary first. If both home and away resolve, match the exact fixture inside the DATE + TIME + LEAGUE bucket.
 
-3. CANDIDATE
-   - A likely same-team naming difference discovered from fixture context.
-   - Never accepted into production merely because it is fuzzy.
-   - Evidence is accumulated across observations.
+This is the hot path and should handle more and more traffic over time.
 
-4. CONFLICT
-   - One external name points to multiple OUR Forebet names, or team class conflicts.
-   - Production use is blocked.
+### 2. DETERMINISTIC UNIQUE FIXTURE
 
-5. UNRESOLVED
-   - No safe mapping.
-   - Keep NO DATA / NO MATCH rather than force a mapping.
+Only when the alias cache misses:
 
-## Candidate evidence
+- normalize date
+- normalize kickoff time
+- normalize league
+- retrieve only fixtures in that exact date/time/league bucket
 
-Each candidate tracks:
+If there is exactly one compatible fixture, it is deterministic enough to resolve the missing source names to that fixture's OUR Forebet home/away names.
 
-- github_forebet_name
-- proposed OUR Forebet name
-- first_seen
-- last_seen
-- observation_count
-- best / latest similarity
-- distinct fixture opponents
-- event IDs observed
-- team class
-- status / reason
+The new mappings are written immediately to the alias cache with:
 
-A candidate becomes REVIEW_READY when:
+- status = AUTO_DETERMINISTIC
+- confidence = 1.000
+- reason = UNIQUE_DATE_TIME_LEAGUE_FIXTURE
 
-- observation_count >= 3
-- at least 2 distinct opponent contexts
-- no conflicting target
-- same team class
-- similarity >= 0.85, or stronger fixture-level evidence exists
+### 3. DETERMINISTIC TEAM PAIR IN SMALL BUCKET
 
-REVIEW_READY is still not production-approved automatically. A verified/static alias remains the production rule.
+Some leagues have several fixtures at the same kickoff.
+
+In that case, team-name comparison is allowed **only inside the small date/time/league candidate bucket**, never against the whole team universe.
+
+A unique winner with a clear margin may be accepted and its missing aliases cached.
+
+### 4. AMBIGUOUS / CONFLICT
+
+Do not auto-write when:
+
+- date/time/league bucket is missing
+- two candidate fixtures remain too similar
+- source alias conflicts with an existing cached target
+- senior/youth/reserve/women team class conflicts
+
+These cases go to candidate/review handling rather than being forced.
+
+## Time is a strong identity field
+
+Time is not merely a weak hint.
+
+For automatic alias learning, the default rule uses **exact normalized kickoff time**. A one-hour or timezone tolerance may be useful during upstream source grouping, but it must not silently create a permanent alias in the cache.
+
+If a timezone conversion is required, normalize the timezone first and then compare exact normalized times.
+
+## Long-term effect
+
+The alias table should become faster and more complete naturally:
+
+```text
+first encounter:
+cache miss -> deterministic fixture resolution -> cache alias
+
+later encounters:
+cache hit -> direct resolution
+```
+
+Therefore the system spends computation mainly on genuinely new naming variants.
+
+## Candidate evidence remains useful
+
+The candidate table remains for ambiguous cases only. It is no longer the normal path for a deterministic unique fixture.
+
+Fuzzy similarity by itself must never auto-write an alias.
 
 ## Conflict rules
 
-The audit must flag:
+Block automatic learning when:
 
-- same source alias -> multiple canonical targets
-- same alias appearing in both verified and rejected sets
-- senior -> U21/U23/B/reserve/women class changes
-- target no longer present in any known OUR Forebet history
-- duplicate verified alias rows with different metadata
-- circular aliases
+- same source alias points to multiple OUR Forebet targets
+- team class changes (senior/U21/U23/B/reserve/women)
+- home/away orientation conflicts
+- duplicate fixtures exist in the same exact identity bucket
 
-## Long-term health metrics
+## Health metrics
 
-Track every run:
+Track:
 
-- exact bridge rate
-- verified alias rate
-- unresolved rate
+- cache-hit rate
+- deterministic-learning rate
+- ambiguous rate
 - conflict count
-- new candidate count
-- review-ready count
-- aliases not seen recently
-- aliases used successfully in the last 30/90 days
+- new aliases learned
+- aliases reused
+- candidate/review queue size
 
-The target is not 100% alias coverage. The target is:
-- high exact-match rate
-- small verified exception table
-- zero silent conflicts
-- zero forced matches
+A healthy mature system should show cache-hit rate rising over time and deterministic-learning rate falling.
 
-## Current baseline
+## Current Fast Tracker baseline
 
-Audit of current Fast Tracker alias files on 2026-09-20:
+Audit on 2026-09-20:
 
 - team_alias_registry.csv: 544 rows
 - team_alias_manual.csv: 33 rows
 - registry conflicts: 0
 - manual conflicts: 0
 - unresolved rows: 0
-
-This is a healthy starting point.
