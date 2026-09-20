@@ -1,0 +1,42 @@
+name: App V1 CI
+
+on:
+  push:
+    branches: [app-v1]
+    paths:
+      - "app/**"
+      - "components/**"
+      - "lib/**"
+      - "data/app_snapshot.json"
+      - "package.json"
+      - "jsconfig.json"
+      - "supabase/functions/app-phase1-feed/**"
+      - ".github/workflows/app_v1_ci.yml"
+  pull_request:
+    paths:
+      - "app/**"
+      - "components/**"
+      - "lib/**"
+      - "data/app_snapshot.json"
+      - "package.json"
+      - "jsconfig.json"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package.json
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build Next.js app
+        run: npm run build
+      - name: Verify canonical feed
+        run: |
+          curl --fail --silent --show-error             "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/app-phase1-feed?hours=24"             -o /tmp/feed.json
+          node -e 'const f=require("/tmp/feed.json"); if(f.source!=="supabase-canonical-live" || !Array.isArray(f.matches) || f.matches.length<1) process.exit(1); console.log("feed matches:", f.matches.length)'
