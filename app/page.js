@@ -1,5 +1,5 @@
 import MatchCard from "@/components/match-card";
-import { allMatches, divergence } from "@/lib/fast-tracker";
+import { getFeed, divergence } from "@/lib/fast-tracker";
 
 const filters = [
   ["all", "全部"],
@@ -11,23 +11,22 @@ const filters = [
 export default async function Home({ searchParams }) {
   const params = await searchParams;
   const filter = params?.filter || "all";
-  let matches = allMatches();
+  const feed = await getFeed();
+  const all = feed.matches;
+  let matches = all;
 
-  if (filter === "models") matches = matches.filter((m) => m.multi || m.forebet);
-  if (filter === "missing") matches = matches.filter((m) => !m.multi && !m.forebet);
+  if (filter === "models") matches = matches.filter((m) => m.multi || m.forebet || m.dc || m.pi || m.form);
+  if (filter === "missing") matches = matches.filter((m) => !m.multi && !m.forebet && !m.dc && !m.pi && !m.form);
   if (filter === "gaps") {
-    matches = matches
-      .filter((m) => divergence(m))
+    matches = matches.filter((m) => divergence(m))
       .sort((a, b) => Math.abs(divergence(b).value) - Math.abs(divergence(a).value));
   }
 
-  const total = allMatches().length;
-  const modeled = allMatches().filter((m) => m.multi || m.forebet).length;
-  const rich = allMatches().filter((m) => (m.multi?.sources || 0) >= 5).length;
-  const maxGap = allMatches()
-    .map(divergence)
-    .filter(Boolean)
+  const modeled = all.filter((m) => m.multi || m.forebet || m.dc || m.pi || m.form).length;
+  const rich = all.filter((m) => (m.multi?.sources || 0) >= 5).length;
+  const maxGap = all.map(divergence).filter(Boolean)
     .reduce((best, x) => !best || Math.abs(x.value) > Math.abs(best.value) ? x : best, null);
+  const isLive = feed.source === "supabase-canonical-live";
 
   return (
     <main className="shell">
@@ -37,11 +36,13 @@ export default async function Home({ searchParams }) {
           <h1>今日賽事情報</h1>
           <p className="subtitle">HKJC 做主軸 · 模型只作 evidence · decision 尚在校準</p>
         </div>
-        <span className="preview-badge">APP V1 PREVIEW</span>
+        <span className={`preview-badge ${isLive ? "live-badge" : ""}`}>
+          {isLive ? "LIVE SQL" : "FALLBACK"}
+        </span>
       </header>
 
       <section className="stats">
-        <div><span>賽事</span><b>{total}</b></div>
+        <div><span>24H 賽事</span><b>{all.length}</b></div>
         <div><span>有模型</span><b>{modeled}</b></div>
         <div><span>5+ Sources</span><b>{rich}</b></div>
         <div><span>最大分歧</span><b>{maxGap ? `${Math.abs(maxGap.value * 100).toFixed(1)}pp` : "—"}</b></div>
@@ -57,10 +58,10 @@ export default async function Home({ searchParams }) {
 
       <section className="section-head">
         <div>
-          <h2>{filter === "gaps" ? "模型與市場分歧" : "Upcoming"}</h2>
+          <h2>{filter === "gaps" ? "模型與市場分歧" : "Upcoming 24H"}</h2>
           <p>{matches.length} 場 · 香港時間</p>
         </div>
-        <span>只顯示 snapshot preview</span>
+        <span>{isLive ? "Canonical live feed" : "Snapshot fallback"}</span>
       </section>
 
       <div className="match-list">
