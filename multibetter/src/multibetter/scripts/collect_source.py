@@ -36,7 +36,7 @@ COLLECTORS = {
 }
 
 
-class SourceDeadline(Exception):
+class SourceDeadline(BaseException):
     pass
 
 
