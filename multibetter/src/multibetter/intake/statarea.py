@@ -9,6 +9,7 @@ from .common import (
     fetch_soup,
     make_session,
     merge_rows,
+    local_fixture_to_utc,
     pct_text,
 )
 
@@ -55,14 +56,24 @@ def collect_statarea(
                 if len(values) < 11:
                     continue
 
+                source_time = clean_text(time_box.get_text(" ", strip=True))
+                converted = local_fixture_to_utc(
+                    day, source_time, "Europe/Berlin"
+                )
+                if converted is None:
+                    continue
+                match_date_utc, match_time_utc = converted
+
                 row = base_row(
                     source="STA",
-                    match_date=day,
-                    match_time_utc=clean_text(time_box.get_text(" ", strip=True)),
+                    match_date=match_date_utc,
+                    match_time_utc=match_time_utc,
                     home=clean_text(host_name.get_text(" ", strip=True)),
                     away=clean_text(guest_name.get_text(" ", strip=True)),
                     source_url=url,
-                    timezone_name="UTC/GMT assumed from upstream compatibility",
+                    source_date=day.isoformat(),
+                    source_time=source_time,
+                    timezone_name="Europe/Berlin",
                     home_away_explicit=True,
                 )
                 row["HOME PER"] = values[0]
