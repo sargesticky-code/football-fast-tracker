@@ -75,7 +75,7 @@ def evaluate_candidate(candidate: AliasCandidate) -> AliasCandidate:
     if (
         candidate.observation_count >= 3
         and len(candidate.opponents) >= 2
-        and candidate.best_similarity >= 0.85
+        and candidate.best_similarity >= 85.0
     ):
         return replace(
             candidate,
@@ -102,7 +102,7 @@ def add_candidate_observation(
 ) -> AliasCandidate:
     """Accumulate evidence without auto-promoting to a production alias."""
 
-    similarity = max(0.0, min(float(similarity), 1.0))
+    similarity = max(0.0, min(float(similarity), 100.0))
 
     if existing is not None and (
         existing.alias != alias or existing.target != target
