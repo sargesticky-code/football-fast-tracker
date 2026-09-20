@@ -20,8 +20,9 @@ BACKUP = os.environ.get("SPORTSCORE_BASE", "https://sportscore.com").rstrip("/")
 SOFASCORE = os.environ.get("SOFASCORE_BASE_URL", "https://www.sofascore.com/api/v1").rstrip("/")
 HKJC_CSV = os.environ.get(
     "HKJC_CURRENT_CSV",
-    "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/main/data/hkjc_current.csv",
+    "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/legacy-static-feed/hkjc_current.csv",
 )
+LOCAL_HKJC_CSV = Path(__file__).resolve().parent.parent / "data" / "hkjc_current.csv"
 UA = "football-fast-tracker-live/1.0"
 ENDED = ("ENDED", "MATCHENDED", "FT", "AET", "PEN", "CANCEL", "VOID", "ABANDON")
 MAX_DETAIL_CALLS_PER_RUN = int(os.environ.get("MAX_DETAIL_CALLS_PER_RUN", "8"))
@@ -86,9 +87,23 @@ def fetch_json(url, params=None):
 
 
 def hkjc_targets(now):
-    r = requests.get(HKJC_CSV, headers={"User-Agent": UA}, timeout=12)
-    r.raise_for_status()
-    rows = list(csv.DictReader(io.StringIO(r.text.lstrip("\ufeff"))))
+    rows = []
+    remote_error = None
+    try:
+        r = requests.get(HKJC_CSV, headers={"User-Agent": UA}, timeout=12)
+        r.raise_for_status()
+        rows = list(csv.DictReader(io.StringIO(r.text.lstrip("\ufeff"))))
+    except Exception as exc:
+        remote_error = exc
+
+    if not rows and LOCAL_HKJC_CSV.exists():
+        with LOCAL_HKJC_CSV.open(encoding="utf-8-sig", newline="") as fh:
+            rows = list(csv.DictReader(fh))
+
+    if not rows:
+        if remote_error:
+            raise remote_error
+        raise RuntimeError("HKJC target feed unavailable")
     out = []
     for row in rows:
         kick = parse_dt(row.get("kickoff_hkt"))
