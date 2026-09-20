@@ -73,7 +73,7 @@ def _parse_our_forebet_kickoff(row: Mapping[str, str]) -> datetime | None:
                 parsed = None
         if parsed is not None:
             if parsed.tzinfo is None:
-                parsed = parsed.replace(timezone(timedelta(hours=8)))
+                parsed = parsed.replace(tzinfo=timezone(timedelta(hours=8)))
             return parsed.astimezone(timezone.utc).replace(tzinfo=None)
 
     # Legacy fallback for rows without HKJC kickoff.
