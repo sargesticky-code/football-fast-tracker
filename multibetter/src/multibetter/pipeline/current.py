@@ -243,6 +243,7 @@ def build_current(
                 github_forebet_competition=_competition_from_forebet_row(
                     forebet_row
                 ),
+                time_tolerance_hours=0,
             )
         except ValueError as exc:
             status = "INVALID_SOURCE_ROW"
