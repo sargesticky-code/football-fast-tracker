@@ -94,3 +94,39 @@ Multibetter uses an exact-first, verified-exception model.
 - `multibetter/scripts/alias_health_report.py` audits both the existing Fast Tracker alias files and the Multibetter bridge tables.
 
 This keeps the alias table improving over time without turning fuzzy matching into hidden permanent state.
+
+
+## Current build pipeline
+
+The V1 current builder is now available:
+
+```bash
+python -m multibetter.scripts.build_current \
+  --source-dir multibetter/incoming/current
+```
+
+Expected source directory:
+
+```text
+forebet.csv              required anchor
+accumulator.csv          optional
+betclan.csv              optional
+footballsupertips.csv    optional
+prematips.csv            optional
+statarea.csv             optional
+```
+
+The builder:
+
+1. loads the fast GitHub-Forebet -> OUR-Forebet alias cache;
+2. groups optional upstream sources around each GitHub Forebet row;
+3. resolves the fixture using cache first;
+4. on cache miss, uses exact date/time/league and home/away orientation;
+5. writes deterministic newly learned aliases back to the cache immediately;
+6. reuses those aliases later in the same run;
+7. emits `multibetter_current.csv` and health counters;
+8. updates last_seen / observation_count when cached aliases are reused.
+
+A manual branch-only workflow exists at `.github/workflows/multibetter_v1_build.yml`.
+
+It deliberately has **no cron schedule yet**. Scheduling should only be enabled after a live current multi-source collector is connected, so the system never overwrites a good output with an empty input run.
