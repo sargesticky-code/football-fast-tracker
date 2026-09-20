@@ -37,6 +37,8 @@ _original_attach = feed.attach_hkjc_target
 _ACTIVE_TARGETS: list[dict] = []
 _JINA_CACHE: dict[str, str | None] = {}
 _BROWSER_CACHE: dict[str, str | None] = {}
+_JINA_CIRCUIT_OPEN = False
+_BROWSER_CIRCUIT_OPEN = False
 _PREVIOUS_CURRENT: list[dict[str, str]] = []
 
 
@@ -174,6 +176,9 @@ def _healthy_html(html: str) -> tuple[bool, int]:
 
 
 def _jina_request(url: str, *, no_cache: bool) -> tuple[str | None, int, int]:
+    global _JINA_CIRCUIT_OPEN
+    if _JINA_CIRCUIT_OPEN:
+        return None, 0, 0
     headers = {
         "x-respond-with": "html",
         "x-timeout": "30",
@@ -188,6 +193,13 @@ def _jina_request(url: str, *, no_cache: bool) -> tuple[str | None, int, int]:
         print(f"WARN: Jina request failed no_cache={int(no_cache)} url={url}: {exc}", flush=True)
         return None, 0, 0
     healthy, rows = _healthy_html(r.text)
+    if r.status_code == 429:
+        _JINA_CIRCUIT_OPEN = True
+        print(
+            f"FOREBET_JINA_CIRCUIT_OPEN status=429 url={url} "
+            "action=skip_remaining_jina_requests",
+            flush=True,
+        )
     print(
         f"FOREBET_JINA_FETCH no_cache={int(no_cache)} status={r.status_code} "
         f"bytes={len(r.text)} rcnt={rows} healthy={int(healthy)} url={url}",
@@ -200,6 +212,8 @@ def _jina_request(url: str, *, no_cache: bool) -> tuple[str | None, int, int]:
 
 def _jina_text_probe(url: str, label: str) -> str | None:
     """Probe Jina's default text/Markdown mode when forced-HTML is unhealthy."""
+    if _JINA_CIRCUIT_OPEN:
+        return None
     headers = {
         "x-timeout": "30",
         "User-Agent": "Mozilla/5.0",
@@ -249,6 +263,7 @@ def _jina_html(url: str, label: str) -> str | None:
 
 
 def _browser_html(url: str, label: str) -> str | None:
+    global _BROWSER_CIRCUIT_OPEN
     """Render one primary Forebet page with the runner's installed Chrome.
 
     This is a bounded fallback for Jina outages/rate limits. It is intentionally
@@ -257,6 +272,8 @@ def _browser_html(url: str, label: str) -> str | None:
     """
     if url in _BROWSER_CACHE:
         return _BROWSER_CACHE[url]
+    if _BROWSER_CIRCUIT_OPEN:
+        return None
 
     try:
         from playwright.sync_api import sync_playwright
@@ -291,6 +308,16 @@ def _browser_html(url: str, label: str) -> str | None:
             page = context.new_page()
             response = page.goto(url, timeout=60_000, wait_until="domcontentloaded")
             status = response.status if response else 0
+            if status in (403, 429):
+                _BROWSER_CIRCUIT_OPEN = True
+                print(
+                    f"FOREBET_BROWSER_CIRCUIT_OPEN status={status} label={label} "
+                    "action=skip_remaining_browser_requests",
+                    flush=True,
+                )
+                browser.close()
+                _BROWSER_CACHE[url] = None
+                return None
             try:
                 page.wait_for_selector("div.rcnt", timeout=20_000)
             except Exception:
