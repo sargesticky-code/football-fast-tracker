@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '5 23 * * *' # 07:05 Hong Kong time, after the 06:45 source refresh
+    - cron: '5 3 * * *'  # 11:05 Hong Kong time, after the 10:45 Forebet refresh
+    - cron: '5 11 * * *' # 19:05 Hong Kong time, after the 18:45 source refresh
   push:
     paths:
       - '.github/workflows/model_daily.yml'
