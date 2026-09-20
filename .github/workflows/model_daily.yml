@@ -12,6 +12,7 @@ on:
       - 'scripts/quality_gate_shadow_models.py'
       - 'scripts/build_team_form_summary.py'
       - 'requirements-model.txt'
+# Phase 1 recovery heartbeat 2026-09-20
 
 permissions:
   contents: write
