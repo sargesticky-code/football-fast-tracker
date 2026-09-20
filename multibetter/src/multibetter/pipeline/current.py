@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterable, Mapping
+from zoneinfo import ZoneInfo
 
 from multibetter.aliasing.cache import (
     AliasCacheRow,
@@ -222,7 +223,7 @@ def build_current(
     cache_rows: Iterable[AliasCacheRow] = (),
     observed_at: datetime | None = None,
 ) -> CurrentBuildResult:
-    observed_at = observed_at or datetime.now()
+    observed_at = observed_at or datetime.now(ZoneInfo("Asia/Hong_Kong"))
     fixtures, raw_by_event = load_our_forebet_fixtures(our_forebet_rows)
 
     fixture_index = build_fixture_index(fixtures)
@@ -316,7 +317,7 @@ def build_current(
         ]
 
         row: dict[str, object] = {
-            "built_at": observed_at.isoformat(),
+            "built_at": observed_at.strftime("%Y-%m-%d %H:%M:%S"),
             "external_fixture_id": multi.external_fixture_id or "",
             "github_forebet_date": multi.kickoff.date().isoformat(),
             "github_forebet_time": multi.kickoff.strftime("%H:%M"),
