@@ -86,21 +86,26 @@ jobs:
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/hkjc_current.csv data/hkjc_targets.csv
-          if git diff --cached --quiet; then
-            echo 'No HKJC changes to commit.'
-          else
+          cp data/hkjc_current.csv /tmp/hkjc_current.csv
+          cp data/hkjc_targets.csv /tmp/hkjc_targets.csv
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/hkjc_current.csv data/hkjc_current.csv
+            cp /tmp/hkjc_targets.csv data/hkjc_targets.csv
+            git add data/hkjc_current.csv data/hkjc_targets.csv
+            if git diff --cached --quiet; then
+              echo 'No HKJC changes to commit.'
+              break
+            fi
             git commit -m 'Refresh HKJC live market feed [skip ci]'
-            for attempt in 1 2 3 4; do
-              git pull --rebase origin main
-              if git push; then
-                break
-              fi
-              if [ "$attempt" -eq 4 ]; then
-                echo 'HKJC live market push failed after retries.' >&2
-                exit 1
-              fi
-              echo "HKJC push raced with another writer; retrying ($attempt/4)."
-              sleep 2
-            done
-          fi
+            if git push origin HEAD:main; then
+              break
+            fi
+            if [ "$attempt" -eq 4 ]; then
+              echo 'HKJC live market push failed after retries.' >&2
+              exit 1
+            fi
+            echo "HKJC push raced with another writer; rebuilding commit on latest main ($attempt/4)."
+            sleep 2
+          done
