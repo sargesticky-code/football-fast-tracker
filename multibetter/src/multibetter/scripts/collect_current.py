@@ -155,8 +155,8 @@ def main():
     print(json.dumps(summary, ensure_ascii=False))
 
     # Forebet is the required anchor. Optional-source failures stay isolated.
-    if forebet_status not in {"OK", "KEEP_LAST_GOOD"}:
-        raise SystemExit("Required Forebet anchor is unavailable")
+    if forebet_status != "OK":
+        raise SystemExit("Required current Forebet anchor is unavailable or stale")
 
 
 if __name__ == "__main__":
