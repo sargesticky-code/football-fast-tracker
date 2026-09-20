@@ -68,7 +68,7 @@ jobs:
           python scripts/normalize_hkjc.py \
             --matches /tmp/hkjc_matches.json \
             --had /tmp/hkjc_had.json \
-            --horizon-hours 36 \
+            --horizon-hours 48 \
             --live-retain-minutes 150
 
       - name: Fetch Forebet 1X2 with durable HKJC matching policy
