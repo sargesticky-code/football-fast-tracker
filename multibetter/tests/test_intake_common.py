@@ -4,7 +4,9 @@ from pathlib import Path
 
 from multibetter.intake.common import (
     base_row,
+    local_fixture_to_utc,
     merge_rows,
+    parse_date_any,
     preserve_last_good,
     utc_from_hkt,
 )
@@ -88,3 +90,18 @@ def test_our_forebet_becomes_utc_anchor(tmp_path):
     assert rows[0]["LEAGUE"] == "EPL"
     assert rows[0]["HOME TEAM"] == "Manchester City"
     assert rows[0]["AWAY TEAM"] == "Sunderland"
+
+
+def test_provider_local_times_normalize_to_same_utc_clock():
+    london = local_fixture_to_utc(
+        date(2026, 9, 20), "14:00", "Europe/London"
+    )
+    berlin = local_fixture_to_utc(
+        date(2026, 9, 20), "15:00", "Europe/Berlin"
+    )
+    assert london == (date(2026, 9, 20), "13:00")
+    assert berlin == (date(2026, 9, 20), "13:00")
+
+
+def test_parse_date_any_extracts_iso_date_from_detail_text():
+    assert parse_date_any("Date 2026-09-20 14:00") == date(2026, 9, 20)
