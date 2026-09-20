@@ -67,6 +67,8 @@ class SourcePrediction:
     predicted_score: str | None = None
     market_label: str | None = None
     source_kickoff_text: str | None = None
+    match_similarity: float | None = None
+    match_quality: str | None = None
 
 
 @dataclass(frozen=True)
