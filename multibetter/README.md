@@ -79,3 +79,18 @@ The APWin collector prototype in this branch is therefore parked as an optional 
 3. Bridge that single Forebet identity to OUR Forebet.
 4. Reuse the existing OUR Forebet -> HKJC event mapping.
 5. Build consensus only after the fixture has a trusted HKJC event ID.
+
+
+## Long-term alias maintenance
+
+Multibetter uses an exact-first, verified-exception model.
+
+- Exact GitHub-Forebet -> OUR-Forebet names require no alias row.
+- Verified exceptions live in `multibetter/data/forebet_bridge_aliases.csv`.
+- New possible mappings are accumulated in `multibetter/data/forebet_bridge_candidates.csv`.
+- Candidates never silently become production aliases.
+- Repeated evidence can mark a candidate `REVIEW_READY`, but final production use remains a verified/static mapping.
+- Conflicting targets and team-class changes block the mapping.
+- `multibetter/scripts/alias_health_report.py` audits both the existing Fast Tracker alias files and the Multibetter bridge tables.
+
+This keeps the alias table improving over time without turning fuzzy matching into hidden permanent state.
