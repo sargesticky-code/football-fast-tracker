@@ -119,7 +119,7 @@ def main():
                 ) as fh:
                     anchor_rows = list(csv.DictReader(fh))
 
-            if args.source == "BCL":
+            if args.source in {"ACC", "BCL"}:
                 kwargs["target_pairs"] = [
                     (row.get("HOME TEAM", ""), row.get("AWAY TEAM", ""))
                     for row in anchor_rows
