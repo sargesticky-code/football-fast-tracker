@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 3 · provider timezone normalization
+# launcher revision: 4 · Statarea per-run clock calibration
 
 on:
   workflow_dispatch:
