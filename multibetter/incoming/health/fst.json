@@ -1,0 +1,12 @@
+{
+  "source": "FST",
+  "status": "OK",
+  "rows": 359,
+  "requests": 6,
+  "errors": 0,
+  "started_at": "2026-09-20T08:54:24.552335+08:00",
+  "finished_at": "2026-09-20T08:54:28.373615+08:00",
+  "note": "",
+  "target_start": "2026-09-20",
+  "target_end": "2026-09-21"
+}

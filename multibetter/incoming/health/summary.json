@@ -1,0 +1,83 @@
+{
+  "built_at_hkt": "2026-09-20T08:54:35.021307+08:00",
+  "sources": {
+    "FRB": {
+      "source": "FRB",
+      "status": "OK",
+      "rows": 84,
+      "requests": 0,
+      "errors": 0,
+      "started_at": "2026-09-20T08:48:11.465777+08:00",
+      "finished_at": "2026-09-20T08:48:11.476767+08:00",
+      "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
+      "target_start": "2026-09-20",
+      "target_end": "2026-09-21"
+    },
+    "ACC": {
+      "source": "ACC",
+      "status": "OK",
+      "rows": 512,
+      "requests": 438,
+      "errors": 1,
+      "started_at": "2026-09-20T08:48:11.653988+08:00",
+      "finished_at": "2026-09-20T08:50:45.774099+08:00",
+      "note": "",
+      "target_start": "2026-09-20",
+      "target_end": "2026-09-21"
+    },
+    "BCL": {
+      "source": "BCL",
+      "status": "NO_DATA",
+      "rows": 0,
+      "requests": 432,
+      "errors": 1,
+      "started_at": "2026-09-20T08:50:46.009357+08:00",
+      "finished_at": "2026-09-20T08:54:24.362868+08:00",
+      "note": "No new rows; previous snapshot preserved when available.",
+      "target_start": "2026-09-20",
+      "target_end": "2026-09-21"
+    },
+    "FST": {
+      "source": "FST",
+      "status": "OK",
+      "rows": 359,
+      "requests": 6,
+      "errors": 0,
+      "started_at": "2026-09-20T08:54:24.552335+08:00",
+      "finished_at": "2026-09-20T08:54:28.373615+08:00",
+      "note": "",
+      "target_start": "2026-09-20",
+      "target_end": "2026-09-21"
+    },
+    "PRE": {
+      "source": "PRE",
+      "status": "OK",
+      "rows": 401,
+      "requests": 6,
+      "errors": 0,
+      "started_at": "2026-09-20T08:54:28.645199+08:00",
+      "finished_at": "2026-09-20T08:54:31.592188+08:00",
+      "note": "",
+      "target_start": "2026-09-20",
+      "target_end": "2026-09-21"
+    },
+    "STA": {
+      "source": "STA",
+      "status": "OK",
+      "rows": 278,
+      "requests": 2,
+      "errors": 0,
+      "started_at": "2026-09-20T08:54:31.813070+08:00",
+      "finished_at": "2026-09-20T08:54:34.807673+08:00",
+      "note": "",
+      "target_start": "2026-09-20",
+      "target_end": "2026-09-21"
+    }
+  },
+  "fresh_optional_sources": [
+    "ACC",
+    "FST",
+    "PRE",
+    "STA"
+  ]
+}

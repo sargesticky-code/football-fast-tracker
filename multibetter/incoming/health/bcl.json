@@ -1,0 +1,12 @@
+{
+  "source": "BCL",
+  "status": "NO_DATA",
+  "rows": 0,
+  "requests": 432,
+  "errors": 1,
+  "started_at": "2026-09-20T08:50:46.009357+08:00",
+  "finished_at": "2026-09-20T08:54:24.362868+08:00",
+  "note": "No new rows; previous snapshot preserved when available.",
+  "target_start": "2026-09-20",
+  "target_end": "2026-09-21"
+}

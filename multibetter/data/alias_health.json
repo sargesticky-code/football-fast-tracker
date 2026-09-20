@@ -1,0 +1,20 @@
+{
+  "fast_tracker": {
+    "registry_rows": 544,
+    "manual_rows": 33,
+    "unresolved_rows": 0,
+    "registry_statuses": {
+      "ACTIVE": 503,
+      "MANUAL": 41
+    },
+    "registry_conflicts": {},
+    "manual_conflicts": {}
+  },
+  "multibetter_bridge": {
+    "verified_alias_rows": 0,
+    "candidate_rows": 0,
+    "candidate_statuses": {},
+    "verified_conflicts": {},
+    "candidate_conflicts": {}
+  }
+}
