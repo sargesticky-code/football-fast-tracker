@@ -105,9 +105,16 @@ def main() -> int:
     if not current_fields or not targets:
         raise SystemExit("missing current schema or HKJC targets")
 
-    current_by_id = {clean(r.get("hkjc_event_id")): r for r in current if clean(r.get("hkjc_event_id"))}
     archive_by_id = {clean(r.get("hkjc_event_id")): r for r in archive if clean(r.get("hkjc_event_id"))}
     target_by_id = {clean(r.get("hkjc_event_id")): r for r in targets if clean(r.get("hkjc_event_id"))}
+    # Keep the current model feed strictly inside the active HKJC target universe.
+    # When the capture horizon rolls forward, rows from the previous run can
+    # otherwise survive here and fail the core feed invariant below.
+    current_by_id = {
+        clean(r.get("hkjc_event_id")): r
+        for r in current
+        if clean(r.get("hkjc_event_id")) in target_by_id
+    }
 
     # A fresh 1X2 row can coexist with an older archived O/U/corner capture.
     # Fill only blanks: fresh values always win, archive is resilience fallback.
