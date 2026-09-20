@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "scripts/update_prediction_fallback.py"
+      - "scripts/check_prediction_fallback_policy.py"
       - "data/prediction_source_registry.csv"
       - ".github/workflows/prediction-fallback.yml"
   schedule:
@@ -29,6 +30,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install --disable-pip-version-check requests==2.32.5
+      - name: Check APWin fixture matching policy
+        run: python scripts/check_prediction_fallback_policy.py
       - run: python scripts/update_prediction_fallback.py
       - name: Commit refreshed fallback CSV
         run: |
