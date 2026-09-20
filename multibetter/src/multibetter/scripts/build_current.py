@@ -41,6 +41,7 @@ def main():
         default=Path("data/forebet_current.csv"),
     )
     parser.add_argument("--source-dir", type=Path, required=True)
+    parser.add_argument("--health-dir", type=Path)
     parser.add_argument(
         "--alias-cache",
         type=Path,
@@ -59,7 +60,10 @@ def main():
     args = parser.parse_args()
 
     our_rows = read_csv_rows(args.our_forebet)
-    sources = load_source_tables(args.source_dir)
+    sources = load_source_tables(
+        args.source_dir,
+        health_dir=args.health_dir,
+    )
     cache = read_cache(args.alias_cache)
 
     result = build_current(
