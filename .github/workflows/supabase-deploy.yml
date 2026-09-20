@@ -1,0 +1,30 @@
+name: Supabase Deploy and Parity Check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: supabase-migration
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install runtime requirements
+        run: pip install -r requirements.txt
+      - name: Apply PostgreSQL migrations
+        run: |
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/migrations/001_core_schema.sql
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/migrations/002_extended_fast_tracker.sql
+      - name: Import primary feeds
+        run: python scripts/supabase_sync.py
+      - name: Import secondary and live feeds
+        run: python scripts/supabase_sync_extended.py
+      - name: Verify parity
+        run: python scripts/supabase_validate.py
