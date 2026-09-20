@@ -629,7 +629,7 @@ multibetter/data/alias_health.json
 
 ---
 
-## 16. Manual GitHub workflow
+## 16. Current intake + build GitHub workflow
 
 Workflow:
 
@@ -637,23 +637,61 @@ Workflow:
 .github/workflows/multibetter_v1_build.yml
 ```
 
-It is intentionally manual / branch-only for now.
+It is currently **manual / branch-only** while the new live scrapers are being validated.
 
-It:
+It now runs the full chain:
 
-1. checks out `multibetter-v1`;
-2. installs Multibetter;
-3. runs tests;
-4. validates that current `forebet.csv` input exists;
-5. builds current output;
-6. runs alias health audit;
-7. commits only Multibetter output files if changed.
+1. checkout `multibetter-v1`;
+2. run regression tests;
+3. fetch the latest production Forebet files from branch `main`;
+4. convert OUR Forebet feed into the Multibetter FRB anchor;
+5. live-scrape ACC / BCL / FST / PRE / STA;
+6. write per-source health and a summary;
+7. build Multibetter current output using only source snapshots whose current-run health is `OK`;
+8. run alias health;
+9. commit current intake, health, current output and alias-cache updates.
+
+### Important branch freshness rule
+
+Do **not** trust the copy of `data/forebet_current.csv` that happens to exist on `multibetter-v1`.
+
+Every workflow run explicitly reads:
+
+```text
+origin/main:data/forebet_current.csv
+origin/main:data/forebet_supplement_current.csv
+```
+
+so the Multibetter branch cannot silently use a stale production snapshot.
+
+### Last-good rule
+
+Each optional source keeps its last non-empty CSV when a scrape fails.
+
+However:
+
+```text
+preserved last-good != fresh current input
+```
+
+The current builder reads source-health JSON and includes an optional source in current consensus **only when its current-run status is OK**.
+
+This means old snapshots remain available for diagnosis without being silently treated as fresh predictions.
 
 ### Why no cron yet
 
-Do not enable scheduled production runs until a live current multi-source collector is connected.
+The live intake code is connected, but the five external HTTP scrapers still need at least one successful GitHub Actions live run before enabling a daily schedule.
 
-A scheduled workflow must not overwrite a last-good output with empty/missing current input.
+Do not add cron merely because the code exists. First verify:
+
+- Forebet anchor rows > 0;
+- parser selectors still work live;
+- at least two optional sources return fresh rows;
+- UTC normalization produces sensible joins;
+- no empty run overwrites good output;
+- alias learning has no unexpected conflicts.
+
+After that validation, daily scheduling can be enabled.
 
 ---
 
@@ -848,8 +886,14 @@ When resuming this project:
 multibetter/src/multibetter/models.py
     Core data models.
 
+multibetter/src/multibetter/intake/
+    Current intake adapters. Forebet reuses OUR production feed; ACC/BCL/FST/PRE/STA are live HTTP scrapers.
+
+multibetter/src/multibetter/scripts/collect_current.py
+    Orchestrates today + tomorrow intake, source health and last-good preservation.
+
 multibetter/src/multibetter/sources/github_multi.py
-    Groups external source rows around GitHub Forebet.
+    Groups fresh external source rows around GitHub Forebet.
 
 multibetter/src/multibetter/matching/fixture_resolver.py
     Cache-first deterministic fixture resolver.
@@ -914,27 +958,35 @@ Zero desired: silent wrong matches
 
 ## 27. Next major milestone
 
-The next major engineering milestone is **live current multi-source intake**.
+The **current intake code is now implemented**.
 
-Needed:
+Current V1 intake produces:
 
 ```text
-forebet.csv
-accumulator.csv
-betclan.csv
-footballsupertips.csv
-prematips.csv
-statarea.csv
+forebet.csv              from OUR production Forebet feed
+accumulator.csv          live AccaGenerator HTTP scrape
+betclan.csv              live BetClan HTTP scrape
+footballsupertips.csv    live FootballSuperTips today/tomorrow scrape
+prematips.csv            live PrimaTips date-specific scrape
+statarea.csv             live Statarea date-specific scrape
 ```
 
-Once current intake is reliable:
+The immediate next milestone is **live-run validation in GitHub Actions**, not more architecture work.
 
-1. run end-to-end current build;
-2. verify alias learning;
-3. verify no blank overwrite behavior;
-4. verify source health;
-5. only then consider scheduled automation;
-6. only after stable outputs consider a separate Multibetter Google Sheet/dashboard.
+Validate:
+
+1. all regression tests pass in the runner;
+2. production Forebet from `main` converts to a non-empty UTC anchor;
+3. each external parser's current selectors still work;
+4. source health accurately isolates failures;
+5. stale preserved files are excluded from current consensus;
+6. matching produces expected cache hits / deterministic matches;
+7. learned aliases are sensible and conflict-free;
+8. current output remains non-empty and auditable.
+
+Only after a successful live run should the workflow receive a daily cron.
+
+After daily automation is stable, the next product milestone can be a separate Multibetter Sheet/dashboard.
 
 Dashboard work is not the first priority. Identity and source reliability come first.
 
@@ -968,3 +1020,113 @@ silent alias overwrite
 blank production output because one source failed
 unapproved Dashboard Board rebuild
 ```
+
+
+---
+
+## 29. Live current intake implementation notes — 2026-09-20
+
+### Forebet: reuse OUR production feed
+
+Do not launch a second Forebet Playwright job for Multibetter V1.
+
+OUR production Forebet capture is already mature and already linked to HKJC. The intake adapter:
+
+```text
+multibetter/src/multibetter/intake/forebet_feed.py
+```
+
+converts `data/forebet_current.csv` into the standardized multi-source schema.
+
+This reduces:
+
+- browser runtime;
+- duplicate scraping;
+- Forebet blocking risk;
+- identity drift between two Forebet collectors.
+
+### Canonical matching clock = UTC
+
+Current matching uses one normalized clock.
+
+OUR Forebet rows contain HKJC HKT kickoff. Multibetter converts that HKT kickoff to UTC and uses UTC as the canonical fixture time.
+
+The raw Forebet display time remains in `SOURCE_TIME` for audit.
+
+The intention is:
+
+```text
+source raw time
+    ↓ source/timezone normalization
+UTC DATE + UTC TIME
+    ↓
+fixture matching
+```
+
+Permanent alias learning still requires exact normalized time.
+
+### External current adapters
+
+Implemented:
+
+```text
+multibetter/src/multibetter/intake/accumulator.py
+multibetter/src/multibetter/intake/betclan.py
+multibetter/src/multibetter/intake/footballsupertips.py
+multibetter/src/multibetter/intake/primatips.py
+multibetter/src/multibetter/intake/statarea.py
+```
+
+Shared normalization / atomic snapshot logic:
+
+```text
+multibetter/src/multibetter/intake/common.py
+```
+
+### Capture horizon
+
+Current orchestrator defaults to:
+
+```text
+today + tomorrow
+```
+
+which supports the project's approximately +48h raw-capture design.
+
+### Current source routing
+
+```text
+FRB  OUR production Forebet feed from main branch
+ACC  accagenerator.com
+BCL  betclan.com today + tomorrow indexes
+FST  footballsuper.tips today + tomorrow HDA/O-U/BTTS pages
+PRE  primatips.com date-specific pages
+STA  statarea.com date-specific pages
+```
+
+### Health isolation
+
+Each source writes its own health JSON plus a combined summary.
+
+A failed optional source does not fail the other sources.
+
+CSV behavior:
+
+```text
+new non-empty snapshot -> atomic replace
+empty / failed scrape   -> preserve previous CSV
+```
+
+But preserved previous CSV is excluded from current consensus unless the current-run health is `OK`.
+
+### Status before cron
+
+As of this README update:
+
+```text
+CODE CONNECTED
+LIVE GITHUB ACTIONS VALIDATION STILL REQUIRED
+CRON NOT YET ENABLED
+```
+
+Future ChatGPT must not interpret "intake code exists" as "all live parsers have been proven healthy".
