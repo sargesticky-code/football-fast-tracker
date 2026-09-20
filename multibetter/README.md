@@ -637,7 +637,7 @@ Workflow:
 .github/workflows/multibetter_v1_build.yml
 ```
 
-It is currently **manual / branch-only** while the new live scrapers are being validated.
+The workflow is now **live and scheduled daily**, while retaining `workflow_dispatch` for manual validation runs.
 
 It now runs the full chain:
 
@@ -678,20 +678,27 @@ The current builder reads source-health JSON and includes an optional source in 
 
 This means old snapshots remain available for diagnosis without being silently treated as fresh predictions.
 
-### Why no cron yet
+### Daily schedule
 
-The live intake code is connected, but the five external HTTP scrapers still need at least one successful GitHub Actions live run before enabling a daily schedule.
+Daily cron is enabled in the default-branch launcher:
 
-Do not add cron merely because the code exists. First verify:
+```text
+10 23 * * *
+```
 
-- Forebet anchor rows > 0;
-- parser selectors still work live;
-- at least two optional sources return fresh rows;
-- UTC normalization produces sensible joins;
+This is approximately **07:10 Asia/Hong_Kong** and is intentionally after the production Forebet morning capture window.
+
+The workflow keeps `workflow_dispatch` so live validation can still be triggered manually when adapters or matching logic change.
+
+The schedule was enabled only after successful live GitHub Actions validation confirmed:
+
+- fresh Forebet anchor rows;
+- all five optional external sources could be fetched;
+- source failures remain isolated;
+- UTC-normalized matching works;
+- Statarea clock can be deterministically calibrated from known Forebet fixture anchors;
 - no empty run overwrites good output;
-- alias learning has no unexpected conflicts.
-
-After that validation, daily scheduling can be enabled.
+- 84/84 Forebet→OUR Forebet bridge rows used the fast identity path.
 
 ---
 
@@ -971,24 +978,26 @@ prematips.csv            live PrimaTips date-specific scrape
 statarea.csv             live Statarea date-specific scrape
 ```
 
-The immediate next milestone is **live-run validation in GitHub Actions**, not more architecture work.
+Live-run validation has now succeeded in GitHub Actions and daily automation is enabled.
 
-Validate:
+Validated baseline on 2026-09-20:
 
-1. all regression tests pass in the runner;
-2. production Forebet from `main` converts to a non-empty UTC anchor;
-3. each external parser's current selectors still work;
-4. source health accurately isolates failures;
-5. stale preserved files are excluded from current consensus;
-6. matching produces expected cache hits / deterministic matches;
-7. learned aliases are sensible and conflict-free;
-8. current output remains non-empty and auditable.
+1. all regression tests passed;
+2. production Forebet from `main` produced 84 current anchor fixtures;
+3. ACC / BCL / FST / PRE / STA all returned fresh data;
+4. source health isolated each adapter;
+5. stale preserved files remained excluded from current consensus;
+6. 84/84 fixtures used the fast Forebet identity path;
+7. no bridge alias conflicts were introduced;
+8. output remained non-empty and auditable;
+9. Statarea dynamic clock calibration reached a single dominant offset with 22/22 exact oriented team-pair anchors;
+10. 49/84 fixtures had all six sources and 71/84 had at least five sources in the validated run.
 
-Only after a successful live run should the workflow receive a daily cron.
+The next engineering priority is efficiency and quality calibration, especially reducing AccaGenerator request volume without losing target coverage.
 
-After daily automation is stable, the next product milestone can be a separate Multibetter Sheet/dashboard.
+After daily automation remains stable, the next product milestone can be a separate Multibetter Sheet/dashboard.
 
-Dashboard work is not the first priority. Identity and source reliability come first.
+Dashboard work is still not the first priority. Identity, source reliability and calibration come first.
 
 ---
 
@@ -1119,14 +1128,156 @@ empty / failed scrape   -> preserve previous CSV
 
 But preserved previous CSV is excluded from current consensus unless the current-run health is `OK`.
 
-### Status before cron
+### Live validation and automation status
 
-As of this README update:
+As of 2026-09-20:
 
 ```text
 CODE CONNECTED
-LIVE GITHUB ACTIONS VALIDATION STILL REQUIRED
-CRON NOT YET ENABLED
+LIVE GITHUB ACTIONS VALIDATION PASSED
+DAILY CRON ENABLED · 07:10 HKT
 ```
 
-Future ChatGPT must not interpret "intake code exists" as "all live parsers have been proven healthy".
+Validated live source example:
+
+```text
+FRB  84 rows
+ACC  512 rows
+BCL  114 rows
+FST  359 rows
+PRE  401 rows
+STA  261 rows
+```
+
+Validated grouped fixture coverage:
+
+```text
+84 total Forebet/HKJC anchor fixtures
+49 fixtures with all 6 sources
+71 fixtures with >=5 sources
+75 fixtures with >=4 sources
+STA present on 51 fixtures
+84/84 bridge status FAST_ALIAS
+```
+
+### Provider clocks
+
+Current matching is exact after clock normalization.
+
+Observed provider rules:
+
+```text
+ACC / BCL / FST / PRE
+    provider local clock normalized before grouping
+
+STA
+    DO NOT hard-code a fixed display timezone
+    calibrate each run from exact oriented Forebet fixture anchors
+```
+
+The validated Statarea run produced:
+
+```text
+samples 22
+dominant samples 22
+dominance 1.0
+source-minus-UTC offset -240 minutes
+reason DOMINANT_EXACT_PAIR_CLOCK_OFFSET
+```
+
+If Statarea calibration lacks enough exact-pair anchors or has a split/ambiguous offset distribution, reject STA for that run rather than guessing.
+
+Future ChatGPT must distinguish "source scraped rows" from "source successfully grouped into current Forebet/HKJC fixtures".
+
+
+---
+
+## 30. Live operations handoff — validated 2026-09-20
+
+### GitHub Actions launcher
+
+The active scheduled launcher lives on the default branch:
+
+```text
+main:.github/workflows/multibetter_v1_build.yml
+```
+
+The job itself checks out:
+
+```text
+multibetter-v1
+```
+
+Do not assume the branch copy of the workflow controls scheduled execution. GitHub scheduled workflows are driven by the default-branch workflow.
+
+### Current live pipeline
+
+```text
+production main Forebet
+    ↓
+FRB anchor · HKJC HKT -> UTC
+    ↓
+ACC / BCL / FST / PRE / STA source intake
+    ↓
+per-source health
+    ↓
+provider clock normalization / STA per-run calibration
+    ↓
+exact normalized fixture time
++ oriented HOME / AWAY
++ team identity
+    ↓
+group around GitHub/OUR Forebet
+    ↓
+existing OUR Forebet -> HKJC event identity
+    ↓
+consensus output
+    ↓
+commit last-good current artifacts to multibetter-v1
+```
+
+### Source isolation
+
+Each source runs in a separate GitHub Actions step with a hard runtime guard.
+
+A slow or broken optional source should produce health metadata and must not silently block unrelated sources.
+
+### BetClan optimization
+
+BetClan originally crawled hundreds of detail pages and returned zero rows because of a date parser issue.
+
+The corrected design:
+
+- parses ISO date embedded in detail text;
+- normalizes provider local time;
+- uses the current Forebet target universe to pre-filter candidate detail URLs;
+- reduced a validated run from 432 requests / 0 rows to about 116 requests / 114 rows;
+- grouped BCL onto 75 of 84 current fixtures.
+
+### Statarea clock calibration
+
+Never restore a hard-coded Statarea timezone merely because one run appears to match a region.
+
+The Statarea page clock observed by GitHub runner can differ from ordinary geographic assumptions. The safe mechanism is evidence-driven per-run calibration:
+
+1. parse Statarea raw rows without trusting its display timezone;
+2. find exact oriented team pairs also present in current Forebet anchors;
+3. compute raw-source-time minus canonical-UTC time;
+4. require enough observations;
+5. require a dominant single offset;
+6. apply that offset to all current Statarea rows;
+7. record calibration evidence in source health;
+8. if ambiguous, fail closed and exclude STA from current consensus.
+
+### AccaGenerator performance
+
+The full census baseline used roughly 146 active league routes and approximately 439 requests because it fetched three markets for nearly every route.
+
+A target-route optimization is being validated:
+
+- first fetch 1X2 for active routes;
+- compare oriented fixtures against the current Forebet target universe;
+- fetch O/U and BTTS only for routes containing a matchable current target;
+- preserve target coverage as the non-negotiable criterion.
+
+Do not keep an ACC optimization if it lowers current target coverage merely to save requests.
