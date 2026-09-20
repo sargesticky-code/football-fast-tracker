@@ -6,7 +6,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterable, Mapping
 
-from multibetter.aliasing.cache import AliasCacheRow, merge_learned_aliases
+from multibetter.aliasing.cache import (
+    AliasCacheRow,
+    merge_learned_aliases,
+    touch_aliases,
+)
 from multibetter.consensus.engine import weighted_consensus
 from multibetter.matching.fixture_resolver import (
     FixtureResolveStatus,
@@ -231,6 +235,24 @@ def build_current(
         status_counts[status] = status_counts.get(status, 0) + 1
 
         learned_labels: list[str] = []
+
+        if result.status == FixtureResolveStatus.FAST_ALIAS:
+            cache_aliases = alias_map(cache_state)
+            aliases_used = [
+                name
+                for name in (
+                    multi.github_forebet_home,
+                    multi.github_forebet_away,
+                )
+                if name in cache_aliases
+            ]
+            if aliases_used:
+                cache_state = touch_aliases(
+                    cache_state,
+                    aliases_used,
+                    observed_at=observed_at,
+                )
+
         if result.learned_aliases:
             cache_state = merge_learned_aliases(
                 cache_state,
