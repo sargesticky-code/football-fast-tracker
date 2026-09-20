@@ -1,0 +1,49 @@
+name: Supabase Migration CI
+
+on:
+  push:
+    branches: [supabase-migration]
+    paths:
+      - "supabase/**"
+      - "scripts/supabase_sync*.py"
+      - ".github/workflows/supabase-migration-ci.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fast_tracker_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Python syntax
+        run: |
+          python -m py_compile scripts/supabase_sync.py
+          python -m py_compile scripts/supabase_sync_extended.py
+      - name: SQL migrations
+        run: |
+          psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 -f supabase/migrations/001_core_schema.sql
+          psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 -f supabase/migrations/002_extended_fast_tracker.sql
+      - name: Smoke check views
+        run: |
+          psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 <<'SQL'
+          select * from public.fast_tracker_live_v limit 0;
+          select * from public.forebet_effective_v limit 0;
+          select * from public.fast_tracker_live_v2 limit 0;
+          SQL
