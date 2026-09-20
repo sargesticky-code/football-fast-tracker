@@ -91,3 +91,60 @@ def test_wrong_date_is_not_grouped():
     }
     grouped = group_sources_around_forebet(FOREBET, sources)
     assert [p.source for p in grouped.predictions] == ["FRB"]
+
+
+def test_date_formats_are_normalized_across_sources():
+    rows = [
+        {
+            "DATE": "2026-09-20",
+            "TIME": "20:00",
+            "HOME TEAM": "Manchester City",
+            "AWAY TEAM": "Sunderland",
+            "NAME": "STA",
+        },
+        {
+            "DATE": "20/09/26",
+            "TIME": "20:00",
+            "HOME TEAM": "Manchester City",
+            "AWAY TEAM": "Sunderland",
+            "NAME": "FST",
+        },
+    ]
+
+    sta = upstream_style_match(
+        [rows[0]],
+        target_home="Manchester City",
+        target_away="Sunderland",
+        target_time="21:00",
+        target_date="20/09/2026",
+    )
+    fst = upstream_style_match(
+        [rows[1]],
+        target_home="Manchester City",
+        target_away="Sunderland",
+        target_time="21:00",
+        target_date="20/09/2026",
+    )
+
+    assert sta is rows[0]
+    assert fst is rows[1]
+
+
+def test_unpadded_time_is_normalized():
+    rows = [
+        {
+            "DATE": "20/09/2026",
+            "TIME": "0:00",
+            "HOME TEAM": "Manchester City",
+            "AWAY TEAM": "Sunderland",
+            "NAME": "BCL",
+        }
+    ]
+    matched = upstream_style_match(
+        rows,
+        target_home="Manchester City",
+        target_away="Sunderland",
+        target_time="00:00",
+        target_date="20/09/2026",
+    )
+    assert matched is rows[0]
