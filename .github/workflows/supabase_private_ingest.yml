@@ -2,6 +2,10 @@ name: Supabase Private Data Push
 
 on:
   workflow_dispatch:
+  push:
+    branches: ["supabase-ingest-v2"]
+    paths:
+      - ".github/workflows/supabase_private_ingest.yml"
   workflow_run:
     workflows:
       - "HKJC Live Odds 5min"
@@ -93,3 +97,17 @@ jobs:
               "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/github-data-ingest"
             echo
           done
+
+      - name: Refresh Supabase canonical core once
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -X POST \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data '{"mode":"current"}' \
+            "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/sync-fast-tracker"
+          echo
