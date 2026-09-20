@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import signal
 from datetime import date, datetime, timedelta
@@ -65,6 +66,11 @@ def main():
         default=Path("data/forebet_supplement_current.csv"),
     )
     parser.add_argument(
+        "--anchor-file",
+        type=Path,
+        default=Path("multibetter/incoming/current/forebet.csv"),
+    )
+    parser.add_argument(
         "--output-dir",
         type=Path,
         default=Path("multibetter/incoming/current"),
@@ -105,7 +111,19 @@ def main():
                 "from HKJC HKT to UTC."
             )
         else:
-            rows, requests_count, errors = COLLECTORS[args.source](targets)
+            kwargs = {}
+            if args.source == "BCL" and args.anchor_file.exists():
+                with args.anchor_file.open(
+                    "r", encoding="utf-8-sig", newline=""
+                ) as fh:
+                    anchor_rows = list(csv.DictReader(fh))
+                kwargs["target_pairs"] = [
+                    (row.get("HOME TEAM", ""), row.get("AWAY TEAM", ""))
+                    for row in anchor_rows
+                ]
+            rows, requests_count, errors = COLLECTORS[args.source](
+                targets, **kwargs
+            )
 
         wrote = preserve_last_good(output, rows)
         status = (
