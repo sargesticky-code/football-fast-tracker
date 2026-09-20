@@ -52,6 +52,14 @@ export default async function MatchDetail({ params }) {
       </section>
 
       <section className="panel">
+        <div className="panel-title"><div><p>HKJC TOTALS</p><h2>入球及角球</h2></div></div>
+        <div className="totals-grid">
+          <div className="total-market"><span>入球 O/U · {match.goals?.line || "—"}</span><div><b>大 {formatOdds(match.goals?.over)}</b><b>細 {formatOdds(match.goals?.under)}</b></div></div>
+          <div className="total-market"><span>角球 O/U · {match.corners?.line || "—"}</span><div><b>大 {formatOdds(match.corners?.over)}</b><b>細 {formatOdds(match.corners?.under)}</b></div></div>
+        </div>
+      </section>
+
+      <section className="panel">
         <div className="panel-title">
           <div><p>PROBABILITY</p><h2>市場 vs 所有模型</h2></div>
           <span>{modelLabel(match)}</span>
