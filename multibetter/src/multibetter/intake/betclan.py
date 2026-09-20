@@ -10,6 +10,7 @@ from .common import (
     fetch_soup,
     make_session,
     merge_rows,
+    local_fixture_to_utc,
     parse_date_any,
     pct_text,
 )
@@ -73,6 +74,14 @@ def collect_betclan(
             if match_date not in target_dates or not time_match:
                 continue
 
+            source_time = time_match.group(1)
+            converted = local_fixture_to_utc(
+                match_date, source_time, "Europe/London"
+            )
+            if converted is None:
+                continue
+            match_date_utc, match_time = converted
+
             teams = [
                 clean_text(x)
                 for x in teams_box.get_text("\n", strip=True).split("\n")
@@ -92,14 +101,14 @@ def collect_betclan(
 
             row = base_row(
                 source="BCL",
-                match_date=match_date,
-                match_time_utc=time_match.group(1),
+                match_date=match_date_utc,
+                match_time_utc=match_time,
                 home=teams[0],
                 away=teams[-1],
                 source_url=url,
                 source_date=date_text,
-                source_time=time_match.group(1),
-                timezone_name="UTC/GMT assumed from upstream compatibility",
+                source_time=source_time,
+                timezone_name="Europe/London",
                 home_away_explicit=True,
             )
             row["HOME PER"] = pct_text(h)
