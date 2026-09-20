@@ -1,5 +1,5 @@
 {
-  "built_at_hkt": "2026-09-20T11:01:39.627283+08:00",
+  "built_at_hkt": "2026-09-20T11:10:08.593817+08:00",
   "sources": {
     "FRB": {
       "source": "FRB",
@@ -7,8 +7,8 @@
       "rows": 84,
       "requests": 0,
       "errors": 0,
-      "started_at": "2026-09-20T10:59:57.655891+08:00",
-      "finished_at": "2026-09-20T10:59:57.666686+08:00",
+      "started_at": "2026-09-20T11:08:15.315494+08:00",
+      "finished_at": "2026-09-20T11:08:15.325882+08:00",
       "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
       "target_start": "2026-09-20",
       "target_end": "2026-09-21"
@@ -19,8 +19,8 @@
       "rows": 512,
       "requests": 201,
       "errors": 0,
-      "started_at": "2026-09-20T10:59:57.844777+08:00",
-      "finished_at": "2026-09-20T11:00:53.245221+08:00",
+      "started_at": "2026-09-20T11:08:15.491963+08:00",
+      "finished_at": "2026-09-20T11:09:16.864164+08:00",
       "note": "",
       "target_start": "2026-09-20",
       "target_end": "2026-09-21"
@@ -31,8 +31,8 @@
       "rows": 114,
       "requests": 116,
       "errors": 0,
-      "started_at": "2026-09-20T11:00:53.450818+08:00",
-      "finished_at": "2026-09-20T11:01:29.973387+08:00",
+      "started_at": "2026-09-20T11:09:17.063482+08:00",
+      "finished_at": "2026-09-20T11:09:58.368740+08:00",
       "note": "",
       "target_start": "2026-09-20",
       "target_end": "2026-09-21"
@@ -43,8 +43,8 @@
       "rows": 359,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-20T11:01:30.205218+08:00",
-      "finished_at": "2026-09-20T11:01:33.384239+08:00",
+      "started_at": "2026-09-20T11:09:58.571600+08:00",
+      "finished_at": "2026-09-20T11:10:01.890727+08:00",
       "note": "",
       "target_start": "2026-09-20",
       "target_end": "2026-09-21"
@@ -55,8 +55,8 @@
       "rows": 401,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-20T11:01:33.700401+08:00",
-      "finished_at": "2026-09-20T11:01:36.095083+08:00",
+      "started_at": "2026-09-20T11:10:02.148795+08:00",
+      "finished_at": "2026-09-20T11:10:04.733796+08:00",
       "note": "",
       "target_start": "2026-09-20",
       "target_end": "2026-09-21"
@@ -64,12 +64,12 @@
     "STA": {
       "source": "STA",
       "status": "OK",
-      "rows": 345,
+      "rows": 379,
       "requests": 2,
       "errors": 0,
-      "started_at": "2026-09-20T11:01:36.365775+08:00",
-      "finished_at": "2026-09-20T11:01:39.440064+08:00",
-      "note": "calibration={\"dominance\": 1.0, \"dominant_samples\": 29, \"inferred_source_minus_utc_minutes\": 0, \"offset_distribution\": {\"0\": 29}, \"reason\": \"DOMINANT_EXACT_PAIR_CLOCK_OFFSET\", \"samples\": 29}",
+      "started_at": "2026-09-20T11:10:04.978748+08:00",
+      "finished_at": "2026-09-20T11:10:08.400128+08:00",
+      "note": "calibration={\"dominance\": 1.0, \"dominant_samples\": 29, \"inferred_source_minus_utc_minutes\": 120, \"offset_distribution\": {\"120\": 29}, \"reason\": \"DOMINANT_EXACT_PAIR_CLOCK_OFFSET\", \"samples\": 29}",
       "target_start": "2026-09-20",
       "target_end": "2026-09-21"
     }
