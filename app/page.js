@@ -117,7 +117,7 @@ export default async function Home({ searchParams }) {
         <a className="selected" href="/">賽事</a>
         <span>Live</span>
         <span>模型</span>
-        <span>系統</span>
+        <a href="/health">系統</a>
       </footer>
     </main>
   );
