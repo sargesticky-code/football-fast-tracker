@@ -1,11 +1,17 @@
 import { createClient } from "npm:@supabase/supabase-js@2.116.0";
 import { parse } from "npm:csv-parse@7.0.2/sync";
+import { createRemoteJWKSet, jwtVerify } from "npm:jose@5.9.6";
 
 const GH = "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/main/data";
 const INGEST_BUCKET = "fast-tracker-ingest";
 const LIVE = "https://football-fast-tracker-live-sargesticky-9289.vercel.app/api/live_scores?format=csv";
 const MULTI = "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/multibetter-v1/multibetter/data/multibetter_current.csv";
 const HKJC_ENDPOINT = "https://info.cld.hkjc.com/graphql/base/";
+const GITHUB_OIDC_ISSUER = "https://token.actions.githubusercontent.com";
+const GITHUB_OIDC_AUDIENCE = "fast-tracker-supabase";
+const GITHUB_OIDC_REPOSITORY = "sargesticky-code/football-fast-tracker";
+const GITHUB_OIDC_REFS = new Set(["refs/heads/main","refs/heads/supabase-ingest-v2"]);
+const GITHUB_OIDC_JWKS = createRemoteJWKSet(new URL(`${GITHUB_OIDC_ISSUER}/.well-known/jwks`));
 const HKJC_RESULT_QUERY = `
     query matchResults($startDate: String, $endDate: String, $startIndex: Int,$endIndex: Int,$teamId: String) {
       matchNumByDate(startDate: $startDate, endDate: $endDate, teamId: $teamId) {
@@ -135,11 +141,26 @@ async function hashHex(s: string) {
 
 async function authorized(req: Request) {
   const provided = req.headers.get("x-fast-tracker-cron") || "";
-  if (!provided) return false;
-  const { data, error } = await db.from("system_config")
-    .select("value").eq("key","cron_secret_sha256").maybeSingle();
-  if (error || !data?.value) return false;
-  return (await hashHex(provided)) === data.value;
+  if (provided) {
+    const { data, error } = await db.from("system_config")
+      .select("value").eq("key","cron_secret_sha256").maybeSingle();
+    if (!error && data?.value && (await hashHex(provided)) === data.value) return true;
+  }
+
+  const auth = req.headers.get("authorization") || "";
+  if (!auth.toLowerCase().startsWith("bearer ")) return false;
+  try {
+    const token = auth.slice(7).trim();
+    const { payload } = await jwtVerify(token, GITHUB_OIDC_JWKS, {
+      issuer: GITHUB_OIDC_ISSUER,
+      audience: GITHUB_OIDC_AUDIENCE,
+    });
+    return payload.repository === GITHUB_OIDC_REPOSITORY
+      && payload.repository_visibility === "private"
+      && GITHUB_OIDC_REFS.has(String(payload.ref || ""));
+  } catch (_) {
+    return false;
+  }
 }
 
 async function ensureStubs(rows: Record<string,string>[], spec: {
