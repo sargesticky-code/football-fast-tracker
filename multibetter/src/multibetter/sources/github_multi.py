@@ -23,6 +23,7 @@ def build_multi_fixture(
     github_forebet_home: str,
     github_forebet_away: str,
     github_forebet_competition: str | None = None,
+    home_away_explicit: bool = True,
     predictions: Iterable[SourcePrediction] = (),
     external_fixture_id: str | None = None,
 ) -> MultiSourceFixture:
@@ -33,6 +34,7 @@ def build_multi_fixture(
         github_forebet_home=github_forebet_home,
         github_forebet_away=github_forebet_away,
         github_forebet_competition=github_forebet_competition,
+        home_away_explicit=home_away_explicit,
         predictions=tuple(predictions),
         external_fixture_id=external_fixture_id,
     )
@@ -237,6 +239,7 @@ def group_sources_around_forebet(
         github_forebet_home=home,
         github_forebet_away=away,
         github_forebet_competition=github_forebet_competition,
+        home_away_explicit=True,
         predictions=predictions,
         external_fixture_id=external_fixture_id,
     )
