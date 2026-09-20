@@ -110,3 +110,18 @@ jobs:
             --data '{"mode":"current"}' \
             "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/sync-fast-tracker"
           echo
+
+      - name: Refresh live score layer after HKJC live cycle
+        if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.name == 'HKJC Live Odds 5min'
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -X POST \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data '{"mode":"live"}' \
+            "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/sync-fast-tracker"
+          echo
