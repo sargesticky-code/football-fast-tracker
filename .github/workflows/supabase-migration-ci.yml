@@ -1,0 +1,64 @@
+name: Supabase Migration CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [supabase-migration]
+    paths:
+      - "supabase/**"
+      - "scripts/supabase_*.py"
+      - ".github/workflows/supabase-*.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fast_tracker_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Python syntax
+        run: |
+          python -m py_compile scripts/supabase_sync.py
+          python -m py_compile scripts/supabase_sync_extended.py
+          python -m py_compile scripts/supabase_validate.py
+      - name: Edge Function type-check
+        run: deno check supabase/functions/sync-fast-tracker/index.ts
+      - name: Create Supabase test roles
+        run: |
+          psql -h localhost -U postgres -d fast_tracker_test -tAc "select 1 from pg_roles where rolname='anon'" | grep -q 1 || psql -h localhost -U postgres -d fast_tracker_test -c "create role anon nologin"
+          psql -h localhost -U postgres -d fast_tracker_test -tAc "select 1 from pg_roles where rolname='authenticated'" | grep -q 1 || psql -h localhost -U postgres -d fast_tracker_test -c "create role authenticated nologin"
+          psql -h localhost -U postgres -d fast_tracker_test -tAc "select 1 from pg_roles where rolname='service_role'" | grep -q 1 || psql -h localhost -U postgres -d fast_tracker_test -c "create role service_role nologin"
+      - name: SQL migrations
+        run: |
+          for f in supabase/migrations/*.sql; do
+            echo "Applying $f"
+            psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 -f "$f"
+          done
+      - name: Smoke check views
+        run: |
+          psql -h localhost -U postgres -d fast_tracker_test -v ON_ERROR_STOP=1 <<'SQL'
+          select * from public.fast_tracker_live_v limit 0;
+          select * from public.forebet_effective_v limit 0;
+          select * from public.fast_tracker_live_v2 limit 0;
+          SQL
