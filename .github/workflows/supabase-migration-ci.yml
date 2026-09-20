@@ -1,6 +1,8 @@
 name: Supabase Migration CI
 
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [supabase-migration]
     paths:
