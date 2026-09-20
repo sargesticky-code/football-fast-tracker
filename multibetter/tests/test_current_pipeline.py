@@ -122,3 +122,41 @@ def test_consensus_is_emitted_from_high_quality_sources():
     assert row["source_count_total"] == 2
     assert row["consensus_home"] > 0
     assert row["consensus_over25"] > 0
+
+
+def test_our_fixture_clock_uses_hkjc_hkt_as_utc_reference():
+    from multibetter.pipeline.current import load_our_forebet_fixtures
+
+    fixtures, _ = load_our_forebet_fixtures(OUR)
+    assert fixtures[0].kickoff.isoformat() == "2026-09-20T13:00:00"
+
+
+def test_stale_preserved_source_is_not_loaded(tmp_path):
+    import json
+    from multibetter.pipeline.current import load_source_tables
+
+    source_dir = tmp_path / "current"
+    health_dir = tmp_path / "health"
+    source_dir.mkdir()
+    health_dir.mkdir()
+
+    (source_dir / "forebet.csv").write_text(
+        "DATE,TIME,HOME TEAM,AWAY TEAM\n20/09/2026,13:00,A,B\n",
+        encoding="utf-8",
+    )
+    (source_dir / "betclan.csv").write_text(
+        "DATE,TIME,HOME TEAM,AWAY TEAM\n20/09/2026,13:00,A,B\n",
+        encoding="utf-8",
+    )
+    (health_dir / "frb.json").write_text(
+        json.dumps({"status": "OK"}),
+        encoding="utf-8",
+    )
+    (health_dir / "bcl.json").write_text(
+        json.dumps({"status": "KEEP_LAST_GOOD"}),
+        encoding="utf-8",
+    )
+
+    tables = load_source_tables(source_dir, health_dir=health_dir)
+    assert "FRB" in tables
+    assert "BCL" not in tables
