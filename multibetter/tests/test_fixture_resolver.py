@@ -122,3 +122,58 @@ def test_missing_league_uses_date_time_bucket_then_team_pair():
     assert result.status == FixtureResolveStatus.DETERMINISTIC_TEAM_PAIR
     assert result.fixture.event_id == "FB1"
     assert result.candidate_count == 3
+
+
+def test_home_away_orientation_is_part_of_identity():
+    fixtures = [f("FB1", 21, "Manchester City", "Sunderland")]
+    multi = MultiSourceFixture(
+        kickoff=datetime(2026, 9, 20, 21, 0),
+        github_forebet_home="Sunderland",
+        github_forebet_away="Manchester City",
+        github_forebet_competition="EPL",
+        home_away_explicit=True,
+    )
+    result = resolve_fixture_cache_first(multi, fixtures)
+    assert result.status == FixtureResolveStatus.CONFLICT
+    assert "HOME_AWAY" in result.reason or "WRONG_SIDE" in result.reason
+
+
+def test_cached_alias_cannot_cross_home_away_roles():
+    fixtures = [f("FB1", 21, "Manchester City", "Sunderland")]
+    multi = MultiSourceFixture(
+        kickoff=datetime(2026, 9, 20, 21, 0),
+        github_forebet_home="Black Cats",
+        github_forebet_away="Man City",
+        github_forebet_competition="EPL",
+        home_away_explicit=True,
+    )
+    result = resolve_fixture_cache_first(
+        multi,
+        fixtures,
+        verified_aliases={
+            "Black Cats": "Sunderland",
+            "Man City": "Manchester City",
+        },
+    )
+    assert result.status == FixtureResolveStatus.CONFLICT
+    assert result.reason in {
+        "HOME_TARGET_MATCHES_AWAY",
+        "AWAY_TARGET_MATCHES_HOME",
+    }
+
+
+def test_inferred_left_right_still_defaults_team1_home_team2_away():
+    fixtures = [
+        f("FB1", 21, "Manchester City", "Sunderland"),
+        f("FB2", 21, "Bournemouth", "Liverpool"),
+    ]
+    multi = MultiSourceFixture(
+        kickoff=datetime(2026, 9, 20, 21, 0),
+        github_forebet_home="Man City",
+        github_forebet_away="Sunderland AFC",
+        github_forebet_competition="EPL",
+        home_away_explicit=False,
+    )
+    result = resolve_fixture_cache_first(multi, fixtures)
+    assert result.status == FixtureResolveStatus.DETERMINISTIC_TEAM_PAIR
+    assert result.fixture.event_id == "FB1"
