@@ -109,8 +109,8 @@ jobs:
           forebet_ids = {r['hkjc_event_id'] for r in forebet_source}
           if len(model) != len(model_targets) or {r['hkjc_event_id'] for r in model} != model_target_ids:
               raise SystemExit('DC/Pi model rows do not match current HKJC selling HAD targets')
-          if len(form) != len(forebet_source) or {r['hkjc_event_id'] for r in form} != forebet_ids:
-              raise SystemExit('form model rows do not match current Forebet feed')
+          if len(form) != len(model_targets) or {r['hkjc_event_id'] for r in form} != model_target_ids:
+              raise SystemExit('form model rows do not match current HKJC selling HAD targets')
           if {r['hkjc_event_id'] for r in teams} != model_target_ids:
               raise SystemExit('HKJC team-id map does not match current HKJC selling HAD targets')
           if forebet_source and not history:
@@ -161,7 +161,7 @@ jobs:
                   raise SystemExit(f'implausible form xG: {row["hkjc_event_id"]} {xg}')
 
           print(
-              f'PASS model_targets={len(model_targets)} forebet_targets={len(forebet_source)} dc_pi_full_league={dc_modeled} '
+              f'PASS model_targets={len(model_targets)} forebet_reference={len(forebet_source)} dc_pi_full_league={dc_modeled} '
               f'sparse_dc_pi_rejected={rejected_sparse} form_modeled={form_modeled} '
               f'form_fail_closed={len(form)-form_modeled} history_rows={len(history)} '
               f'coverage_rows={len(coverage)} current_coverage_partial={len(partial_coverage)}'
