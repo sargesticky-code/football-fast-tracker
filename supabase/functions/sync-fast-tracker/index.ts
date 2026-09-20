@@ -4,6 +4,67 @@ import { parse } from "npm:csv-parse@7.0.2/sync";
 const GH = "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/main/data";
 const LIVE = "https://football-fast-tracker-live-sargesticky-9289.vercel.app/api/live_scores?format=csv";
 const MULTI = "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/multibetter-v1/multibetter/data/multibetter_current.csv";
+const HKJC_ENDPOINT = "https://info.cld.hkjc.com/graphql/base/";
+const HKJC_RESULT_QUERY = `
+    query matchResults($startDate: String, $endDate: String, $startIndex: Int,$endIndex: Int,$teamId: String) {
+      matchNumByDate(startDate: $startDate, endDate: $endDate, teamId: $teamId) {
+        total
+      }
+      matches: matchResult(startDate: $startDate, endDate: $endDate, startIndex: $startIndex,endIndex: $endIndex, teamId: $teamId) {
+        id
+        status
+        frontEndId
+        matchDayOfWeek
+        matchNumber
+        matchDate
+        kickOffTime
+        sequence
+        homeTeam {
+          id
+          name_en
+          name_ch
+        }
+        awayTeam {
+          id
+          name_en
+          name_ch
+        }
+        tournament {
+          code
+          name_en
+          name_ch      
+        }
+        results {
+          homeResult
+          awayResult
+          ttlCornerResult
+          resultConfirmType
+          payoutConfirmed
+          stageId
+          resultType
+          sequence
+        }
+        poolInfo {
+          payoutRefundPools
+          refundPools
+          ntsInfo
+          entInfo
+          definedPools
+          ngsInfo {
+            str
+            name_en
+            name_ch
+            instNo
+          }
+          agsInfo {
+            str
+            name_en
+            name_ch
+            }
+        }
+      }
+    }
+  `;
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const modern = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}");
@@ -290,6 +351,100 @@ async function refreshCanonicalCore() {
   return data;
 }
 
+
+function hkjcDate(daysBack=0) {
+  const d = new Date(Date.now() + 8*3600000 - daysBack*86400000);
+  const y=d.getUTCFullYear();
+  const m=String(d.getUTCMonth()+1).padStart(2,"0");
+  const day=String(d.getUTCDate()).padStart(2,"0");
+  return `${y}${m}${day}`;
+}
+
+async function hkjcGql(query: string, variables: Record<string,unknown>) {
+  const r = await fetch(HKJC_ENDPOINT, {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Origin":"https://bet.hkjc.com",
+      "Referer":"https://bet.hkjc.com/",
+      "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+    },
+    body:JSON.stringify({query,variables})
+  });
+  if(!r.ok) throw new Error(`HKJC result HTTP ${r.status}`);
+  const body=await r.json();
+  if(body.errors?.length) throw new Error("HKJC result GraphQL: "+body.errors.map((e:any)=>e.message||"?").join("; "));
+  return body.data || {};
+}
+
+async function syncResultsDirect(daysBack=5) {
+  const startDate=hkjcDate(daysBack);
+  const endDate=hkjcDate(0);
+
+  const first=await hkjcGql(HKJC_RESULT_QUERY,{
+    startDate,endDate,startIndex:1,endIndex:20,teamId:null
+  });
+  const total=Number(first.matchNumByDate?.total||0);
+  const matches:any[]=[...(first.matches||[])];
+
+  const starts:number[]=[];
+  for(let i=21;i<=total;i+=20) starts.push(i);
+
+  const concurrency=4;
+  for(let i=0;i<starts.length;i+=concurrency) {
+    const batchStarts=starts.slice(i,i+concurrency);
+    const pages=await Promise.all(batchStarts.map(async (idx)=>{
+      const data=await hkjcGql(HKJC_RESULT_QUERY,{
+        startDate,endDate,startIndex:idx,endIndex:Math.min(idx+19,total),teamId:null
+      });
+      return data.matches || [];
+    }));
+    for(const page of pages) matches.push(...page);
+  }
+
+  const fetched=new Date().toISOString();
+  const rows=matches.flatMap((match:any)=>{
+    const ft=(match.results||[]).find((x:any)=>Number(x.resultType)===1 && Number(x.stageId)===5);
+    if(!ft) return [];
+    const hg=Number(ft.homeResult), ag=Number(ft.awayResult);
+    if(!Number.isInteger(hg)||!Number.isInteger(ag)||hg<0||ag<0) return [];
+    const event=String(match.frontEndId||"").trim();
+    if(!event) return [];
+    return [{
+      hkjc_event_id:event,
+      match_id:text(match.id),
+      kickoff_hkt:ts(match.kickOffTime),
+      tournament:text(match.tournament?.code),
+      home:text(match.homeTeam?.name_en || match.homeTeam?.name_ch),
+      away:text(match.awayTeam?.name_en || match.awayTeam?.name_ch),
+      home_goals:hg,
+      away_goals:ag,
+      outcome:hg>ag?"H":ag>hg?"A":"D",
+      payout_confirmed:ft.payoutConfirmed === true || String(ft.payoutConfirmed).toLowerCase()==="true",
+      fetched_at:fetched,
+      raw:match
+    }];
+  });
+
+  const {data:upserted,error}=await db.rpc("ft_internal_upsert_results",{payload:rows});
+  if(error) throw new Error("results upsert: "+error.message);
+  const {data:validation,error:ve}=await db.rpc("ft_internal_refresh_validation");
+  if(ve) throw new Error("validation refresh: "+ve.message);
+  return {startDate,endDate,total_returned:matches.length,settled_rows:rows.length,upserted,validation};
+}
+
+async function capturePrematch() {
+  const {data,error}=await db.rpc("ft_internal_capture_prematch");
+  if(error) throw new Error("prematch capture: "+error.message);
+  return data;
+}
+
+async function refreshDecisions() {
+  const {data,error}=await db.rpc("ft_internal_refresh_phase1_decisions");
+  if(error) throw new Error("decision refresh: "+error.message);
+  return data;
+}
+
 async function syncArchive() {
   const rows = await csv(`${GH}/forebet_archive.csv`);
   await ensureStubs(rows,{
@@ -327,8 +482,11 @@ Deno.serve(async (req) => {
     let result: Record<string,unknown>;
     if (mode === "live") {
       result = await syncLive();
+    } else if (mode === "results") {
+      result = await syncResultsDirect();
     } else if (mode === "archive") {
       result = await syncArchive();
+      result.direct_results = await syncResultsDirect();
     } else {
       result = await syncCurrent();
       try {
@@ -343,6 +501,8 @@ Deno.serve(async (req) => {
         },{onConflict:"source,metric"});
       }
       result.canonical_core = await refreshCanonicalCore();
+      result.prematch_snapshot = await capturePrematch();
+      result.phase1_decisions = await refreshDecisions();
     }
 
     await db.from("source_health").upsert({
