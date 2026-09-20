@@ -1,8 +1,12 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 4 · Statarea per-run clock calibration
+# launcher revision: 5 · daily schedule enabled after live validation
 
 on:
   workflow_dispatch:
+  schedule:
+    # 07:10 Asia/Hong_Kong daily (23:10 UTC previous day).
+    # Runs after the production Forebet morning capture window.
+    - cron: '10 23 * * *'
   push:
     branches:
       - main
