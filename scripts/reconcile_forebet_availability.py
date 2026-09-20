@@ -23,6 +23,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent.parent
 CURRENT = ROOT / "data" / "forebet_current.csv"
 AVAILABILITY = ROOT / "data" / "forebet_availability.csv"
+TARGETS = ROOT / "data" / "hkjc_targets.csv"
 HKT = ZoneInfo("Asia/Hong_Kong")
 
 
@@ -36,8 +37,21 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 def main() -> int:
     feed = read_csv(CURRENT)
     availability = read_csv(AVAILABILITY)
-    if not feed or not availability:
-        raise SystemExit("zero Forebet model or availability rows")
+    targets = read_csv(TARGETS)
+    if not feed or not availability or not targets:
+        raise SystemExit("zero Forebet model, availability, or HKJC target rows")
+
+    target_ids = {
+        str(row.get("hkjc_event_id") or "").strip()
+        for row in targets
+        if str(row.get("hkjc_event_id") or "").strip()
+    }
+    # Availability is a current-run health surface, so keep it complete and
+    # bounded to the same active HKJC target universe as the model feed.
+    availability = [
+        row for row in availability
+        if str(row.get("hkjc_event_id") or "").strip() in target_ids
+    ]
 
     feed_ids = {
         str(row.get("hkjc_event_id") or "").strip()
@@ -56,6 +70,31 @@ def main() -> int:
     }
 
     now = datetime.now(HKT).isoformat(timespec="seconds")
+
+    target_by_id = {
+        str(row.get("hkjc_event_id") or "").strip(): row
+        for row in targets
+        if str(row.get("hkjc_event_id") or "").strip()
+    }
+    # If a scraper pass exits early or misses writing an availability row,
+    # record the target explicitly as UNRESOLVED instead of leaving it
+    # invisible to health/validation.
+    missing_targets = sorted(target_ids - set(by_id))
+    for event_id in missing_targets:
+        target = target_by_id[event_id]
+        availability.append({
+            "checked_at_hkt": now,
+            "match_date": str(target.get("kickoff_hkt") or "")[:10],
+            "kickoff_hkt": str(target.get("kickoff_hkt") or "").strip(),
+            "hkjc_event_id": event_id,
+            "league_zh": str(target.get("league_zh") or "").strip(),
+            "home_en": str(target.get("home_en") or "").strip(),
+            "away_en": str(target.get("away_en") or "").strip(),
+            "state": "UNRESOLVED",
+            "reason": "target_missing_from_forebet_scan_output",
+        })
+        by_id[event_id] = availability[-1]
+
     missing = sorted(feed_ids - set(by_id))
     inserted: list[str] = []
     for event_id in missing:
