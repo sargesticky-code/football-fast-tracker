@@ -156,7 +156,7 @@ async function authorized(req: Request) {
       audience: GITHUB_OIDC_AUDIENCE,
     });
     return payload.repository === GITHUB_OIDC_REPOSITORY
-      && payload.repository_visibility === "private"
+      && ["private","public"].includes(String(payload.repository_visibility || ""))
       && GITHUB_OIDC_REFS.has(String(payload.ref || ""));
   } catch (_) {
     return false;
@@ -371,6 +371,10 @@ async function syncMultiSource() {
   }));
   const { data, error } = await db.rpc("ft_internal_upsert_multisource", { payload });
   if (error) throw new Error("multisource: " + error.message);
+  await db.from("source_health").upsert({
+    source:"MULTISOURCE_SYNC", metric:"current", value_text:JSON.stringify({rows:payload.length,upserted:data}),
+    status:"PASS", notes:"Multi-source static feed synced successfully", observed_at:new Date().toISOString()
+  }, { onConflict:"source,metric" });
   return { rows: payload.length, upserted: data };
 }
 
