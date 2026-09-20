@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 jobs:
-  push-hkjc-current:
+  push-current-artifacts:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -30,24 +30,50 @@ jobs:
           echo "::add-mask::$token"
           echo "token=$token" >> "$GITHUB_OUTPUT"
 
-      - name: Push HKJC current artifact to Supabase
+      - name: Push current artifacts to Supabase private storage
         env:
           OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import json
+          files=(
+            data/hkjc_current.csv
+            data/forebet_current.csv
+            data/model_current.csv
+            data/team_alias_registry.csv
+            data/form_current.csv
+            data/odds_movement.csv
+            data/prediction_fallback_current.csv
+            data/bet365_current.csv
+            data/forebet_supplement_current.csv
+            data/forebet_availability.csv
+            data/forebet_archive.csv
+            data/evaluation_summary.csv
+          )
+
+          for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "SKIP missing $file"
+              continue
+            fi
+
+            FILE="$file" python - <<'PY'
+          import json, os
           from pathlib import Path
-          content = Path("data/hkjc_current.csv").read_text(encoding="utf-8-sig")
+          path = os.environ["FILE"]
+          content = Path(path).read_text(encoding="utf-8-sig")
           Path("/tmp/fast-tracker-ingest.json").write_text(
-              json.dumps({"path":"data/hkjc_current.csv","content":content}),
+              json.dumps({"path": path, "content": content}),
               encoding="utf-8",
           )
           PY
-          curl -fsSL \
-            -X POST \
-            -H "Authorization: Bearer $OIDC_TOKEN" \
-            -H "Content-Type: application/json" \
-            --data-binary @/tmp/fast-tracker-ingest.json \
-            "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/github-data-ingest"
+
+            echo "PUSH $file"
+            curl -fsSL \
+              -X POST \
+              -H "Authorization: Bearer $OIDC_TOKEN" \
+              -H "Content-Type: application/json" \
+              --data-binary @/tmp/fast-tracker-ingest.json \
+              "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/github-data-ingest"
+            echo
+          done
