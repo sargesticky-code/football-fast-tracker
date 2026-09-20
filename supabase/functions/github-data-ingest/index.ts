@@ -22,6 +22,8 @@ const ALLOWED_PATHS = new Map([
   ["data/forebet_availability.csv", "forebet_availability.csv"],
   ["data/forebet_archive.csv", "forebet_archive.csv"],
   ["data/evaluation_summary.csv", "evaluation_summary.csv"],
+  ["data/hkjc_live_odds.csv", "hkjc_live_odds.csv"],
+  ["data/team_form_summary.csv", "team_form_summary.csv"],
 ]);
 const JWKS = createRemoteJWKSet(new URL(`${ISSUER}/.well-known/jwks`));
 
@@ -63,8 +65,9 @@ Deno.serve(async (req: Request) => {
     if (payload.repository !== REPOSITORY) {
       return Response.json({ ok:false, error:"repository_not_allowed" }, { status:403 });
     }
-    if (payload.repository_visibility !== "private") {
-      return Response.json({ ok:false, error:"repository_must_be_private" }, { status:403 });
+    const visibility = String(payload.repository_visibility ?? "");
+    if (!["private","public"].includes(visibility)) {
+      return Response.json({ ok:false, error:"repository_visibility_not_allowed", visibility }, { status:403 });
     }
     const ref = String(payload.ref ?? "");
     if (!ALLOWED_REFS.has(ref)) {
