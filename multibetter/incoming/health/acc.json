@@ -2,10 +2,10 @@
   "source": "ACC",
   "status": "OK",
   "rows": 512,
-  "requests": 201,
+  "requests": 197,
   "errors": 0,
-  "started_at": "2026-09-20T11:08:15.491963+08:00",
-  "finished_at": "2026-09-20T11:09:16.864164+08:00",
+  "started_at": "2026-09-20T15:09:15.667164+08:00",
+  "finished_at": "2026-09-20T15:10:11.005391+08:00",
   "note": "",
   "target_start": "2026-09-20",
   "target_end": "2026-09-21"
