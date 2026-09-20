@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: multibetter-v1-current
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   current:
@@ -50,17 +50,34 @@ jobs:
             printf '' > /tmp/forebet_supplement_current.csv
           fi
 
-      - name: Collect current multi-source intake
+      - name: Collect FRB anchor
         run: |
-          python -m multibetter.scripts.collect_current \
+          python -m multibetter.scripts.collect_source \
+            --source FRB \
             --days 2 \
+            --max-seconds 45 \
             --our-forebet /tmp/forebet_current.csv \
-            --our-forebet-supplement /tmp/forebet_supplement_current.csv \
-            --output-dir multibetter/incoming/current \
-            --health-dir multibetter/incoming/health
+            --our-forebet-supplement /tmp/forebet_supplement_current.csv
 
-      - name: Show intake health
-        run: cat multibetter/incoming/health/summary.json
+      - name: Collect ACC
+        run: python -m multibetter.scripts.collect_source --source ACC --days 2 --max-seconds 90
+
+      - name: Collect BCL
+        run: python -m multibetter.scripts.collect_source --source BCL --days 2 --max-seconds 120
+
+      - name: Collect FST
+        run: python -m multibetter.scripts.collect_source --source FST --days 2 --max-seconds 60
+
+      - name: Collect PRE
+        run: python -m multibetter.scripts.collect_source --source PRE --days 2 --max-seconds 60
+
+      - name: Collect STA
+        run: python -m multibetter.scripts.collect_source --source STA --days 2 --max-seconds 60
+
+      - name: Summarize intake health
+        run: |
+          python -m multibetter.scripts.summarize_intake \
+            --health-dir multibetter/incoming/health
 
       - name: Build Multibetter current output
         run: |
