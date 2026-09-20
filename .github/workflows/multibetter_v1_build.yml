@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 5 · daily schedule enabled after live validation
+# launcher revision: 6 · AccaGenerator target-route optimization validation
 
 on:
   workflow_dispatch:
