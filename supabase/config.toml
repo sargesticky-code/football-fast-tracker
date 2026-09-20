@@ -3,3 +3,6 @@ verify_jwt = false
 
 [functions.app-phase1-feed]
 verify_jwt = true
+
+[functions.github-data-ingest]
+verify_jwt = false
