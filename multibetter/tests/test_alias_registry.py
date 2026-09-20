@@ -50,7 +50,7 @@ def test_candidate_needs_repeated_context_before_review_ready():
         alias="Liverpool (URU)",
         target="Liverpool Montevideo",
         observed_at=t1,
-        similarity=0.90,
+        similarity=90.0,
         opponent="Ind Medellin",
         event_id="A",
     )
@@ -61,7 +61,7 @@ def test_candidate_needs_repeated_context_before_review_ready():
         alias="Liverpool (URU)",
         target="Liverpool Montevideo",
         observed_at=datetime(2026, 9, 21, 8, 0),
-        similarity=0.92,
+        similarity=92.0,
         opponent="Nacional",
         event_id="B",
     )
@@ -70,7 +70,7 @@ def test_candidate_needs_repeated_context_before_review_ready():
         alias="Liverpool (URU)",
         target="Liverpool Montevideo",
         observed_at=datetime(2026, 9, 22, 8, 0),
-        similarity=0.91,
+        similarity=91.0,
         opponent="Penarol",
         event_id="C",
     )
@@ -83,7 +83,7 @@ def test_team_class_mismatch_never_becomes_review_ready():
         alias="Arsenal U21",
         target="Arsenal",
         observed_at=datetime(2026, 9, 20, 8, 0),
-        similarity=0.99,
+        similarity=99.0,
         opponent="Brighton U21",
     )
     assert row.status == AliasStatus.CONFLICT
