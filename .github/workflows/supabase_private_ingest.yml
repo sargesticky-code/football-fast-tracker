@@ -2,6 +2,11 @@ name: Supabase Static Data Push
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - '.github/workflows/supabase_private_ingest.yml'
   schedule:
     - cron: '7,37 * * * *' # static artifact reconciliation only; no source scraping
   workflow_run:
@@ -28,7 +33,7 @@ concurrency:
 
 jobs:
   push-current-artifacts:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
