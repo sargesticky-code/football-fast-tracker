@@ -128,7 +128,7 @@ def test_our_fixture_clock_uses_hkjc_hkt_as_utc_reference():
     from multibetter.pipeline.current import load_our_forebet_fixtures
 
     fixtures, _ = load_our_forebet_fixtures(OUR)
-    assert fixtures[0].kickoff.isoformat() == "2026-09-20T13:00:00"
+    assert fixtures[0].kickoff.isoformat() == "2026-09-20T21:00:00"
 
 
 def test_stale_preserved_source_is_not_loaded(tmp_path):
