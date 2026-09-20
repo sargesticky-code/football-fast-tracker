@@ -9,6 +9,7 @@ from .common import (
     fetch_soup,
     make_session,
     merge_rows,
+    local_fixture_to_utc,
     pct_text,
 )
 
@@ -68,14 +69,22 @@ def collect_primatips(
                 size = min(len(parsed_teams), len(times), len(per) // 3)
                 for i in range(size):
                     home, away = parsed_teams[i]
+                    converted = local_fixture_to_utc(
+                        day, times[i], "Europe/London"
+                    )
+                    if converted is None:
+                        continue
+                    match_date_utc, match_time_utc = converted
                     row = base_row(
                         source="PRE",
-                        match_date=day,
-                        match_time_utc=times[i],
+                        match_date=match_date_utc,
+                        match_time_utc=match_time_utc,
                         home=home,
                         away=away,
                         source_url=url,
-                        timezone_name="UTC/GMT assumed from upstream compatibility",
+                        source_date=day.isoformat(),
+                        source_time=times[i],
+                        timezone_name="Europe/London",
                         home_away_explicit=True,
                     )
                     row["HOME PER"] = per[i * 3]
