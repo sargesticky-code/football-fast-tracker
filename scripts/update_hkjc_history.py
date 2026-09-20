@@ -24,7 +24,7 @@ from hkjc.scraper import HKJCFootball
 
 HKT = ZoneInfo("Asia/Hong_Kong")
 ROOT = Path(__file__).resolve().parent.parent
-FEED = ROOT / "data" / "forebet_current.csv"
+FEED = ROOT / "data" / "hkjc_current.csv"
 HISTORY = ROOT / "data" / "hkjc_history.csv"
 TEAM_MAP = ROOT / "data" / "hkjc_current_teams.csv"
 COVERAGE = ROOT / "data" / "hkjc_history_coverage.csv"
@@ -150,12 +150,19 @@ def current_fixture_map(raw_listing: list[dict], wanted_ids: set[str], fetched_a
 
 
 def map_team_ids(rows: list[dict[str, str]]) -> set[str]:
-    out: set[str] = set()
+    return set(ordered_team_ids(rows))
+
+
+def ordered_team_ids(rows: list[dict[str, str]]) -> list[str]:
+    """Return unique team ids in fixture order (kickoff, then event id)."""
+    out: list[str] = []
+    seen: set[str] = set()
     for r in rows:
         for key in ("home_id", "away_id"):
             value = str(r.get(key) or "").strip()
-            if value:
-                out.add(value)
+            if value and value not in seen:
+                seen.add(value)
+                out.append(value)
     return out
 
 
@@ -172,14 +179,19 @@ def main() -> int:
     args = ap.parse_args()
 
     if not FEED.exists():
-        raise SystemExit("missing data/forebet_current.csv")
+        raise SystemExit("missing data/hkjc_current.csv")
     with FEED.open(encoding="utf-8-sig", newline="") as fh:
         feed_rows = list(csv.DictReader(fh))
-    wanted_ids = {str(r.get("hkjc_event_id") or "").strip() for r in feed_rows}
-    wanted_ids.discard("")
+    model_targets = [
+        r for r in feed_rows
+        if str(r.get("hkjc_event_id") or "").strip()
+        and str(r.get("selling") or "").strip() in ("1", "true", "TRUE")
+        and all(str(r.get(k) or "").strip() for k in ("had_home", "had_draw", "had_away"))
+    ]
+    wanted_ids = {str(r.get("hkjc_event_id") or "").strip() for r in model_targets}
     if not wanted_ids:
         write_csv(TEAM_MAP, TEAM_COLUMNS, [])
-        print("HKJC_HISTORY current_forebet_events=0")
+        print("HKJC_HISTORY current_hkjc_had_events=0")
         return 0
 
     raw_listing = json.loads(Path(args.raw_list).read_text(encoding="utf-8-sig"))
@@ -223,7 +235,7 @@ def main() -> int:
         if str(r.get("match_id") or "").strip()
     }
 
-    all_current_team_ids = sorted(map_team_ids(teams))
+    all_current_team_ids = ordered_team_ids(teams)
 
     # Hard daily request budget. Existing covered teams are refreshed oldest
     # first; only a small number of new teams may enter the 12-month bootstrap
