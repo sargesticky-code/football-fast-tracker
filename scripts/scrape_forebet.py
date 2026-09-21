@@ -16,6 +16,8 @@ from zoneinfo import ZoneInfo
 import requests
 from bs4 import BeautifulSoup, Tag
 
+from team_name_master import build_forward_map
+
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "forebet_current.csv"
 TARGET_OUT = ROOT / "data" / "hkjc_targets.csv"
@@ -497,11 +499,48 @@ def parse_forebet_rows(html: str, requested_date: str) -> list[dict[str, Any]]:
     return rows
 
 
-def attach_hkjc_target(row: dict[str, Any], targets: list[dict[str, Any]]) -> dict[str, Any] | None:
+def attach_hkjc_target(
+    row: dict[str, Any],
+    targets: list[dict[str, Any]],
+    master: dict[str, str] | None = None,
+) -> dict[str, Any] | None:
     same_date = [t for t in targets if t["match_date"] == row["match_date"]]
     if not same_date:
         return None
 
+    # One-for-all path: a previously verified Forebet name resolves directly
+    # to the canonical HKJC English name. This avoids re-fuzzy-matching the
+    # same clubs on every future fixture.
+    if master:
+        home_canonical = master.get(normalize_team(row["home_team"]))
+        away_canonical = master.get(normalize_team(row["away_team"]))
+        if home_canonical and away_canonical:
+            direct = [
+                t for t in same_date
+                if normalize_team(t["home_en"]) == normalize_team(home_canonical)
+                and normalize_team(t["away_en"]) == normalize_team(away_canonical)
+            ]
+            if len(direct) == 1:
+                best = direct[0]
+                out = dict(row)
+                out.update({
+                    "hkjc_event_id": best["hkjc_event_id"],
+                    "hkjc_league": best["league_zh"],
+                    "hkjc_home_team": best["home_en"],
+                    "hkjc_away_team": best["away_en"],
+                    "hkjc_home_zh": best["home_zh"],
+                    "hkjc_away_zh": best["away_zh"],
+                    "hkjc_kickoff_hkt": best["kickoff_hkt"],
+                    "hkjc_had_home": best["had_home"],
+                    "hkjc_had_draw": best["had_draw"],
+                    "hkjc_had_away": best["had_away"],
+                    "match_score": 1.0,
+                })
+                return out
+
+    # Discovery-only fallback for genuinely new names. Once a successful
+    # event mapping is persisted to team_name_master, future runs take the
+    # direct path above instead of repeating this fuzzy search.
     best = None
     best_avg = 0.0
     best_home = 0.0
@@ -559,6 +598,8 @@ def main() -> int:
     if not targets:
         return 2
 
+    forebet_master = build_forward_map("FOREBET", normalize_team)
+
     if GATE_ONLY:
         print(f"GATE_ONLY_PASS targets={len(targets)} scraperapi_calls=0", flush=True)
         return 0
@@ -582,7 +623,7 @@ def main() -> int:
 
     unique: dict[str, dict[str, Any]] = {}
     for row in parsed:
-        selected = attach_hkjc_target(row, targets)
+        selected = attach_hkjc_target(row, targets, forebet_master)
         if selected is None:
             continue
         key = selected["hkjc_event_id"]
