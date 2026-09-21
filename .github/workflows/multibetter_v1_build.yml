@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 8 · safe 5-minute source matching regression fix
+# launcher revision: 9 · HKJC-authority Statarea clock calibration
 
 on:
   workflow_dispatch:
@@ -51,6 +51,7 @@ jobs:
         run: |
           git fetch origin main
           git show origin/main:data/forebet_current.csv > /tmp/forebet_current.csv
+          git show origin/main:data/hkjc_current.csv > /tmp/hkjc_current.csv
           if git cat-file -e origin/main:data/forebet_supplement_current.csv 2>/dev/null; then
             git show origin/main:data/forebet_supplement_current.csv > /tmp/forebet_supplement_current.csv
           else
@@ -78,8 +79,45 @@ jobs:
       - name: Collect PRE
         run: python -m multibetter.scripts.collect_source --source PRE --days 2 --max-seconds 60
 
+      - name: Build HKJC authority anchors for Statarea clock
+        run: |
+          python - <<'PY'
+          import csv
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          src = Path("/tmp/hkjc_current.csv")
+          out = Path("/tmp/statarea_calibration_anchors.csv")
+          rows = []
+          with src.open("r", encoding="utf-8-sig", newline="") as fh:
+              for r in csv.DictReader(fh):
+                  home = (r.get("home_en") or "").strip()
+                  away = (r.get("away_en") or "").strip()
+                  raw = (r.get("kickoff_hkt") or "").strip()
+                  if not home or not away or not raw:
+                      continue
+                  try:
+                      dt = datetime.fromisoformat(raw)
+                  except ValueError:
+                      continue
+                  if dt.tzinfo is None:
+                      continue
+                  utc = dt.astimezone(timezone.utc)
+                  rows.append({
+                      "DATE": utc.strftime("%d/%m/%Y"),
+                      "TIME": utc.strftime("%H:%M"),
+                      "HOME TEAM": home,
+                      "AWAY TEAM": away,
+                  })
+          with out.open("w", encoding="utf-8", newline="") as fh:
+              w = csv.DictWriter(fh, fieldnames=["DATE","TIME","HOME TEAM","AWAY TEAM"])
+              w.writeheader()
+              w.writerows(rows)
+          print("STA_CALIBRATION_ANCHORS", len(rows))
+          PY
+
       - name: Collect STA
-        run: python -m multibetter.scripts.collect_source --source STA --days 2 --max-seconds 60
+        run: python -m multibetter.scripts.collect_source --source STA --days 2 --max-seconds 60 --anchor-file /tmp/statarea_calibration_anchors.csv
 
       - name: Summarize intake health
         run: |
