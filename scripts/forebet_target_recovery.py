@@ -14,14 +14,18 @@ list-page and detail-page health/parsing separate.
 """
 from __future__ import annotations
 
+import csv
 import html as html_lib
 import re
 from datetime import datetime, timezone
+from pathlib import Path
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
 BASE = "https://www.forebet.com"
+ROOT = Path(__file__).resolve().parent.parent
+COMPETITION_ALIAS_FILE = ROOT / "data" / "competition_alias_manual.csv"
 MAX_DETAIL_RECOVERY = 48  # bounded; earliest HKJC kickoffs first, avoids unlimited detail fan-out
 MATCH_LINK_RE = re.compile(r"/en/football/matches/", re.I)
 DETAIL_MIN_TEXT = 1200
@@ -42,6 +46,46 @@ BROAD_INDEXES = [
 ]
 
 _DETAIL_CACHE: dict[str, str | None] = {}
+
+
+def _competition_routes(targets: list[dict], missing_ids: set[str]) -> list[tuple[str, str, str]]:
+    """Return persistent verified competition routes for unresolved HKJC targets.
+
+    The route table is deliberately static and reusable: once a provider
+    competition code/name is verified against an HKJC tournament, future runs
+    jump directly to the provider competition page instead of rediscovering it
+    through huge global pagination.
+    """
+    if not COMPETITION_ALIAS_FILE.exists() or not missing_ids:
+        return []
+    wanted = {
+        str(t.get("league_zh") or "").strip()
+        for t in targets
+        if str(t.get("hkjc_event_id") or "").strip() in missing_ids
+        and str(t.get("league_zh") or "").strip()
+    }
+    if not wanted:
+        return []
+    out: list[tuple[str, str, str]] = []
+    seen: set[str] = set()
+    try:
+        with COMPETITION_ALIAS_FILE.open(encoding="utf-8-sig", newline="") as fh:
+            for row in csv.DictReader(fh):
+                if str(row.get("source") or "").strip().upper() != "FOREBET":
+                    continue
+                if str(row.get("status") or "").strip().upper() != "VERIFIED":
+                    continue
+                hkjc_tournament = str(row.get("hkjc_tournament") or "").strip()
+                url = str(row.get("competition_url") or "").strip()
+                source_comp = str(row.get("source_competition") or "").strip()
+                if hkjc_tournament not in wanted or not url or url in seen:
+                    continue
+                seen.add(url)
+                out.append((source_comp or hkjc_tournament, hkjc_tournament, url))
+    except Exception as exc:
+        print(f"WARN competition alias registry read failed: {exc}", flush=True)
+        return []
+    return out
 
 
 def _clean_text(node) -> str:
@@ -394,6 +438,48 @@ def install(production) -> None:
                     f"remaining={len(missing_ids)}",
                     flush=True,
                 )
+
+        # Persistent league-aware route registry. This is the long-term
+        # "learn once, reuse forever" path: when a provider competition has
+        # already been verified against an HKJC tournament, scan that compact
+        # competition page before broad/global discovery.
+        for source_comp, hkjc_tournament, route_url in _competition_routes(date_targets, missing_ids):
+            if not missing_ids:
+                break
+            route_html = production._jina_html(
+                route_url, f"recovery_competition_{source_comp}_{match_date}"
+            )
+            if not route_html:
+                route_html = production._browser_html(
+                    route_url, f"recovery_competition_browser_{source_comp}_{match_date}"
+                )
+            if not route_html:
+                continue
+            scoped_targets = [
+                t for t in date_targets
+                if str(t.get("league_zh") or "").strip() == hkjc_tournament
+            ]
+            usable = _usable_ids(production, route_html, match_date, scoped_targets)
+            new_ids = usable & missing_ids
+            if new_ids:
+                extra_parts.append(route_html)
+                covered |= new_ids
+                missing_ids = required - covered
+
+            still_missing = [
+                target_by_id[event_id]
+                for event_id in sorted(missing_ids - set(discovered))
+                if event_id in target_by_id
+                and str(target_by_id[event_id].get("league_zh") or "").strip() == hkjc_tournament
+            ]
+            found = _discover(production, route_html, still_missing)
+            discovered.update(found)
+            print(
+                f"FOREBET_COMPETITION_RECOVERY date={match_date} "
+                f"source_comp={source_comp} hkjc_tournament={hkjc_tournament} "
+                f"new={len(new_ids)} discovered={len(found)} remaining={len(missing_ids)}",
+                flush=True,
+            )
 
         for kind, index_url in BROAD_INDEXES:
             if not missing_ids:
