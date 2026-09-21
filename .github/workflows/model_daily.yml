@@ -3,9 +3,7 @@ name: Football Shadow Models
 on:
   workflow_dispatch:
   schedule:
-    - cron: '5 23 * * *' # 07:05 Hong Kong time, after the 06:45 source refresh
-    - cron: '5 3 * * *'  # 11:05 Hong Kong time, after the 10:45 Forebet refresh
-    - cron: '5 11 * * *' # 19:05 Hong Kong time, after the 18:45 source refresh
+    - cron: '20 * * * *' # hourly freshness gate; expensive model fit runs only on target drift or 3 daily full refresh windows
   push:
     paths:
       - 'scripts/team_name_master.py'
@@ -58,35 +56,83 @@ jobs:
           git -C /tmp/hkjc-direct fetch --depth 1 origin "$HKJC_UPSTREAM_SHA"
           git -C /tmp/hkjc-direct checkout --detach "$HKJC_UPSTREAM_SHA"
 
-      - name: Capture raw HKJC listing with stable team ids
+      - name: Capture fresh HKJC modelling targets directly
         run: |
-          PYTHONPATH=/tmp/hkjc-direct python - <<'PY'
-          import json
-          from hkjc.scraper import HKJCFootball
-          rows = HKJCFootball().list_matches()
-          if not rows:
-              raise SystemExit('HKJC raw listing returned zero matches')
-          with open('/tmp/hkjc_raw_matches.json', 'w', encoding='utf-8') as fh:
-              json.dump(rows, fh, ensure_ascii=False)
-          print(f'HKJC_RAW_LIST rows={len(rows)}')
+          cd /tmp/hkjc-direct
+          python -m hkjc list --format json --out /tmp/hkjc_raw_matches.json
+          python -m hkjc odds --page HAD --format json --out /tmp/hkjc_had.json
+          cd "$GITHUB_WORKSPACE"
+          python scripts/normalize_hkjc.py             --matches /tmp/hkjc_raw_matches.json             --had /tmp/hkjc_had.json             --horizon-hours 48             --live-retain-minutes 150
+
+      - name: Decide whether models need rebuilding
+        id: model_gate
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          def ids(path, *, current=False):
+              p=Path(path)
+              if not p.exists():
+                  return set()
+              with p.open(encoding='utf-8-sig', newline='') as fh:
+                  rows=list(csv.DictReader(fh))
+              if current:
+                  return {
+                      str(r.get('hkjc_event_id') or '').strip()
+                      for r in rows
+                      if str(r.get('hkjc_event_id') or '').strip()
+                      and str(r.get('selling') or '').strip().lower() in ('1','true')
+                      and all(str(r.get(k) or '').strip() for k in ('had_home','had_draw','had_away'))
+                  }
+              return {str(r.get('hkjc_event_id') or '').strip() for r in rows if str(r.get('hkjc_event_id') or '').strip()}
+
+          targets=ids('data/hkjc_current.csv', current=True)
+          model=ids('data/model_current.csv')
+          form=ids('data/form_current.csv')
+          event=os.getenv('GITHUB_EVENT_NAME','')
+          hour=datetime.now(timezone.utc).hour
+          regular_full=hour in {3,11,23}
+          drift=(targets != model) or (targets != form)
+          force=event == 'workflow_dispatch'
+          run_models=force or regular_full or drift
+
+          print(
+              f'MODEL_FRESHNESS_GATE targets={len(targets)} model={len(model)} form={len(form)} '
+              f'drift={int(drift)} regular_full={int(regular_full)} force={int(force)} run={int(run_models)}'
+          )
+          if drift:
+              print('MODEL_TARGET_ADDED', ','.join(sorted(targets - (model & form))) or '-')
+              print('MODEL_TARGET_REMOVED', ','.join(sorted((model | form) - targets)) or '-')
+
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as fh:
+              fh.write(f"run_models={'true' if run_models else 'false'}\n")
           PY
 
       - name: Refresh incremental HKJC results history for current teams
+        if: steps.model_gate.outputs.run_models == 'true'
         run: PYTHONPATH=/tmp/hkjc-direct python scripts/update_hkjc_history.py --raw-list /tmp/hkjc_raw_matches.json
 
       - name: Build Dixon-Coles and Pi candidates
+        if: steps.model_gate.outputs.run_models == 'true'
         run: python scripts/build_shadow_model.py
 
       - name: Reject sparse-network HKJC DC Pi fits
+        if: steps.model_gate.outputs.run_models == 'true'
         run: python scripts/quality_gate_shadow_models.py
 
       - name: Build global HKJC Team-Form Poisson shadow feed
+        if: steps.model_gate.outputs.run_models == 'true'
         run: python scripts/build_form_model.py
 
       - name: Build display-ready recent team form summary
+        if: steps.model_gate.outputs.run_models == 'true'
         run: python scripts/build_team_form_summary.py
 
       - name: Validate shadow model outputs and history coverage
+        if: steps.model_gate.outputs.run_models == 'true'
         run: |
           python - <<'PY'
           import csv
@@ -174,7 +220,12 @@ jobs:
           PY
 
       - name: Commit shadow feeds and incremental HKJC history
+        if: steps.model_gate.outputs.run_models == 'true'
         run: |
+          # Fresh HKJC files are modelling inputs only in this workflow.
+          # Restore repository-owned snapshots so model commits never race the
+          # dedicated HKJC market workflow.
+          git restore --source=HEAD -- data/hkjc_current.csv data/hkjc_targets.csv
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add \
