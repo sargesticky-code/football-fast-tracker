@@ -1,5 +1,5 @@
 {
-  "built_at_hkt": "2026-09-21T14:26:08.574288+08:00",
+  "built_at_hkt": "2026-09-21T14:30:56.157895+08:00",
   "sources": {
     "FRB": {
       "source": "FRB",
@@ -7,8 +7,8 @@
       "rows": 7,
       "requests": 0,
       "errors": 0,
-      "started_at": "2026-09-21T14:25:52.113127+08:00",
-      "finished_at": "2026-09-21T14:25:52.229509+08:00",
+      "started_at": "2026-09-21T14:30:34.498725+08:00",
+      "finished_at": "2026-09-21T14:30:34.500754+08:00",
       "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
       "target_start": "2026-09-21",
       "target_end": "2026-09-22"
@@ -17,10 +17,10 @@
       "source": "ACC",
       "status": "OK",
       "rows": 68,
-      "requests": 40,
+      "requests": 50,
       "errors": 0,
-      "started_at": "2026-09-21T14:25:52.419344+08:00",
-      "finished_at": "2026-09-21T14:25:57.908598+08:00",
+      "started_at": "2026-09-21T14:30:34.635531+08:00",
+      "finished_at": "2026-09-21T14:30:42.979400+08:00",
       "note": "",
       "target_start": "2026-09-21",
       "target_end": "2026-09-22"
@@ -28,11 +28,11 @@
     "BCL": {
       "source": "BCL",
       "status": "OK",
-      "rows": 7,
-      "requests": 9,
+      "rows": 16,
+      "requests": 18,
       "errors": 0,
-      "started_at": "2026-09-21T14:25:58.090972+08:00",
-      "finished_at": "2026-09-21T14:26:01.192494+08:00",
+      "started_at": "2026-09-21T14:30:43.140681+08:00",
+      "finished_at": "2026-09-21T14:30:49.090137+08:00",
       "note": "",
       "target_start": "2026-09-21",
       "target_end": "2026-09-22"
@@ -43,8 +43,8 @@
       "rows": 81,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-21T14:26:01.386849+08:00",
-      "finished_at": "2026-09-21T14:26:03.088686+08:00",
+      "started_at": "2026-09-21T14:30:49.265801+08:00",
+      "finished_at": "2026-09-21T14:30:50.965242+08:00",
       "note": "",
       "target_start": "2026-09-21",
       "target_end": "2026-09-22"
@@ -55,8 +55,8 @@
       "rows": 76,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-21T14:26:03.265303+08:00",
-      "finished_at": "2026-09-21T14:26:04.281200+08:00",
+      "started_at": "2026-09-21T14:30:51.118088+08:00",
+      "finished_at": "2026-09-21T14:30:52.308666+08:00",
       "note": "",
       "target_start": "2026-09-21",
       "target_end": "2026-09-22"
@@ -67,9 +67,9 @@
       "rows": 48,
       "requests": 3,
       "errors": 0,
-      "started_at": "2026-09-21T14:26:04.500993+08:00",
-      "finished_at": "2026-09-21T14:26:08.390781+08:00",
-      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-20\", \"calibration_rows\": 388, \"dominance\": 0.9688, \"dominant_samples\": 31, \"inferred_source_minus_utc_minutes\": -240, \"offset_distribution\": {\"-240\": 31, \"-237\": 1}, \"reason\": \"DOMINANT_EXACT_PAIR_CLOCK_OFFSET\", \"samples\": 32, \"target_rows\": 48}",
+      "started_at": "2026-09-21T14:30:52.488165+08:00",
+      "finished_at": "2026-09-21T14:30:56.018739+08:00",
+      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-20\", \"calibration_rows\": 387, \"dominance\": 0.9688, \"dominant_samples\": 31, \"inferred_source_minus_utc_minutes\": -300, \"offset_distribution\": {\"-300\": 31, \"-297\": 1}, \"reason\": \"DOMINANT_EXACT_PAIR_CLOCK_OFFSET\", \"samples\": 32, \"target_rows\": 48}",
       "target_start": "2026-09-21",
       "target_end": "2026-09-22"
     }

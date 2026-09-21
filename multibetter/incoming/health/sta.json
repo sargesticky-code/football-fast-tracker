@@ -4,9 +4,9 @@
   "rows": 48,
   "requests": 3,
   "errors": 0,
-  "started_at": "2026-09-21T14:26:04.500993+08:00",
-  "finished_at": "2026-09-21T14:26:08.390781+08:00",
-  "note": "calibration={\"calibration_only_previous_day\": \"2026-09-20\", \"calibration_rows\": 388, \"dominance\": 0.9688, \"dominant_samples\": 31, \"inferred_source_minus_utc_minutes\": -240, \"offset_distribution\": {\"-240\": 31, \"-237\": 1}, \"reason\": \"DOMINANT_EXACT_PAIR_CLOCK_OFFSET\", \"samples\": 32, \"target_rows\": 48}",
+  "started_at": "2026-09-21T14:30:52.488165+08:00",
+  "finished_at": "2026-09-21T14:30:56.018739+08:00",
+  "note": "calibration={\"calibration_only_previous_day\": \"2026-09-20\", \"calibration_rows\": 387, \"dominance\": 0.9688, \"dominant_samples\": 31, \"inferred_source_minus_utc_minutes\": -300, \"offset_distribution\": {\"-300\": 31, \"-297\": 1}, \"reason\": \"DOMINANT_EXACT_PAIR_CLOCK_OFFSET\", \"samples\": 32, \"target_rows\": 48}",
   "target_start": "2026-09-21",
   "target_end": "2026-09-22"
 }
