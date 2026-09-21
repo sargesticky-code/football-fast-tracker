@@ -178,9 +178,9 @@ def main():
     write_health(args.health_dir / f"{args.source.lower()}.json", health)
     print(json.dumps(health.__dict__, ensure_ascii=False))
 
-    # FRB is mandatory. Optional sources fail closed into health metadata.
-    if args.source == "FRB" and status != "OK":
-        raise SystemExit("Required fresh Forebet anchor unavailable")
+    # HKJC is the canonical fixture universe. FRB is an evidence source.
+    # Any provider may fail closed into health metadata without blocking the
+    # other independent sources.
 
 
 if __name__ == "__main__":
