@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 13 · master-first multisource matching
+# launcher revision: 14 · safe global one-for-all fallback
 
 on:
   workflow_dispatch:
@@ -170,7 +170,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/team-master
-          for source in FRB ACC BCL FST PRE STA; do
+          for source in GLOBAL FRB ACC BCL FST PRE STA; do
             curl -fsSL               "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/team-name-master?source=$source"               -o "/tmp/team-master/$source.json"
           done
           python - <<'PY'
