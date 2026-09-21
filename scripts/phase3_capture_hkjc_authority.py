@@ -30,6 +30,14 @@ def clean(value) -> str:
     return "" if value is None else str(value).strip()
 
 
+def first(row: dict, *keys: str) -> str:
+    for key in keys:
+        value = clean(row.get(key))
+        if value:
+            return value
+    return ""
+
+
 def truthy(value) -> bool:
     if isinstance(value, bool):
         return value
@@ -65,6 +73,13 @@ def main() -> int:
         if not event_id or not live_status(status):
             continue
 
+        # Preserve source-language fields when the upstream scraper exposes
+        # them. Generic home/away remain the fallback so Layer 1 stays stable.
+        home_en = first(row, "home_en", "home_name_en", "homeEnglish", "home")
+        away_en = first(row, "away_en", "away_name_en", "awayEnglish", "away")
+        home_zh = first(row, "home_zh", "home_name_zh", "homeChinese", "home_chi")
+        away_zh = first(row, "away_zh", "away_name_zh", "awayChinese", "away_chi")
+
         rec = by_event.setdefault(event_id, {
             "hkjc_event_id": event_id,
             "match_id": clean(row.get("match_id")),
@@ -72,8 +87,10 @@ def main() -> int:
             "pool_status": clean(row.get("pool_status")),
             "kickoff_hkt": clean(row.get("kick_off")),
             "tournament": clean(row.get("tournament")),
-            "home_en": clean(row.get("home")),
-            "away_en": clean(row.get("away")),
+            "home_en": home_en,
+            "away_en": away_en,
+            "home_zh": home_zh,
+            "away_zh": away_zh,
             "in_play": truthy(row.get("in_play")),
             "odds_updated_at": clean(row.get("updated_at")),
         })
@@ -85,6 +102,14 @@ def main() -> int:
             rec["status"] = status
         if clean(row.get("pool_status")):
             rec["pool_status"] = clean(row.get("pool_status"))
+        if home_en:
+            rec["home_en"] = home_en
+        if away_en:
+            rec["away_en"] = away_en
+        if home_zh:
+            rec["home_zh"] = home_zh
+        if away_zh:
+            rec["away_zh"] = away_zh
         rec["in_play"] = rec["in_play"] or truthy(row.get("in_play"))
         if clean(row.get("updated_at")) > clean(rec.get("odds_updated_at")):
             rec["odds_updated_at"] = clean(row.get("updated_at"))
