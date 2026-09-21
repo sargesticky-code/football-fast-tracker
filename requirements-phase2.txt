@@ -1,0 +1,8 @@
+# Phase 2 only: player / squad / manager / human-factor intelligence
+# Kept separate from production requirements.txt.
+curl_cffi>=0.13,<0.15
+rapidfuzz>=3.14,<4
+python-dateutil>=2.9,<3
+pydantic>=2.11,<3
+pandas>=2.3,<3
+soccerdata==1.9.1
