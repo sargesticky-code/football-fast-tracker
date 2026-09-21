@@ -546,15 +546,11 @@ def main() -> int:
         gate_date = datetime.strptime(date, "%Y-%m-%d").date()
         today_hkt = datetime.now(HKT).date()
         if len(date_rows) >= MIN_DATE_ROWS_FOR_GATE and ratio < MIN_DATE_CORNER_RATIO:
-            if gate_date <= today_hkt:
-                raise SystemExit(
-                    f"Forebet corner date coverage too low: "
-                    f"{date} {parsed}/{len(date_rows)} ({ratio:.1%})"
-                )
+            period = "current/past" if gate_date <= today_hkt else "future"
             print(
-                f"WARN Forebet future corner page not fully published yet: "
-                f"{date} {parsed}/{len(date_rows)} ({ratio:.1%}); "
-                "preserving available rows and continuing"
+                f"WARN Forebet {period} corner surface incomplete: "
+                f"{date} fresh={parsed}/{len(date_rows)} ({ratio:.1%}); "
+                "preserving last-good enrichment where available"
             )
 
     if corner_unlisted:
@@ -570,16 +566,46 @@ def main() -> int:
             f"{len(corner_parse_failures)}"
         )
 
+    # Upstream absence/rate-limiting is not a parser failure. The current feed
+    # already carries last-good enrichment from prior validated runs; never blank
+    # it merely because this refresh could not reach/publish the optional market
+    # surfaces. Listed-but-unparsed fixtures remain fatal above because they are
+    # evidence of an actual parser regression.
+    available_ou = sum(
+        bool(str(row.get("prediction_ou25") or "").strip())
+        and bool(str(row.get("prob_over25") or "").strip())
+        and bool(str(row.get("prob_under25") or "").strip())
+        for row in rows
+    )
+    available_corners = sum(
+        bool(str(row.get("corner_prediction") or "").strip())
+        and bool(str(row.get("corner_prob_under95") or "").strip())
+        and bool(str(row.get("corner_prob_over95") or "").strip())
+        for row in rows
+    )
+
     if ou_count == 0:
-        raise SystemExit("zero Forebet O/U rows parsed")
+        print(
+            f"WARN FOREBET_OU_REFRESH_UNAVAILABLE fresh=0 "
+            f"last_good_preserved={available_ou}/{len(rows)}"
+        )
     if corner_count == 0:
-        raise SystemExit("zero Forebet corner rows parsed")
+        print(
+            f"WARN FOREBET_CORNER_REFRESH_UNAVAILABLE fresh=0 "
+            f"last_good_preserved={available_corners}/{len(rows)}"
+        )
     if fresh_corner_ratio < MIN_FRESH_CORNER_RATIO:
-        raise SystemExit(
-            f"Forebet fresh corner coverage too low: "
-            f"{corner_count}/{len(rows)} ({fresh_corner_ratio:.1%})"
+        print(
+            f"WARN Forebet fresh corner coverage below target: "
+            f"{corner_count}/{len(rows)} ({fresh_corner_ratio:.1%}); "
+            f"last_good_preserved={available_corners}/{len(rows)}"
         )
 
+    print(
+        f"FOREBET_MARKETS_FINAL fresh_ou={ou_count} available_ou={available_ou} "
+        f"fresh_corners={corner_count} available_corners={available_corners} "
+        "policy=preserve_last_good_on_source_absence"
+    )
     return 0
 
 
