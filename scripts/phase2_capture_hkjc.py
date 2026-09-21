@@ -3,9 +3,18 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
 import requests
+
+# Direct execution (python scripts/...) puts scripts/ on sys.path, not repo root.
+# Resolve the repo root explicitly so the vendored read-only HKJC query remains
+# the single source without copying production code into Phase 2.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 from vendor_hkjc_queries import ALL_MATCH_LIST
 
 ENDPOINT = "https://info.cld.hkjc.com/graphql/base/"
