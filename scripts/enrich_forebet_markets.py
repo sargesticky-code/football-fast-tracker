@@ -32,6 +32,7 @@ MIN_FRESH_CORNER_RATIO = 0.50
 MIN_DATE_ROWS_FOR_GATE = 5
 MIN_DATE_CORNER_RATIO = 0.35
 HKT = ZoneInfo("Asia/Hong_Kong")
+_JINA_CIRCUIT_OPEN = False
 
 EXTRA_FIELDS = [
     "ou_predicted_score",
