@@ -1,16 +1,23 @@
 name: Phase 2 Identity
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - app-v1
+    paths:
+      - 'scripts/phase2_*.py'
+      - 'data/phase2_*'
+      - '.github/workflows/phase2_identity.yml'
   schedule:
     - cron: '18 * * * *'
 permissions:
   contents: write
 concurrency:
-  group: phase2-identity
+  group: phase2-identity-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: false
 jobs:
   identity:
-    if: github.ref == 'refs/heads/phase2-human-intelligence'
+    if: (github.event_name == 'pull_request' && github.head_ref == 'phase2-human-intelligence') || (github.event_name != 'pull_request' && github.ref == 'refs/heads/phase2-human-intelligence')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -25,6 +32,7 @@ jobs:
       - name: Execute complete Layer 1 pipeline
         run: python scripts/phase2_run_layer1.py
       - name: Persist Phase 2 snapshots only
+        if: github.event_name != 'pull_request'
         run: |
           git config user.name "phase2-bot"
           git config user.email "phase2-bot@users.noreply.github.com"
