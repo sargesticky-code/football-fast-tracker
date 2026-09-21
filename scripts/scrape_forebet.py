@@ -16,7 +16,7 @@ from zoneinfo import ZoneInfo
 import requests
 from bs4 import BeautifulSoup, Tag
 
-from team_name_master import build_forward_map
+from team_name_master import build_competition_map, build_context_map, build_forward_map
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "forebet_current.csv"
@@ -92,6 +92,8 @@ SESSION.headers.update({
 })
 
 _FOREBET_MASTER: dict[str, str] | None = None
+_FOREBET_COMPETITION_MASTER: dict[str, str] | None = None
+_FOREBET_CONTEXT_MASTER: dict[tuple[str, str], tuple[str, str]] | None = None
 
 
 def forebet_master_map() -> dict[str, str]:
@@ -100,6 +102,30 @@ def forebet_master_map() -> dict[str, str]:
     if _FOREBET_MASTER is None:
         _FOREBET_MASTER = build_forward_map("FOREBET", normalize_team)
     return _FOREBET_MASTER
+
+
+def normalize_competition(value: str) -> str:
+    value = strip_accents(str(value or "")).casefold()
+    value = re.sub(r"[^a-z0-9]+", "", value)
+    return value.strip()
+
+
+def forebet_competition_map() -> dict[str, str]:
+    global _FOREBET_COMPETITION_MASTER
+    if _FOREBET_COMPETITION_MASTER is None:
+        _FOREBET_COMPETITION_MASTER = build_competition_map(
+            "FOREBET", normalize_competition
+        )
+    return _FOREBET_COMPETITION_MASTER
+
+
+def forebet_context_map() -> dict[tuple[str, str], tuple[str, str]]:
+    global _FOREBET_CONTEXT_MASTER
+    if _FOREBET_CONTEXT_MASTER is None:
+        _FOREBET_CONTEXT_MASTER = build_context_map(
+            "FOREBET", normalize_team, normalize_competition
+        )
+    return _FOREBET_CONTEXT_MASTER
 
 
 def text(el: Tag | None) -> str:
@@ -518,10 +544,57 @@ def attach_hkjc_target(
     if not same_date:
         return None
 
-    # One-for-all path: a previously verified Forebet name resolves directly
-    # to the canonical HKJC English name. This avoids re-fuzzy-matching the
-    # same clubs on every future fixture. All production callers get this path
-    # automatically; callers do not need to pass a map explicitly.
+    # Static competition identity narrows the candidate universe before team
+    # matching. Once a source league/code is verified, future fixtures in that
+    # competition no longer need to rediscover the league relationship.
+    source_comp = normalize_competition(row.get("league_short", ""))
+    competition_master = forebet_competition_map()
+    canonical_tournament = competition_master.get(source_comp, "")
+    scoped_date = [
+        t for t in same_date
+        if not canonical_tournament
+        or normalize_competition(t.get("league_zh", "")) == normalize_competition(canonical_tournament)
+    ]
+    if not scoped_date:
+        scoped_date = same_date
+
+    # Strongest path: persistent source+competition+team mapping. This is the
+    # reusable "learn once, one lookup forever" identity path.
+    context = forebet_context_map()
+    home_ctx = context.get((source_comp, normalize_team(row["home_team"])))
+    away_ctx = context.get((source_comp, normalize_team(row["away_team"])))
+    if home_ctx and away_ctx:
+        home_canonical, home_tournament = home_ctx
+        away_canonical, away_tournament = away_ctx
+        context_tournament = home_tournament if home_tournament == away_tournament else canonical_tournament
+        direct = [
+            t for t in scoped_date
+            if (not context_tournament
+                or normalize_competition(t.get("league_zh", "")) == normalize_competition(context_tournament))
+            and normalize_team(t["home_en"]) == normalize_team(home_canonical)
+            and normalize_team(t["away_en"]) == normalize_team(away_canonical)
+        ]
+        if len(direct) == 1:
+            best = direct[0]
+            out = dict(row)
+            out.update({
+                "hkjc_event_id": best["hkjc_event_id"],
+                "hkjc_league": best["league_zh"],
+                "hkjc_home_team": best["home_en"],
+                "hkjc_away_team": best["away_en"],
+                "hkjc_home_zh": best["home_zh"],
+                "hkjc_away_zh": best["away_zh"],
+                "hkjc_kickoff_hkt": best["kickoff_hkt"],
+                "hkjc_had_home": best["had_home"],
+                "hkjc_had_draw": best["had_draw"],
+                "hkjc_had_away": best["had_away"],
+                "match_score": 1.0,
+            })
+            return out
+
+    # One-for-all source-name path: a previously verified Forebet name resolves
+    # directly to the canonical HKJC English name. Competition narrowing above
+    # keeps cohort/league collisions fail-closed.
     if master is None:
         master = forebet_master_map()
     if master:
@@ -529,7 +602,7 @@ def attach_hkjc_target(
         away_canonical = master.get(normalize_team(row["away_team"]))
         if home_canonical and away_canonical:
             direct = [
-                t for t in same_date
+                t for t in scoped_date
                 if normalize_team(t["home_en"]) == normalize_team(home_canonical)
                 and normalize_team(t["away_en"]) == normalize_team(away_canonical)
             ]
@@ -551,14 +624,13 @@ def attach_hkjc_target(
                 })
                 return out
 
-    # Discovery-only fallback for genuinely new names. Once a successful
-    # event mapping is persisted to team_name_master, future runs take the
-    # direct path above instead of repeating this fuzzy search.
+    # Discovery-only fallback for genuinely new names. League context is still
+    # applied so fuzzy discovery compares only compatible competition targets.
     best = None
     best_avg = 0.0
     best_home = 0.0
     best_away = 0.0
-    for target in same_date:
+    for target in scoped_date:
         hs = team_score(row["home_team"], target["home_en"])
         aws = team_score(row["away_team"], target["away_en"])
         avg = (hs + aws) / 2
