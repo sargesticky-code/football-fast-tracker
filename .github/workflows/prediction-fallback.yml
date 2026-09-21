@@ -7,6 +7,7 @@ on:
       - "scripts/update_prediction_fallback.py"
       - "scripts/check_prediction_fallback_policy.py"
       - "data/prediction_source_registry.csv"
+      - "scripts/team_name_master.py"
       - ".github/workflows/prediction-fallback.yml"
   schedule:
     # 06:30 and 18:30 Hong Kong time (UTC+8)
