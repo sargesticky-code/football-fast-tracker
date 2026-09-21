@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 9 · HKJC-authority Statarea clock calibration
+# launcher revision: 10 · previous-day Statarea calibration evidence
 
 on:
   workflow_dispatch:
