@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Collect Phase 3 Layer 2 FotMob identity evidence for HKJC-eligible rows.
+"""Collect Phase 3 Layer 2 external identity evidence for HKJC-eligible rows.
 
-At most one FotMob daily-board request is made per execution, regardless of the
-number of eligible HKJC matches. No request is made when HKJC has no eligible
-rows. Ambiguous/weak matches are reported but never persisted as evidence.
+FotMob is the primary one-board source. Sofascore is a coverage-gap fallback,
+but repeated transport blocking is persisted and cooled down so scheduled runs
+do not hammer a blocked provider. External sources never create HKJC eligibility.
 """
 from __future__ import annotations
 
@@ -19,177 +19,118 @@ from phase3.sofascore_identity import normalize_board as normalize_sofascore_boa
 
 AUTH=Path("data/phase3_hkjc_authority.json")
 EVIDENCE=Path("data/phase3_identity_evidence.jsonl")
+SOURCE_HEALTH=Path("data/phase3_identity_source_health.json")
+SOFASCORE_COOLDOWN_SECONDS=6*60*60
 
 
 def eligible_rows(payload: dict) -> tuple[list[dict], str, float | None]:
-    """Reuse Layer 1 authority contract; never reimplement live eligibility here."""
-    result=evaluate_authority(
-        payload.get("rows") or [],
-        source_fetched_at=payload.get("fetched_at"),
-        now=datetime.now(timezone.utc),
-    )
+    result=evaluate_authority(payload.get("rows") or [], source_fetched_at=payload.get("fetched_at"), now=datetime.now(timezone.utc))
     return [dict(r) for r in result.rows if r.get("phase3_eligible")], result.health, result.snapshot_age_seconds
 
 
 def fotmob_board(date: str) -> list[dict]:
     url=f"https://www.fotmob.com/api/data/matches?date={date}"
     req=Request(url,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
-    with urlopen(req,timeout=12) as resp:
-        data=json.load(resp)
+    with urlopen(req,timeout=12) as resp: data=json.load(resp)
     rows=[]
     for league in data.get("leagues") or []:
-        competition=(league.get("primaryName") or league.get("name") or "")
+        competition=league.get("primaryName") or league.get("name") or ""
         for m in league.get("matches") or []:
             home=m.get("home") or {}; away=m.get("away") or {}
-            rows.append({
-                "id":m.get("id"),
-                "home":home.get("name") or home.get("longName") or "",
-                "away":away.get("name") or away.get("longName") or "",
-                "kickoff":m.get("status",{}).get("utcTime") or m.get("timeTS") or "",
-                "competition":competition,
-            })
+            rows.append({"id":m.get("id"),"home":home.get("name") or home.get("longName") or "","away":away.get("name") or away.get("longName") or "","kickoff":m.get("status",{}).get("utcTime") or m.get("timeTS") or "","competition":competition})
     return rows
 
 
 def sofascore_board(date: str) -> list[dict]:
     iso=f"{date[:4]}-{date[4:6]}-{date[6:8]}"
-    urls=[
-        f"https://www.sofascore.com/api/v1/sport/football/scheduled-events/{iso}",
-        f"https://api.sofascore.com/api/v1/sport/football/scheduled-events/{iso}",
-    ]
+    urls=[f"https://www.sofascore.com/api/v1/sport/football/scheduled-events/{iso}",f"https://api.sofascore.com/api/v1/sport/football/scheduled-events/{iso}"]
     last_error=None
     for url in urls:
-        req=Request(url,headers={
-            "User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/128 Safari/537.36",
-            "Accept":"application/json",
-            "Referer":"https://www.sofascore.com/",
-        })
+        req=Request(url,headers={"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/128 Safari/537.36","Accept":"application/json","Referer":"https://www.sofascore.com/"})
         try:
-            with urlopen(req,timeout=12) as resp:
-                return normalize_sofascore_board(json.load(resp))
+            with urlopen(req,timeout=12) as resp: return normalize_sofascore_board(json.load(resp))
         except HTTPError as exc:
             last_error=exc
-            if exc.code not in {403,404,429}:
-                raise
-    if last_error:
-        raise last_error
+            if exc.code not in {403,404,429}: raise
+    if last_error: raise last_error
     return []
 
 
-def _names(hk: dict) -> tuple[str, str]:
-    home=str(hk.get("home_en") or hk.get("home") or "").strip()
-    away=str(hk.get("away_en") or hk.get("away") or "").strip()
-    return home,away
+def _load_source_health() -> dict:
+    try: return json.loads(SOURCE_HEALTH.read_text(encoding="utf-8"))
+    except (FileNotFoundError,json.JSONDecodeError): return {}
+
+
+def _save_source_health(state: dict) -> None:
+    SOURCE_HEALTH.parent.mkdir(parents=True,exist_ok=True)
+    SOURCE_HEALTH.write_text(json.dumps(state,sort_keys=True,indent=2)+"\n",encoding="utf-8")
+
+
+def _sofascore_in_cooldown(state: dict, now: datetime) -> tuple[bool,float]:
+    raw=(state.get("SOFASCORE") or {}).get("blocked_at")
+    if not raw: return False,0.0
+    try: blocked=datetime.fromisoformat(str(raw).replace("Z","+00:00")).astimezone(timezone.utc)
+    except ValueError: return False,0.0
+    age=max(0.0,(now-blocked).total_seconds())
+    return age<SOFASCORE_COOLDOWN_SECONDS,age
+
+
+def _names(hk: dict) -> tuple[str,str]:
+    return str(hk.get("home_en") or hk.get("home") or "").strip(),str(hk.get("away_en") or hk.get("away") or "").strip()
 
 
 def main() -> int:
     if not AUTH.exists():
-        print("PHASE3_LAYER2 source_gap=NO_AUTHORITY_SNAPSHOT requests=0")
-        return 2
+        print("PHASE3_LAYER2 source_gap=NO_AUTHORITY_SNAPSHOT requests=0"); return 2
     authority=json.loads(AUTH.read_text(encoding="utf-8"))
     eligible,authority_health,authority_age=eligible_rows(authority)
     age="NA" if authority_age is None else f"{authority_age:.1f}"
     if not eligible:
-        print(
-            f"PHASE3_LAYER2 eligible=0 requests=0 evidence_added=0 "
-            f"authority_health={authority_health} authority_age_seconds={age}"
-        )
-        return 0
-
+        print(f"PHASE3_LAYER2 eligible=0 requests=0 evidence_added=0 authority_health={authority_health} authority_age_seconds={age}"); return 0
     dates=sorted({str(r.get("kickoff_hkt") or "")[:10].replace("-","") for r in eligible if r.get("kickoff_hkt")})
     if len(dates)!=1:
-        print(f"PHASE3_LAYER2 eligible={len(eligible)} requests=0 source_gap=DATE_AMBIGUITY")
-        return 2
+        print(f"PHASE3_LAYER2 eligible={len(eligible)} requests=0 source_gap=DATE_AMBIGUITY"); return 2
     board=fotmob_board(dates[0])
-    now=datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-    additions=[]; unresolved=0; fallback_rows=[]; fallback_requests=0
+    now_dt=datetime.now(timezone.utc).replace(microsecond=0); now=now_dt.isoformat()
+    source_health=_load_source_health(); additions=[]; unresolved=0; fallback_rows=[]; fallback_requests=0; fallback_attempted=False
     for hk in eligible:
-        event=hk.get("hkjc_event_id")
-        home,away=_names(hk)
+        event=hk.get("hkjc_event_id"); home,away=_names(hk)
         if not home or not away:
-            unresolved+=1
-            print(
-                f"PHASE3_IDENTITY event={event} status=UNRESOLVED reason=HKJC_NAME_GAP "
-                f"home_present={int(bool(home))} away_present={int(bool(away))} candidates=0"
-            )
-            continue
+            unresolved+=1; print(f"PHASE3_IDENTITY event={event} status=UNRESOLVED reason=HKJC_NAME_GAP home_present={int(bool(home))} away_present={int(bool(away))} candidates=0"); continue
         c,reason=choose_candidate(hk,board)
         if not c:
-            ranked=ranked_candidates(hk,board,limit=3)
-            diagnostic_reason = classify_unresolved(hk, board)
-            if diagnostic_reason == "SOURCE_COVERAGE_GAP":
-                if not fallback_rows:
-                    fallback_requests=1
+            ranked=ranked_candidates(hk,board,limit=3); diagnostic_reason=classify_unresolved(hk,board)
+            if diagnostic_reason=="SOURCE_COVERAGE_GAP":
+                cooldown,cooldown_age=_sofascore_in_cooldown(source_health,now_dt)
+                if cooldown:
+                    print(f"PHASE3_IDENTITY_FALLBACK source=SOFASCORE status=COOLDOWN age_seconds={cooldown_age:.0f} cooldown_seconds={SOFASCORE_COOLDOWN_SECONDS}")
+                elif not fallback_attempted:
+                    fallback_attempted=True; fallback_requests=1
                     try:
-                        fallback_rows=sofascore_board(dates[0])
+                        fallback_rows=sofascore_board(dates[0]); source_health.pop("SOFASCORE",None); _save_source_health(source_health)
                     except HTTPError as exc:
-                        print(
-                            f"PHASE3_IDENTITY_FALLBACK source=SOFASCORE status=SOURCE_HTTP_ERROR "
-                            f"http_status={exc.code}"
-                        )
+                        source_health["SOFASCORE"]={"status":"HTTP_BLOCKED","http_status":exc.code,"blocked_at":now}; _save_source_health(source_health)
+                        print(f"PHASE3_IDENTITY_FALLBACK source=SOFASCORE status=SOURCE_HTTP_ERROR http_status={exc.code}")
                     except Exception as exc:
-                        print(
-                            f"PHASE3_IDENTITY_FALLBACK source=SOFASCORE status=SOURCE_ERROR "
-                            f"error={type(exc).__name__}"
-                        )
+                        print(f"PHASE3_IDENTITY_FALLBACK source=SOFASCORE status=SOURCE_ERROR error={type(exc).__name__}")
                 fallback_candidate,fallback_reason=choose_candidate(hk,fallback_rows)
                 if fallback_candidate:
-                    additions.append(json.dumps({
-                        "hkjc_event_id":str(event),"source":"SOFASCORE",
-                        "source_match_id":fallback_candidate.source_match_id,
-                        "confidence":fallback_candidate.confidence,"observed_at":now,
-                        "home":fallback_candidate.home,"away":fallback_candidate.away,
-                        "kickoff":fallback_candidate.kickoff,
-                        "competition":fallback_candidate.competition,
-                    },ensure_ascii=False))
-                    print(
-                        f"PHASE3_IDENTITY event={event} source=SOFASCORE "
-                        f"external={fallback_candidate.source_match_id} "
-                        f"confidence={fallback_candidate.confidence:.3f} status=CANDIDATE"
-                    )
-                    continue
-                diagnostic_reason = classify_unresolved(hk,fallback_rows) if fallback_rows else "SOURCE_COVERAGE_GAP"
-                reason=f"{reason}/SOFASCORE_{fallback_reason}"
+                    additions.append(json.dumps({"hkjc_event_id":str(event),"source":"SOFASCORE","source_match_id":fallback_candidate.source_match_id,"confidence":fallback_candidate.confidence,"observed_at":now,"home":fallback_candidate.home,"away":fallback_candidate.away,"kickoff":fallback_candidate.kickoff,"competition":fallback_candidate.competition},ensure_ascii=False))
+                    print(f"PHASE3_IDENTITY event={event} source=SOFASCORE external={fallback_candidate.source_match_id} confidence={fallback_candidate.confidence:.3f} status=CANDIDATE"); continue
+                diagnostic_reason=classify_unresolved(hk,fallback_rows) if fallback_rows else "SOURCE_COVERAGE_GAP"; reason=f"{reason}/SOFASCORE_{fallback_reason}"
             unresolved+=1
-            print(
-                f"PHASE3_IDENTITY event={event} status=UNRESOLVED reason={diagnostic_reason} "
-                f"matcher_reason={reason} hkjc_fixture={home}|{away} candidates={len(ranked)}"
-            )
-            for rank,x in enumerate(ranked,1):
-                print(
-                    f"PHASE3_IDENTITY_DIAG event={event} rank={rank} "
-                    f"external={x.source_match_id} confidence={x.confidence:.3f} "
-                    f"home_score={x.home_score:.3f} away_score={x.away_score:.3f} "
-                    f"drift_seconds={x.kickoff_drift_seconds} "
-                    f"fixture={x.home}|{x.away} competition={x.competition}"
-                )
+            print(f"PHASE3_IDENTITY event={event} status=UNRESOLVED reason={diagnostic_reason} matcher_reason={reason} hkjc_fixture={home}|{away} candidates={len(ranked)}")
+            for rank,x in enumerate(ranked,1): print(f"PHASE3_IDENTITY_DIAG event={event} rank={rank} external={x.source_match_id} confidence={x.confidence:.3f} home_score={x.home_score:.3f} away_score={x.away_score:.3f} drift_seconds={x.kickoff_drift_seconds} fixture={x.home}|{x.away} competition={x.competition}")
             if not ranked:
-                coverage=coverage_diagnostic(hk,board,limit=3)
-                for rank,x in enumerate(coverage,1):
+                for rank,x in enumerate(coverage_diagnostic(hk,board,limit=3),1):
                     drift="NA" if x["kickoff_drift_seconds"] is None else x["kickoff_drift_seconds"]
-                    print(
-                        f"PHASE3_IDENTITY_COVERAGE event={event} rank={rank} "
-                        f"external={x['source_match_id']} name_score={x['name_score']:.3f} "
-                        f"home_score={x['home_score']:.3f} away_score={x['away_score']:.3f} "
-                        f"drift_seconds={drift} fixture={x['home']}|{x['away']} "
-                        f"competition={x['competition']}"
-                    )
+                    print(f"PHASE3_IDENTITY_COVERAGE event={event} rank={rank} external={x['source_match_id']} name_score={x['name_score']:.3f} home_score={x['home_score']:.3f} away_score={x['away_score']:.3f} drift_seconds={drift} fixture={x['home']}|{x['away']} competition={x['competition']}")
             continue
-        additions.append(json.dumps({
-            "hkjc_event_id":str(event),"source":"FOTMOB",
-            "source_match_id":c.source_match_id,"confidence":c.confidence,"observed_at":now,
-            "home":c.home,"away":c.away,"kickoff":c.kickoff,"competition":c.competition,
-        },ensure_ascii=False))
-        print(f"PHASE3_IDENTITY event={event} external={c.source_match_id} confidence={c.confidence:.3f} status=CANDIDATE")
+        additions.append(json.dumps({"hkjc_event_id":str(event),"source":"FOTMOB","source_match_id":c.source_match_id,"confidence":c.confidence,"observed_at":now,"home":c.home,"away":c.away,"kickoff":c.kickoff,"competition":c.competition},ensure_ascii=False)); print(f"PHASE3_IDENTITY event={event} external={c.source_match_id} confidence={c.confidence:.3f} status=CANDIDATE")
     if additions:
         EVIDENCE.parent.mkdir(parents=True,exist_ok=True)
-        with EVIDENCE.open("a",encoding="utf-8") as fh:
-            fh.write("\n".join(additions)+"\n")
-    print(
-        f"PHASE3_LAYER2 eligible={len(eligible)} board_rows={len(board)} "
-        f"fotmob_requests=1 sofascore_requests={fallback_requests} "
-        f"evidence_added={len(additions)} unresolved={unresolved}"
-    )
+        with EVIDENCE.open("a",encoding="utf-8") as fh: fh.write("\n".join(additions)+"\n")
+    print(f"PHASE3_LAYER2 eligible={len(eligible)} board_rows={len(board)} fotmob_requests=1 sofascore_requests={fallback_requests} evidence_added={len(additions)} unresolved={unresolved}")
     return 0
 
 if __name__=="__main__": raise SystemExit(main())
