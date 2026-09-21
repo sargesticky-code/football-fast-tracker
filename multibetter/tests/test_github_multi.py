@@ -192,3 +192,75 @@ def test_current_normalized_mode_can_require_exact_time():
         time_tolerance_hours=0,
     )
     assert matched is None
+
+
+def test_current_grouping_allows_small_normalized_kickoff_drift():
+    rows = [
+        {
+            "DATE": "22/09/2026",
+            "TIME": "00:15",
+            "HOME TEAM": "Lanus",
+            "AWAY TEAM": "Estudiantes LP",
+            "HOME PER": "51",
+            "DRAW PER": "13",
+            "AWAY PER": "36",
+            "NAME": "PRE",
+        }
+    ]
+    matched = upstream_style_match(
+        rows,
+        target_home="Lanús",
+        target_away="Estudiantes La Plata",
+        target_time="00:13",
+        target_date="22/09/2026",
+        similarity_threshold=55,
+        time_tolerance_hours=0,
+        time_tolerance_minutes=5,
+    )
+    assert matched is not None
+    assert matched["HOME TEAM"] == "Lanus"
+
+
+def test_team_similarity_handles_common_club_prefix_and_diacritics():
+    rows = [
+        {
+            "DATE": "21/09/2026",
+            "TIME": "02:05",
+            "HOME TEAM": "Queretaro",
+            "AWAY TEAM": "Leon",
+            "NAME": "ACC",
+        }
+    ]
+    matched = upstream_style_match(
+        rows,
+        target_home="Querétaro FC",
+        target_away="Club León",
+        target_time="02:05",
+        target_date="21/09/2026",
+        similarity_threshold=55,
+        time_tolerance_hours=0,
+        time_tolerance_minutes=5,
+    )
+    assert matched is not None
+
+
+def test_small_time_tolerance_does_not_accept_large_drift():
+    rows = [
+        {
+            "DATE": "22/09/2026",
+            "TIME": "00:25",
+            "HOME TEAM": "Lanus",
+            "AWAY TEAM": "Estudiantes LP",
+            "NAME": "PRE",
+        }
+    ]
+    matched = upstream_style_match(
+        rows,
+        target_home="Lanús",
+        target_away="Estudiantes La Plata",
+        target_time="00:13",
+        target_date="22/09/2026",
+        time_tolerance_hours=0,
+        time_tolerance_minutes=5,
+    )
+    assert matched is None
