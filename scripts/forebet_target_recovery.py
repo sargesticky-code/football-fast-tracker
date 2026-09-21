@@ -449,6 +449,7 @@ def install(production) -> None:
             route_html = production._jina_html(
                 route_url, f"recovery_competition_{source_comp}_{match_date}"
             )
+            route_from_jina = bool(route_html)
             if not route_html:
                 route_html = production._browser_html(
                     route_url, f"recovery_competition_browser_{source_comp}_{match_date}"
@@ -480,6 +481,55 @@ def install(production) -> None:
                 f"new={len(new_ids)} discovered={len(found)} remaining={len(missing_ids)}",
                 flush=True,
             )
+
+            # A rendered/Jina competition page can be syntactically healthy yet
+            # contain only the first lazy-loaded rows.  That is a partial source
+            # surface, not evidence that later fixtures are absent.  If a
+            # persistent league route found at least one target but did not cover
+            # all active targets in that same league, perform ONE bounded browser
+            # expansion of the same route and merge it.  This makes the static
+            # league registry a durable completeness mechanism rather than a
+            # one-row hint, without fan-out per fixture.
+            route_missing_ids = {
+                str(t.get("hkjc_event_id") or "").strip()
+                for t in scoped_targets
+                if str(t.get("hkjc_event_id") or "").strip() in missing_ids
+            }
+            if route_from_jina and route_missing_ids:
+                browser_html = production._browser_html(
+                    route_url,
+                    f"recovery_competition_partial_browser_{source_comp}_{match_date}",
+                )
+                if browser_html:
+                    browser_usable = _usable_ids(
+                        production, browser_html, match_date, scoped_targets
+                    )
+                    browser_new = browser_usable & missing_ids
+                    if browser_new:
+                        extra_parts.append(browser_html)
+                        covered |= browser_new
+                        missing_ids = required - covered
+
+                    browser_still_missing = [
+                        target_by_id[event_id]
+                        for event_id in sorted(missing_ids - set(discovered))
+                        if event_id in target_by_id
+                        and str(target_by_id[event_id].get("league_zh") or "").strip()
+                        == hkjc_tournament
+                    ]
+                    browser_found = _discover(
+                        production, browser_html, browser_still_missing
+                    )
+                    discovered.update(browser_found)
+                    print(
+                        f"FOREBET_COMPETITION_COMPLETENESS date={match_date} "
+                        f"source_comp={source_comp} hkjc_tournament={hkjc_tournament} "
+                        f"jina_usable={len(usable)} browser_usable={len(browser_usable)} "
+                        f"browser_new={len(browser_new)} "
+                        f"browser_discovered={len(browser_found)} "
+                        f"league_remaining={sum(1 for event_id in missing_ids if event_id in {str(t.get('hkjc_event_id') or '').strip() for t in scoped_targets})}",
+                        flush=True,
+                    )
 
         for kind, index_url in BROAD_INDEXES:
             if not missing_ids:
