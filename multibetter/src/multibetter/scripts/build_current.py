@@ -98,16 +98,26 @@ def main():
     write_cache(args.alias_cache, list(result.alias_cache))
 
     master_direct_by_source: dict[str, int] = {}
+    master_global_by_source: dict[str, int] = {}
     master_direct_rows = 0
+    master_global_rows = 0
     for row in result.rows:
         direct = [
             x for x in str(row.get("master_direct_sources") or "").split("+")
             if x
         ]
+        global_hits = [
+            x for x in str(row.get("master_global_sources") or "").split("+")
+            if x
+        ]
         if direct:
             master_direct_rows += 1
+        if global_hits:
+            master_global_rows += 1
         for source in direct:
             master_direct_by_source[source] = master_direct_by_source.get(source, 0) + 1
+        for source in global_hits:
+            master_global_by_source[source] = master_global_by_source.get(source, 0) + 1
 
     args.health_output.parent.mkdir(parents=True, exist_ok=True)
     args.health_output.write_text(
@@ -119,6 +129,8 @@ def main():
                 "status_counts": dict(result.status_counts),
                 "master_direct_rows": master_direct_rows,
                 "master_direct_by_source": master_direct_by_source,
+                "master_global_rows": master_global_rows,
+                "master_global_by_source": master_global_by_source,
             },
             indent=2,
             ensure_ascii=False,
@@ -137,6 +149,8 @@ def main():
                 "status_counts": dict(result.status_counts),
                 "master_direct_rows": master_direct_rows,
                 "master_direct_by_source": master_direct_by_source,
+                "master_global_rows": master_global_rows,
+                "master_global_by_source": master_global_by_source,
             },
             ensure_ascii=False,
         )
