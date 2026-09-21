@@ -175,7 +175,9 @@ def _apply_master_lookup(
     master_dir: Path | None,
 ) -> list[dict[str, str]]:
     verified, blocked = _load_master_lookup(master_dir, source)
-    if not verified:
+    global_verified, _ = _load_master_lookup(master_dir, "GLOBAL")
+
+    if not verified and not global_verified:
         return rows
 
     output: list[dict[str, str]] = []
@@ -185,19 +187,29 @@ def _apply_master_lookup(
             original = str(row.get(label, "") or "").strip()
             if not original:
                 continue
+
             key = normalize_text(original)
+            side = label.split()[0]
+
+            # A source-specific CANDIDATE / AMBIGUOUS state is an explicit
+            # safety block. Global fallback must never override it.
             if key in blocked:
-                row[f"__MB_MASTER_{label.split()[0]}_BLOCKED"] = "1"
-                continue
-            hit = verified.get(key)
-            if not hit:
+                row[f"__MB_MASTER_{side}_BLOCKED"] = "1"
                 continue
 
-            side = label.split()[0]
+            hit = verified.get(key)
+            hit_kind = "SOURCE"
+            if hit is None:
+                hit = global_verified.get(key)
+                hit_kind = "GLOBAL"
+            if hit is None:
+                continue
+
             row[f"__MB_RAW_{side}_TEAM"] = original
-            row[f"__MB_MASTER_{side}_HIT"] = "1"
+            row[f"__MB_MASTER_{side}_HIT"] = hit_kind
             row[f"__MB_MASTER_{side}_TEAM_KEY"] = str(hit.get("team_key") or "")
             row[label] = str(hit.get("hkjc_name_en") or original)
+
         output.append(row)
     return output
 
@@ -323,7 +335,14 @@ def build_hkjc_anchored_current(
             if _quality_confidence(p.match_quality) >= 0.85
         ]
         master_direct_sources = [
-            p.source for p in usable_predictions if p.match_quality == "MASTER"
+            p.source
+            for p in usable_predictions
+            if p.match_quality in ("MASTER_SOURCE", "MASTER_GLOBAL")
+        ]
+        master_global_sources = [
+            p.source
+            for p in usable_predictions
+            if p.match_quality == "MASTER_GLOBAL"
         ]
 
         identity_evidence = [
@@ -364,6 +383,8 @@ def build_hkjc_anchored_current(
             "learned_aliases": "",
             "master_direct_source_count": len(master_direct_sources),
             "master_direct_sources": "+".join(master_direct_sources),
+            "master_global_source_count": len(master_global_sources),
+            "master_global_sources": "+".join(master_global_sources),
             "identity_evidence": json.dumps(identity_evidence, ensure_ascii=False),
         }
 
@@ -399,7 +420,7 @@ def alias_map(rows: Iterable[AliasCacheRow]) -> dict[str, str]:
 
 
 def _quality_confidence(value: str | None) -> float:
-    if value == "MASTER":
+    if value in ("MASTER_SOURCE", "MASTER_GLOBAL"):
         return 1.0
     if value == "HIGH":
         return 1.0
