@@ -120,3 +120,78 @@ def build_reverse_map(source: str, normalizer: Callable[[str], str]) -> dict[str
         flush=True,
     )
     return out
+
+
+def build_competition_map(source: str, normalizer: Callable[[str], str]) -> dict[str, str]:
+    """Verified provider competition -> canonical HKJC tournament.
+
+    Only globally unambiguous VERIFIED competition rows are exposed by the
+    endpoint. Runtime importers can therefore narrow fixture candidates before
+    any team-name discovery.
+    """
+    payload = fetch_master_payload(source)
+    rows = payload.get("competitionRows")
+    rows = rows if isinstance(rows, list) else []
+    out: dict[str, str] = {}
+    bad: set[str] = set()
+    for row in rows:
+        source_comp = str(row.get("source_competition") or "").strip()
+        canonical = str(row.get("canonical_tournament") or "").strip()
+        key = normalizer(source_comp)
+        if not key or not canonical:
+            continue
+        old = out.get(key)
+        if old and old != canonical:
+            bad.add(key)
+            continue
+        out[key] = canonical
+    for key in bad:
+        out.pop(key, None)
+    print(
+        f"COMPETITION_NAME_MASTER source={source.upper()} rows={len(rows)} "
+        f"usable={len(out)} collisions={len(bad)}",
+        flush=True,
+    )
+    return out
+
+
+def build_context_map(
+    source: str,
+    team_normalizer: Callable[[str], str],
+    competition_normalizer: Callable[[str], str],
+) -> dict[tuple[str, str], tuple[str, str]]:
+    """(provider competition, provider team) -> (HKJC team, HKJC tournament).
+
+    Context rows are persistent verified event evidence. They are the safe path
+    for names reused across cohorts/leagues and let importers avoid repeating
+    fuzzy identity work once a source/league/name combination is known.
+    """
+    payload = fetch_master_payload(source)
+    rows = payload.get("contextRows")
+    rows = rows if isinstance(rows, list) else []
+    out: dict[tuple[str, str], tuple[str, str]] = {}
+    bad: set[tuple[str, str]] = set()
+    for row in rows:
+        source_name = str(row.get("source_name") or "").strip()
+        source_comp = str(row.get("source_competition") or "").strip()
+        canonical = str(row.get("hkjc_name_en") or "").strip()
+        tournament = str(row.get("canonical_tournament") or "").strip()
+        team_key = team_normalizer(source_name)
+        comp_key = competition_normalizer(source_comp)
+        key = (comp_key, team_key)
+        if not team_key or not canonical:
+            continue
+        old = out.get(key)
+        value = (canonical, tournament)
+        if old and old != value:
+            bad.add(key)
+            continue
+        out[key] = value
+    for key in bad:
+        out.pop(key, None)
+    print(
+        f"TEAM_NAME_CONTEXT source={source.upper()} rows={len(rows)} "
+        f"usable={len(out)} collisions={len(bad)}",
+        flush=True,
+    )
+    return out
