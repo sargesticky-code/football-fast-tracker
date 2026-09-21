@@ -1,30 +1,28 @@
 ﻿checked_at_hkt,match_date,kickoff_hkt,hkjc_event_id,league_zh,home_en,away_en,state,reason
-2026-09-21T07:11:41+08:00,2026-09-20,2026-09-21 05:30,FB5467,BD1,Flamengo,RB Bragantino,MODEL,usable_forebet_prediction_model
-2026-09-21T07:11:41+08:00,2026-09-20,2026-09-21 06:13,FB5550,APL,Belgrano,Estudiantes Rio Cuarto,UNRESOLVED,forebet_match_policy_review
-2026-09-21T07:11:41+08:00,2026-09-20,2026-09-21 06:30,FB5468,BD1,Athletico Paranaense,Bahia,UNRESOLVED,forebet_match_policy_review
-2026-09-21T07:11:41+08:00,2026-09-20,2026-09-21 06:57,FB5443,UD1,Montevideo Liverpool,Racing Club Montevideo,UNRESOLVED,forebet_match_policy_review
-2026-09-21T07:11:41+08:00,2026-09-20,2026-09-21 07:00,FB5457,MLS,Inter Miami CF,San Diego FC,MODEL,usable_forebet_prediction_model
-2026-09-21T07:11:41+08:00,2026-09-20,2026-09-21 07:00,FB5546,USL,Sacramento Republic,San Antonio FC,MODEL,usable_forebet_prediction_model
-2026-09-21T07:11:41+08:00,2026-09-20,2026-09-21 07:00,FB5547,MD1,Tapatio,Tlaxcala,UNRESOLVED,forebet_match_policy_review
-2026-09-21T07:11:41+08:00,2026-09-20,2026-09-21 07:00,FB5579,MXLW,Atletico San Luis Women,Pachuca Women,MODEL,usable_forebet_prediction_model
-2026-09-21T07:11:41+08:00,2026-09-20,2026-09-21 07:00,FB5580,MLSW,Utah Royals Women,Angel City Women,UNRESOLVED,forebet_alias_near_miss_review
-2026-09-21T07:11:41+08:00,2026-09-20,2026-09-21 07:00,FB5581,MLSW,Bay FC Women,Racing Louisville Women,UNRESOLVED,forebet_alias_near_miss_review
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-21 08:00,FB5459,MXL,Toluca,Santos Laguna,MODEL,usable_forebet_prediction_model
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-21 08:00,FB5460,MXL,Pachuca,Tijuana,MODEL,usable_forebet_prediction_model
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-21 08:28,FB5502,APL,Velez Sarsfield,Tigre,MODEL,usable_forebet_prediction_model
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-21 10:05,FB5458,MXL,Queretaro,Club Leon,MODEL,usable_forebet_prediction_model
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-21 15:00,FB5568,AWF,Korea Republic Women,Korea DPR Women,UNRESOLVED,weak_forebet_name_candidate_review
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-21 15:00,FB5569,AWF,China Women,Philippines Women,UNRESOLVED,weak_forebet_name_candidate_review
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-21 18:30,FB5570,AWF,Vietnam Women,Thailand Women,UNRESOLVED,weak_forebet_name_candidate_review
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-21 18:30,FB5571,AWF,Japan Women,Chinese Taipei Women,UNRESOLVED,weak_forebet_name_candidate_review
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-22 00:00,FB5582,GSLW,Werder Bremen Women,Stuttgart Women,UNRESOLVED,weak_forebet_name_candidate_review
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-22 01:28,FB5501,APL,Aldosivi,Atletico Tucuman,MODEL,usable_forebet_prediction_model
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-22 05:58,FB5508,APL,Barracas Central,Independiente Rivadavia,MODEL,usable_forebet_prediction_model
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-22 06:27,FB5442,UD1,Central Espanol,Montevideo City Torque,UNRESOLVED,forebet_alias_near_miss_review
-2026-09-21T07:12:01+08:00,2026-09-21,2026-09-22 06:28,FB5572,BD2,Criciuma,Operario Ferroviario,UNRESOLVED,forebet_alias_near_miss_review
-2026-09-21T07:12:05+08:00,2026-09-22,2026-09-22 08:13,FB5507,APL,Lanus,Estudiantes,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-21T07:12:05+08:00,2026-09-22,2026-09-22 08:28,FB5573,BD2,Cuiaba,Nautico Recife,MODEL,usable_forebet_prediction_model_after_reconcile
-2026-09-21T07:12:05+08:00,2026-09-22,2026-09-22 13:00,FB5575,AMF,Vietnam AM,Uzbekistan AM,UNRESOLVED,target_missing_from_forebet_scan_output
-2026-09-21T07:12:05+08:00,2026-09-22,2026-09-22 13:00,FB5576,AMF,Philippines AM,Kuwait AM,UNRESOLVED,target_missing_from_forebet_scan_output
-2026-09-21T07:12:05+08:00,2026-09-22,2026-09-22 18:00,FB5577,AMF,Korea Republic AM,Saudi Arabia AM,UNRESOLVED,target_missing_from_forebet_scan_output
-2026-09-21T07:12:05+08:00,2026-09-22,2026-09-22 08:30,FB5583,BD1W,Corinthians Women,Bahia Women,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:30+08:00,2026-09-20,2026-09-21 06:30,FB5468,BD1,Athletico Paranaense,Bahia,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:30+08:00,2026-09-20,2026-09-21 06:57,FB5443,UD1,Montevideo Liverpool,Racing Club Montevideo,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:31+08:00,2026-09-20,2026-09-21 07:00,FB5457,MLS,Inter Miami CF,San Diego FC,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:31+08:00,2026-09-20,2026-09-21 07:00,FB5546,USL,Sacramento Republic,San Antonio FC,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:30+08:00,2026-09-20,2026-09-21 07:00,FB5547,MD1,Tapatio,Tlaxcala,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:31+08:00,2026-09-20,2026-09-21 07:00,FB5579,MXLW,Atletico San Luis Women,Pachuca Women,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:30+08:00,2026-09-20,2026-09-21 07:00,FB5580,MLSW,Utah Royals Women,Angel City Women,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:30+08:00,2026-09-20,2026-09-21 07:00,FB5581,MLSW,Bay FC Women,Racing Louisville Women,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-21 08:00,FB5459,MXL,Toluca,Santos Laguna,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-21 08:00,FB5460,MXL,Pachuca,Tijuana,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-21 08:28,FB5502,APL,Velez Sarsfield,Tigre,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-21 10:05,FB5458,MXL,Queretaro,Club Leon,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-21 15:00,FB5568,AWF,Korea Republic Women,Korea DPR Women,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-21 15:00,FB5569,AWF,China Women,Philippines Women,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-21 18:30,FB5570,AWF,Vietnam Women,Thailand Women,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-21 18:30,FB5571,AWF,Japan Women,Chinese Taipei Women,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-22 00:00,FB5582,GSLW,Werder Bremen Women,Stuttgart Women,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-22 01:28,FB5501,APL,Aldosivi,Atletico Tucuman,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-22 05:58,FB5508,APL,Barracas Central,Independiente Rivadavia,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-22 06:27,FB5442,UD1,Central Espanol,Montevideo City Torque,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:31+08:00,2026-09-21,2026-09-22 06:28,FB5572,BD2,Criciuma,Operario Ferroviario,UNRESOLVED,forebet_source_surface_unavailable
+2026-09-21T08:30:31+08:00,2026-09-22,2026-09-22 08:13,FB5507,APL,Lanus,Estudiantes,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:31+08:00,2026-09-22,2026-09-22 08:28,FB5573,BD2,Cuiaba,Nautico Recife,MODEL,usable_forebet_prediction_model_after_reconcile
+2026-09-21T08:30:31+08:00,2026-09-22,2026-09-22 13:00,FB5575,AMF,Vietnam AM,Uzbekistan AM,UNRESOLVED,target_missing_from_forebet_scan_output
+2026-09-21T08:30:31+08:00,2026-09-22,2026-09-22 13:00,FB5576,AMF,Philippines AM,Kuwait AM,UNRESOLVED,target_missing_from_forebet_scan_output
+2026-09-21T08:30:31+08:00,2026-09-22,2026-09-22 18:00,FB5577,AMF,Korea Republic AM,Saudi Arabia AM,UNRESOLVED,target_missing_from_forebet_scan_output
+2026-09-21T08:30:31+08:00,2026-09-22,2026-09-22 08:30,FB5583,BD1W,Corinthians Women,Bahia Women,MODEL,usable_forebet_prediction_model_after_reconcile
