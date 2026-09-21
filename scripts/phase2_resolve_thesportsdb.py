@@ -8,7 +8,7 @@ from datetime import datetime,timedelta,timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 import requests
-HKT=timezone(timedelta(hours=8)); BASE="https://www.thesportsdb.com/api/v1/json/123/eventsday.php"
+HKT=timezone(timedelta(hours=8)); BASE="https://www.thesportsdb.com/api/v1/json/123/eventsday.php"; SEARCH="https://www.thesportsdb.com/api/v1/json/123/searchevents.php"
 FIELDS=["hkjc_team_id","hkjc_name_en","hkjc_name_ch","cohort","external_source","external_team_id","external_name","evidence_class","confirmed","confidence","source_url","source_timestamp","fetched_at","raw_context"]
 def rows(p):
  if not Path(p).exists(): return []
@@ -34,7 +34,7 @@ def main():
   try:
    r=requests.get(url,timeout=15,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"});r.raise_for_status();batch=r.json().get("events") or [];counts[d]=len(batch);events+=batch;time.sleep(.5)
   except Exception as e:errors.append([d,type(e).__name__,getattr(getattr(e,"response",None),"status_code",None)])
- added=[];attempted=set();fail={}
+ added=[];attempted=set();fail={};search_requests=0
  for f in fs:
   kick=datetime.fromisoformat(f["kickoff_hkt"])
   for side,other in (("home","away"),("away","home")):
@@ -60,5 +60,5 @@ def main():
    w=csv.DictWriter(out,fieldnames=FIELDS)
    if not exists:w.writeheader()
    w.writerows(added)
- print("PHASE2_THESPORTSDB "+json.dumps({"attempted":len(attempted),"confirmed_new":len(added),"unresolved":len(attempted)-len(added),"failure_classes":fail,"source_errors":errors,"source_event_counts":counts,"total_source_events":len(events)},separators=(",",":")))
+ print("PHASE2_THESPORTSDB "+json.dumps({"attempted":len(attempted),"confirmed_new":len(added),"unresolved":len(attempted)-len(added),"failure_classes":fail,"source_errors":errors,"source_event_counts":counts,"total_source_events":len(events),"targeted_search_requests":search_requests},separators=(",",":")))
 if __name__=="__main__":main()
