@@ -1,5 +1,5 @@
 import unittest
-from phase3.external_identity import choose_candidate, ranked_candidates
+from phase3.external_identity import choose_candidate, ranked_candidates, coverage_diagnostic
 
 HK={"home_en":"Manchester United","away_en":"Arsenal","kickoff_hkt":"2026-09-21T19:00:00+08:00"}
 
@@ -37,6 +37,16 @@ class ExternalIdentityTests(unittest.TestCase):
         c,reason=choose_candidate(HK,[row("1"),row("2",kickoff="2026-09-21T11:01:00+00:00")])
         self.assertIsNone(c)
         self.assertEqual(reason,"AMBIGUOUS_CANDIDATES")
+
+    def test_coverage_diagnostic_exposes_name_match_rejected_by_kickoff_gate(self):
+        far=row("88",home="Manchester United",away="Arsenal",kickoff="2026-09-21T15:00:00+00:00")
+        self.assertEqual(ranked_candidates(HK,[far]),[])
+        coverage=coverage_diagnostic(HK,[far])
+        self.assertEqual(coverage[0]["source_match_id"],"88")
+        self.assertEqual(coverage[0]["name_score"],1.0)
+        self.assertGreater(coverage[0]["kickoff_drift_seconds"],45*60)
+        c,reason=choose_candidate(HK,[far])
+        self.assertIsNone(c)
 
     def test_ranked_diagnostics_expose_components_without_promoting_weak_match(self):
         weak=row("7",home="Manchester Utd Youth",away="Arsenal Academy")
