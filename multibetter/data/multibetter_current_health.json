@@ -4,5 +4,14 @@
   "alias_cache_rows": 0,
   "status_counts": {
     "HKJC_ANCHOR": 27
+  },
+  "master_direct_rows": 6,
+  "master_direct_by_source": {
+    "PRE": 1,
+    "ACC": 5,
+    "BCL": 5,
+    "FST": 5,
+    "FRB": 1,
+    "STA": 1
   }
 }

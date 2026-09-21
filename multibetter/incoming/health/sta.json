@@ -1,12 +1,12 @@
 {
   "source": "STA",
   "status": "OK",
-  "rows": 48,
-  "requests": 3,
-  "errors": 0,
-  "started_at": "2026-09-21T15:04:07.026432+08:00",
-  "finished_at": "2026-09-21T15:04:11.524972+08:00",
-  "note": "calibration={\"calibration_only_previous_day\": \"2026-09-20\", \"calibration_rows\": 387, \"dominance\": 0.9688, \"dominant_samples\": 31, \"inferred_source_minus_utc_minutes\": -420, \"offset_distribution\": {\"-420\": 31, \"-417\": 1}, \"reason\": \"DOMINANT_EXACT_PAIR_CLOCK_OFFSET\", \"samples\": 32, \"target_rows\": 48}",
+  "rows": 28,
+  "requests": 2,
+  "errors": 1,
+  "started_at": "2026-09-21T15:07:04.564055+08:00",
+  "finished_at": "2026-09-21T15:07:27.793927+08:00",
+  "note": "calibration={\"calibration_only_previous_day\": \"2026-09-20\", \"calibration_rows\": 387, \"dominance\": 0.9744, \"dominant_samples\": 38, \"inferred_source_minus_utc_minutes\": 120, \"offset_distribution\": {\"120\": 38, \"123\": 1}, \"reason\": \"DOMINANT_EXACT_PAIR_CLOCK_OFFSET\", \"samples\": 39, \"target_rows\": 28}",
   "target_start": "2026-09-21",
   "target_end": "2026-09-22"
 }
