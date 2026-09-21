@@ -11,10 +11,11 @@ on:
       - 'phase3/**'
       - 'scripts/phase3_capture_hkjc_authority.py'
       - 'scripts/phase3_check_hkjc_authority.py'
-      - 'tests/test_phase3_hkjc_authority.py'
-      - 'phase3/identity_registry.py'
-      - 'tests/test_phase3_identity_registry.py'
+      - 'scripts/phase3_collect_fotmob_identity.py'
       - 'scripts/phase3_build_identity_registry.py'
+      - 'tests/test_phase3_hkjc_authority.py'
+      - 'tests/test_phase3_identity_registry.py'
+      - 'tests/test_phase3_external_identity.py'
       - '.github/workflows/phase3_hkjc_authority.yml'
 
 permissions:
@@ -43,8 +44,10 @@ jobs:
       - name: Run Layer 1 deterministic tests
         run: python -m unittest tests.test_phase3_hkjc_authority -v
 
-      - name: Run Layer 2 identity registry tests
-        run: python -m unittest tests.test_phase3_identity_registry -v
+      - name: Run Layer 2 identity tests
+        run: |
+          python -m unittest tests.test_phase3_identity_registry -v
+          python -m unittest tests.test_phase3_external_identity -v
 
       - name: Checkout pinned HKJC scraper
         run: |
@@ -59,11 +62,20 @@ jobs:
       - name: Evaluate Phase 3 Layer 1 authority
         run: PYTHONPATH=. python scripts/phase3_check_hkjc_authority.py
 
-      - name: Upload authority evidence
+      - name: Collect external identity evidence
+        run: PYTHONPATH=. python scripts/phase3_collect_fotmob_identity.py
+
+      - name: Build persistent identity registry
+        run: PYTHONPATH=. python scripts/phase3_build_identity_registry.py
+
+      - name: Upload Phase 3 evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: phase3-hkjc-authority-${{ github.run_id }}
-          path: data/phase3_hkjc_authority.json
-          if-no-files-found: error
+          name: phase3-live-evidence-${{ github.run_id }}
+          path: |
+            data/phase3_hkjc_authority.json
+            data/phase3_identity_evidence.jsonl
+            data/phase3_live_identity_map.json
+          if-no-files-found: warn
           retention-days: 7
