@@ -117,6 +117,25 @@ def coverage_diagnostic(hkjc: dict, external_rows: list[dict], limit: int = 3) -
     return rows[:max(0, limit)]
 
 
+def classify_unresolved(hkjc: dict, external_rows: list[dict]) -> str:
+    """Classify why no safe external identity can be promoted.
+
+    Classification is diagnostic only and never relaxes candidate thresholds.
+    """
+    coverage = coverage_diagnostic(hkjc, external_rows, limit=2)
+    if not coverage:
+        return "SOURCE_COVERAGE_GAP"
+    top = coverage[0]
+    drift = top.get("kickoff_drift_seconds")
+    if top.get("name_score", 0.0) >= 0.85 and drift is not None and drift > MAX_KICKOFF_DRIFT_SECONDS:
+        return "KICKOFF_MISMATCH"
+    if top.get("name_score", 0.0) < 0.65:
+        return "SOURCE_COVERAGE_GAP"
+    if len(coverage) > 1 and coverage[1].get("name_score", 0.0) >= top.get("name_score", 0.0) - 0.05:
+        return "AMBIGUOUS_NAME_COVERAGE"
+    return "NAME_MISMATCH"
+
+
 def ranked_candidates(hkjc: dict, external_rows: list[dict], limit: int = 3) -> list[Candidate]:
     """Return best structurally-valid candidates for diagnostics only.
 
