@@ -220,7 +220,7 @@ jobs:
         run: |
           python - <<'PY'
           import csv
-          from datetime import datetime, timezone
+          from datetime import datetime, timezone, timedelta
           from pathlib import Path
 
           src = Path("/tmp/hkjc_targets.csv")
@@ -238,7 +238,7 @@ jobs:
                   except ValueError:
                       continue
                   if dt.tzinfo is None:
-                      continue
+                      dt = dt.replace(tzinfo=timezone(timedelta(hours=8)))
                   utc = dt.astimezone(timezone.utc)
                   rows.append({
                       "DATE": utc.strftime("%d/%m/%Y"),
