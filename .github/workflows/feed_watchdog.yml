@@ -3,13 +3,14 @@ name: Feed Freshness Watchdog
 on:
   workflow_dispatch:
   schedule:
-    - cron: '20 23 * * *' # 07:20 Hong Kong time
-    - cron: '20 3 * * *'  # 11:20 Hong Kong time
-    - cron: '20 11 * * *' # 19:20 Hong Kong time
+    # Hourly, offset from the main model / capture jobs.
+    # This is a lightweight control-plane check; it only dispatches heavy
+    # recovery when freshness or canonical target coverage actually drifts.
+    - cron: '12 * * * *'
   push:
     paths:
       - '.github/workflows/feed_watchdog.yml'
-# Phase 1 recovery heartbeat 2026-09-20
+# Phase 1 canonical coverage heartbeat 2026-09-22
 
 permissions:
   contents: read
@@ -73,9 +74,11 @@ jobs:
           model_age = age_minutes('data/model_current.csv')
           form_age = age_minutes('data/form_current.csv')
 
-          # HKJC is a 12-hour capture; Forebet/model layers refresh more often.
+          # Static HKJC is intentionally lower-frequency because Supabase owns
+          # the high-frequency official HKJC authority. Forebet/model files must
+          # still remain reasonably fresh.
           source_stale = (
-              hkjc_age is None or hkjc_age > 720 or
+              hkjc_age is None or hkjc_age > 780 or
               forebet_age is None or forebet_age > 240
           )
           model_stale = (
@@ -97,12 +100,72 @@ jobs:
               fh.write(f'model_stale={str(model_stale).lower()}\n')
           PY
 
-      - name: Recover Forebet/HKJC source layer when stale
-        if: steps.freshness.outputs.source_stale == 'true'
+      - name: Check live Supabase canonical target coverage
+        id: canonical
+        env:
+          PHASE1_FEED_URL: https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/app-phase1-feed?hours=48
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          url = os.environ['PHASE1_FEED_URL']
+          gap = False
+          missing_ids = []
+          stale_ids = []
+          total = 0
+          try:
+              req = urllib.request.Request(
+                  url,
+                  headers={
+                      'Accept': 'application/json',
+                      'User-Agent': 'fast-tracker-feed-watchdog/1.0',
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=25) as response:
+                  payload = json.load(response)
+              matches = payload.get('matches') or []
+              total = len(matches)
+              for match in matches:
+                  if match.get('liveNow'):
+                      continue
+                  health = match.get('health') or {}
+                  event_id = str(match.get('id') or '').strip()
+                  state = str(health.get('forebetState') or '').strip()
+                  freshness = str(health.get('forebetCheckFreshness') or '').strip().upper()
+                  # Genuine source limitations are explicit FIXTURE_ONLY /
+                  # UNRESOLVED states and must not cause an endless recovery loop.
+                  # A blank state means a new canonical HKJC target has not yet
+                  # passed through Forebet availability classification.
+                  if event_id and not state:
+                      missing_ids.append(event_id)
+                  elif event_id and freshness == 'STALE':
+                      stale_ids.append(event_id)
+              gap = bool(missing_ids)
+              print(
+                  'CANONICAL_COVERAGE '
+                  f'targets={total} missing_availability={len(missing_ids)} '
+                  f'stale_checks={len(stale_ids)} '
+                  f'missing_ids={",".join(missing_ids[:30]) or "-"}'
+              )
+          except Exception as exc:
+              # Do not create a dispatch storm if the diagnostic endpoint itself
+              # is temporarily unreachable; the age gate above remains active.
+              print(f'WARN canonical coverage probe failed: {exc}')
+              gap = False
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as fh:
+              fh.write(f'coverage_gap={str(gap).lower()}\n')
+              fh.write(f'missing_count={len(missing_ids)}\n')
+          PY
+
+      - name: Recover Forebet/HKJC source layer when stale or uncovered
+        if: steps.freshness.outputs.source_stale == 'true' || steps.canonical.outputs.coverage_gap == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo 'Source layer is stale; dispatching forebet_daily.yml once.'
+          echo "Source recovery required: stale=${{ steps.freshness.outputs.source_stale }} missing=${{ steps.canonical.outputs.missing_count }}"
           gh workflow run forebet_daily.yml --repo "$GITHUB_REPOSITORY" --ref main
 
       - name: Recover DC/Pi/Form model layer when stale
@@ -114,5 +177,5 @@ jobs:
           gh workflow run model_daily.yml --repo "$GITHUB_REPOSITORY" --ref main
 
       - name: Healthy feeds
-        if: steps.freshness.outputs.source_stale != 'true' && steps.freshness.outputs.model_stale != 'true'
-        run: echo 'Source and model feeds are within freshness targets.'
+        if: steps.freshness.outputs.source_stale != 'true' && steps.freshness.outputs.model_stale != 'true' && steps.canonical.outputs.coverage_gap != 'true'
+        run: echo 'Source/model freshness and live Supabase canonical Forebet coverage are healthy.'
