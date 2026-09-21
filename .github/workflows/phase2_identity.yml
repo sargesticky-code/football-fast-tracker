@@ -20,7 +20,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install requests==2.32.5 curl_cffi>=0.13,<0.15
+      - name: Install Phase 2 runtime
+        run: python -m pip install 'requests==2.32.5' 'curl_cffi>=0.13,<0.15'
       - name: Capture current HKJC universe
         run: python scripts/phase2_capture_hkjc.py --out data/phase2_hkjc_current.csv --horizon-hours 48
       - name: Build identity targets
