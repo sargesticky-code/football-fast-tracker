@@ -35,11 +35,26 @@ def _usable_model_ids(production, html: str | None, match_date: str, targets: li
     return ids
 
 
-def _classification(home_score: float, away_score: float, average: float, has_probs: bool) -> str:
+def _classification(
+    home_score: float,
+    away_score: float,
+    average: float,
+    has_probs: bool,
+    *,
+    target_identity_known: bool,
+) -> str:
     if home_score >= 0.68 and away_score >= 0.68 and average >= 0.76:
         return "PUBLISHED_WITHOUT_USABLE_MODEL" if not has_probs else "MATCH_POLICY_REVIEW"
     if average >= 0.65 and max(home_score, away_score) >= 0.80:
         return "ALIAS_NEAR_MISS"
+
+    # With the universal team master, a canonical HKJC team identity is already
+    # known before we inspect the source surface. If the nearest Forebet row is
+    # only weakly similar on both sides, that is not useful alias evidence; it
+    # means this fetched model surface simply does not contain the fixture.
+    if target_identity_known:
+        return "SOURCE_SURFACE_ABSENT"
+
     if average >= 0.50:
         return "WEAK_NAME_CANDIDATE"
     return "NO_CLOSE_FIXTURE_ON_FETCHED_MODEL_SURFACES"
@@ -70,15 +85,40 @@ def install(production) -> None:
             if str(target.get("hkjc_event_id") or "").strip() not in model_ids
         ]
 
+        master = production.feed.forebet_master_map()
         for target in missing:
             event_id = str(target.get("hkjc_event_id") or "").strip()
+            target_home = str(target.get("home_en") or "")
+            target_away = str(target.get("away_en") or "")
+            target_home_key = production.feed.normalize_team(target_home)
+            target_away_key = production.feed.normalize_team(target_away)
+            target_identity_known = bool(
+                master.get(target_home_key) and master.get(target_away_key)
+            )
+
             best = None
             for row in rows:
-                home_score = production.feed.team_score(
-                    str(row.get("home_team") or ""), str(target.get("home_en") or "")
+                row_home = str(row.get("home_team") or "")
+                row_away = str(row.get("away_team") or "")
+                row_home_key = production.feed.normalize_team(row_home)
+                row_away_key = production.feed.normalize_team(row_away)
+
+                # Reuse the one-for-all registry before similarity scoring.
+                # If a provider name has already been learned, diagnose it by
+                # stable identity rather than by spelling resemblance.
+                mapped_home = master.get(row_home_key)
+                mapped_away = master.get(row_away_key)
+                home_score = (
+                    1.0
+                    if mapped_home
+                    and production.feed.normalize_team(mapped_home) == target_home_key
+                    else production.feed.team_score(row_home, target_home)
                 )
-                away_score = production.feed.team_score(
-                    str(row.get("away_team") or ""), str(target.get("away_en") or "")
+                away_score = (
+                    1.0
+                    if mapped_away
+                    and production.feed.normalize_team(mapped_away) == target_away_key
+                    else production.feed.team_score(row_away, target_away)
                 )
                 average = (home_score + away_score) / 2
                 if best is None or average > best[0]:
@@ -96,14 +136,20 @@ def install(production) -> None:
                 continue
 
             average, home_score, away_score, has_probs, row = best
-            diagnosis = _classification(home_score, away_score, average, has_probs)
+            diagnosis = _classification(
+                home_score,
+                away_score,
+                average,
+                has_probs,
+                target_identity_known=target_identity_known,
+            )
             DIAGNOSTICS[event_id] = diagnosis
             print(
                 f"FOREBET_UNRESOLVED_DIAG event={event_id} diagnosis={diagnosis} "
                 f"target={target.get('home_en','')} vs {target.get('away_en','')} "
                 f"nearest={row.get('home_team','')} vs {row.get('away_team','')} "
                 f"hs={home_score:.3f} aws={away_score:.3f} avg={average:.3f} "
-                f"probs={int(has_probs)}",
+                f"probs={int(has_probs)} master_identity={int(target_identity_known)}",
                 flush=True,
             )
 
