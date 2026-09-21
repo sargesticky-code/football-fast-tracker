@@ -113,7 +113,9 @@ jobs:
           hour=datetime.now(timezone.utc).hour
           regular_full=hour in {3,11,23}
           drift=(targets != model) or (targets != form)
-          force=event == 'workflow_dispatch'
+          # This workflow's push filter contains model code/config only.
+          # Any such push must rebuild even when the fixture universe is unchanged.
+          force=event in {'workflow_dispatch','push'}
           run_models=force or regular_full or drift
 
           print(
@@ -213,7 +215,12 @@ jobs:
               pi = [float(row[k]) for k in ('pi_prob_home','pi_prob_draw','pi_prob_away')]
               if abs(sum(dc) - 1) > 0.015 or abs(sum(pi) - 1) > 0.015:
                   raise SystemExit(f'bad DC/Pi probability sum: {row["hkjc_event_id"]}')
-              if not str(row.get('model_source') or '').startswith('football-data'):
+              source = str(row.get('model_source') or '')
+              approved_full_league = (
+                  source.startswith('football-data')
+                  or source.startswith('Brazil Serie B full-league')
+              )
+              if not approved_full_league:
                   raise SystemExit(f'non-full-league DC/Pi row passed: {row["hkjc_event_id"]}')
 
           form_modeled = 0
