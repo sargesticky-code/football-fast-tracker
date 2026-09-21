@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-from phase3.external_identity import choose_candidate, ranked_candidates, coverage_diagnostic
+from phase3.external_identity import choose_candidate, ranked_candidates, coverage_diagnostic, classify_unresolved
 from phase3.hkjc_authority import evaluate_authority
 
 AUTH=Path("data/phase3_hkjc_authority.json")
@@ -90,9 +90,10 @@ def main() -> int:
         if not c:
             unresolved+=1
             ranked=ranked_candidates(hk,board,limit=3)
+            diagnostic_reason = classify_unresolved(hk, board)
             print(
-                f"PHASE3_IDENTITY event={event} status=UNRESOLVED reason={reason} "
-                f"hkjc_fixture={home}|{away} candidates={len(ranked)}"
+                f"PHASE3_IDENTITY event={event} status=UNRESOLVED reason={diagnostic_reason} "
+                f"matcher_reason={reason} hkjc_fixture={home}|{away} candidates={len(ranked)}"
             )
             for rank,x in enumerate(ranked,1):
                 print(
