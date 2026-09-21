@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 7 · HKT build timestamp validation
+# launcher revision: 8 · safe 5-minute source matching regression fix
 
 on:
   workflow_dispatch:
