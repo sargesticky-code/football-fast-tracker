@@ -32,8 +32,9 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument("--fixtures",default="data/phase2_hkjc_current.csv");ap.add_argument("--registry",default="data/phase2_team_identity_evidence.csv");ap.add_argument("--diagnostics",default="data/phase2_identity_resolution_diagnostics.csv");a=ap.parse_args()
  fs=rows(a.fixtures);reg=rows(a.registry);known={(x["hkjc_team_id"],x["external_source"]):x for x in reg if str(x.get("confirmed","")).lower() in ("true","1","yes")}
  added=[];attempted=set();diags=[];events=[];source_errors=[];now=datetime.now(timezone.utc).isoformat()
- dates=sorted({d for f in fs for d in {datetime.fromisoformat(f["kickoff_hkt"]).astimezone(timezone.utc).date().isoformat(), datetime.fromisoformat(f["kickoff_hkt"]).astimezone(HKT).date().isoformat()}})
- for d in dates:\n  url=f"{BASE}/sport/football/scheduled-events/{d}"
+ dates=sorted({d for f in fs for d in {datetime.fromisoformat(f["kickoff_hkt"]).astimezone(timezone.utc).date().isoformat(),datetime.fromisoformat(f["kickoff_hkt"]).astimezone(HKT).date().isoformat()}})
+ for d in dates:
+  url=f"{BASE}/sport/football/scheduled-events/{d}"
   try:events+=get(url).get("events",[]);time.sleep(.5)
   except Exception as e:source_errors.append((d,type(e).__name__))
  for f in fs:
@@ -44,7 +45,8 @@ def main():
    attempted.add(hid);hn=f[f"{side}_en"];on=f[f"{other}_en"];hc=cohort(hn);near=[];cohort_ok=[];name_ok=[]
    for e in events:
     try:
-     ek=datetime.fromtimestamp(e["startTimestamp"],timezone.utc).astimezone(HKT);delta=min(abs((ek-kick).total_seconds()),abs((ek-(kick-timedelta(hours=8))).total_seconds()),abs((ek-(kick+timedelta(hours=8))).total_seconds()))
+     ek=datetime.fromtimestamp(e["startTimestamp"],timezone.utc).astimezone(HKT)
+     delta=min(abs((ek-kick).total_seconds()),abs((ek-(kick-timedelta(hours=8))).total_seconds()),abs((ek-(kick+timedelta(hours=8))).total_seconds()))
      if delta>1800:continue
      et=e[side+"Team"];ot=e[other+"Team"];s1=sim(hn,et.get("name",""));s2=sim(on,ot.get("name",""));item=(round((s1+s2)/2,3),e,et,ek,delta)
      near.append(item)
@@ -60,7 +62,7 @@ def main():
  if added:
   with open(a.registry,"a",encoding="utf-8-sig",newline="") as out:csv.DictWriter(out,fieldnames=FIELDS).writerows(added)
  write_diag(a.diagnostics,diags)
- counts={};
+ counts={}
  for d in diags:counts[d["reason"]]=counts.get(d["reason"],0)+1
  print("PHASE2_SOFASCORE "+json.dumps({"attempted":len(attempted),"confirmed_new":len(added),"unresolved":len(diags),"failure_classes":counts,"source_errors":source_errors},separators=(",",":")))
 if __name__=="__main__":main()
