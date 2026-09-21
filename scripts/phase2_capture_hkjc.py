@@ -12,6 +12,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
+import json
 
 from vendor_hkjc_queries import ALL_MATCH_LIST
 
@@ -141,11 +142,10 @@ def write_csv(rows: list[dict], path: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", default="data/phase2_hkjc_current.csv")
-    parser.add_argument("--horizon-hours", type=int, default=48)
+    parser.add_argument("--horizon-hours", type=int, default=48)\n    parser.add_argument("--health-out", default="data/phase2_hkjc_capture_health.json")
     args = parser.parse_args()
     rows, health = fetch_upcoming(horizon_hours=max(1, args.horizon_hours))
-    write_csv(rows, Path(args.out))
-    print("PHASE2_HKJC " + " ".join(f"{k}={v}" for k, v in health.items()))
+    write_csv(rows, Path(args.out))\n    hp = Path(args.health_out); hp.parent.mkdir(parents=True, exist_ok=True)\n    hp.write_text(json.dumps(health, indent=2) + "\\n", encoding="utf-8")\n    if not rows:\n        raise RuntimeError("HKJC capture returned zero upcoming fixtures; refusing to persist a healthy state")\n    print("PHASE2_HKJC " + " ".join(f"{k}={v}" for k, v in health.items()))
     return 0
 
 
