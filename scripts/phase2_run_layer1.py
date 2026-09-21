@@ -8,6 +8,7 @@ STEPS=[
  [sys.executable,"scripts/phase2_capture_hkjc.py","--out","data/phase2_hkjc_current.csv","--horizon-hours","48"],
  [sys.executable,"scripts/phase2_team_identity.py","--fixtures","data/phase2_hkjc_current.csv","--registry","data/phase2_team_identity_evidence.csv","--targets","data/phase2_team_identity_targets.csv"],
  [sys.executable,"scripts/phase2_resolve_sofascore.py","--fixtures","data/phase2_hkjc_current.csv","--registry","data/phase2_team_identity_evidence.csv"],
+ [sys.executable,"scripts/phase2_resolve_thesportsdb.py","--fixtures","data/phase2_hkjc_current.csv","--registry","data/phase2_team_identity_evidence.csv"],
  [sys.executable,"scripts/phase2_team_identity.py","--fixtures","data/phase2_hkjc_current.csv","--registry","data/phase2_team_identity_evidence.csv","--targets","data/phase2_team_identity_targets.csv"],
  [sys.executable,"scripts/phase2_identity_health.py","--fixtures","data/phase2_hkjc_current.csv","--registry","data/phase2_team_identity_evidence.csv","--out","data/phase2_identity_health.json"],
 ]
