@@ -10,8 +10,11 @@
     "ACC": 2,
     "BCL": 6,
     "FST": 6,
-    "FRB": 1
+    "FRB": 1,
+    "STA": 3
   },
-  "master_global_rows": 0,
-  "master_global_by_source": {}
+  "master_global_rows": 2,
+  "master_global_by_source": {
+    "STA": 2
+  }
 }
