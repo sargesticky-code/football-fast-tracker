@@ -86,7 +86,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import csv, os
+          import csv, json, os
           from datetime import datetime, timezone
           from pathlib import Path
 
@@ -109,6 +109,40 @@ jobs:
           targets=ids('data/hkjc_current.csv', current=True)
           model=ids('data/model_current.csv')
           form=ids('data/form_current.csv')
+
+          # Event-ID equality is not enough. A model/form row can be a
+          # FORM_INSUFFICIENT stub while one or both HKJC teams have never
+          # completed explicit history bootstrap. Keep the hourly worker alive
+          # until every active target team has reached BOOTSTRAPPED in the
+          # coverage registry; the history worker keeps its own hard request
+          # budget and prioritises the earliest kickoffs.
+          raw = json.loads(Path('/tmp/hkjc_raw_matches.json').read_text(encoding='utf-8-sig'))
+          current_team_ids=set()
+          for match in raw if isinstance(raw,list) else []:
+              event_id=str(match.get('frontEndId') or '').strip()
+              if event_id not in targets:
+                  continue
+              for key in ('homeTeam','awayTeam'):
+                  team=match.get(key) or {}
+                  team_id=str(team.get('id') or '').strip()
+                  if team_id:
+                      current_team_ids.add(team_id)
+
+          coverage={}
+          coverage_path=Path('data/hkjc_history_coverage.csv')
+          if coverage_path.exists():
+              with coverage_path.open(encoding='utf-8-sig', newline='') as fh:
+                  coverage={
+                      str(r.get('team_id') or '').strip(): str(r.get('status') or '').strip()
+                      for r in csv.DictReader(fh)
+                      if str(r.get('team_id') or '').strip()
+                  }
+          pending_team_ids=sorted(
+              team_id for team_id in current_team_ids
+              if coverage.get(team_id) != 'BOOTSTRAPPED'
+          )
+          pending_history=bool(pending_team_ids)
+
           event=os.getenv('GITHUB_EVENT_NAME','')
           hour=datetime.now(timezone.utc).hour
           regular_full=hour in {3,11,23}
@@ -116,15 +150,18 @@ jobs:
           # This workflow's push filter contains model code/config only.
           # Any such push must rebuild even when the fixture universe is unchanged.
           force=event in {'workflow_dispatch','push'}
-          run_models=force or regular_full or drift
+          run_models=force or regular_full or drift or pending_history
 
           print(
               f'MODEL_FRESHNESS_GATE targets={len(targets)} model={len(model)} form={len(form)} '
+              f'active_teams={len(current_team_ids)} pending_history={len(pending_team_ids)} '
               f'drift={int(drift)} regular_full={int(regular_full)} force={int(force)} run={int(run_models)}'
           )
           if drift:
               print('MODEL_TARGET_ADDED', ','.join(sorted(targets - (model & form))) or '-')
               print('MODEL_TARGET_REMOVED', ','.join(sorted((model | form) - targets)) or '-')
+          if pending_history:
+              print('MODEL_HISTORY_PENDING', ','.join(pending_team_ids[:50]))
 
           with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as fh:
               fh.write(f"run_models={'true' if run_models else 'false'}\n")
