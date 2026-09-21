@@ -1635,3 +1635,77 @@ FRB not required
 ```
 
 This is now the preferred long-term architecture. Do not revert production Multibetter to a Forebet-prediction-gated fixture universe.
+
+
+---
+
+## 34. One-for-all team alias runtime (2026-09-21)
+
+The universal team identity architecture is now active for the Multibetter source family.
+
+Runtime path:
+
+```text
+provider team string
+    ↓
+team-name-master source dictionary (load once per build)
+    ↓ VERIFIED direct hit
+canonical HKJC team identity
+    ↓
+fixture matcher
+
+if no VERIFIED hit:
+    ↓
+legacy matcher = discovery fallback only
+    ↓
+successful HKJC-anchor match emits identity evidence
+    ↓
+team_alias_evidence_v2
+    ↓
+team_alias_registry_v2
+    ↓
+team_name_master
+    ↓
+future direct hit
+```
+
+Current sources covered by this Multibetter path:
+
+```text
+FRB / ACC / BCL / FST / PRE / STA
+```
+
+The build fetches one source dictionary per provider from the
+`team-name-master` endpoint and reuses it in memory. It does not query
+Supabase once per fixture.
+
+Verification remains conservative:
+- exact HKJC-equivalent names may verify immediately;
+- non-exact source aliases normally require repeated independent event
+  evidence before becoming VERIFIED;
+- CANDIDATE and AMBIGUOUS names remain visible as blocked names;
+- a registry merge must never downgrade VERIFIED to CANDIDATE;
+- AMBIGUOUS remains a safety block.
+
+Initial production census:
+
+```text
+ACC  18 VERIFIED / 8 CANDIDATE
+BCL  18 VERIFIED / 8 CANDIDATE
+FST  18 VERIFIED / 8 CANDIDATE
+PRE  10 VERIFIED / 14 CANDIDATE
+FRB   2 VERIFIED / 12 CANDIDATE
+STA   2 VERIFIED / 0 CANDIDATE
+```
+
+First master-first build:
+- 27 HKJC anchor rows
+- 6 rows had at least one direct master identity hit
+- direct hits by source: ACC 5, BCL 5, FST 5, PRE 1, FRB 1, STA 1
+
+Supabase now records `TEAM_ALIAS_ONE_FOR_ALL / phase1` health. The success
+metric is direct-master-hit coverage, not total alias rows and not fuzzy
+matches.
+
+Do not create a second source-specific alias framework for these providers.
+Extend `team_name_master` instead.
