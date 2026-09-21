@@ -24,6 +24,8 @@ from typing import Iterable
 
 import requests
 
+from team_name_master import build_reverse_map
+
 SOURCE_URL = "https://dataviz.theanalyst.com/opta-power-rankings/index.js"
 FEED_PATH = Path("data/forebet_current.csv")
 HKJC_PATH = Path("data/hkjc_current.csv")
@@ -236,12 +238,28 @@ def variants(name: str) -> list[str]:
     return list(dict.fromkeys(norm(v) for v in vals if v))
 
 
-def match_rating(name: str, ratings: list[Rating]) -> tuple[Rating | None, float]:
+def match_rating(
+    name: str,
+    ratings: list[Rating],
+    master_reverse: dict[str, str] | None = None,
+) -> tuple[Rating | None, float]:
     if not name or not ratings:
         return None, 0.0
 
     by_norm = {norm(r.club): r for r in ratings}
     by_compact = {compact(r.club): r for r in ratings}
+
+    # Reuse the persistent one-for-all mapping first. Only genuinely unseen
+    # teams need to enter the conservative fuzzy search below.
+    if master_reverse:
+        verified_source_name = master_reverse.get(norm(name))
+        if verified_source_name:
+            direct = by_norm.get(norm(verified_source_name))
+            if direct is not None:
+                return direct, 1.0
+            direct = by_compact.get(compact(verified_source_name))
+            if direct is not None:
+                return direct, 0.995
 
     for v in variants(name):
         if v in by_norm:
@@ -279,7 +297,10 @@ def match_rating(name: str, ratings: list[Rating]) -> tuple[Rating | None, float
     return None, score
 
 
-def enrich_feed(ratings: list[Rating]) -> tuple[int, int]:
+def enrich_feed(
+    ratings: list[Rating],
+    master_reverse: dict[str, str] | None = None,
+) -> tuple[int, int]:
     if not FEED_PATH.exists():
         raise RuntimeError(f"missing {FEED_PATH}")
 
@@ -301,8 +322,8 @@ def enrich_feed(ratings: list[Rating]) -> tuple[int, int]:
     for row in rows:
         home = row.get("hkjc_home_team") or row.get("home_team") or ""
         away = row.get("hkjc_away_team") or row.get("away_team") or ""
-        hr, hs = match_rating(home, ratings)
-        ar, ass = match_rating(away, ratings)
+        hr, hs = match_rating(home, ratings, master_reverse)
+        ar, ass = match_rating(away, ratings, master_reverse)
         total_sides += 2
         matched_sides += int(hr is not None) + int(ar is not None)
 
@@ -325,7 +346,10 @@ def enrich_feed(ratings: list[Rating]) -> tuple[int, int]:
 
 
 
-def write_hkjc_power_feed(ratings: list[Rating]) -> tuple[int, int]:
+def write_hkjc_power_feed(
+    ratings: list[Rating],
+    master_reverse: dict[str, str] | None = None,
+) -> tuple[int, int]:
     """Build Opta strength by HKJC event, independent of Forebet availability."""
     if not HKJC_PATH.exists():
         raise RuntimeError(f"missing {HKJC_PATH}")
@@ -352,8 +376,8 @@ def write_hkjc_power_feed(ratings: list[Rating]) -> tuple[int, int]:
         if not event_id or not home or not away:
             continue
 
-        hr, hs = match_rating(home, ratings)
-        ar, ass = match_rating(away, ratings)
+        hr, hs = match_rating(home, ratings, master_reverse)
+        ar, ass = match_rating(away, ratings, master_reverse)
         matched_sides += int(hr is not None) + int(ar is not None)
         total_sides += 2
 
@@ -405,9 +429,10 @@ def main() -> int:
         ratings = load_snapshot()
         print(f"using cached power-rating snapshot: {len(ratings)} clubs")
 
-    matched, total = enrich_feed(ratings)
+    opta_master = build_reverse_map("OPTA", norm)
+    matched, total = enrich_feed(ratings, opta_master)
     print(f"Opta power enrichment coverage: {matched}/{total} Forebet team-sides")
-    hkjc_matched, hkjc_total = write_hkjc_power_feed(ratings)
+    hkjc_matched, hkjc_total = write_hkjc_power_feed(ratings, opta_master)
     print(
         f"Opta HKJC-event coverage: {hkjc_matched}/{hkjc_total} team-sides "
         f"wrote={HKJC_POWER_PATH}"
