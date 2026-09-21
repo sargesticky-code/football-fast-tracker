@@ -1,0 +1,88 @@
+name: Phase 3 Identity Runner
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase3-identity-runner
+  cancel-in-progress: true
+
+jobs:
+  phase3-identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HKJC_UPSTREAM_SHA: '1d2234102dc8f1ee23d0b45c25c125dc3ef98176'
+      HKJC_SCRAPER_PATH: '/tmp/hkjc-phase3'
+    steps:
+      - name: Checkout isolated Phase 3 branch
+        uses: actions/checkout@v4
+        with:
+          ref: phase3-live-intelligence
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Restore persistent Layer 2 identity state
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/phase3_identity_evidence.jsonl
+            data/phase3_live_identity_map.json
+          key: phase3-scheduled-identity-${{ github.run_id }}
+          restore-keys: |
+            phase3-scheduled-identity-
+
+      - name: Run Phase 3 Layer 1 and Layer 2 tests
+        run: |
+          python -m unittest tests.test_phase3_hkjc_authority -v
+          python -m unittest tests.test_phase3_identity_registry -v
+          python -m unittest tests.test_phase3_external_identity -v
+          python -m unittest tests.test_phase3_layer2_authority_gate -v
+
+      - name: Checkout pinned HKJC scraper
+        run: |
+          rm -rf "$HKJC_SCRAPER_PATH"
+          git clone --filter=blob:none --no-checkout https://github.com/sososo829/hkjc-football-scraper.git "$HKJC_SCRAPER_PATH"
+          git -C "$HKJC_SCRAPER_PATH" fetch --depth 1 origin "$HKJC_UPSTREAM_SHA"
+          git -C "$HKJC_SCRAPER_PATH" checkout --detach "$HKJC_UPSTREAM_SHA"
+
+      - name: Capture canonical HKJC authority
+        run: python scripts/phase3_capture_hkjc_authority.py
+
+      - name: Evaluate canonical authority
+        run: PYTHONPATH=. python scripts/phase3_check_hkjc_authority.py
+
+      - name: Collect one-board external identity evidence
+        run: PYTHONPATH=. python scripts/phase3_collect_fotmob_identity.py
+
+      - name: Build persistent identity registry
+        run: PYTHONPATH=. python scripts/phase3_build_identity_registry.py
+
+      - name: Save persistent Layer 2 identity state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            data/phase3_identity_evidence.jsonl
+            data/phase3_live_identity_map.json
+          key: phase3-scheduled-identity-${{ github.run_id }}
+
+      - name: Upload Phase 3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-identity-evidence-${{ github.run_id }}
+          path: |
+            data/phase3_hkjc_authority.json
+            data/phase3_identity_evidence.jsonl
+            data/phase3_live_identity_map.json
+          if-no-files-found: warn
+          retention-days: 7
