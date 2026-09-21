@@ -7,6 +7,7 @@ from pathlib import Path
 
 from multibetter.pipeline.current import (
     build_current,
+    build_hkjc_anchored_current,
     load_source_tables,
     read_csv_rows,
 )
@@ -40,6 +41,12 @@ def main():
         type=Path,
         default=Path("data/forebet_current.csv"),
     )
+    parser.add_argument(
+        "--hkjc-targets",
+        type=Path,
+        default=None,
+        help="Optional HKJC-authority target universe for source-independent consensus.",
+    )
     parser.add_argument("--source-dir", type=Path, required=True)
     parser.add_argument("--health-dir", type=Path)
     parser.add_argument(
@@ -66,11 +73,19 @@ def main():
     )
     cache = read_cache(args.alias_cache)
 
-    result = build_current(
-        our_forebet_rows=our_rows,
-        source_tables=sources,
-        cache_rows=cache,
-    )
+    if args.hkjc_targets is not None:
+        target_rows = read_csv_rows(args.hkjc_targets)
+        result = build_hkjc_anchored_current(
+            hkjc_target_rows=target_rows,
+            source_tables=sources,
+            cache_rows=cache,
+        )
+    else:
+        result = build_current(
+            our_forebet_rows=our_rows,
+            source_tables=sources,
+            cache_rows=cache,
+        )
 
     write_output(args.output, list(result.rows))
     write_cache(args.alias_cache, list(result.alias_cache))
