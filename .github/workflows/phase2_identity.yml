@@ -22,16 +22,8 @@ jobs:
           python-version: '3.12'
       - name: Install Phase 2 runtime
         run: python -m pip install 'requests==2.32.5' 'curl_cffi>=0.13,<0.15'
-      - name: Capture current HKJC universe
-        run: python scripts/phase2_capture_hkjc.py --out data/phase2_hkjc_current.csv --horizon-hours 48
-      - name: Build identity targets
-        run: python scripts/phase2_team_identity.py --fixtures data/phase2_hkjc_current.csv --registry data/phase2_team_identity_evidence.csv --targets data/phase2_team_identity_targets.csv
-      - name: Resolve targeted Sofascore identities
-        run: python scripts/phase2_resolve_sofascore.py --fixtures data/phase2_hkjc_current.csv --registry data/phase2_team_identity_evidence.csv
-      - name: Recalculate identity coverage
-        run: python scripts/phase2_team_identity.py --fixtures data/phase2_hkjc_current.csv --registry data/phase2_team_identity_evidence.csv --targets data/phase2_team_identity_targets.csv
-      - name: Enforce fresh real-data health gate
-        run: python scripts/phase2_identity_health.py --fixtures data/phase2_hkjc_current.csv --registry data/phase2_team_identity_evidence.csv --out data/phase2_identity_health.json
+      - name: Execute complete Layer 1 pipeline
+        run: python scripts/phase2_run_layer1.py
       - name: Persist Phase 2 snapshots only
         run: |
           git config user.name "phase2-bot"
