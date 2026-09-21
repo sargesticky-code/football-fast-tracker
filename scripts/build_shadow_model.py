@@ -25,7 +25,7 @@ import pandas as pd
 import penaltyblog as pb
 import requests
 
-from team_name_master import build_forward_map, build_reverse_map
+from team_name_master import build_forward_map, build_reverse_map, fetch_master_payload
 
 HKT = ZoneInfo("Asia/Hong_Kong")
 ROOT = Path(__file__).resolve().parent.parent
@@ -336,6 +336,7 @@ def discover_fixture(
     current: dict[str, pd.DataFrame],
     master_reverse: dict[str, str] | None = None,
     master_forward: dict[str, str] | None = None,
+    blocked_source_names: set[str] | None = None,
 ):
     source_home = row.get("hkjc_home_team") or row.get("home_en") or row.get("home_team") or ""
     source_away = row.get("hkjc_away_team") or row.get("away_en") or row.get("away_team") or ""
@@ -385,9 +386,20 @@ def discover_fixture(
         # If the actual Football-Data candidate name is already known in the
         # source/global master and points to another HKJC team, reject this
         # fixture candidate rather than treating name similarity as evidence.
+        home_key = norm(home)
+        away_key = norm(away)
+
+        # Candidate/ambiguous source names are hard safety blocks. They must
+        # never re-enter through fuzzy discovery while maintenance is waiting
+        # for independent evidence or resolving a collision.
+        if blocked_source_names and (
+            home_key in blocked_source_names or away_key in blocked_source_names
+        ):
+            continue
+
         if master_forward:
-            mapped_home = master_forward.get(norm(home))
-            mapped_away = master_forward.get(norm(away))
+            mapped_home = master_forward.get(home_key)
+            mapped_away = master_forward.get(away_key)
             if mapped_home and norm(mapped_home) != norm(source_home):
                 continue
             if mapped_away and norm(mapped_away) != norm(source_away):
@@ -625,12 +637,19 @@ def main() -> int:
 
     football_data_master = build_reverse_map("FOOTBALL_DATA", norm)
     football_data_forward = build_forward_map("FOOTBALL_DATA", norm)
+    football_data_payload = fetch_master_payload("FOOTBALL_DATA")
+    football_data_blocked = {
+        norm(str(name))
+        for name in football_data_payload.get("blockedNames", [])
+        if norm(str(name))
+    }
     discovered = {
         r["hkjc_event_id"]: discover_fixture(
             r,
             current,
             football_data_master,
             football_data_forward,
+            football_data_blocked,
         )
         for r in fixtures
     }
