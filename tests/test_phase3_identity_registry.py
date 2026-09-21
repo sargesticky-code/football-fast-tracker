@@ -12,6 +12,18 @@ class IdentityRegistryTests(unittest.TestCase):
         r=rebuild_registry([o(t=f"2026-09-21T01:0{i}:00+00:00") for i in range(3)])
         self.assertEqual(r[0]["status"],"VERIFIED"); self.assertTrue(r[0]["terminal"]); self.assertEqual(r[0]["evidence_count"],3)
 
+    def test_exact_retry_does_not_inflate_evidence_count(self):
+        same=o(t="2026-09-21T01:00:00+00:00")
+        r=rebuild_registry([same,same,same])
+        self.assertEqual(r[0]["status"],"CANDIDATE")
+        self.assertEqual(r[0]["evidence_count"],1)
+
+    def test_retry_plus_two_real_observations_promotes(self):
+        first=o(t="2026-09-21T01:00:00+00:00")
+        r=rebuild_registry([first,first,o(t="2026-09-21T01:05:00+00:00"),o(t="2026-09-21T01:10:00+00:00")])
+        self.assertEqual(r[0]["status"],"VERIFIED")
+        self.assertEqual(r[0]["evidence_count"],3)
+
     def test_low_confidence_does_not_promote(self):
         r=rebuild_registry([o(conf=.80,t=f"2026-09-21T01:0{i}:00+00:00") for i in range(3)]); self.assertEqual(r[0]["status"],"CANDIDATE")
 
