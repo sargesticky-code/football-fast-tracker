@@ -20,8 +20,6 @@ MAX_KICKOFF_DRIFT_SECONDS = 45 * 60
 def _norm(value: object) -> str:
     s = unicodedata.normalize("NFKD", str(value or "")).encode("ascii", "ignore").decode().casefold()
     tokens = re.sub(r"[^a-z0-9]+", " ", s).split()
-    # Safe source-format aliases only. This is not a fuzzy team alias table:
-    # FotMob commonly uses a terminal "W" while HKJC emits "Women".
     if tokens and tokens[-1] in {"women", "woman", "womens"}:
         tokens[-1] = "w"
     return " ".join(tokens)
@@ -47,6 +45,9 @@ class Candidate:
     away: str
     kickoff: str
     competition: str = ""
+    home_score: float = 0.0
+    away_score: float = 0.0
+    kickoff_drift_seconds: int = 0
 
 
 def score_candidate(hkjc: dict, external: dict) -> Candidate | None:
@@ -76,12 +77,25 @@ def score_candidate(hkjc: dict, external: dict) -> Candidate | None:
         away=str(external.get("away") or ""),
         kickoff=str(external.get("kickoff") or ""),
         competition=str(external.get("competition") or ""),
+        home_score=round(direct_home, 4),
+        away_score=round(direct_away, 4),
+        kickoff_drift_seconds=int(round(drift)),
     )
 
 
-def choose_candidate(hkjc: dict, external_rows: list[dict]) -> tuple[Candidate | None, str]:
+def ranked_candidates(hkjc: dict, external_rows: list[dict], limit: int = 3) -> list[Candidate]:
+    """Return best structurally-valid candidates for diagnostics only.
+
+    This does not relax promotion thresholds: weak/ambiguous candidates remain
+    unusable. It exists so real-source gaps can be diagnosed without guessing.
+    """
     scored = [c for row in external_rows if (c := score_candidate(hkjc, row)) and c.source_match_id]
     scored.sort(key=lambda c: c.confidence, reverse=True)
+    return scored[:max(0, limit)]
+
+
+def choose_candidate(hkjc: dict, external_rows: list[dict]) -> tuple[Candidate | None, str]:
+    scored = ranked_candidates(hkjc, external_rows, limit=2)
     if not scored or scored[0].confidence < MIN_CONFIDENCE:
         return None, "NO_HIGH_CONFIDENCE_CANDIDATE"
     if len(scored) > 1 and scored[0].confidence - scored[1].confidence < MIN_MARGIN:
