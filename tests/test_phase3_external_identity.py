@@ -1,5 +1,5 @@
 import unittest
-from phase3.external_identity import choose_candidate
+from phase3.external_identity import choose_candidate, ranked_candidates
 
 HK={"home_en":"Manchester United","away_en":"Arsenal","kickoff_hkt":"2026-09-21T19:00:00+08:00"}
 
@@ -37,5 +37,15 @@ class ExternalIdentityTests(unittest.TestCase):
         c,reason=choose_candidate(HK,[row("1"),row("2",kickoff="2026-09-21T11:01:00+00:00")])
         self.assertIsNone(c)
         self.assertEqual(reason,"AMBIGUOUS_CANDIDATES")
+
+    def test_ranked_diagnostics_expose_components_without_promoting_weak_match(self):
+        weak=row("7",home="Manchester Utd Youth",away="Arsenal Academy")
+        ranked=ranked_candidates(HK,[weak])
+        self.assertEqual(len(ranked),1)
+        self.assertEqual(ranked[0].source_match_id,"7")
+        self.assertGreater(ranked[0].home_score,0)
+        c,reason=choose_candidate(HK,[weak])
+        self.assertIsNone(c)
+        self.assertEqual(reason,"NO_HIGH_CONFIDENCE_CANDIDATE")
 
 if __name__=="__main__": unittest.main()
