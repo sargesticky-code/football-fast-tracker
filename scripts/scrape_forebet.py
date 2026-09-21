@@ -624,6 +624,52 @@ def attach_hkjc_target(
                 })
                 return out
 
+    # Durable static-pair recovery for source date/timezone drift.
+    # Forebet can render a fixture on a neighbouring source date (or expose a
+    # page timezone that differs from HKJC HKT). Once BOTH provider team names
+    # and the provider competition are already VERIFIED in the static master,
+    # date is no longer an identity requirement: the canonical league + ordered
+    # home/away pair must resolve to exactly one active HKJC target. This is a
+    # deterministic dictionary join, not fuzzy matching.
+    if master is None:
+        master = forebet_master_map()
+    home_canonical = master.get(normalize_team(row["home_team"])) if master else None
+    away_canonical = master.get(normalize_team(row["away_team"])) if master else None
+    if home_canonical and away_canonical and canonical_tournament:
+        pair_candidates = [
+            t for t in targets
+            if normalize_competition(t.get("league_zh", ""))
+               == normalize_competition(canonical_tournament)
+            and normalize_team(t["home_en"]) == normalize_team(home_canonical)
+            and normalize_team(t["away_en"]) == normalize_team(away_canonical)
+        ]
+        if len(pair_candidates) == 1:
+            best = pair_candidates[0]
+            out = dict(row)
+            out.update({
+                "hkjc_event_id": best["hkjc_event_id"],
+                "hkjc_league": best["league_zh"],
+                "hkjc_home_team": best["home_en"],
+                "hkjc_away_team": best["away_en"],
+                "hkjc_home_zh": best["home_zh"],
+                "hkjc_away_zh": best["away_zh"],
+                "hkjc_kickoff_hkt": best["kickoff_hkt"],
+                "hkjc_had_home": best["had_home"],
+                "hkjc_had_draw": best["had_draw"],
+                "hkjc_had_away": best["had_away"],
+                "match_score": 1.0,
+            })
+            print(
+                "FOREBET_STATIC_PAIR_RECOVERY "
+                f"event={best.get('hkjc_event_id','')} "
+                f"source_comp={row.get('league_short','')} "
+                f"canonical_tournament={canonical_tournament} "
+                f"source_date={row.get('match_date','')} "
+                f"fixture={row.get('home_team','')} vs {row.get('away_team','')}",
+                flush=True,
+            )
+            return out
+
     # Discovery-only fallback for genuinely new names. League context is still
     # applied so fuzzy discovery compares only compatible competition targets.
     best = None
