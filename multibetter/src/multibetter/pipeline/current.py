@@ -59,7 +59,11 @@ def _parse_our_forebet_kickoff(row: Mapping[str, str]) -> datetime | None:
     HKJC HKT is the strongest cross-source clock we already own. Convert it to
     UTC so GMT/UTC prediction providers and our fixture resolver use one clock.
     """
-    value = (row.get("hkjc_kickoff_hkt") or "").strip()
+    value = (
+        row.get("hkjc_kickoff_hkt")
+        or row.get("kickoff_hkt")
+        or ""
+    ).strip()
     if value:
         parsed = None
         for fmt in ("%Y-%m-%d %H:%M", "%Y-%m-%dT%H:%M:%S"):
