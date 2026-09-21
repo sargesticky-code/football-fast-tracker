@@ -29,6 +29,9 @@ OUT = ROOT / "data" / "form_current.csv"
 
 MIN_GAMES = 8
 HALF_LIFE_DAYS = 180.0
+EXTERNAL_LOOKBACK_DAYS = 730
+MIN_EFFECTIVE_WEIGHT = 3.0
+MIN_VENUE_EFFECTIVE_WEIGHT = 1.5
 MAX_GOALS = 10
 WOMENS_RESULTS_URL = (
     "https://raw.githubusercontent.com/"
@@ -241,6 +244,8 @@ def weighted_external_rate(
         if venue == "A" and (at_home or neutral):
             continue
         age_days = max(0.0, (kickoff - dt).total_seconds() / 86400.0)
+        if age_days > EXTERNAL_LOOKBACK_DAYS:
+            continue
         weight = math.exp(-math.log(2.0) * age_days / HALF_LIFE_DAYS)
         own = float(row["home_goals"] if at_home else row["away_goals"])
         opp = float(row["away_goals"] if at_home else row["home_goals"])
@@ -311,7 +316,11 @@ def weighted_rate(
 def blend(all_rate, venue_rate):
     if all_rate is None:
         return None
-    if venue_rate is None or venue_rate["n"] < 4:
+    if (
+        venue_rate is None
+        or venue_rate["n"] < 4
+        or float(venue_rate.get("weight", 0.0)) < MIN_VENUE_EFFECTIVE_WEIGHT
+    ):
         return all_rate
     # Venue split is useful but noisier; shrink it toward the all-match rate.
     venue_weight = min(0.70, 0.40 + 0.03 * venue_rate["n"])
@@ -482,7 +491,14 @@ def main() -> int:
         base["home_venue_games"] = h_venue["n"] if h_venue else 0
         base["away_venue_games"] = a_venue["n"] if a_venue else 0
 
-        if not h_all or not a_all or h_all["n"] < MIN_GAMES or a_all["n"] < MIN_GAMES:
+        if (
+            not h_all
+            or not a_all
+            or h_all["n"] < MIN_GAMES
+            or a_all["n"] < MIN_GAMES
+            or float(h_all.get("weight", 0.0)) < MIN_EFFECTIVE_WEIGHT
+            or float(a_all.get("weight", 0.0)) < MIN_EFFECTIVE_WEIGHT
+        ):
             base["quality"] = f"FORM_INSUFFICIENT:{base['home_games']}/{base['away_games']}"
             out.append(base)
             continue
