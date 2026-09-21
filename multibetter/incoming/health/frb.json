@@ -4,8 +4,8 @@
   "rows": 7,
   "requests": 0,
   "errors": 0,
-  "started_at": "2026-09-21T15:06:46.081723+08:00",
-  "finished_at": "2026-09-21T15:06:46.083403+08:00",
+  "started_at": "2026-09-21T15:31:58.125580+08:00",
+  "finished_at": "2026-09-21T15:31:58.134353+08:00",
   "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
   "target_start": "2026-09-21",
   "target_end": "2026-09-22"
