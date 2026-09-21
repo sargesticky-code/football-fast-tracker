@@ -1,18 +1,18 @@
 ﻿fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,source,source_competition,source_url,recommendation,market,match_score,status,notes
-2026-09-21T10:21:38+08:00,FB5502,2026-09-21T08:28+08:00,APL,Velez Sarsfield,Tigre,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5458,2026-09-21T10:05+08:00,MXL,Queretaro,Club Leon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5568,2026-09-21T15:00+08:00,AWF,Korea Republic Women,Korea DPR Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5569,2026-09-21T15:00+08:00,AWF,China Women,Philippines Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5570,2026-09-21T18:30+08:00,AWF,Vietnam Women,Thailand Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5571,2026-09-21T18:30+08:00,AWF,Japan Women,Chinese Taipei Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5582,2026-09-22T00:00+08:00,GSLW,Werder Bremen Women,Stuttgart Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5501,2026-09-22T01:28+08:00,APL,Aldosivi,Atletico Tucuman,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5508,2026-09-22T05:58+08:00,APL,Barracas Central,Independiente Rivadavia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5442,2026-09-22T06:27+08:00,UD1,Central Espanol,Montevideo City Torque,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5572,2026-09-22T06:28+08:00,BD2,Criciuma,Operario Ferroviario,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5507,2026-09-22T08:13+08:00,APL,Lanus,Estudiantes,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5573,2026-09-22T08:28+08:00,BD2,Cuiaba,Nautico Recife,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5583,2026-09-22T08:30+08:00,BD1W,Corinthians Women,Bahia Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5575,2026-09-22T13:00+08:00,AMF,Vietnam AM,Uzbekistan AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5576,2026-09-22T13:00+08:00,AMF,Philippines AM,Kuwait AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-21T10:21:38+08:00,FB5577,2026-09-22T18:00+08:00,AMF,Korea Republic AM,Saudi Arabia AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5502,2026-09-21T08:28+08:00,APL,Velez Sarsfield,Tigre,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5458,2026-09-21T10:05+08:00,MXL,Queretaro,Club Leon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5568,2026-09-21T15:00+08:00,AWF,Korea Republic Women,Korea DPR Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5569,2026-09-21T15:00+08:00,AWF,China Women,Philippines Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5570,2026-09-21T18:30+08:00,AWF,Vietnam Women,Thailand Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5571,2026-09-21T18:30+08:00,AWF,Japan Women,Chinese Taipei Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5582,2026-09-22T00:00+08:00,GSLW,Werder Bremen Women,Stuttgart Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5501,2026-09-22T01:28+08:00,APL,Aldosivi,Atletico Tucuman,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5508,2026-09-22T05:58+08:00,APL,Barracas Central,Independiente Rivadavia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5442,2026-09-22T06:27+08:00,UD1,Central Espanol,Montevideo City Torque,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5572,2026-09-22T06:28+08:00,BD2,Criciuma,Operario Ferroviario,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5507,2026-09-22T08:13+08:00,APL,Lanus,Estudiantes,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5573,2026-09-22T08:28+08:00,BD2,Cuiaba,Nautico Recife,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5583,2026-09-22T08:30+08:00,BD1W,Corinthians Women,Bahia Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5575,2026-09-22T13:00+08:00,AMF,Vietnam AM,Uzbekistan AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5576,2026-09-22T13:00+08:00,AMF,Philippines AM,Kuwait AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T10:27:25+08:00,FB5577,2026-09-22T18:00+08:00,AMF,Korea Republic AM,Saudi Arabia AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
