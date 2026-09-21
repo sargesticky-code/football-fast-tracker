@@ -674,7 +674,7 @@ def main() -> int:
                 base["quality"] = "MODELED"
                 if dataset_key == "SPECIAL:BrazilSerieB2026":
                     base["model_source"] = (
-                        "FerrerasRP/FootballData Brazil Serie B 2026 / penaltyblog 1.12.2"
+                        "Brazil Serie B full-league (BrazilianFootball/Data 2025 + FerrerasRP/FootballData 2026) / penaltyblog 1.12.2"
                     )
                 elif dataset_key.startswith("EXTRA:"):
                     base["model_source"] = "football-data.co.uk extra / penaltyblog 1.12.2"
