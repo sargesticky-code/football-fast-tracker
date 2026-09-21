@@ -1,8 +1,5 @@
 ﻿captured_at_hkt,kickoff_hkt,hkjc_event_id,home,away,movement_side,now_odds,odds_24h,move_24h_pp,odds_2h,move_2h_pp,odds_1h,move_1h_pp,vol_24h_pp,signal,model_side,model_prob,model_alignment,match_confidence,alert_score
-2026-09-21T07:37:50+08:00,2026-09-21T08:00+08:00,FB5459,Toluca,Santos Laguna,H,1.227,,,1.250,1.51,,,4.10,COLLECTING,H,69.0,YES,1.000,0.000
-2026-09-21T07:37:50+08:00,2026-09-21T08:00+08:00,FB5460,Pachuca,Tijuana,H,1.684,,,1.752,1.93,,,4.52,COLLECTING,A,35.0,NO,1.000,0.000
-2026-09-21T07:37:50+08:00,2026-09-21T08:28+08:00,FB5502,Velez Sarsfield,Tigre,H,2.299,,,2.340,0.77,,,0.77,COLLECTING,H,42.0,YES,1.000,0.000
-2026-09-21T07:37:50+08:00,2026-09-21T10:05+08:00,FB5458,Queretaro,Club Leon,H,2.770,,,,,,,1.25,COLLECTING,A,40.0,COLLECTING,1.000,0.000
+2026-09-21T09:47:00+08:00,2026-09-21T10:05+08:00,FB5458,Queretaro,Club Leon,H,2.860,,,2.770,-0.61,,,1.86,COLLECTING,A,40.0,NEUTRAL,1.000,0.000
 2026-09-21T03:05:50+08:00,2026-09-21T15:00+08:00,FB5569,China Women,Philippines Women,H,1.200,,,,,,,6.07,COLLECTING,,,NO MODEL,1.000,0.000
 2026-09-21T03:05:50+08:00,2026-09-21T18:30+08:00,FB5570,Vietnam Women,Thailand Women,H,2.400,,,,,,,,COLLECTING,,,NO MODEL,1.000,0.000
 2026-09-21T03:05:50+08:00,2026-09-22T00:00+08:00,FB5582,Werder Bremen Women,Stuttgart Women,H,1.850,,,,,,,,COLLECTING,,,NO MODEL,0.970,0.000
