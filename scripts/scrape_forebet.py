@@ -541,8 +541,11 @@ def attach_hkjc_target(
     master: dict[str, str] | None = None,
 ) -> dict[str, Any] | None:
     same_date = [t for t in targets if t["match_date"] == row["match_date"]]
-    if not same_date:
-        return None
+    # A missing exact source date is not an automatic identity failure. For
+    # VERIFIED competition + team dictionaries we may safely compare against
+    # the bounded active target universe; fuzzy discovery remains same-date only
+    # below.
+    identity_scope = same_date if same_date else list(targets)
 
     # Static competition identity narrows the candidate universe before team
     # matching. Once a source league/code is verified, future fixtures in that
@@ -551,12 +554,12 @@ def attach_hkjc_target(
     competition_master = forebet_competition_map()
     canonical_tournament = competition_master.get(source_comp, "")
     scoped_date = [
-        t for t in same_date
+        t for t in identity_scope
         if not canonical_tournament
         or normalize_competition(t.get("league_zh", "")) == normalize_competition(canonical_tournament)
     ]
     if not scoped_date:
-        scoped_date = same_date
+        scoped_date = identity_scope
 
     # Strongest path: persistent source+competition+team mapping. This is the
     # reusable "learn once, one lookup forever" identity path.
@@ -669,6 +672,13 @@ def attach_hkjc_target(
                 flush=True,
             )
             return out
+
+    # Never fuzzy-discover across a source-date mismatch. Cross-date recovery
+    # above is allowed only through VERIFIED static league + ordered team-pair
+    # identity. If that deterministic path could not resolve uniquely, fail
+    # closed and leave the row for diagnostics.
+    if not same_date:
+        return None
 
     # Discovery-only fallback for genuinely new names. League context is still
     # applied so fuzzy discovery compares only compatible competition targets.
