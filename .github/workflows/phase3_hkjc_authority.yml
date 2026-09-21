@@ -34,6 +34,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Restore persistent Layer 2 identity state
+        id: identity-cache
         uses: actions/cache/restore@v4
         with:
           path: |
@@ -44,6 +45,20 @@ jobs:
           key: phase3-identity-${{ github.run_id }}
           restore-keys: |
             phase3-identity-
+      - name: Diagnose Layer 2 state continuity
+        run: |
+          echo "PHASE3_IDENTITY_CACHE hit=${{ steps.identity-cache.outputs.cache-hit }} matched_key=${{ steps.identity-cache.outputs.cache-matched-key }}"
+          python - <<'PY'
+          from pathlib import Path
+          for name in (
+              'phase3_identity_evidence.jsonl',
+              'phase3_live_identity_map.json',
+              'phase3_identity_source_health.json',
+              'phase3_identity_exceptions.json',
+          ):
+              p=Path('data')/name
+              print(f"PHASE3_IDENTITY_STATE file={name} present={int(p.exists())} bytes={p.stat().st_size if p.exists() else 0}")
+          PY
       - name: Run Layer 1 deterministic tests
         run: python -m unittest tests.test_phase3_hkjc_authority -v
       - name: Run Layer 2 identity tests
