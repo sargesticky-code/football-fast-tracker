@@ -164,11 +164,11 @@ def _apply_clock_offset(
     return rows
 
 
-def collect_statarea(
+
+def _collect_statarea_days(
     target_dates: Sequence[date],
     *,
-    anchor_rows: Sequence[Mapping[str, str]] | None = None,
-    timeout: int = 20,
+    timeout: int,
 ):
     session = make_session()
     raw_rows: list[dict[str, str]] = []
@@ -211,8 +211,6 @@ def collect_statarea(
                 if normalize_time(source_time) is None:
                     continue
 
-                # Store source display clock unchanged first. It is calibrated
-                # against known Forebet anchors after the page is parsed.
                 row = base_row(
                     source="STA",
                     match_date=day,
@@ -237,6 +235,19 @@ def collect_statarea(
             except Exception:
                 errors += 1
 
+    return raw_rows, requests_count, errors
+
+
+def collect_statarea(
+    target_dates: Sequence[date],
+    *,
+    anchor_rows: Sequence[Mapping[str, str]] | None = None,
+    timeout: int = 20,
+):
+    raw_rows, requests_count, errors = _collect_statarea_days(
+        target_dates,
+        timeout=timeout,
+    )
     if not raw_rows:
         return [], requests_count, errors, {
             "samples": 0,
@@ -249,7 +260,28 @@ def collect_statarea(
             "reason": "MISSING_FOREBET_ANCHORS",
         }
 
-    offset, calibration = infer_statarea_clock_offset(raw_rows, anchor_rows)
+    calibration_rows = list(raw_rows)
+    if target_dates:
+        calibration_day = target_dates[0] - timedelta(days=1)
+        extra_rows, extra_requests, extra_errors = _collect_statarea_days(
+            [calibration_day],
+            timeout=timeout,
+        )
+        calibration_rows.extend(extra_rows)
+        requests_count += extra_requests
+        errors += extra_errors
+
+    offset, calibration = infer_statarea_clock_offset(
+        calibration_rows,
+        anchor_rows,
+    )
+    calibration["calibration_only_previous_day"] = (
+        target_dates[0].isoformat() if not target_dates
+        else (target_dates[0] - timedelta(days=1)).isoformat()
+    )
+    calibration["target_rows"] = len(raw_rows)
+    calibration["calibration_rows"] = len(calibration_rows)
+
     if offset is None:
         return [], requests_count, errors + 1, calibration
 
