@@ -50,6 +50,12 @@ def main():
     parser.add_argument("--source-dir", type=Path, required=True)
     parser.add_argument("--health-dir", type=Path)
     parser.add_argument(
+        "--team-master-dir",
+        type=Path,
+        default=None,
+        help="Directory containing source-specific team-name-master JSON snapshots.",
+    )
+    parser.add_argument(
         "--alias-cache",
         type=Path,
         default=Path("multibetter/data/forebet_bridge_aliases.csv"),
@@ -70,6 +76,7 @@ def main():
     sources = load_source_tables(
         args.source_dir,
         health_dir=args.health_dir,
+        master_dir=args.team_master_dir,
     )
     cache = read_cache(args.alias_cache)
 
@@ -90,6 +97,18 @@ def main():
     write_output(args.output, list(result.rows))
     write_cache(args.alias_cache, list(result.alias_cache))
 
+    master_direct_by_source: dict[str, int] = {}
+    master_direct_rows = 0
+    for row in result.rows:
+        direct = [
+            x for x in str(row.get("master_direct_sources") or "").split("+")
+            if x
+        ]
+        if direct:
+            master_direct_rows += 1
+        for source in direct:
+            master_direct_by_source[source] = master_direct_by_source.get(source, 0) + 1
+
     args.health_output.parent.mkdir(parents=True, exist_ok=True)
     args.health_output.write_text(
         json.dumps(
@@ -98,6 +117,8 @@ def main():
                 "learned_alias_count": result.learned_alias_count,
                 "alias_cache_rows": len(result.alias_cache),
                 "status_counts": dict(result.status_counts),
+                "master_direct_rows": master_direct_rows,
+                "master_direct_by_source": master_direct_by_source,
             },
             indent=2,
             ensure_ascii=False,
@@ -114,6 +135,8 @@ def main():
                 "learned_alias_count": result.learned_alias_count,
                 "alias_cache_rows": len(result.alias_cache),
                 "status_counts": dict(result.status_counts),
+                "master_direct_rows": master_direct_rows,
+                "master_direct_by_source": master_direct_by_source,
             },
             ensure_ascii=False,
         )
