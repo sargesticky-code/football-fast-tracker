@@ -157,7 +157,6 @@ jobs:
         run: python scripts/enrich_power_ratings.py
 
       - name: Add Forebet O-U and corner signals from free match pages
-        continue-on-error: true
         run: python scripts/enrich_forebet_markets.py
 
       - name: Add recent Forebet team form from match-detail pages
