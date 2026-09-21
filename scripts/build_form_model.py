@@ -35,6 +35,11 @@ WOMENS_RESULTS_URL = (
     "martj42/womens-international-results/master/results.csv"
 )
 WOMENS_RESULTS_TIMEOUT = 30
+BRAZIL_RESULTS_URLS = (
+    "https://raw.githubusercontent.com/BrazilianFootball/Data/main/results/processed/Serie_B_2025_games.json",
+    "https://raw.githubusercontent.com/BrazilianFootball/Data/main/results/processed/Serie_C_2025_games.json",
+)
+BRAZIL_RESULTS_TIMEOUT = 40
 
 COLUMNS = [
     "fetched_at_hkt", "hkjc_event_id", "home", "away",
@@ -298,10 +303,17 @@ def main() -> int:
     if women_latest is not None:
         women_cutoff = women_latest.replace(hour=23, minute=59, second=59, microsecond=999999)
 
+    brazil_rows, brazil_latest = fetch_brazilianfootball_results()
+    brazil_master = build_reverse_map("BRAZILIANFOOTBALL_DATA", norm_name) if brazil_rows else {}
+    brazil_cutoff = None
+    if brazil_latest is not None:
+        brazil_cutoff = brazil_latest.replace(hour=23, minute=59, second=59, microsecond=999999)
+
     now = datetime.now(HKT).replace(microsecond=0)
     out = []
     modeled = 0
     women_modeled = 0
+    brazil_modeled = 0
 
     for m in mappings:
         event_id = m.get("hkjc_event_id", "")
@@ -362,6 +374,37 @@ def main() -> int:
                     "recency-weighted Team-Form Poisson"
                 )
 
+        # Brazil Serie B current targets: use the public BrazilianFootball/Data
+        # 2025 Serie B/C result archive as the long-run base, then append only
+        # HKJC results newer than that archive. This fills promoted/relegated
+        # teams without mixing divisions into a single league-strength graph.
+        if str(m.get("tournament") or "").strip() == "BD2" and brazil_rows:
+            source_home = brazil_master.get(norm_name(str(m.get("home") or "")))
+            source_away = brazil_master.get(norm_name(str(m.get("away") or "")))
+            if source_home and source_away:
+                h_ext = weighted_external_rate(brazil_rows, source_home, kickoff)
+                a_ext = weighted_external_rate(brazil_rows, source_away, kickoff)
+                h_ext_venue = weighted_external_rate(brazil_rows, source_home, kickoff, "H")
+                a_ext_venue = weighted_external_rate(brazil_rows, source_away, kickoff, "A")
+
+                h_recent = weighted_rate(history, home_id, kickoff, after=brazil_cutoff) if brazil_cutoff else None
+                a_recent = weighted_rate(history, away_id, kickoff, after=brazil_cutoff) if brazil_cutoff else None
+                h_recent_venue = weighted_rate(history, home_id, kickoff, "H", after=brazil_cutoff) if brazil_cutoff else None
+                a_recent_venue = weighted_rate(history, away_id, kickoff, "A", after=brazil_cutoff) if brazil_cutoff else None
+
+                h_all = combine_rates(h_ext, h_recent)
+                a_all = combine_rates(a_ext, a_recent)
+                h_venue = combine_rates(h_ext_venue, h_recent_venue)
+                a_venue = combine_rates(a_ext_venue, a_recent_venue)
+                base["history_source"] = "BRAZILIANFOOTBALL_SERIE_BC_2025+HKJC_RECENT"
+                base["external_home_games"] = h_ext["n"] if h_ext else 0
+                base["external_away_games"] = a_ext["n"] if a_ext else 0
+                base["external_latest_date"] = brazil_latest.date().isoformat() if brazil_latest else ""
+                base["model_source"] = (
+                    "BrazilianFootball/Data Serie B-C 2025 + HKJC recent · "
+                    "recency-weighted Team-Form Poisson"
+                )
+
         base["home_games"] = h_all["n"] if h_all else 0
         base["away_games"] = a_all["n"] if a_all else 0
         base["home_venue_games"] = h_venue["n"] if h_venue else 0
@@ -392,17 +435,92 @@ def main() -> int:
         modeled += 1
         if base.get("history_source") == "WOMENS_INTL_RESULTS+HKJC_RECENT":
             women_modeled += 1
+        if base.get("history_source") == "BRAZILIANFOOTBALL_SERIE_BC_2025+HKJC_RECENT":
+            brazil_modeled += 1
         out.append(base)
 
     out.sort(key=lambda r: r.get("hkjc_event_id", ""))
     write(out)
     print(
         f"FORM_MODEL fixtures={len(mappings)} modeled={modeled} "
-        f"women_external_modeled={women_modeled} fail_closed={len(mappings)-modeled} "
-        f"history_rows={len(history)} womens_history_rows={len(women_rows)}"
+        f"women_external_modeled={women_modeled} brazil_external_modeled={brazil_modeled} "
+        f"fail_closed={len(mappings)-modeled} history_rows={len(history)} "
+        f"womens_history_rows={len(women_rows)} brazil_history_rows={len(brazil_rows)}"
     )
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main())def clean_brazil_team(value: str) -> str:
+    value = str(value or "").strip()
+    value = re.sub(r"\s*/\s*[A-Z]{2}\s*$", "", value)
+    value = re.sub(r"\s+-\s*$", "", value)
+    return value.strip()
+
+
+def fetch_brazilianfootball_results() -> tuple[list[dict], datetime | None]:
+    rows: list[dict] = []
+    latest: datetime | None = None
+    for url in BRAZIL_RESULTS_URLS:
+        try:
+            response = requests.get(
+                url,
+                timeout=BRAZIL_RESULTS_TIMEOUT,
+                headers={"User-Agent": "football-fast-tracker/1.0"},
+            )
+            response.raise_for_status()
+            payload = response.json()
+        except Exception as exc:
+            print(f"BRAZIL_HISTORY unavailable url={url} error={exc}", flush=True)
+            continue
+
+        games = payload.values() if isinstance(payload, dict) else []
+        source_rows = 0
+        for game in games:
+            if not isinstance(game, dict):
+                continue
+            try:
+                dt = datetime.strptime(str(game.get("Date") or ""), "%d/%m/%Y").replace(tzinfo=HKT)
+                m = re.search(r"(\d+)\s*[Xx]\s*(\d+)", str(game.get("Result") or ""))
+                if not m:
+                    continue
+                hg = float(m.group(1))
+                ag = float(m.group(2))
+            except (TypeError, ValueError):
+                continue
+            home = clean_brazil_team(game.get("Home", ""))
+            away = clean_brazil_team(game.get("Away", ""))
+            if not home or not away:
+                continue
+            rows.append({
+                "date_dt": dt,
+                "home": home,
+                "away": away,
+                "home_goals": hg,
+                "away_goals": ag,
+                "neutral": False,
+            })
+            source_rows += 1
+            if latest is None or dt > latest:
+                latest = dt
+        print(
+            f"BRAZIL_HISTORY_SOURCE url={url.rsplit('/',1)[-1]} rows={source_rows}",
+            flush=True,
+        )
+
+    # Same match cannot occur in both Serie B and C in one season, but keep a
+    # deterministic de-duplication guard in case the source later changes.
+    dedup: dict[tuple[str,str,str],dict] = {}
+    for row in rows:
+        key=(row["date_dt"].date().isoformat(),norm_name(row["home"]),norm_name(row["away"]))
+        dedup[key]=row
+    rows=list(dedup.values())
+    print(
+        f"BRAZIL_HISTORY rows={len(rows)} "
+        f"latest={latest.date().isoformat() if latest else '-'}",
+        flush=True,
+    )
+    return rows, latest
+
+
+
