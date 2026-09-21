@@ -11,6 +11,8 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 
+from team_name_master import build_reverse_map
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 HKJC = DATA / "hkjc_current.csv"
@@ -134,8 +136,13 @@ def global_prediction_links():
             pass
     return sorted(links)
 
-def pick_link(target, links):
+def pick_link(target, links, master_reverse=None):
     kick = target["kickoff_hkt"]
+    target_home = target["home_en"]
+    target_away = target["away_en"]
+    if master_reverse:
+        target_home = master_reverse.get(norm(target_home), target_home)
+        target_away = master_reverse.get(norm(target_away), target_away)
     date_suffixes = {
         (kick + timedelta(days=delta)).strftime("%d-%m-%Y")
         for delta in (-1, 0, 1)
@@ -144,7 +151,7 @@ def pick_link(target, links):
     for href in links:
         if re.search(r"\d{2}-\d{2}-\d{4}", href) and not any(s in href for s in date_suffixes):
             continue
-        home_score, away_score, score = slug_scores(target["home_en"], target["away_en"], href)
+        home_score, away_score, score = slug_scores(target_home, target_away, href)
         # Fail closed: one matching team is not enough evidence for a fixture.
         # Accept abbreviated provider names such as "AGF" for "AGF Aarhus",
         # but require both sides to be represented and a strong combined score.
@@ -187,6 +194,7 @@ def main():
         and clean(r.get("recommendation"))
         and float(clean(r.get("match_score")) or 0) >= 0.70
     }
+    apwin_master = build_reverse_map("APWIN", norm)
     global_links = global_prediction_links()
 
     targets = []
@@ -231,7 +239,7 @@ def main():
         try:
             # First try the broad APWin prediction indexes so APWin remains a
             # true second opinion even when Forebet already has a model.
-            link, score = pick_link(t, global_links)
+            link, score = pick_link(t, global_links, apwin_master)
 
             # If the broad indexes do not expose the match, fall back to an
             # optional permanent league mapping.
@@ -241,7 +249,7 @@ def main():
                 if league_url:
                     if league_url not in links_cache:
                         links_cache[league_url] = prediction_links(league_url)
-                    link, score = pick_link(t, links_cache[league_url])
+                    link, score = pick_link(t, links_cache[league_url], apwin_master)
 
             base["match_score"] = f"{score:.3f}"
             if not link:
