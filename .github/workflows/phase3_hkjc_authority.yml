@@ -17,6 +17,7 @@ on:
       - 'tests/test_phase3_identity_registry.py'
       - 'tests/test_phase3_external_identity.py'
       - 'tests/test_phase3_layer2_authority_gate.py'
+      - 'tests/test_phase3_sofascore_identity.py'
       - '.github/workflows/phase3_hkjc_authority.yml'
 
 permissions:
@@ -60,6 +61,7 @@ jobs:
           python -m unittest tests.test_phase3_identity_registry -v
           python -m unittest tests.test_phase3_external_identity -v
           python -m unittest tests.test_phase3_layer2_authority_gate -v
+          python -m unittest tests.test_phase3_sofascore_identity -v
 
       - name: Checkout pinned HKJC scraper
         run: |
