@@ -13,6 +13,13 @@ class ExternalIdentityTests(unittest.TestCase):
         self.assertEqual(c.source_match_id,"1")
         self.assertGreaterEqual(c.confidence,.85)
 
+    def test_women_suffix_matches_external_w_format(self):
+        hk={"home_en":"Vietnam Women","away_en":"Thailand Women","kickoff_hkt":"2026-09-21T18:30:00+08:00"}
+        c,reason=choose_candidate(hk,[row("9","Vietnam W","Thailand W","2026-09-21T10:30:00+00:00")])
+        self.assertEqual(reason,"CANDIDATE")
+        self.assertEqual(c.source_match_id,"9")
+        self.assertEqual(c.confidence,1.0)
+
     def test_reversed_fixture_fails_closed(self):
         c,reason=choose_candidate(HK,[row(home="Arsenal",away="Manchester United")])
         self.assertIsNone(c)
