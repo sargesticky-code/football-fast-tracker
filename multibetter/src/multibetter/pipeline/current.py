@@ -245,6 +245,7 @@ def build_current(
                     forebet_row
                 ),
                 time_tolerance_hours=0,
+                time_tolerance_minutes=5,
             )
         except ValueError as exc:
             status = "INVALID_SOURCE_ROW"
