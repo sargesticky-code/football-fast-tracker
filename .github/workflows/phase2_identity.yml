@@ -36,7 +36,7 @@ jobs:
         run: |
           git config user.name "phase2-bot"
           git config user.email "phase2-bot@users.noreply.github.com"
-          git add data/phase2_hkjc_current.csv data/phase2_hkjc_capture_health.json data/phase2_team_identity_targets.csv data/phase2_team_identity_evidence.csv data/phase2_identity_resolution_diagnostics.csv data/phase2_identity_health.json
+          git add data/phase2_hkjc_current.csv data/phase2_hkjc_capture_health.json data/phase2_team_identity_targets.csv data/phase2_team_identity_evidence.csv data/phase2_identity_resolution_diagnostics.csv data/phase2_thesportsdb_diagnostics.csv data/phase2_espn_diagnostics.csv data/phase2_fotmob_diagnostics.csv data/phase2_identity_health.json
           if ! git diff --cached --quiet; then
             git commit -m "phase2: refresh current identity universe"
             git push origin HEAD:phase2-human-intelligence
