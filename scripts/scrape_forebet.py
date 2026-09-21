@@ -91,6 +91,16 @@ SESSION.headers.update({
     "Accept": "text/csv,text/plain,*/*;q=0.8",
 })
 
+_FOREBET_MASTER: dict[str, str] | None = None
+
+
+def forebet_master_map() -> dict[str, str]:
+    """Load the verified universal dictionary once per production process."""
+    global _FOREBET_MASTER
+    if _FOREBET_MASTER is None:
+        _FOREBET_MASTER = build_forward_map("FOREBET", normalize_team)
+    return _FOREBET_MASTER
+
 
 def text(el: Tag | None) -> str:
     return el.get_text(" ", strip=True) if el else ""
@@ -510,7 +520,10 @@ def attach_hkjc_target(
 
     # One-for-all path: a previously verified Forebet name resolves directly
     # to the canonical HKJC English name. This avoids re-fuzzy-matching the
-    # same clubs on every future fixture.
+    # same clubs on every future fixture. All production callers get this path
+    # automatically; callers do not need to pass a map explicitly.
+    if master is None:
+        master = forebet_master_map()
     if master:
         home_canonical = master.get(normalize_team(row["home_team"]))
         away_canonical = master.get(normalize_team(row["away_team"]))
@@ -598,7 +611,7 @@ def main() -> int:
     if not targets:
         return 2
 
-    forebet_master = build_forward_map("FOREBET", normalize_team)
+    forebet_master = forebet_master_map()
 
     if GATE_ONLY:
         print(f"GATE_ONLY_PASS targets={len(targets)} scraperapi_calls=0", flush=True)
