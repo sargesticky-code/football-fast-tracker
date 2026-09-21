@@ -1,21 +1,12 @@
 {
-  "rows": 27,
+  "rows": 24,
   "learned_alias_count": 0,
   "alias_cache_rows": 0,
   "status_counts": {
-    "HKJC_ANCHOR": 27
+    "HKJC_ANCHOR": 24
   },
-  "master_direct_rows": 10,
-  "master_direct_by_source": {
-    "STA": 8,
-    "PRE": 1,
-    "ACC": 5,
-    "BCL": 5,
-    "FST": 5,
-    "FRB": 1
-  },
-  "master_global_rows": 7,
-  "master_global_by_source": {
-    "STA": 7
-  }
+  "master_direct_rows": 0,
+  "master_direct_by_source": {},
+  "master_global_rows": 0,
+  "master_global_by_source": {}
 }
