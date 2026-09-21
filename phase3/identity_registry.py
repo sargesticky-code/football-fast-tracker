@@ -1,8 +1,9 @@
 """Phase 3 Layer 2: persistent external live-match identity registry.
 
-This module is deliberately independent from Phase 1 value logic and Phase 2
-human factors. It promotes an HKJC event -> external match ID only after
-repeated, fixture-consistent observations. Ambiguity fails closed.
+Independent from Phase 1 value logic and Phase 2 human factors. New mappings
+must earn repeated evidence. Once verified, a mapping is terminal/locked and
+is reused instead of fuzzy-rematching; contradictory later evidence is
+quarantined and makes lookup fail closed until reviewed.
 """
 from __future__ import annotations
 
@@ -37,9 +38,7 @@ class IdentityObservation:
             source_match_id=_s(self.source_match_id),
             confidence=max(0.0, min(1.0, float(self.confidence))),
             observed_at=_s(self.observed_at) or datetime.now(timezone.utc).isoformat(),
-            home=_s(self.home),
-            away=_s(self.away),
-            kickoff=_s(self.kickoff),
+            home=_s(self.home), away=_s(self.away), kickoff=_s(self.kickoff),
             competition=_s(self.competition),
         )
 
@@ -49,61 +48,74 @@ def _fixture_signature(o: IdentityObservation) -> tuple[str, str, str]:
 
 
 def rebuild_registry(observations: Iterable[IdentityObservation]) -> list[dict]:
-    """Rebuild deterministic candidate/verified state from append-only evidence."""
+    """Build deterministic candidate/verified state from append-only evidence."""
     obs = [x.normalized() for x in observations]
     groups: dict[tuple[str, str, str], list[IdentityObservation]] = {}
-    source_id_owners: dict[tuple[str, str], set[str]] = {}
-
+    owners: dict[tuple[str, str], set[str]] = {}
     for o in obs:
         if not (o.hkjc_event_id and o.source and o.source_match_id):
             continue
         groups.setdefault((o.hkjc_event_id, o.source, o.source_match_id), []).append(o)
-        source_id_owners.setdefault((o.source, o.source_match_id), set()).add(o.hkjc_event_id)
+        owners.setdefault((o.source, o.source_match_id), set()).add(o.hkjc_event_id)
 
     rows: list[dict] = []
-    for key, evidence in sorted(groups.items()):
-        event_id, source, source_match_id = key
+    for (event_id, source, source_match_id), evidence in sorted(groups.items()):
         signatures = {_fixture_signature(x) for x in evidence}
-        competing_ids = {
-            k[2] for k in groups
-            if k[0] == event_id and k[1] == source and k[2] != source_match_id
-        }
-        collision = len(source_id_owners[(source, source_match_id)]) > 1
-        conflict = len(signatures) > 1 or bool(competing_ids) or collision
+        competing = {k[2] for k in groups if k[0] == event_id and k[1] == source and k[2] != source_match_id}
+        conflict = len(signatures) > 1 or bool(competing) or len(owners[(source, source_match_id)]) > 1
         evidence_count = len({x.observed_at for x in evidence})
         confidence = min(x.confidence for x in evidence)
-        verified = (
-            not conflict
-            and confidence >= PROMOTE_CONFIDENCE
-            and evidence_count >= PROMOTE_OBSERVATIONS
-        )
+        verified = not conflict and confidence >= PROMOTE_CONFIDENCE and evidence_count >= PROMOTE_OBSERVATIONS
         latest = max(evidence, key=lambda x: x.observed_at)
-
         rows.append({
-            "hkjc_event_id": event_id,
-            "source": source,
-            "source_match_id": source_match_id,
+            "hkjc_event_id": event_id, "source": source, "source_match_id": source_match_id,
             "status": "VERIFIED" if verified else ("CONFLICT" if conflict else "CANDIDATE"),
-            "confidence": round(confidence, 3),
-            "evidence_count": evidence_count,
-            "conflict": conflict,
-            "competing_ids": sorted(competing_ids),
-            "last_observed_at": latest.observed_at,
-            "home": latest.home,
-            "away": latest.away,
-            "kickoff": latest.kickoff,
-            "competition": latest.competition,
+            "confidence": round(confidence, 3), "evidence_count": evidence_count,
+            "conflict": conflict, "competing_ids": sorted(competing),
+            "last_observed_at": latest.observed_at, "home": latest.home, "away": latest.away,
+            "kickoff": latest.kickoff, "competition": latest.competition,
+            "terminal": verified,
         })
     return rows
 
 
+def merge_terminal_registry(previous: Iterable[dict], rebuilt: Iterable[dict]) -> list[dict]:
+    """Retain verified mappings across cycles; quarantine contradictory evidence.
+
+    A verified mapping is never silently replaced. If a later rebuild proposes
+    another external ID for the same HKJC event/source, the verified row is
+    retained as LOCKED_CONFLICT and no usable mapping is returned.
+    """
+    old = [dict(r) for r in previous]
+    new = [dict(r) for r in rebuilt]
+    locked = {(r.get("hkjc_event_id"), r.get("source")): r for r in old if r.get("status") in {"VERIFIED", "LOCKED_CONFLICT"}}
+    new_by_key: dict[tuple[str, str], list[dict]] = {}
+    for r in new:
+        new_by_key.setdefault((r.get("hkjc_event_id"), r.get("source")), []).append(r)
+
+    output: list[dict] = []
+    consumed: set[tuple[str, str]] = set()
+    for key, prior in locked.items():
+        candidates = new_by_key.get(key, [])
+        contradiction = any(r.get("source_match_id") != prior.get("source_match_id") or r.get("status") == "CONFLICT" for r in candidates)
+        kept = dict(prior)
+        kept["terminal"] = True
+        if contradiction:
+            kept["status"] = "LOCKED_CONFLICT"
+            kept["conflict"] = True
+            kept["quarantined_ids"] = sorted({str(r.get("source_match_id")) for r in candidates if r.get("source_match_id") != prior.get("source_match_id")})
+        output.append(kept)
+        consumed.add(key)
+
+    for r in new:
+        key = (r.get("hkjc_event_id"), r.get("source"))
+        if key not in consumed:
+            output.append(r)
+    return sorted(output, key=lambda r: (str(r.get("hkjc_event_id")), str(r.get("source")), str(r.get("source_match_id"))))
+
+
 def usable_mapping(registry: Iterable[dict], hkjc_event_id: str, source: str) -> dict | None:
-    rows = [
-        r for r in registry
-        if r.get("hkjc_event_id") == hkjc_event_id
-        and r.get("source") == source.upper()
-        and r.get("status") == "VERIFIED"
-    ]
+    rows = [r for r in registry if r.get("hkjc_event_id") == hkjc_event_id and r.get("source") == source.upper() and r.get("status") == "VERIFIED"]
     return rows[0] if len(rows) == 1 else None
 
 
