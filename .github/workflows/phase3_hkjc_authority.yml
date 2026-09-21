@@ -5,30 +5,20 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   push:
-    branches:
-      - phase3-live-intelligence
+    branches: [phase3-live-intelligence]
     paths:
       - 'phase3/**'
       - 'scripts/phase3_capture_hkjc_authority.py'
       - 'scripts/phase3_check_hkjc_authority.py'
       - 'scripts/phase3_collect_fotmob_identity.py'
       - 'scripts/phase3_build_identity_registry.py'
-      - 'tests/test_phase3_hkjc_authority.py'
-      - 'tests/test_phase3_identity_registry.py'
-      - 'tests/test_phase3_external_identity.py'
-      - 'tests/test_phase3_layer2_authority_gate.py'
-      - 'tests/test_phase3_sofascore_identity.py'
-      - 'tests/test_phase3_sofascore_transport.py'
-      - 'tests/test_phase3_source_health.py'
+      - 'tests/test_phase3_*.py'
       - '.github/workflows/phase3_hkjc_authority.yml'
-
 permissions:
   contents: read
-
 concurrency:
   group: phase3-hkjc-authority-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   authority:
     runs-on: ubuntu-latest
@@ -63,6 +53,7 @@ jobs:
           python -m unittest tests.test_phase3_sofascore_identity -v
           python -m unittest tests.test_phase3_sofascore_transport -v
           python -m unittest tests.test_phase3_source_health -v
+          python -m unittest tests.test_phase3_espn_identity -v
       - name: Checkout pinned HKJC scraper
         run: |
           rm -rf "$HKJC_SCRAPER_PATH"
