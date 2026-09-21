@@ -1,0 +1,36 @@
+name: Phase 2 Identity
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '18 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: phase2-identity
+  cancel-in-progress: false
+jobs:
+  identity:
+    if: github.ref == 'refs/heads/phase2-human-intelligence'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase2-human-intelligence
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5
+      - name: Capture current HKJC universe
+        run: python scripts/phase2_capture_hkjc.py --out data/phase2_hkjc_current.csv --horizon-hours 48
+      - name: Build identity targets and coverage
+        run: python scripts/phase2_team_identity.py --fixtures data/phase2_hkjc_current.csv --registry data/phase2_team_identity_evidence.csv --targets data/phase2_team_identity_targets.csv
+      - name: Persist Phase 2 snapshots only
+        run: |
+          git config user.name "phase2-bot"
+          git config user.email "phase2-bot@users.noreply.github.com"
+          git add data/phase2_hkjc_current.csv data/phase2_team_identity_targets.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "phase2: refresh current identity universe"
+            git push origin HEAD:phase2-human-intelligence
+          fi
