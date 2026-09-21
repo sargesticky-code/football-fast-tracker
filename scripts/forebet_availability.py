@@ -222,6 +222,7 @@ def install(production) -> None:
                     "SOURCE_UNAVAILABLE": "forebet_source_surface_unavailable",
                     "NO_SOURCE_ROWS": "no_forebet_source_rows_for_date",
                     "NO_CLOSE_FIXTURE_ON_FETCHED_MODEL_SURFACES": "forebet_fixture_absent_from_fetched_model_surfaces",
+                    "SOURCE_SURFACE_ABSENT": "forebet_fixture_absent_from_fetched_model_surfaces",
                     "WEAK_NAME_CANDIDATE": "weak_forebet_name_candidate_review",
                     "ALIAS_NEAR_MISS": "forebet_alias_near_miss_review",
                     "PUBLISHED_WITHOUT_USABLE_MODEL": "forebet_fixture_published_without_usable_model",
