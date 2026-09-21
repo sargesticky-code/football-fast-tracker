@@ -40,6 +40,7 @@ jobs:
             data/phase3_identity_evidence.jsonl
             data/phase3_live_identity_map.json
             data/phase3_identity_source_health.json
+            data/phase3_identity_exceptions.json
           key: phase3-identity-${{ github.run_id }}
           restore-keys: |
             phase3-identity-
@@ -54,6 +55,7 @@ jobs:
           python -m unittest tests.test_phase3_sofascore_transport -v
           python -m unittest tests.test_phase3_source_health -v
           python -m unittest tests.test_phase3_espn_identity -v
+          python -m unittest tests.test_phase3_identity_exceptions -v
       - name: Checkout pinned HKJC scraper
         run: |
           rm -rf "$HKJC_SCRAPER_PATH"
@@ -76,6 +78,7 @@ jobs:
             data/phase3_identity_evidence.jsonl
             data/phase3_live_identity_map.json
             data/phase3_identity_source_health.json
+            data/phase3_identity_exceptions.json
           key: phase3-identity-${{ github.run_id }}
       - name: Upload Phase 3 evidence
         if: always()
@@ -88,5 +91,6 @@ jobs:
             data/phase3_identity_evidence.jsonl
             data/phase3_live_identity_map.json
             data/phase3_identity_source_health.json
+            data/phase3_identity_exceptions.json
           if-no-files-found: warn
           retention-days: 7
