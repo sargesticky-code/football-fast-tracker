@@ -21,6 +21,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import scrape_forebet as feed
+from team_name_master import build_forward_map
 
 DIRECT_TARGETS = Path("data/hkjc_targets.csv")
 CURRENT_FEED = Path("data/forebet_current.csv")
@@ -135,6 +136,24 @@ def _attach_with_safe_date_rollover(row, targets):
 _original_attach = _attach_with_safe_date_rollover
 
 
+def _load_team_name_master() -> int:
+    """Load verified one-for-all Forebet names before legacy matching.
+
+    Source-specific VERIFIED mappings win inside build_forward_map. GLOBAL
+    fallback is used only for names Forebet has never classified, while
+    source-specific candidate/ambiguous names remain blocked.
+    """
+    master = build_forward_map("FOREBET", feed.normalize_team)
+    loaded = 0
+    for alias_key, canonical in master.items():
+        canonical_value = feed.normalize_team(canonical)
+        if alias_key and canonical_value:
+            feed.ALIASES[alias_key] = canonical_value
+            loaded += 1
+    print(f"FOREBET_TEAM_MASTER verified_forward={loaded}", flush=True)
+    return loaded
+
+
 def _load_alias_registry() -> int:
     loaded = conflicts = manual_loaded = 0
     sources = (
@@ -170,7 +189,13 @@ def _load_alias_registry() -> int:
     return loaded
 
 
-_load_alias_registry()
+_MASTER_ALIAS_COUNT = _load_team_name_master()
+_LEGACY_ALIAS_COUNT = _load_alias_registry()
+print(
+    f"FOREBET_IDENTITY_PATH master={_MASTER_ALIAS_COUNT} "
+    f"legacy_plus_manual={_LEGACY_ALIAS_COUNT} fuzzy=discovery_only",
+    flush=True,
+)
 
 
 def _translate_target_dates(rows):
