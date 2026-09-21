@@ -24,6 +24,7 @@ on:
       - 'scripts/enrich_power_ratings.py'
       - 'scripts/archive_forebet.py'
       - 'data/team_alias_manual.csv'
+      - 'data/competition_alias_manual.csv'
       - 'scripts/team_name_master.py'
       - 'scripts/scrape_forebet.py'
       - '.github/workflows/forebet_daily.yml'
