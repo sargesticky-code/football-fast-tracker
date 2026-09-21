@@ -58,11 +58,28 @@ jobs:
 
       - name: Capture fresh HKJC modelling targets directly
         run: |
+          # Two representations are intentional:
+          # raw list_matches() preserves nested stable team IDs for history/form;
+          # CLI JSON provides the normalized fixture shape for normalize_hkjc.py.
+          PYTHONPATH=/tmp/hkjc-direct python - <<'PY'
+          import json
+          from hkjc.scraper import HKJCFootball
+          rows = HKJCFootball().list_matches()
+          if not rows:
+              raise SystemExit('HKJC raw listing returned zero matches')
+          with open('/tmp/hkjc_raw_matches.json', 'w', encoding='utf-8') as fh:
+              json.dump(rows, fh, ensure_ascii=False)
+          print(f'HKJC_RAW_LIST rows={len(rows)}')
+          PY
           cd /tmp/hkjc-direct
-          python -m hkjc list --format json --out /tmp/hkjc_raw_matches.json
+          python -m hkjc list --format json --out /tmp/hkjc_matches.json
           python -m hkjc odds --page HAD --format json --out /tmp/hkjc_had.json
           cd "$GITHUB_WORKSPACE"
-          python scripts/normalize_hkjc.py             --matches /tmp/hkjc_raw_matches.json             --had /tmp/hkjc_had.json             --horizon-hours 48             --live-retain-minutes 150
+          python scripts/normalize_hkjc.py \
+            --matches /tmp/hkjc_matches.json \
+            --had /tmp/hkjc_had.json \
+            --horizon-hours 48 \
+            --live-retain-minutes 150
 
       - name: Decide whether models need rebuilding
         id: model_gate
