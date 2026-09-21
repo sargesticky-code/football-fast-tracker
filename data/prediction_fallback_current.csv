@@ -1,85 +1,28 @@
 ﻿fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,source,source_competition,source_url,recommendation,market,match_score,status,notes
-2026-09-20T22:18:16+08:00,FB5360,2026-09-20T20:30+08:00,DFL,Twente,PSV Eindhoven,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5361,2026-09-20T20:30+08:00,DFL,AZ Alkmaar,Telstar,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5417,2026-09-20T20:30+08:00,NTL,Valerenga,Fredrikstad,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5483,2026-09-20T20:30+08:00,AT1,Hartberg,LASK Linz,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5537,2026-09-20T20:30+08:00,ED1,Norwich,Bolton,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5368,2026-09-20T21:00+08:00,FFL,Auxerre,Brest,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5377,2026-09-20T21:00+08:00,ISA,Parma,Genoa,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5379,2026-09-20T21:00+08:00,ISA,Frosinone,Como,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5437,2026-09-20T21:00+08:00,EPL,Bournemouth,Liverpool,APWIN,,https://www.apwin.com/predictions/bournemouth-vs-liverpool-prediction-premier-league-20-09-2026/,Liverpool to win,BTTS - Yes,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5438,2026-09-20T21:00+08:00,EPL,Leeds,Crystal Palace,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5439,2026-09-20T21:00+08:00,EPL,Manchester City,Sunderland,APWIN,,https://www.apwin.com/predictions/manchester-city-vs-sunderland-prediction-premier-league-20-09-2026/,Manchester City to win,2nd Half Manchester City Win,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5566,2026-09-20T21:00+08:00,UWW,Nigeria Women U20,Colombia Women U20,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5371,2026-09-20T21:30+08:00,GSL,Leverkusen,RB Leipzig,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5561,2026-09-20T21:30+08:00,ULP,Al Nasr SC,Dubai United FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5407,2026-09-20T22:00+08:00,DK1,Horsens,AGF Aarhus,APWIN,,https://www.apwin.com/predictions/horsens-vs-agf-prediction-superliga-20-09-2026/,Under 2.5 goals in the match,BTTS - Yes,0.750,OK,
-2026-09-20T22:18:16+08:00,FB5469,2026-09-20T22:00+08:00,BD1,Gremio,Palmeiras,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5487,2026-09-20T22:00+08:00,BFL,Sint Truiden,Westerlo,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5362,2026-09-20T22:15+08:00,SFL,Atletico Madrid,Real Madrid,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5488,2026-09-20T22:15+08:00,SF2,Ceuta,Valladolid,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5400,2026-09-20T22:30+08:00,PFL,Guimaraes,Moreirense,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5401,2026-09-20T22:30+08:00,PFL,Amadora,Viseu,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5489,2026-09-20T22:30+08:00,SU1,Lausanne,Lugano,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5490,2026-09-20T22:30+08:00,SU1,Basel,St. Gallen,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5554,2026-09-20T22:30+08:00,SAL,Mjallby,GAIS,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5555,2026-09-20T22:30+08:00,SAL,Degerfors,Hammarby,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5366,2026-09-20T22:45+08:00,DF2,De Graafschap,NAC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5491,2026-09-20T22:45+08:00,DFL,NEC Nijmegen,Go Ahead Eagles,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5416,2026-09-20T23:00+08:00,NTL,Tromso,Ham-Kam,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5418,2026-09-20T23:00+08:00,NTL,Sandefjord,Start,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5482,2026-09-20T23:00+08:00,AT1,Salzburg,Sturm Graz,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5545,2026-09-20T23:00+08:00,NTL,Viking,Lillestrom,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5369,2026-09-20T23:15+08:00,FFL,Nice,Lille,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5339,2026-09-20T23:30+08:00,EPL,Fulham,Manchester Utd,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5372,2026-09-20T23:30+08:00,GSL,Schalke 04,Elversberg,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5406,2026-09-21T00:00+08:00,DK1,Viborg,Nordsjaelland,APWIN,,https://www.apwin.com/predictions/viborg-vs-nordsjaelland-prediction-superliga-20-09-2026/,Viborg to win,Double Chance: Viborg or Draw,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5497,2026-09-21T00:00+08:00,ISA,Juventus,Atalanta,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5548,2026-09-21T00:15+08:00,ULP,Al Jazira,Al Wahda,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5549,2026-09-21T00:15+08:00,ULP,Al Dhafra,Baniyas,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5492,2026-09-21T00:30+08:00,SFL,Deportivo,Betis,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5493,2026-09-21T00:30+08:00,BFL,Bruges,Genk,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5494,2026-09-21T00:30+08:00,SFL,Villarreal,Levante,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5495,2026-09-21T00:30+08:00,SF2,Las Palmas,Burgos,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5565,2026-09-21T00:30+08:00,UWW,Korea DPR Women U20,Canada Women U20,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5396,2026-09-21T01:00+08:00,PFL,Santa Clara,Braga,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5397,2026-09-21T01:00+08:00,PFL,Estoril,Casa Pia AC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5391,2026-09-21T01:15+08:00,NTL,Brann,Bodo Glimt,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5496,2026-09-21T01:15+08:00,BFL,KV Kortrijk,SK Beveren,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5511,2026-09-21T01:30+08:00,GSL,Paderborn,Hoffenheim,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5500,2026-09-21T01:43+08:00,APL,San Lorenzo,Boca Juniors,APWIN,,https://www.apwin.com/predictions/san-lorenzo-vs-boca-juniors-prediction-primera-division-20-09-2026/,Boca Juniors to win,Under 2.5 Goals,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5380,2026-09-21T02:45+08:00,ISA,AC Milan,Lecce,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5440,2026-09-21T02:45+08:00,FFL,Marseille,Paris Saint Germain,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5465,2026-09-21T03:00+08:00,BD1,Corinthians,Fluminense,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5466,2026-09-21T03:00+08:00,BD1,Vitoria,Cruzeiro,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5509,2026-09-21T03:00+08:00,SFL,Valencia,Real Sociedad,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5510,2026-09-21T03:00+08:00,SF2,Leganes,CF Granada,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5307,2026-09-21T03:27+08:00,UD1,Montevideo Nacional,Defensor Sporting,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5399,2026-09-21T03:30+08:00,PFL,Porto,Benfica,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5498,2026-09-21T03:58+08:00,APL,Rosario Central,Argentinos Juniors,APWIN,,https://www.apwin.com/predictions/rosario-central-vs-argentinos-juniors-prediction-primera-division-20-09-2026/,Argentinos Juniors win or draw,Under 2.5 Goals,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5505,2026-09-21T03:58+08:00,APL,CA Platense,Newell's Old Boys,APWIN,,https://www.apwin.com/predictions/platense-vs-newells-old-boys-prediction-primera-division-20-09-2026/,Both teams don't score,Under 2.5 Goals,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5551,2026-09-21T05:00+08:00,USL,Indy Eleven,Oakland Roots,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5467,2026-09-21T05:30+08:00,BD1,Flamengo,RB Bragantino,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5550,2026-09-21T06:13+08:00,APL,Belgrano,Estudiantes Rio Cuarto,APWIN,,https://www.apwin.com/predictions/belgrano-vs-estudiantes-de-rio-cuarto-prediction-primera-division-20-09-2026/,Estudiantes de Río Cuarto win or draw,Under 2.5 Goals,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5468,2026-09-21T06:30+08:00,BD1,Athletico Paranaense,Bahia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5443,2026-09-21T06:57+08:00,UD1,Montevideo Liverpool,Racing Club Montevideo,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5457,2026-09-21T07:00+08:00,MLS,Inter Miami CF,San Diego FC,APWIN,,https://www.apwin.com/predictions/inter-miami-vs-san-diego-prediction-mls-21-09-2026/,Inter Miami to win the 1st half,BTTS - Yes,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5546,2026-09-21T07:00+08:00,USL,Sacramento Republic,San Antonio FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5547,2026-09-21T07:00+08:00,MD1,Tapatio,Tlaxcala,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5459,2026-09-21T08:00+08:00,MXL,Toluca,Santos Laguna,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5460,2026-09-21T08:00+08:00,MXL,Pachuca,Tijuana,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5502,2026-09-21T08:28+08:00,APL,Velez Sarsfield,Tigre,APWIN,,https://www.apwin.com/predictions/velez-sarsfield-vs-tigre-prediction-primera-division-21-09-2026/,Under 2.5 goals in the match,Under 2.5 Goals,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5458,2026-09-21T10:05+08:00,MXL,Queretaro,Club Leon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5568,2026-09-21T15:00+08:00,AWF,Korea Republic Women,Korea DPR Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5569,2026-09-21T15:00+08:00,AWF,China Women,Philippines Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5570,2026-09-21T18:30+08:00,AWF,Vietnam Women,Thailand Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5571,2026-09-21T18:30+08:00,AWF,Japan Women,Chinese Taipei Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5501,2026-09-22T01:28+08:00,APL,Aldosivi,Atletico Tucuman,APWIN,,https://www.apwin.com/predictions/aldosivi-vs-atletico-tucuman-prediction-primera-division-21-09-2026/,Draw,Under 2.5 Goals,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5508,2026-09-22T05:58+08:00,APL,Barracas Central,Independiente Rivadavia,APWIN,,https://www.apwin.com/predictions/barracas-central-vs-independiente-rivadavia-prediction-primera-division-21-09-2026/,Barracas Central win or draw,Under 2.5 Goals,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5442,2026-09-22T06:27+08:00,UD1,Central Espanol,Montevideo City Torque,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5572,2026-09-22T06:28+08:00,BD2,Criciuma,Operario Ferroviario,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5507,2026-09-22T08:13+08:00,APL,Lanus,Estudiantes,APWIN,,https://www.apwin.com/predictions/lanus-vs-estudiantes-de-la-plata-prediction-primera-division-22-09-2026/,Lanús to win the 1st half,Under 2.5 Goals,1.000,OK,
-2026-09-20T22:18:16+08:00,FB5573,2026-09-22T08:28+08:00,BD2,Cuiaba,Nautico Recife,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5575,2026-09-22T13:00+08:00,AMF,Vietnam AM,Uzbekistan AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5576,2026-09-22T13:00+08:00,AMF,Philippines AM,Kuwait AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-20T22:18:16+08:00,FB5577,2026-09-22T18:00+08:00,AMF,Korea Republic AM,Saudi Arabia AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5468,2026-09-21T06:30+08:00,BD1,Athletico Paranaense,Bahia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5443,2026-09-21T06:57+08:00,UD1,Montevideo Liverpool,Racing Club Montevideo,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5457,2026-09-21T07:00+08:00,MLS,Inter Miami CF,San Diego FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5546,2026-09-21T07:00+08:00,USL,Sacramento Republic,San Antonio FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5547,2026-09-21T07:00+08:00,MD1,Tapatio,Tlaxcala,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5579,2026-09-21T07:00+08:00,MXLW,Atletico San Luis Women,Pachuca Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5580,2026-09-21T07:00+08:00,MLSW,Utah Royals Women,Angel City Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5581,2026-09-21T07:00+08:00,MLSW,Bay FC Women,Racing Louisville Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5459,2026-09-21T08:00+08:00,MXL,Toluca,Santos Laguna,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5460,2026-09-21T08:00+08:00,MXL,Pachuca,Tijuana,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5502,2026-09-21T08:28+08:00,APL,Velez Sarsfield,Tigre,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5458,2026-09-21T10:05+08:00,MXL,Queretaro,Club Leon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5568,2026-09-21T15:00+08:00,AWF,Korea Republic Women,Korea DPR Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5569,2026-09-21T15:00+08:00,AWF,China Women,Philippines Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5570,2026-09-21T18:30+08:00,AWF,Vietnam Women,Thailand Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5571,2026-09-21T18:30+08:00,AWF,Japan Women,Chinese Taipei Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5582,2026-09-22T00:00+08:00,GSLW,Werder Bremen Women,Stuttgart Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5501,2026-09-22T01:28+08:00,APL,Aldosivi,Atletico Tucuman,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5508,2026-09-22T05:58+08:00,APL,Barracas Central,Independiente Rivadavia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5442,2026-09-22T06:27+08:00,UD1,Central Espanol,Montevideo City Torque,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5572,2026-09-22T06:28+08:00,BD2,Criciuma,Operario Ferroviario,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5507,2026-09-22T08:13+08:00,APL,Lanus,Estudiantes,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5573,2026-09-22T08:28+08:00,BD2,Cuiaba,Nautico Recife,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5583,2026-09-22T08:30+08:00,BD1W,Corinthians Women,Bahia Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5575,2026-09-22T13:00+08:00,AMF,Vietnam AM,Uzbekistan AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5576,2026-09-22T13:00+08:00,AMF,Philippines AM,Kuwait AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-21T08:23:58+08:00,FB5577,2026-09-22T18:00+08:00,AMF,Korea Republic AM,Saudi Arabia AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
