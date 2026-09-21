@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from phase3.external_identity import choose_candidate, ranked_candidates, coverage_diagnostic, classify_unresolved
@@ -52,10 +53,27 @@ def fotmob_board(date: str) -> list[dict]:
 
 def sofascore_board(date: str) -> list[dict]:
     iso=f"{date[:4]}-{date[4:6]}-{date[6:8]}"
-    url=f"https://www.sofascore.com/api/v1/sport/football/scheduled-events/{iso}"
-    req=Request(url,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
-    with urlopen(req,timeout=12) as resp:
-        return normalize_sofascore_board(json.load(resp))
+    urls=[
+        f"https://www.sofascore.com/api/v1/sport/football/scheduled-events/{iso}",
+        f"https://api.sofascore.com/api/v1/sport/football/scheduled-events/{iso}",
+    ]
+    last_error=None
+    for url in urls:
+        req=Request(url,headers={
+            "User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/128 Safari/537.36",
+            "Accept":"application/json",
+            "Referer":"https://www.sofascore.com/",
+        })
+        try:
+            with urlopen(req,timeout=12) as resp:
+                return normalize_sofascore_board(json.load(resp))
+        except HTTPError as exc:
+            last_error=exc
+            if exc.code not in {403,404,429}:
+                raise
+    if last_error:
+        raise last_error
+    return []
 
 
 def _names(hk: dict) -> tuple[str, str]:
@@ -101,10 +119,19 @@ def main() -> int:
             diagnostic_reason = classify_unresolved(hk, board)
             if diagnostic_reason == "SOURCE_COVERAGE_GAP":
                 if not fallback_rows:
+                    fallback_requests=1
                     try:
-                        fallback_rows=sofascore_board(dates[0]); fallback_requests=1
+                        fallback_rows=sofascore_board(dates[0])
+                    except HTTPError as exc:
+                        print(
+                            f"PHASE3_IDENTITY_FALLBACK source=SOFASCORE status=SOURCE_HTTP_ERROR "
+                            f"http_status={exc.code}"
+                        )
                     except Exception as exc:
-                        print(f"PHASE3_IDENTITY_FALLBACK source=SOFASCORE status=SOURCE_ERROR error={type(exc).__name__}")
+                        print(
+                            f"PHASE3_IDENTITY_FALLBACK source=SOFASCORE status=SOURCE_ERROR "
+                            f"error={type(exc).__name__}"
+                        )
                 fallback_candidate,fallback_reason=choose_candidate(hk,fallback_rows)
                 if fallback_candidate:
                     additions.append(json.dumps({
