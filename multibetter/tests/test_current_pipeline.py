@@ -211,3 +211,115 @@ def test_hkjc_anchor_allows_optional_source_without_forebet_model():
     assert row["source_count_total"] == 1
     assert row["sources_total"] == "PRE"
     assert row["consensus_home"] > 0
+
+
+def test_global_master_fallback_is_used_only_for_unseen_source_name(tmp_path):
+    import json
+    from multibetter.pipeline.current import load_source_tables
+
+    source_dir = tmp_path / "current"
+    health_dir = tmp_path / "health"
+    master_dir = tmp_path / "master"
+    source_dir.mkdir()
+    health_dir.mkdir()
+    master_dir.mkdir()
+
+    (source_dir / "accumulator.csv").write_text(
+        "DATE,TIME,HOME TEAM,AWAY TEAM\n22/09/2026,00:15,San Diego FC,Toluca\n",
+        encoding="utf-8",
+    )
+    (health_dir / "acc.json").write_text(
+        json.dumps({"status": "OK"}),
+        encoding="utf-8",
+    )
+    (master_dir / "ACC.json").write_text(
+        json.dumps({"ok": True, "rows": [], "blockedNames": []}),
+        encoding="utf-8",
+    )
+    (master_dir / "GLOBAL.json").write_text(
+        json.dumps({
+            "ok": True,
+            "rows": [
+                {
+                    "source_name": "San Diego FC",
+                    "team_key": "HKJC:sandiegofc",
+                    "hkjc_name_en": "San Diego FC",
+                },
+                {
+                    "source_name": "Toluca",
+                    "team_key": "HKJC:toluca",
+                    "hkjc_name_en": "Toluca",
+                },
+            ],
+            "blockedNames": [],
+        }),
+        encoding="utf-8",
+    )
+
+    tables = load_source_tables(
+        source_dir,
+        health_dir=health_dir,
+        master_dir=master_dir,
+    )
+    row = tables["ACC"][0]
+    assert row["__MB_MASTER_HOME_HIT"] == "GLOBAL"
+    assert row["__MB_MASTER_AWAY_HIT"] == "GLOBAL"
+
+
+def test_source_candidate_block_prevents_global_override(tmp_path):
+    import json
+    from multibetter.pipeline.current import load_source_tables
+
+    source_dir = tmp_path / "current"
+    health_dir = tmp_path / "health"
+    master_dir = tmp_path / "master"
+    source_dir.mkdir()
+    health_dir.mkdir()
+    master_dir.mkdir()
+
+    (source_dir / "accumulator.csv").write_text(
+        "DATE,TIME,HOME TEAM,AWAY TEAM\n22/09/2026,00:15,Leon,Toluca\n",
+        encoding="utf-8",
+    )
+    (health_dir / "acc.json").write_text(
+        json.dumps({"status": "OK"}),
+        encoding="utf-8",
+    )
+    (master_dir / "ACC.json").write_text(
+        json.dumps({
+            "ok": True,
+            "rows": [],
+            "blockedNames": ["Leon"],
+        }),
+        encoding="utf-8",
+    )
+    (master_dir / "GLOBAL.json").write_text(
+        json.dumps({
+            "ok": True,
+            "rows": [
+                {
+                    "source_name": "Leon",
+                    "team_key": "HKJC:clubleon",
+                    "hkjc_name_en": "Club Leon",
+                },
+                {
+                    "source_name": "Toluca",
+                    "team_key": "HKJC:toluca",
+                    "hkjc_name_en": "Toluca",
+                },
+            ],
+            "blockedNames": [],
+        }),
+        encoding="utf-8",
+    )
+
+    tables = load_source_tables(
+        source_dir,
+        health_dir=health_dir,
+        master_dir=master_dir,
+    )
+    row = tables["ACC"][0]
+    assert row["HOME TEAM"] == "Leon"
+    assert row["__MB_MASTER_HOME_BLOCKED"] == "1"
+    assert "__MB_MASTER_HOME_HIT" not in row
+    assert row["__MB_MASTER_AWAY_HIT"] == "GLOBAL"
