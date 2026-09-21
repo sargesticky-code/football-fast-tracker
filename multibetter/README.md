@@ -1527,3 +1527,111 @@ separate Multibetter View
 ```
 
 `Dashboard Board` remains untouched unless the user explicitly requests integration later.
+
+---
+
+## 33. Production architecture update — HKJC-authority multisource universe (2026-09-21)
+
+The production Multibetter integration no longer requires a usable Forebet prediction before other providers can contribute evidence.
+
+### Canonical fixture universe
+
+```text
+HKJC targets = fixture / identity authority
+FRB / ACC / BCL / FST / PRE / STA = independent evidence members
+```
+
+This fixes a production regression where the Forebet model feed temporarily contained only 7 prediction rows even though ACC / BCL / FST / PRE had dozens of fresh rows. Under the old FRB-gated build, those independent sources could not enter consensus unless Forebet itself had a model row.
+
+The current production build therefore uses:
+
+```text
+hkjc_targets.csv
+    ↓
+one canonical HKJC fixture
+    ↓
+same date + oriented HOME/AWAY
++ normalized team identity
++ safe kickoff drift up to 5 minutes
+    ↓
+independent source matches
+    ↓
+weighted multisource consensus
+```
+
+### Safety rules
+
+- HKJC event ID, names and kickoff remain authoritative.
+- A provider does not become a fixture authority.
+- Home/away orientation remains strict.
+- Matching remains fixture-scoped; there is no global fuzzy scan.
+- Source kickoff drift is limited to 5 minutes after provider clock normalization.
+- Team matching normalizes accents/punctuation and common identity-noise tokens such as FC / CF / Club, but team-class safety remains in force.
+- Missing provider coverage remains explicit; no synthetic prediction is fabricated.
+- FRB is now an evidence source, not a workflow gatekeeper.
+
+### Statarea clock calibration
+
+Statarea remains evidence-driven and must never use a hard-coded timezone.
+
+The live collector now:
+1. uses HKJC authority fixtures as calibration anchors;
+2. fetches one previous-day Statarea page only for clock calibration evidence;
+3. requires at least 3 exact oriented-pair samples and >=80% dominant offset;
+4. applies the inferred offset only after calibration passes;
+5. uses only today/tomorrow rows for current prediction output.
+
+Validated 2026-09-21 example:
+
+```text
+STA target rows          48
+calibration samples      32
+dominant samples         31
+dominance                96.88%
+status                   OK
+```
+
+### Supabase transfer
+
+`multibetter_current.csv` is no longer fetched anonymously from a private GitHub raw URL.
+
+Current path:
+
+```text
+GitHub Actions
+    ↓ OIDC
+github-data-ingest
+    ↓
+Supabase Storage / fast-tracker-ingest
+    ↓
+sync-fast-tracker
+    ↓
+private.multisource_consensus_current
+    ↓
+app-phase1-feed
+```
+
+A failed private-GitHub raw request must not report PASS. Source health now records per-source rows and forward horizon and reports WARN when optional source coverage is insufficient.
+
+### First validated HKJC-anchor production build
+
+```text
+HKJC anchor rows   27
+ACC                 13
+BCL                 13
+FST                 13
+PRE                 12
+FRB                  7
+STA                  1
+```
+
+Example independent coverage:
+
+```text
+Central Espanol vs Montevideo City Torque
+ACC + BCL + FST + PRE + STA
+5 sources
+FRB not required
+```
+
+This is now the preferred long-term architecture. Do not revert production Multibetter to a Forebet-prediction-gated fixture universe.
