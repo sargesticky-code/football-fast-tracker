@@ -8,7 +8,7 @@ try:
  from curl_cffi import requests
 except ImportError:
  import requests
-HKT=timezone(timedelta(hours=8)); BASE="https://www.sofascore.com/api/v1"
+HKT=timezone(timedelta(hours=8)); BASE="https://api.sofascore.com/api/v1"
 FIELDS=["hkjc_team_id","hkjc_name_en","hkjc_name_ch","cohort","external_source","external_team_id","external_name","evidence_class","confirmed","confidence","source_url","source_timestamp","fetched_at","raw_context"]
 DIAG=["hkjc_team_id","hkjc_name_en","cohort","hkjc_event_id","reason","candidate_count","best_score","best_external_name","best_external_team_id","kickoff_delta_seconds","fetched_at"]
 def rows(p):
