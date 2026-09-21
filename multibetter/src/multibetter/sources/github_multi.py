@@ -187,24 +187,37 @@ def source_row_to_prediction(
         if value is not None:
             probs[key] = value
 
+    master_hit = (
+        str(row.get("__MB_MASTER_HOME_HIT", "") or "") == "1"
+        and str(row.get("__MB_MASTER_AWAY_HIT", "") or "") == "1"
+    )
+
     return SourcePrediction(
         source=source,
         kickoff=None,
         competition=None,
-        home=str(row.get("HOME TEAM", "") or ""),
-        away=str(row.get("AWAY TEAM", "") or ""),
+        home=str(row.get("__MB_RAW_HOME_TEAM") or row.get("HOME TEAM", "") or ""),
+        away=str(row.get("__MB_RAW_AWAY_TEAM") or row.get("AWAY TEAM", "") or ""),
         probabilities=probs,
         market_label=str(row.get("NAME", "") or source),
         source_kickoff_text=str(row.get("TIME", "") or "") or None,
         match_similarity=(
-            float(row["__MB_MATCH_SIMILARITY"])
-            if row.get("__MB_MATCH_SIMILARITY") not in (None, "")
-            else (100.0 if source == "FRB" else None)
+            100.0
+            if master_hit
+            else (
+                float(row["__MB_MATCH_SIMILARITY"])
+                if row.get("__MB_MATCH_SIMILARITY") not in (None, "")
+                else (100.0 if source == "FRB" else None)
+            )
         ),
         match_quality=(
-            str(row.get("__MB_MATCH_QUALITY"))
-            if row.get("__MB_MATCH_QUALITY") not in (None, "")
-            else ("HIGH" if source == "FRB" else None)
+            "MASTER"
+            if master_hit
+            else (
+                str(row.get("__MB_MATCH_QUALITY"))
+                if row.get("__MB_MATCH_QUALITY") not in (None, "")
+                else ("HIGH" if source == "FRB" else None)
+            )
         ),
     )
 
