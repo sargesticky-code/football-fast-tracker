@@ -209,6 +209,65 @@ def source_row_to_prediction(
     )
 
 
+
+def group_sources_around_anchor(
+    anchor_row: Mapping[str, object],
+    source_tables: Mapping[str, Sequence[Mapping[str, object]]],
+    *,
+    similarity_threshold: float = 55.0,
+    time_tolerance_hours: int = 0,
+    time_tolerance_minutes: int = 5,
+    external_fixture_id: str | None = None,
+) -> MultiSourceFixture:
+    """Group prediction sources around one canonical HKJC-authority fixture.
+
+    The anchor is identity only. It is not counted as a prediction source.
+    Each provider must independently match the same DATE/TIME/HOME/AWAY bucket.
+    """
+    home = str(anchor_row.get("HOME TEAM", "") or "")
+    away = str(anchor_row.get("AWAY TEAM", "") or "")
+    time_value = str(anchor_row.get("TIME", "") or "")
+    date_value = str(anchor_row.get("DATE", "") or "")
+    competition = str(anchor_row.get("LEAGUE", "") or "") or None
+
+    if not home or not away or not time_value or not date_value:
+        raise ValueError("HKJC anchor requires DATE, TIME, HOME TEAM and AWAY TEAM")
+
+    parsed_date = _parse_date(date_value)
+    if parsed_date is None:
+        raise ValueError(f"Unsupported anchor DATE format: {date_value}")
+    normalized_anchor_time = _normalize_time(time_value)
+    if normalized_anchor_time is None:
+        raise ValueError(f"Unsupported anchor TIME format: {time_value}")
+
+    kickoff_time = datetime.strptime(normalized_anchor_time, "%H:%M").time()
+    kickoff = datetime.combine(parsed_date, kickoff_time)
+    predictions: list[SourcePrediction] = []
+
+    for source, rows in source_tables.items():
+        matched = upstream_style_match(
+            rows,
+            target_home=home,
+            target_away=away,
+            target_time=time_value,
+            target_date=date_value,
+            similarity_threshold=similarity_threshold,
+            time_tolerance_hours=time_tolerance_hours,
+            time_tolerance_minutes=time_tolerance_minutes,
+        )
+        if matched is not None:
+            predictions.append(source_row_to_prediction(matched, source=source))
+
+    return build_multi_fixture(
+        kickoff=kickoff,
+        github_forebet_home=home,
+        github_forebet_away=away,
+        github_forebet_competition=competition,
+        home_away_explicit=True,
+        predictions=predictions,
+        external_fixture_id=external_fixture_id or f"{date_value}|{time_value}|{home}|{away}",
+    )
+
 def group_sources_around_forebet(
     forebet_row: Mapping[str, object],
     source_tables: Mapping[str, Sequence[Mapping[str, object]]],
