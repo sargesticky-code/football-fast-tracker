@@ -25,6 +25,8 @@ import pandas as pd
 import penaltyblog as pb
 import requests
 
+from team_name_master import build_reverse_map
+
 HKT = ZoneInfo("Asia/Hong_Kong")
 ROOT = Path(__file__).resolve().parent.parent
 FEED = ROOT / "data" / "hkjc_current.csv"
@@ -219,14 +221,33 @@ def best_name(name: str, candidates: set[str]) -> tuple[str | None, float]:
     return (candidate, score) if score >= 0.78 else (None, score)
 
 
-def discover_fixture(row: dict[str, str], current: dict[str, pd.DataFrame]):
+def discover_fixture(
+    row: dict[str, str],
+    current: dict[str, pd.DataFrame],
+    master_reverse: dict[str, str] | None = None,
+):
     source_home = row.get("hkjc_home_team") or row.get("home_en") or row.get("home_team") or ""
     source_away = row.get("hkjc_away_team") or row.get("away_en") or row.get("away_team") or ""
+
+    verified_home = master_reverse.get(norm(source_home)) if master_reverse else None
+    verified_away = master_reverse.get(norm(source_away)) if master_reverse else None
+
     best = None
     for code, df in current.items():
         if df.empty:
             continue
         teams = set(df["HomeTeam"].dropna().astype(str)) | set(df["AwayTeam"].dropna().astype(str))
+
+        # Persistent dictionary first: once a Football-Data name has been
+        # verified for an HKJC team, reuse it forever rather than fuzzy
+        # matching the same club against every league on every run.
+        if verified_home and verified_away:
+            by_norm = {norm(t): t for t in teams}
+            direct_home = by_norm.get(norm(verified_home))
+            direct_away = by_norm.get(norm(verified_away))
+            if direct_home and direct_away and direct_home != direct_away:
+                return (1.0, code, direct_home, direct_away, 1.0, 1.0)
+
         home, hs = best_name(source_home, teams)
         away, aws = best_name(source_away, teams)
         if not home or not away or home == away:
@@ -450,7 +471,11 @@ def main() -> int:
         current[key] = frame
         dataset_labels[key] = f"{country} top flight"
 
-    discovered = {r["hkjc_event_id"]: discover_fixture(r, current) for r in fixtures}
+    football_data_master = build_reverse_map("FOOTBALL_DATA", norm)
+    discovered = {
+        r["hkjc_event_id"]: discover_fixture(r, current, football_data_master)
+        for r in fixtures
+    }
     needed_keys = sorted({d[1] for d in discovered.values() if d})
     histories: dict[str, pd.DataFrame] = {}
     for key in needed_keys:
