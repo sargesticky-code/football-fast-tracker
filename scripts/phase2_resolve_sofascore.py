@@ -21,10 +21,7 @@ def cohort(name):
  for x in ("WOMEN","U17","U18","U19","U20","U21","U23","RESERVE"):
   if x in s:return x
  return "SENIOR"
-def get(url):
- try:r=requests.get(url,timeout=15,impersonate="chrome")
- except TypeError:r=requests.get(url,timeout=15,headers={"User-Agent":"Mozilla/5.0"})
- r.raise_for_status(); return r.json()
+def get(url):\n headers={"User-Agent":"Mozilla/5.0","Accept":"application/json","Referer":"https://www.sofascore.com/"}\n attempts=[]\n for candidate in (url,url.replace("https://api.sofascore.com/api/v1","https://www.sofascore.com/api/v1")):\n  try:\n   try:r=requests.get(candidate,timeout=15,impersonate="chrome",headers=headers)\n   except TypeError:r=requests.get(candidate,timeout=15,headers=headers)\n   if r.status_code==200:return r.json(),candidate\n   attempts.append({"url":candidate,"status":r.status_code,"body":str(r.text)[:120]})\n  except Exception as e:attempts.append({"url":candidate,"error":type(e).__name__})\n raise RuntimeError(json.dumps(attempts,separators=(",",":")))
 def write_diag(path,ds):
  Path(path).parent.mkdir(parents=True,exist_ok=True)
  with open(path,"w",encoding="utf-8-sig",newline="") as f:
@@ -37,8 +34,8 @@ def main():
  for d in dates:
   url=f"{BASE}/sport/football/scheduled-events/{d}"
   try:
-   payload=get(url); batch=payload.get("events",[]); source_counts[d]=len(batch); events+=batch; time.sleep(.5)
-  except Exception as e:source_errors.append((d,type(e).__name__))
+   payload,used_url=get(url); batch=payload.get("events",[]); source_counts[d]={"events":len(batch),"url":used_url}; events+=batch; time.sleep(.5)
+  except Exception as e:source_errors.append((d,type(e).__name__,str(e)[:500]))
  for f in fs:
   kick=datetime.fromisoformat(f["kickoff_hkt"])
   for side,other in (("home","away"),("away","home")):
