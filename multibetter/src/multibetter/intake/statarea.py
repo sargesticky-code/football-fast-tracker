@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import Counter
 from datetime import date, datetime, timedelta
+from statistics import median
 import re
 import unicodedata
 from typing import Mapping, Sequence
@@ -110,16 +111,53 @@ def infer_statarea_clock_offset(
             "dominant_samples": 0,
             "dominance": 0.0,
             "offset_distribution": {},
+            "offset_tolerance_minutes": 5,
             "reason": "NO_EXACT_PAIR_ANCHORS",
         }
 
-    offset, dominant = counts.most_common(1)[0]
+    # Provider kickoff clocks can differ from HKJC by a few minutes even when
+    # the underlying timezone offset is identical. Treat offsets within a
+    # five-minute band as one clock mode. This matches the fixture resolver's
+    # own +/-5 minute kickoff tolerance while preserving exact oriented team
+    # identity as the calibration anchor.
+    tolerance_minutes = 5
+    best_cluster: list[int] = []
+    for candidate in sorted(counts):
+        cluster = [value for value in offsets if abs(value - candidate) <= tolerance_minutes]
+        if len(cluster) > len(best_cluster):
+            best_cluster = cluster
+        elif len(cluster) == len(best_cluster) and cluster:
+            # Deterministic tie-break only; a genuinely split clock mode still
+            # fails the dominance gate below.
+            current_spread = max(cluster) - min(cluster)
+            best_spread = max(best_cluster) - min(best_cluster) if best_cluster else 10**9
+            if current_spread < best_spread:
+                best_cluster = cluster
+
+    dominant = len(best_cluster)
     dominance = dominant / len(offsets)
+
+    # Clock offsets are expected to sit on five-minute boundaries. Use a robust
+    # cluster median and quantize to five minutes so source kickoff rounding
+    # (for example -417 next to -420) does not shift every normalized fixture.
+    representative = float(median(best_cluster)) if best_cluster else float(counts.most_common(1)[0][0])
+    offset = int(round(representative / 5.0) * 5)
+
+    # Never accept a quantized representative that falls outside the same
+    # tolerance band used to form the dominant cluster.
+    inliers = [value for value in offsets if abs(value - offset) <= tolerance_minutes]
+    if len(inliers) < dominant:
+        dominant = len(inliers)
+        dominance = dominant / len(offsets)
+        best_cluster = inliers
+
     meta = {
         "samples": len(offsets),
         "dominant_samples": dominant,
         "dominance": round(dominance, 4),
         "offset_distribution": dict(sorted(counts.items())),
+        "offset_tolerance_minutes": tolerance_minutes,
+        "dominant_cluster": sorted(best_cluster),
         "inferred_source_minus_utc_minutes": offset,
         "reason": "",
     }
@@ -131,7 +169,7 @@ def infer_statarea_clock_offset(
         meta["reason"] = "AMBIGUOUS_CLOCK_OFFSET"
         return None, meta
 
-    meta["reason"] = "DOMINANT_EXACT_PAIR_CLOCK_OFFSET"
+    meta["reason"] = "DOMINANT_TOLERANT_CLOCK_OFFSET"
     return offset, meta
 
 
