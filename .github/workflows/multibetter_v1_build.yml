@@ -216,17 +216,40 @@ jobs:
       - name: Collect PRE
         run: python -m multibetter.scripts.collect_source --source PRE --days 2 --max-seconds 60
 
-      - name: Build HKJC authority anchors for Statarea clock
+      - name: Build fresh UTC anchors for Statarea clock
         run: |
           python - <<'PY'
           import csv
+          import json
           from datetime import datetime, timezone, timedelta
           from pathlib import Path
 
-          src = Path("/tmp/hkjc_targets.csv")
           out = Path("/tmp/statarea_calibration_anchors.csv")
           rows = []
-          with src.open("r", encoding="utf-8-sig", newline="") as fh:
+          seen = set()
+
+          def add(date_text, time_text, home, away, source):
+              date_text = str(date_text or "").strip()
+              time_text = str(time_text or "").strip()
+              home = str(home or "").strip()
+              away = str(away or "").strip()
+              if not date_text or not time_text or not home or not away:
+                  return
+              key = (date_text, time_text, home.casefold(), away.casefold())
+              if key in seen:
+                  return
+              seen.add(key)
+              rows.append({
+                  "DATE": date_text,
+                  "TIME": time_text,
+                  "HOME TEAM": home,
+                  "AWAY TEAM": away,
+                  "ANCHOR_SOURCE": source,
+              })
+
+          # Primary authority anchors: HKJC HKT -> UTC.
+          hkjc = Path("/tmp/hkjc_targets.csv")
+          with hkjc.open("r", encoding="utf-8-sig", newline="") as fh:
               for r in csv.DictReader(fh):
                   home = (r.get("home_en") or "").strip()
                   away = (r.get("away_en") or "").strip()
@@ -240,17 +263,62 @@ jobs:
                   if dt.tzinfo is None:
                       dt = dt.replace(tzinfo=timezone(timedelta(hours=8)))
                   utc = dt.astimezone(timezone.utc)
-                  rows.append({
-                      "DATE": utc.strftime("%d/%m/%Y"),
-                      "TIME": utc.strftime("%H:%M"),
-                      "HOME TEAM": home,
-                      "AWAY TEAM": away,
-                  })
+                  add(
+                      utc.strftime("%d/%m/%Y"),
+                      utc.strftime("%H:%M"),
+                      home,
+                      away,
+                      "HKJC",
+                  )
+
+          # Calibration support only: fresh independent source rows already
+          # normalized to UTC by their collectors. These do NOT create HKJC
+          # matches or bypass identity matching; Statarea still requires an
+          # exact oriented team pair before a clock sample is accepted.
+          source_files = {
+              "ACC": "accumulator.csv",
+              "BCL": "betclan.csv",
+              "FST": "footballsupertips.csv",
+              "PRE": "prematips.csv",
+          }
+          counts = {"HKJC": sum(1 for r in rows if r["ANCHOR_SOURCE"] == "HKJC")}
+          for source, filename in source_files.items():
+              health_path = Path("multibetter/incoming/health") / f"{source.lower()}.json"
+              data_path = Path("multibetter/incoming/current") / filename
+              if not health_path.exists() or not data_path.exists():
+                  counts[source] = 0
+                  continue
+              try:
+                  health = json.loads(health_path.read_text(encoding="utf-8"))
+              except Exception:
+                  counts[source] = 0
+                  continue
+              if health.get("status") != "OK":
+                  counts[source] = 0
+                  continue
+              before = len(rows)
+              with data_path.open("r", encoding="utf-8-sig", newline="") as fh:
+                  for r in csv.DictReader(fh):
+                      add(
+                          r.get("DATE"),
+                          r.get("TIME"),
+                          r.get("HOME TEAM"),
+                          r.get("AWAY TEAM"),
+                          source,
+                      )
+              counts[source] = len(rows) - before
+
           with out.open("w", encoding="utf-8", newline="") as fh:
-              w = csv.DictWriter(fh, fieldnames=["DATE","TIME","HOME TEAM","AWAY TEAM"])
+              w = csv.DictWriter(
+                  fh,
+                  fieldnames=["DATE","TIME","HOME TEAM","AWAY TEAM","ANCHOR_SOURCE"],
+              )
               w.writeheader()
               w.writerows(rows)
-          print("STA_CALIBRATION_ANCHORS", len(rows))
+
+          print("STA_CALIBRATION_ANCHORS", len(rows), counts)
+          if not rows:
+              raise SystemExit("Statarea calibration anchor universe is empty")
           PY
 
       - name: Collect STA
