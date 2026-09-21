@@ -244,6 +244,18 @@ def build_hkjc_anchored_current(
             if _quality_confidence(p.match_quality) >= 0.85
         ]
 
+        identity_evidence = [
+            {
+                "source": p.source,
+                "home": p.home,
+                "away": p.away,
+                "match_similarity": p.match_similarity,
+                "match_quality": p.match_quality,
+            }
+            for p in multi.predictions
+            if p.source in SOURCE_FILES and p.home and p.away
+        ]
+
         row: dict[str, object] = {
             "built_at": observed_at.strftime("%Y-%m-%d %H:%M:%S"),
             "external_fixture_id": fixture.event_id,
@@ -268,6 +280,7 @@ def build_hkjc_anchored_current(
             "sources_consensus": "+".join(accepted_source_names),
             "learned_alias_count": 0,
             "learned_aliases": "",
+            "identity_evidence": json.dumps(identity_evidence, ensure_ascii=False),
         }
 
         if hda and hda.probabilities:
