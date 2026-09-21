@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 12 · persist multisource alias evidence
+# launcher revision: 13 · master-first multisource matching
 
 on:
   workflow_dispatch:
@@ -165,11 +165,30 @@ jobs:
           python -m multibetter.scripts.summarize_intake \
             --health-dir multibetter/incoming/health
 
+      - name: Load verified universal team master
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/team-master
+          for source in FRB ACC BCL FST PRE STA; do
+            curl -fsSL               "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/team-name-master?source=$source"               -o "/tmp/team-master/$source.json"
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in sorted(Path("/tmp/team-master").glob("*.json")):
+              body=json.loads(path.read_text(encoding="utf-8"))
+              if not body.get("ok"):
+                  raise SystemExit(f"team master load failed: {path.name}")
+              print(path.stem, "verified", body.get("count",0), "blocked", len(body.get("blockedNames",[])))
+          PY
+
       - name: Build Multibetter current output
         run: |
           python -m multibetter.scripts.build_current \
             --source-dir multibetter/incoming/current \
             --health-dir multibetter/incoming/health \
+            --team-master-dir /tmp/team-master \
             --our-forebet /tmp/forebet_current.csv \
             --hkjc-targets /tmp/hkjc_targets.csv \
             --alias-cache multibetter/data/forebet_bridge_aliases.csv \
