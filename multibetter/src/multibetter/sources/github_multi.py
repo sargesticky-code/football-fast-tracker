@@ -187,9 +187,16 @@ def source_row_to_prediction(
         if value is not None:
             probs[key] = value
 
+    home_master = str(row.get("__MB_MASTER_HOME_HIT", "") or "")
+    away_master = str(row.get("__MB_MASTER_AWAY_HIT", "") or "")
     master_hit = (
-        str(row.get("__MB_MASTER_HOME_HIT", "") or "") == "1"
-        and str(row.get("__MB_MASTER_AWAY_HIT", "") or "") == "1"
+        home_master in {"SOURCE", "GLOBAL", "1"}
+        and away_master in {"SOURCE", "GLOBAL", "1"}
+    )
+    master_kind = (
+        "MASTER_GLOBAL"
+        if master_hit and "GLOBAL" in {home_master, away_master}
+        else ("MASTER_SOURCE" if master_hit else None)
     )
 
     return SourcePrediction(
@@ -211,7 +218,7 @@ def source_row_to_prediction(
             )
         ),
         match_quality=(
-            "MASTER"
+            master_kind
             if master_hit
             else (
                 str(row.get("__MB_MATCH_QUALITY"))
