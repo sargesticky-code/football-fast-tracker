@@ -5,8 +5,16 @@
   "status_counts": {
     "HKJC_ANCHOR": 24
   },
-  "master_direct_rows": 0,
-  "master_direct_by_source": {},
-  "master_global_rows": 0,
-  "master_global_by_source": {}
+  "master_direct_rows": 6,
+  "master_direct_by_source": {
+    "ACC": 2,
+    "BCL": 6,
+    "FST": 6,
+    "FRB": 1
+  },
+  "master_global_rows": 4,
+  "master_global_by_source": {
+    "BCL": 4,
+    "FST": 4
+  }
 }

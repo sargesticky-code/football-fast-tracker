@@ -2,11 +2,11 @@
   "source": "STA",
   "status": "KEEP_LAST_GOOD",
   "rows": 0,
-  "requests": 3,
+  "requests": 2,
   "errors": 1,
-  "started_at": "2026-09-21T17:09:58.986906+08:00",
-  "finished_at": "2026-09-21T17:10:03.332269+08:00",
-  "note": "calibration={\"calibration_only_previous_day\": \"2026-09-20\", \"calibration_rows\": 388, \"dominance\": 0.6667, \"dominant_samples\": 2, \"inferred_source_minus_utc_minutes\": -240, \"offset_distribution\": {\"-240\": 2, \"-237\": 1}, \"reason\": \"AMBIGUOUS_CLOCK_OFFSET\", \"samples\": 3, \"target_rows\": 48}",
+  "started_at": "2026-09-21T17:12:08.162209+08:00",
+  "finished_at": "2026-09-21T17:12:09.493386+08:00",
+  "note": "calibration={\"reason\": \"MISSING_FOREBET_ANCHORS\", \"samples\": 0}",
   "target_start": "2026-09-21",
   "target_end": "2026-09-22"
 }
