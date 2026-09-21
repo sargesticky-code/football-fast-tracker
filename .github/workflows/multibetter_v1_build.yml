@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 14 · safe global one-for-all fallback
+# launcher revision: 15 · tolerant Statarea clock calibration
 
 on:
   workflow_dispatch:
