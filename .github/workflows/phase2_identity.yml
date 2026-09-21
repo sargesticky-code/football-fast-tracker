@@ -30,11 +30,13 @@ jobs:
         run: python scripts/phase2_resolve_sofascore.py --fixtures data/phase2_hkjc_current.csv --registry data/phase2_team_identity_evidence.csv
       - name: Recalculate identity coverage
         run: python scripts/phase2_team_identity.py --fixtures data/phase2_hkjc_current.csv --registry data/phase2_team_identity_evidence.csv --targets data/phase2_team_identity_targets.csv
+      - name: Enforce fresh real-data health gate
+        run: python scripts/phase2_identity_health.py --fixtures data/phase2_hkjc_current.csv --registry data/phase2_team_identity_evidence.csv --out data/phase2_identity_health.json
       - name: Persist Phase 2 snapshots only
         run: |
           git config user.name "phase2-bot"
           git config user.email "phase2-bot@users.noreply.github.com"
-          git add data/phase2_hkjc_current.csv data/phase2_team_identity_targets.csv data/phase2_team_identity_evidence.csv
+          git add data/phase2_hkjc_current.csv data/phase2_team_identity_targets.csv data/phase2_team_identity_evidence.csv data/phase2_identity_health.json
           if ! git diff --cached --quiet; then
             git commit -m "phase2: refresh current identity universe"
             git push origin HEAD:phase2-human-intelligence
