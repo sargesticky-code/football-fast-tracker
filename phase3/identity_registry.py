@@ -47,9 +47,29 @@ def _fixture_signature(o: IdentityObservation) -> tuple[str, str, str]:
     return (o.home.casefold(), o.away.casefold(), o.kickoff)
 
 
+def observation_key(o: IdentityObservation) -> tuple[str, str, str, str]:
+    """Stable key preventing retries/restores from inflating promotion evidence."""
+    n = o.normalized()
+    return (n.hkjc_event_id, n.source, n.source_match_id, n.observed_at)
+
+
+def dedupe_observations(observations: Iterable[IdentityObservation]) -> list[IdentityObservation]:
+    """Deduplicate exact observation identities while preserving first-seen order."""
+    out: list[IdentityObservation] = []
+    seen: set[tuple[str, str, str, str]] = set()
+    for raw in observations:
+        o = raw.normalized()
+        key = observation_key(o)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(o)
+    return out
+
+
 def rebuild_registry(observations: Iterable[IdentityObservation]) -> list[dict]:
     """Build deterministic candidate/verified state from append-only evidence."""
-    obs = [x.normalized() for x in observations]
+    obs = dedupe_observations(observations)
     groups: dict[tuple[str, str, str], list[IdentityObservation]] = {}
     owners: dict[tuple[str, str], set[str]] = {}
     for o in obs:
@@ -80,12 +100,7 @@ def rebuild_registry(observations: Iterable[IdentityObservation]) -> list[dict]:
 
 
 def merge_terminal_registry(previous: Iterable[dict], rebuilt: Iterable[dict]) -> list[dict]:
-    """Retain verified mappings across cycles; quarantine contradictory evidence.
-
-    A verified mapping is never silently replaced. If a later rebuild proposes
-    another external ID for the same HKJC event/source, the verified row is
-    retained as LOCKED_CONFLICT and no usable mapping is returned.
-    """
+    """Retain verified mappings across cycles; quarantine contradictory evidence."""
     old = [dict(r) for r in previous]
     new = [dict(r) for r in rebuilt]
     locked = {(r.get("hkjc_event_id"), r.get("source")): r for r in old if r.get("status") in {"VERIFIED", "LOCKED_CONFLICT"}}
