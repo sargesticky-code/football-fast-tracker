@@ -51,7 +51,7 @@ jobs:
         run: python scripts/phase3_capture_hkjc_authority.py
 
       - name: Evaluate Phase 3 Layer 1 authority
-        run: python scripts/phase3_check_hkjc_authority.py
+        run: PYTHONPATH=. python scripts/phase3_check_hkjc_authority.py
 
       - name: Upload authority evidence
         if: always()
