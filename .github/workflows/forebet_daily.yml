@@ -12,6 +12,7 @@ on:
       - 'scripts/run_selective.py'
       - 'scripts/run_selective_v2.py'
       - 'scripts/forebet_match_policy.py'
+      - 'scripts/check_forebet_match_policy.py'
       - 'scripts/forebet_target_recovery.py'
       - 'scripts/forebet_detail_parser.py'
       - 'scripts/forebet_availability.py'
@@ -57,6 +58,9 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Validate durable Forebet identity registry
+        run: python scripts/check_forebet_match_policy.py
 
       - name: Capture HKJC directly from official GraphQL
         run: |
