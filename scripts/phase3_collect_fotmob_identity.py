@@ -14,6 +14,7 @@ from urllib.request import Request, urlopen
 
 from phase3.external_identity import choose_candidate, ranked_candidates, coverage_diagnostic, classify_unresolved
 from phase3.hkjc_authority import evaluate_authority
+from phase3.sofascore_identity import normalize_board as normalize_sofascore_board
 
 AUTH=Path("data/phase3_hkjc_authority.json")
 EVIDENCE=Path("data/phase3_identity_evidence.jsonl")
@@ -49,6 +50,14 @@ def fotmob_board(date: str) -> list[dict]:
     return rows
 
 
+def sofascore_board(date: str) -> list[dict]:
+    iso=f"{date[:4]}-{date[4:6]}-{date[6:8]}"
+    url=f"https://www.sofascore.com/api/v1/sport/football/scheduled-events/{iso}"
+    req=Request(url,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
+    with urlopen(req,timeout=12) as resp:
+        return normalize_sofascore_board(json.load(resp))
+
+
 def _names(hk: dict) -> tuple[str, str]:
     home=str(hk.get("home_en") or hk.get("home") or "").strip()
     away=str(hk.get("away_en") or hk.get("away") or "").strip()
@@ -75,7 +84,7 @@ def main() -> int:
         return 2
     board=fotmob_board(dates[0])
     now=datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-    additions=[]; unresolved=0
+    additions=[]; unresolved=0; fallback_rows=[]; fallback_requests=0
     for hk in eligible:
         event=hk.get("hkjc_event_id")
         home,away=_names(hk)
@@ -88,9 +97,33 @@ def main() -> int:
             continue
         c,reason=choose_candidate(hk,board)
         if not c:
-            unresolved+=1
             ranked=ranked_candidates(hk,board,limit=3)
             diagnostic_reason = classify_unresolved(hk, board)
+            if diagnostic_reason == "SOURCE_COVERAGE_GAP":
+                if not fallback_rows:
+                    try:
+                        fallback_rows=sofascore_board(dates[0]); fallback_requests=1
+                    except Exception as exc:
+                        print(f"PHASE3_IDENTITY_FALLBACK source=SOFASCORE status=SOURCE_ERROR error={type(exc).__name__}")
+                fallback_candidate,fallback_reason=choose_candidate(hk,fallback_rows)
+                if fallback_candidate:
+                    additions.append(json.dumps({
+                        "hkjc_event_id":str(event),"source":"SOFASCORE",
+                        "source_match_id":fallback_candidate.source_match_id,
+                        "confidence":fallback_candidate.confidence,"observed_at":now,
+                        "home":fallback_candidate.home,"away":fallback_candidate.away,
+                        "kickoff":fallback_candidate.kickoff,
+                        "competition":fallback_candidate.competition,
+                    },ensure_ascii=False))
+                    print(
+                        f"PHASE3_IDENTITY event={event} source=SOFASCORE "
+                        f"external={fallback_candidate.source_match_id} "
+                        f"confidence={fallback_candidate.confidence:.3f} status=CANDIDATE"
+                    )
+                    continue
+                diagnostic_reason = classify_unresolved(hk,fallback_rows) if fallback_rows else "SOURCE_COVERAGE_GAP"
+                reason=f"{reason}/SOFASCORE_{fallback_reason}"
+            unresolved+=1
             print(
                 f"PHASE3_IDENTITY event={event} status=UNRESOLVED reason={diagnostic_reason} "
                 f"matcher_reason={reason} hkjc_fixture={home}|{away} candidates={len(ranked)}"
@@ -125,7 +158,11 @@ def main() -> int:
         EVIDENCE.parent.mkdir(parents=True,exist_ok=True)
         with EVIDENCE.open("a",encoding="utf-8") as fh:
             fh.write("\n".join(additions)+"\n")
-    print(f"PHASE3_LAYER2 eligible={len(eligible)} board_rows={len(board)} requests=1 evidence_added={len(additions)} unresolved={unresolved}")
+    print(
+        f"PHASE3_LAYER2 eligible={len(eligible)} board_rows={len(board)} "
+        f"fotmob_requests=1 sofascore_requests={fallback_requests} "
+        f"evidence_added={len(additions)} unresolved={unresolved}"
+    )
     return 0
 
 if __name__=="__main__": raise SystemExit(main())
