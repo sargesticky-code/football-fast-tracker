@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-from phase3.external_identity import choose_candidate
+from phase3.external_identity import choose_candidate, ranked_candidates
 
 AUTH=Path("data/phase3_hkjc_authority.json")
 EVIDENCE=Path("data/phase3_identity_evidence.jsonl")
@@ -70,7 +70,16 @@ def main() -> int:
         c,reason=choose_candidate(hk,board)
         if not c:
             unresolved+=1
-            print(f"PHASE3_IDENTITY event={hk.get('hkjc_event_id')} status=UNRESOLVED reason={reason}")
+            ranked=ranked_candidates(hk,board,limit=3)
+            print(f"PHASE3_IDENTITY event={hk.get('hkjc_event_id')} status=UNRESOLVED reason={reason} candidates={len(ranked)}")
+            for rank,x in enumerate(ranked,1):
+                print(
+                    f"PHASE3_IDENTITY_DIAG event={hk.get('hkjc_event_id')} rank={rank} "
+                    f"external={x.source_match_id} confidence={x.confidence:.3f} "
+                    f"home_score={x.home_score:.3f} away_score={x.away_score:.3f} "
+                    f"drift_seconds={x.kickoff_drift_seconds} "
+                    f"fixture={x.home}|{x.away} competition={x.competition}"
+                )
             continue
         additions.append(json.dumps({
             "hkjc_event_id":str(hk.get("hkjc_event_id")),"source":"FOTMOB",
