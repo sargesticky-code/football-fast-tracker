@@ -636,7 +636,7 @@ def main() -> int:
 
     unique: dict[str, dict[str, Any]] = {}
     for row in parsed:
-        selected = attach_hkjc_target(row, targets, forebet_master)
+        selected = attach_hkjc_target(row, targets)
         if selected is None:
             continue
         key = selected["hkjc_event_id"]
