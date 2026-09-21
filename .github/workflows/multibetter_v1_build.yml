@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 11 · HKJC-authority multisource universe
+# launcher revision: 12 · persist multisource alias evidence
 
 on:
   workflow_dispatch:
