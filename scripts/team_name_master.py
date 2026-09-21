@@ -12,10 +12,14 @@ TEAM_NAME_MASTER_URL = os.getenv(
 TIMEOUT = 12
 
 
-def fetch_verified_rows(source: str) -> list[dict]:
+_CACHE: dict[str, dict] = {}
+
+def fetch_master_payload(source: str) -> dict:
     source = (source or "").strip().upper()
     if not source:
-        return []
+        return {"rows": [], "blockedNames": []}
+    if source in _CACHE:
+        return _CACHE[source]
     try:
         r = requests.get(
             TEAM_NAME_MASTER_URL,
@@ -26,12 +30,17 @@ def fetch_verified_rows(source: str) -> list[dict]:
         r.raise_for_status()
         payload = r.json() or {}
         if payload.get("ok") is not True:
-            return []
-        rows = payload.get("rows")
-        return rows if isinstance(rows, list) else []
+            payload = {"rows": [], "blockedNames": []}
     except Exception as exc:
         print(f"WARNING team-name-master source={source} unavailable: {exc}", flush=True)
-        return []
+        payload = {"rows": [], "blockedNames": []}
+    _CACHE[source] = payload
+    return payload
+
+
+def fetch_verified_rows(source: str) -> list[dict]:
+    rows = fetch_master_payload(source).get("rows")
+    return rows if isinstance(rows, list) else []
 
 
 def build_forward_map(source: str, normalizer: Callable[[str], str]) -> dict[str, str]:
@@ -41,17 +50,22 @@ def build_forward_map(source: str, normalizer: Callable[[str], str]) -> dict[str
     the globally unique cross-source dictionary can still resolve it. Any local
     normalizer collision is dropped rather than guessed.
     """
-    source_rows = fetch_verified_rows(source)
+    source_payload = fetch_master_payload(source)
+    source_rows = source_payload.get("rows") if isinstance(source_payload.get("rows"), list) else []
+    blocked_names = source_payload.get("blockedNames") if isinstance(source_payload.get("blockedNames"), list) else []
     global_rows = fetch_verified_rows("GLOBAL")
     out: dict[str, str] = {}
     bad: set[str] = set()
+    blocked = {normalizer(str(name)) for name in blocked_names if normalizer(str(name))}
 
-    def add(rows: list[dict], *, override: bool) -> None:
+    def add(rows: list[dict], *, override: bool, skip_blocked: bool = False) -> None:
         for row in rows:
             source_name = str(row.get("source_name") or "").strip()
             canonical = str(row.get("hkjc_name_en") or "").strip()
             key = normalizer(source_name)
             if not key or not canonical:
+                continue
+            if skip_blocked and key in blocked:
                 continue
             old = out.get(key)
             if old and old != canonical and not override:
@@ -60,17 +74,17 @@ def build_forward_map(source: str, normalizer: Callable[[str], str]) -> dict[str
             if override or key not in out:
                 out[key] = canonical
 
-    # Global gives broad reuse across models; source-specific verified mapping
-    # then overrides it when the provider has an explicit canonical relation.
-    add(global_rows, override=False)
+    # Global reuse is allowed only for names the current source has never
+    # classified as candidate/ambiguous. Source-specific verified mapping wins.
+    add(global_rows, override=False, skip_blocked=True)
     for key in bad:
         out.pop(key, None)
     add(source_rows, override=True)
 
     print(
         f"TEAM_NAME_MASTER source={source.upper()} source_rows={len(source_rows)} "
-        f"global_rows={len(global_rows)} usable_forward={len(out)} "
-        f"local_collisions={len(bad)}",
+        f"global_rows={len(global_rows)} blocked={len(blocked)} "
+        f"usable_forward={len(out)} local_collisions={len(bad)}",
         flush=True,
     )
     return out
