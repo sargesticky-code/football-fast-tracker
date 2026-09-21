@@ -4,9 +4,9 @@ name: Multibetter V1 Current Intake + Build
 on:
   workflow_dispatch:
   schedule:
-    # 07:10 Asia/Hong_Kong daily (23:10 UTC previous day).
-    # Runs after the production Forebet morning capture window.
-    - cron: '10 23 * * *'
+    # Two target-aware builds per day, after the 06:30 / 18:30 HKJC authority cycles.
+    - cron: '10 23 * * *' # 07:10 Asia/Hong_Kong
+    - cron: '10 11 * * *' # 19:10 Asia/Hong_Kong
   push:
     branches:
       - main
@@ -51,13 +51,103 @@ jobs:
         run: |
           git fetch origin main
           git show origin/main:data/forebet_current.csv > /tmp/forebet_current.csv
-          git show origin/main:data/hkjc_current.csv > /tmp/hkjc_current.csv
-          git show origin/main:data/hkjc_targets.csv > /tmp/hkjc_targets.csv
+          git show origin/main:data/hkjc_targets.csv > /tmp/hkjc_targets_static.csv
           if git cat-file -e origin/main:data/forebet_supplement_current.csv 2>/dev/null; then
             git show origin/main:data/forebet_supplement_current.csv > /tmp/forebet_supplement_current.csv
           else
             printf '' > /tmp/forebet_supplement_current.csv
           fi
+
+      - name: Build fresh HKJC target universe from Supabase authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          if curl -fsSL --max-time 30             "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/app-phase1-feed?hours=48"             -o /tmp/hkjc_authority.json; then
+            python - <<'PY'
+          import csv, json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          source = Path("/tmp/hkjc_authority.json")
+          out = Path("/tmp/hkjc_targets.csv")
+          body = json.loads(source.read_text(encoding="utf-8"))
+          matches = body.get("matches") or []
+          rows = []
+          now = datetime.now(timezone.utc)
+
+          for m in matches:
+              if m.get("liveNow"):
+                  continue
+              event_id = str(m.get("id") or "").strip()
+              home = str(m.get("home") or "").strip()
+              away = str(m.get("away") or "").strip()
+              kickoff_raw = str(m.get("kickoff") or "").strip()
+              if not event_id or not home or not away or not kickoff_raw:
+                  continue
+              try:
+                  kickoff = datetime.fromisoformat(kickoff_raw.replace("Z","+00:00"))
+              except ValueError:
+                  continue
+              if kickoff.tzinfo is None:
+                  kickoff = kickoff.replace(tzinfo=timezone.utc)
+              if kickoff <= now:
+                  continue
+
+              odds = m.get("odds") or {}
+              rows.append({
+                  "fetched_at_hkt": body.get("generatedAt") or "",
+                  "match_date": kickoff.date().isoformat(),
+                  "kickoff_hkt": kickoff.isoformat(),
+                  "hkjc_event_id": event_id,
+                  "league_zh": str(m.get("league") or "").strip(),
+                  "home_zh": str(m.get("homeZh") or "").strip(),
+                  "away_zh": str(m.get("awayZh") or "").strip(),
+                  "home_en": home,
+                  "away_en": away,
+                  "had_home": odds.get("home") if odds.get("home") is not None else "",
+                  "had_draw": odds.get("draw") if odds.get("draw") is not None else "",
+                  "had_away": odds.get("away") if odds.get("away") is not None else "",
+                  "mapping_source": "SUPABASE_HKJC_AUTHORITY",
+                  "forebet_state": "",
+                  "forebet_reason": "",
+                  "forebet_checked_at": "",
+              })
+
+          if not rows:
+              raise SystemExit("Supabase HKJC authority returned zero future targets")
+
+          fields = [
+              "fetched_at_hkt","match_date","kickoff_hkt","hkjc_event_id","league_zh",
+              "home_zh","away_zh","home_en","away_en","had_home","had_draw","had_away",
+              "mapping_source","forebet_state","forebet_reason","forebet_checked_at",
+          ]
+          with out.open("w",encoding="utf-8-sig",newline="") as fh:
+              w=csv.DictWriter(fh,fieldnames=fields)
+              w.writeheader()
+              w.writerows(rows)
+          print(f"HKJC_MULTISOURCE_AUTHORITY source=supabase rows={len(rows)}")
+          PY
+          else
+            echo "::warning::Supabase HKJC authority feed unavailable; using main-branch static fallback"
+            cp /tmp/hkjc_targets_static.csv /tmp/hkjc_targets.csv
+          fi
+
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          p=Path("/tmp/hkjc_targets.csv")
+          with p.open(encoding="utf-8-sig",newline="") as fh:
+              rows=list(csv.DictReader(fh))
+          if not rows:
+              raise SystemExit("HKJC Multibetter target universe is empty")
+          required={"hkjc_event_id","kickoff_hkt","home_en","away_en"}
+          if not required.issubset(rows[0]):
+              raise SystemExit("HKJC Multibetter target schema incomplete")
+          ids=[str(r.get("hkjc_event_id") or "").strip() for r in rows]
+          if any(not x for x in ids) or len(ids)!=len(set(ids)):
+              raise SystemExit("HKJC Multibetter target IDs missing or duplicated")
+          print(f"HKJC_MULTISOURCE_TARGET_VALIDATED rows={len(rows)}")
+          PY
 
       - name: Build HKJC Multibetter target anchors
         run: |
@@ -127,7 +217,7 @@ jobs:
           from datetime import datetime, timezone
           from pathlib import Path
 
-          src = Path("/tmp/hkjc_current.csv")
+          src = Path("/tmp/hkjc_targets.csv")
           out = Path("/tmp/statarea_calibration_anchors.csv")
           rows = []
           with src.open("r", encoding="utf-8-sig", newline="") as fh:
