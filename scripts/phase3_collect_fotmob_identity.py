@@ -49,6 +49,12 @@ def fotmob_board(date: str) -> list[dict]:
     return rows
 
 
+def _names(hk: dict) -> tuple[str, str]:
+    home=str(hk.get("home_en") or hk.get("home") or "").strip()
+    away=str(hk.get("away_en") or hk.get("away") or "").strip()
+    return home,away
+
+
 def main() -> int:
     if not AUTH.exists():
         print("PHASE3_LAYER2 source_gap=NO_AUTHORITY_SNAPSHOT requests=0")
@@ -67,14 +73,26 @@ def main() -> int:
     now=datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     additions=[]; unresolved=0
     for hk in eligible:
+        event=hk.get("hkjc_event_id")
+        home,away=_names(hk)
+        if not home or not away:
+            unresolved+=1
+            print(
+                f"PHASE3_IDENTITY event={event} status=UNRESOLVED reason=HKJC_NAME_GAP "
+                f"home_present={int(bool(home))} away_present={int(bool(away))} candidates=0"
+            )
+            continue
         c,reason=choose_candidate(hk,board)
         if not c:
             unresolved+=1
             ranked=ranked_candidates(hk,board,limit=3)
-            print(f"PHASE3_IDENTITY event={hk.get('hkjc_event_id')} status=UNRESOLVED reason={reason} candidates={len(ranked)}")
+            print(
+                f"PHASE3_IDENTITY event={event} status=UNRESOLVED reason={reason} "
+                f"hkjc_fixture={home}|{away} candidates={len(ranked)}"
+            )
             for rank,x in enumerate(ranked,1):
                 print(
-                    f"PHASE3_IDENTITY_DIAG event={hk.get('hkjc_event_id')} rank={rank} "
+                    f"PHASE3_IDENTITY_DIAG event={event} rank={rank} "
                     f"external={x.source_match_id} confidence={x.confidence:.3f} "
                     f"home_score={x.home_score:.3f} away_score={x.away_score:.3f} "
                     f"drift_seconds={x.kickoff_drift_seconds} "
@@ -82,11 +100,11 @@ def main() -> int:
                 )
             continue
         additions.append(json.dumps({
-            "hkjc_event_id":str(hk.get("hkjc_event_id")),"source":"FOTMOB",
+            "hkjc_event_id":str(event),"source":"FOTMOB",
             "source_match_id":c.source_match_id,"confidence":c.confidence,"observed_at":now,
             "home":c.home,"away":c.away,"kickoff":c.kickoff,"competition":c.competition,
         },ensure_ascii=False))
-        print(f"PHASE3_IDENTITY event={hk.get('hkjc_event_id')} external={c.source_match_id} confidence={c.confidence:.3f} status=CANDIDATE")
+        print(f"PHASE3_IDENTITY event={event} external={c.source_match_id} confidence={c.confidence:.3f} status=CANDIDATE")
     if additions:
         EVIDENCE.parent.mkdir(parents=True,exist_ok=True)
         with EVIDENCE.open("a",encoding="utf-8") as fh:
