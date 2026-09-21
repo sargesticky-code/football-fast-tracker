@@ -21,6 +21,7 @@ from multibetter.matching.fixture_resolver import (
     resolve_fixture_cache_first,
 )
 from multibetter.models import CanonicalFixture, Market, MultiSourceFixture
+from multibetter.normalization.teams import normalize_text
 from multibetter.sources.github_multi import (
     UPSTREAM_DEFAULT_WEIGHTS,
     group_sources_around_anchor,
@@ -128,15 +129,89 @@ def load_our_forebet_fixtures(
     return fixtures, raw_by_event
 
 
+def _load_master_lookup(
+    master_dir: Path | None,
+    source: str,
+) -> tuple[dict[str, dict[str, object]], set[str]]:
+    if master_dir is None:
+        return {}, set()
+    path = master_dir / f"{source}.json"
+    if not path.exists():
+        return {}, set()
+    try:
+        body = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}, set()
+
+    blocked = {
+        normalize_text(str(value))
+        for value in body.get("blockedNames", [])
+        if str(value).strip()
+    }
+    candidates: dict[str, list[dict[str, object]]] = {}
+    for item in body.get("rows", []):
+        source_name = str(item.get("source_name") or "").strip()
+        canonical = str(item.get("hkjc_name_en") or "").strip()
+        team_key = str(item.get("team_key") or "").strip()
+        if not source_name or not canonical or not team_key:
+            continue
+        key = normalize_text(source_name)
+        if not key or key in blocked:
+            continue
+        candidates.setdefault(key, []).append(item)
+
+    verified = {
+        key: items[0]
+        for key, items in candidates.items()
+        if len({str(x.get("team_key") or "") for x in items}) == 1
+    }
+    return verified, blocked
+
+
+def _apply_master_lookup(
+    rows: list[dict[str, str]],
+    *,
+    source: str,
+    master_dir: Path | None,
+) -> list[dict[str, str]]:
+    verified, blocked = _load_master_lookup(master_dir, source)
+    if not verified:
+        return rows
+
+    output: list[dict[str, str]] = []
+    for raw in rows:
+        row = dict(raw)
+        for label in ("HOME TEAM", "AWAY TEAM"):
+            original = str(row.get(label, "") or "").strip()
+            if not original:
+                continue
+            key = normalize_text(original)
+            if key in blocked:
+                row[f"__MB_MASTER_{label.split()[0]}_BLOCKED"] = "1"
+                continue
+            hit = verified.get(key)
+            if not hit:
+                continue
+
+            side = label.split()[0]
+            row[f"__MB_RAW_{side}_TEAM"] = original
+            row[f"__MB_MASTER_{side}_HIT"] = "1"
+            row[f"__MB_MASTER_{side}_TEAM_KEY"] = str(hit.get("team_key") or "")
+            row[label] = str(hit.get("hkjc_name_en") or original)
+        output.append(row)
+    return output
+
+
 def load_source_tables(
     source_dir: Path,
     *,
     health_dir: Path | None = None,
+    master_dir: Path | None = None,
 ) -> dict[str, list[dict[str, str]]]:
-    """Load only fresh source snapshots when health metadata is supplied.
+    """Load only fresh source snapshots and canonicalize VERIFIED source names.
 
-    Last-good CSVs are intentionally preserved on scrape failure, but a stale
-    preserved file must not silently enter the current consensus.
+    Master lookup is the runtime hot path. Legacy similarity matching remains
+    available only for names that are not yet safely VERIFIED.
     """
     result: dict[str, list[dict[str, str]]] = {}
     for source, filename in SOURCE_FILES.items():
@@ -153,7 +228,11 @@ def load_source_tables(
 
         rows = read_csv_rows(source_dir / filename)
         if rows:
-            result[source] = rows
+            result[source] = _apply_master_lookup(
+                rows,
+                source=source,
+                master_dir=master_dir,
+            )
     return result
 
 
@@ -243,6 +322,9 @@ def build_hkjc_anchored_current(
             for p in usable_predictions
             if _quality_confidence(p.match_quality) >= 0.85
         ]
+        master_direct_sources = [
+            p.source for p in usable_predictions if p.match_quality == "MASTER"
+        ]
 
         identity_evidence = [
             {
@@ -280,6 +362,8 @@ def build_hkjc_anchored_current(
             "sources_consensus": "+".join(accepted_source_names),
             "learned_alias_count": 0,
             "learned_aliases": "",
+            "master_direct_source_count": len(master_direct_sources),
+            "master_direct_sources": "+".join(master_direct_sources),
             "identity_evidence": json.dumps(identity_evidence, ensure_ascii=False),
         }
 
@@ -315,6 +399,8 @@ def alias_map(rows: Iterable[AliasCacheRow]) -> dict[str, str]:
 
 
 def _quality_confidence(value: str | None) -> float:
+    if value == "MASTER":
+        return 1.0
     if value == "HIGH":
         return 1.0
     if value == "GOOD":
