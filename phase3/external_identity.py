@@ -19,7 +19,12 @@ MAX_KICKOFF_DRIFT_SECONDS = 45 * 60
 
 def _norm(value: object) -> str:
     s = unicodedata.normalize("NFKD", str(value or "")).encode("ascii", "ignore").decode().casefold()
-    return " ".join(re.sub(r"[^a-z0-9]+", " ", s).split())
+    tokens = re.sub(r"[^a-z0-9]+", " ", s).split()
+    # Safe source-format aliases only. This is not a fuzzy team alias table:
+    # FotMob commonly uses a terminal "W" while HKJC emits "Women".
+    if tokens and tokens[-1] in {"women", "woman", "womens"}:
+        tokens[-1] = "w"
+    return " ".join(tokens)
 
 
 def _ratio(a: object, b: object) -> float:
