@@ -22,8 +22,9 @@ def cohort(name):
   if x in s:return x
  return "SENIOR"
 def get(url):
- try:return requests.get(url,timeout=15,impersonate="chrome").json()
- except TypeError:return requests.get(url,timeout=15,headers={"User-Agent":"Mozilla/5.0"}).json()
+ try:r=requests.get(url,timeout=15,impersonate="chrome")
+ except TypeError:r=requests.get(url,timeout=15,headers={"User-Agent":"Mozilla/5.0"})
+ r.raise_for_status(); return r.json()
 def write_diag(path,ds):
  Path(path).parent.mkdir(parents=True,exist_ok=True)
  with open(path,"w",encoding="utf-8-sig",newline="") as f:
@@ -31,11 +32,12 @@ def write_diag(path,ds):
 def main():
  ap=argparse.ArgumentParser();ap.add_argument("--fixtures",default="data/phase2_hkjc_current.csv");ap.add_argument("--registry",default="data/phase2_team_identity_evidence.csv");ap.add_argument("--diagnostics",default="data/phase2_identity_resolution_diagnostics.csv");a=ap.parse_args()
  fs=rows(a.fixtures);reg=rows(a.registry);known={(x["hkjc_team_id"],x["external_source"]):x for x in reg if str(x.get("confirmed","")).lower() in ("true","1","yes")}
- added=[];attempted=set();diags=[];events=[];source_errors=[];now=datetime.now(timezone.utc).isoformat()
+ added=[];attempted=set();diags=[];events=[];source_errors=[];source_counts={};now=datetime.now(timezone.utc).isoformat()
  dates=sorted({d for f in fs for d in {datetime.fromisoformat(f["kickoff_hkt"]).astimezone(timezone.utc).date().isoformat(),datetime.fromisoformat(f["kickoff_hkt"]).astimezone(HKT).date().isoformat()}})
  for d in dates:
   url=f"{BASE}/sport/football/scheduled-events/{d}"
-  try:events+=get(url).get("events",[]);time.sleep(.5)
+  try:
+   payload=get(url); batch=payload.get("events",[]); source_counts[d]=len(batch); events+=batch; time.sleep(.5)
   except Exception as e:source_errors.append((d,type(e).__name__))
  for f in fs:
   kick=datetime.fromisoformat(f["kickoff_hkt"])
@@ -43,12 +45,13 @@ def main():
    hid=f[f"{side}_hkjc_id"]
    if (hid,"sofascore") in known or hid in attempted:continue
    attempted.add(hid);hn=f[f"{side}_en"];on=f[f"{other}_en"];hc=cohort(hn);near=[];cohort_ok=[];name_ok=[]
+   closest=None
    for e in events:
     try:
-     ek=datetime.fromtimestamp(e["startTimestamp"],timezone.utc).astimezone(HKT)
-     delta=min(abs((ek-kick).total_seconds()),abs((ek-(kick-timedelta(hours=8))).total_seconds()),abs((ek-(kick+timedelta(hours=8))).total_seconds()))
-     if delta>1800:continue
-     et=e[side+"Team"];ot=e[other+"Team"];s1=sim(hn,et.get("name",""));s2=sim(on,ot.get("name",""));item=(round((s1+s2)/2,3),e,et,ek,delta)
+     ek=datetime.fromtimestamp(e["startTimestamp"],timezone.utc).astimezone(HKT); raw_delta=abs((ek-kick).total_seconds())
+     if closest is None or raw_delta<closest[0]:closest=(raw_delta,e,ek)
+     if raw_delta>1800:continue
+     et=e[side+"Team"];ot=e[other+"Team"];s1=sim(hn,et.get("name",""));s2=sim(on,ot.get("name",""));item=(round((s1+s2)/2,3),e,et,ek,raw_delta)
      near.append(item)
      if cohort(et.get("name",""))==hc:cohort_ok.append(item)
      if cohort(et.get("name",""))==hc and s1>=.62 and s2>=.62:name_ok.append(item)
@@ -58,11 +61,13 @@ def main():
     score,e,et,ek,delta=name_ok[0];added.append({"hkjc_team_id":hid,"hkjc_name_en":hn,"hkjc_name_ch":f.get(f"{side}_ch",""),"cohort":hc,"external_source":"sofascore","external_team_id":str(et["id"]),"external_name":et.get("name",""),"evidence_class":"CONFIRMED_FACT","confirmed":"true","confidence":str(score),"source_url":f"{BASE}/sport/football/scheduled-events/{ek.date().isoformat()}","source_timestamp":ek.isoformat(),"fetched_at":now,"raw_context":json.dumps({"hkjc_event_id":f["hkjc_event_id"],"sofascore_event_id":e.get("id"),"kickoff_delta_seconds":delta},separators=(",",":"))});continue
    reason="SOURCE_ERROR" if source_errors and not events else "NO_EVENT_WITHIN_30M" if not near else "COHORT_MISMATCH" if not cohort_ok else "NAME_MISMATCH" if not name_ok else "AMBIGUOUS_CANDIDATES" if len(name_ok)>1 else "LOW_CONFIDENCE"
    best=(name_ok or cohort_ok or near);best=sorted(best,key=lambda x:x[0],reverse=True)[0] if best else None
+   if not best and closest:
+    ce=closest[1]; cet=ce.get(side+"Team",{}); best=(0,ce,cet,closest[2],closest[0])
    diags.append({"hkjc_team_id":hid,"hkjc_name_en":hn,"cohort":hc,"hkjc_event_id":f["hkjc_event_id"],"reason":reason,"candidate_count":len(name_ok),"best_score":best[0] if best else "","best_external_name":best[2].get("name","") if best else "","best_external_team_id":best[2].get("id","") if best else "","kickoff_delta_seconds":best[4] if best else "","fetched_at":now})
  if added:
   with open(a.registry,"a",encoding="utf-8-sig",newline="") as out:csv.DictWriter(out,fieldnames=FIELDS).writerows(added)
- write_diag(a.diagnostics,diags)
- counts={}
+ write_diag(a.diagnostics,diags);counts={}
  for d in diags:counts[d["reason"]]=counts.get(d["reason"],0)+1
- print("PHASE2_SOFASCORE "+json.dumps({"attempted":len(attempted),"confirmed_new":len(added),"unresolved":len(diags),"failure_classes":counts,"source_errors":source_errors},separators=(",",":")))
+ nearest=sorted({int(float(d["kickoff_delta_seconds"])) for d in diags if str(d["kickoff_delta_seconds"]).strip()})[:10]
+ print("PHASE2_SOFASCORE "+json.dumps({"attempted":len(attempted),"confirmed_new":len(added),"unresolved":len(diags),"failure_classes":counts,"source_errors":source_errors,"source_event_counts":source_counts,"total_source_events":len(events),"nearest_delta_seconds_sample":nearest},separators=(",",":")))
 if __name__=="__main__":main()
