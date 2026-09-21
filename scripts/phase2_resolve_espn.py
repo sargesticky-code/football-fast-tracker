@@ -25,6 +25,7 @@ def main():
   try:
    r=requests.get(url,timeout=20,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"});r.raise_for_status();batch=r.json().get("events") or [];counts[d.isoformat()]=len(batch);events+=batch;time.sleep(.4)
   except Exception as e:errors.append([d.isoformat(),type(e).__name__,getattr(getattr(e,"response",None),"status_code",None)])
+ source_unavailable=bool(errors) and not events
  added=[];diag=[];attempted=set();fail={}
  for f in fs:
   kick=datetime.fromisoformat(f["kickoff_hkt"])
@@ -47,7 +48,7 @@ def main():
     score,e,me,en,ek=cand[0];ext=(me.get("team") or {}).get("id")
     if ext:
      added.append({"hkjc_team_id":hid,"hkjc_name_en":hn,"hkjc_name_ch":f.get(f"{side}_ch",""),"cohort":hc,"external_source":"espn","external_team_id":str(ext),"external_name":en,"evidence_class":"CONFIRMED_FACT","confirmed":"true","confidence":str(score),"source_url":urls.get(ek.date().isoformat(),BASE),"source_timestamp":ek.isoformat(),"fetched_at":now,"raw_context":json.dumps({"hkjc_event_id":f["hkjc_event_id"],"espn_event_id":e.get("id")},separators=(",",":"))});continue
-   reason="AMBIGUOUS_CANDIDATES" if len(cand)>1 else "EVENT_ABSENT" if not near else "COHORT_MISMATCH" if all(x[3]!=hc for x in near) else "NAME_MISMATCH";fail[reason]=fail.get(reason,0)+1;diag.append({"hkjc_team_id":hid,"hkjc_name_en":hn,"hkjc_event_id":f["hkjc_event_id"],"reason":reason,"near_count":len(near),"fetched_at":now})
+   reason="SOURCE_ERROR" if source_unavailable else "AMBIGUOUS_CANDIDATES" if len(cand)>1 else "EVENT_ABSENT" if not near else "COHORT_MISMATCH" if all(x[3]!=hc for x in near) else "NAME_MISMATCH";fail[reason]=fail.get(reason,0)+1;diag.append({"hkjc_team_id":hid,"hkjc_name_en":hn,"hkjc_event_id":f["hkjc_event_id"],"reason":reason,"near_count":len(near),"source_errors":json.dumps(errors,separators=(",",":")) if source_unavailable else "","fetched_at":now})
  if added:
   with open(a.registry,"a",encoding="utf-8-sig",newline="") as out:csv.DictWriter(out,fieldnames=FIELDS).writerows(added)
  if diag:
