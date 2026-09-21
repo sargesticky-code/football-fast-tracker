@@ -39,6 +39,10 @@ BRAZIL_SERIE_B_2026_URL = (
     "https://raw.githubusercontent.com/FerrerasRP/FootballData/main/"
     "database/brasil-serie-b/brasil-serie-b%202026.json"
 )
+BRAZIL_SERIE_B_2025_URL = (
+    "https://raw.githubusercontent.com/BrazilianFootball/Data/main/"
+    "results/processed/Serie_B_2025_games.json"
+)
 SPECIAL_DATASETS_BY_TOURNAMENT = {
     "BD2": {"SPECIAL:BrazilSerieB2026"},
 }
@@ -253,6 +257,57 @@ def fetch_brazil_serie_b_2026(session: requests.Session) -> pd.DataFrame:
         home = re.sub(r"\s*\n\s*\d+\s*$", "", home).strip()
         away = re.sub(r"\s*\n\s*\d+\s*$", "", away).strip()
         if not home or not away or hg < 0 or ag < 0:
+            continue
+
+        rows.append({
+            "HomeTeam": home,
+            "AwayTeam": away,
+            "FTHG": hg,
+            "FTAG": ag,
+            "Date": dt.strftime("%d/%m/%Y"),
+        })
+
+    return pd.DataFrame(rows, columns=["HomeTeam", "AwayTeam", "FTHG", "FTAG", "Date"])
+
+
+def fetch_brazil_serie_b_2025(session: requests.Session) -> pd.DataFrame:
+    """Fetch the completed 2025 Brazil Serie B season for same-league history."""
+    try:
+        r = session.get(
+            BRAZIL_SERIE_B_2025_URL,
+            timeout=TIMEOUT,
+            headers={"User-Agent": "football-fast-tracker/1.0"},
+        )
+        r.raise_for_status()
+        payload = r.json()
+    except Exception:
+        return pd.DataFrame()
+
+    if not isinstance(payload, dict):
+        return pd.DataFrame()
+
+    rows: list[dict[str, object]] = []
+    for item in payload.values():
+        if not isinstance(item, dict):
+            continue
+        raw_date = str(item.get("Date") or "").strip()
+        home = str(item.get("Home") or "").strip()
+        away = str(item.get("Away") or "").strip()
+        result = str(item.get("Result") or "").strip()
+        score = re.search(r"(\d+)\s*[xX]\s*(\d+)", result)
+        if not raw_date or not home or not away or not score:
+            continue
+        try:
+            dt = datetime.strptime(raw_date, "%d/%m/%Y")
+            hg = int(score.group(1))
+            ag = int(score.group(2))
+        except (TypeError, ValueError):
+            continue
+
+        # The archive appends Brazilian state suffixes, e.g. "Criciúma / SC".
+        home = re.sub(r"\s*/\s*[A-Z]{2}\s*$", "", home).strip()
+        away = re.sub(r"\s*/\s*[A-Z]{2}\s*$", "", away).strip()
+        if not home or not away:
             continue
 
         rows.append({
@@ -547,8 +602,12 @@ def main() -> int:
     # Use a dedicated current-season full-league dataset, scoped only to HKJC
     # tournament BD2 so it cannot leak into unrelated league discovery.
     bd2_key = "SPECIAL:BrazilSerieB2026"
-    current[bd2_key] = fetch_brazil_serie_b_2026(session)
-    dataset_labels[bd2_key] = "Brazil Serie B 2026"
+    brazil_b_2026 = fetch_brazil_serie_b_2026(session)
+    brazil_b_2025 = fetch_brazil_serie_b_2025(session)
+    # Discovery uses 2026 only, so last season's clubs cannot be mistaken for
+    # current BD2 members. Fitting may use both seasons after a 2026 identity hit.
+    current[bd2_key] = brazil_b_2026
+    dataset_labels[bd2_key] = "Brazil Serie B 2025-2026"
 
     football_data_master = build_reverse_map("FOOTBALL_DATA", norm)
     discovered = {
@@ -564,6 +623,8 @@ def main() -> int:
             for season in seasons[1:]:
                 parts.append(fetch_csv(session, season, code))
             histories[key] = clean_history(parts)
+        elif key == bd2_key:
+            histories[key] = clean_history([brazil_b_2025, brazil_b_2026])
         else:
             histories[key] = clean_history([current.get(key, pd.DataFrame())])
 
