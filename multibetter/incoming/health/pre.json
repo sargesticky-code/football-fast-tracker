@@ -1,12 +1,12 @@
 {
   "source": "PRE",
   "status": "OK",
-  "rows": 416,
+  "rows": 75,
   "requests": 6,
   "errors": 0,
-  "started_at": "2026-09-20T15:10:46.712785+08:00",
-  "finished_at": "2026-09-20T15:10:49.004814+08:00",
+  "started_at": "2026-09-21T09:04:13.041217+08:00",
+  "finished_at": "2026-09-21T09:04:14.095398+08:00",
   "note": "",
-  "target_start": "2026-09-20",
-  "target_end": "2026-09-21"
+  "target_start": "2026-09-21",
+  "target_end": "2026-09-22"
 }

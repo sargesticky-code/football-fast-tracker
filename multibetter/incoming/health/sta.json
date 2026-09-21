@@ -1,12 +1,12 @@
 {
   "source": "STA",
-  "status": "OK",
-  "rows": 380,
+  "status": "KEEP_LAST_GOOD",
+  "rows": 0,
   "requests": 2,
-  "errors": 0,
-  "started_at": "2026-09-20T15:10:49.181807+08:00",
-  "finished_at": "2026-09-20T15:10:52.238489+08:00",
-  "note": "calibration={\"dominance\": 1.0, \"dominant_samples\": 23, \"inferred_source_minus_utc_minutes\": 60, \"offset_distribution\": {\"60\": 23}, \"reason\": \"DOMINANT_EXACT_PAIR_CLOCK_OFFSET\", \"samples\": 23}",
-  "target_start": "2026-09-20",
-  "target_end": "2026-09-21"
+  "errors": 1,
+  "started_at": "2026-09-21T09:04:14.300936+08:00",
+  "finished_at": "2026-09-21T09:04:20.812486+08:00",
+  "note": "calibration={\"dominance\": 0.0, \"dominant_samples\": 0, \"offset_distribution\": {}, \"reason\": \"NO_EXACT_PAIR_ANCHORS\", \"samples\": 0}",
+  "target_start": "2026-09-21",
+  "target_end": "2026-09-22"
 }
