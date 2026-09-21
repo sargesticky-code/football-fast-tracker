@@ -29,10 +29,10 @@ HISTORY = ROOT / "data" / "hkjc_history.csv"
 TEAM_MAP = ROOT / "data" / "hkjc_current_teams.csv"
 COVERAGE = ROOT / "data" / "hkjc_history_coverage.csv"
 
-BOOTSTRAP_MONTHS = max(3, int(os.getenv("HKJC_HISTORY_BOOTSTRAP_MONTHS", "12")))
+BOOTSTRAP_MONTHS = max(2, int(os.getenv("HKJC_HISTORY_BOOTSTRAP_MONTHS", "2")))
 REFRESH_MONTHS = max(1, int(os.getenv("HKJC_HISTORY_REFRESH_MONTHS", "2")))
 REQUEST_SLEEP = max(0.0, float(os.getenv("HKJC_HISTORY_REQUEST_SLEEP", "0.05")))
-MAX_BOOTSTRAP_TEAMS = max(0, int(os.getenv("HKJC_HISTORY_MAX_BOOTSTRAP_TEAMS", "4")))
+MAX_BOOTSTRAP_TEAMS = max(0, int(os.getenv("HKJC_HISTORY_MAX_BOOTSTRAP_TEAMS", "12")))
 MAX_REFRESH_TEAMS = max(0, int(os.getenv("HKJC_HISTORY_MAX_REFRESH_TEAMS", "24")))
 
 HISTORY_COLUMNS = [
@@ -237,10 +237,10 @@ def main() -> int:
 
     all_current_team_ids = ordered_team_ids(teams)
 
-    # Hard daily request budget. Existing covered teams are refreshed oldest
-    # first; only a small number of new teams may enter the 12-month bootstrap
-    # on any one run. This prevents a larger HKJC slate from multiplying
-    # GraphQL calls unexpectedly.
+    # Hard request budget. HKJC's results endpoint retains roughly the last
+    # 30 days, so a two-calendar-month window is sufficient to straddle the
+    # month boundary. Bootstrapping more teams with two calls each is both
+    # cheaper and faster than querying twelve mostly-empty historical months.
     bootstrapped = [
         tid for tid in all_current_team_ids
         if coverage.get(tid, {}).get("status") == "BOOTSTRAPPED"
@@ -314,7 +314,7 @@ def main() -> int:
 
         row = dict(cov) if cov else {"team_id": team_id}
         if mode == "bootstrap":
-            min_success = max(3, math.ceil(BOOTSTRAP_MONTHS * 0.75)) if False else max(3, (BOOTSTRAP_MONTHS * 3 + 3) // 4)
+            min_success = max(1, (BOOTSTRAP_MONTHS * 3 + 3) // 4)
             if successful_months >= min_success:
                 row["status"] = "BOOTSTRAPPED"
                 row["bootstrap_months"] = str(BOOTSTRAP_MONTHS)
