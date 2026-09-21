@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from multibetter.aliasing.cache import AliasCacheRow
-from multibetter.pipeline.current import build_current
+from multibetter.pipeline.current import build_current, build_hkjc_anchored_current
 
 
 OUR = [
@@ -170,3 +170,44 @@ def test_built_at_is_sheet_friendly_local_timestamp_text():
         observed_at=datetime(2026, 9, 20, 8, 0),
     )
     assert result.rows[0]["built_at"] == "2026-09-20 08:00:00"
+
+
+def test_hkjc_anchor_allows_optional_source_without_forebet_model():
+    targets = [
+        {
+            "hkjc_event_id": "FBX",
+            "kickoff_hkt": "2026-09-22 08:15",
+            "league_zh": "APL",
+            "home_en": "Lanus",
+            "away_en": "Estudiantes",
+        }
+    ]
+    source_tables = {
+        "PRE": [
+            {
+                "DATE": "22/09/2026",
+                "TIME": "00:15",
+                "HOME TEAM": "Lanus",
+                "AWAY TEAM": "Estudiantes LP",
+                "HOME PER": "51",
+                "DRAW PER": "13",
+                "AWAY PER": "36",
+                "NAME": "PRE",
+            }
+        ]
+    }
+
+    result = build_hkjc_anchored_current(
+        hkjc_target_rows=targets,
+        source_tables=source_tables,
+        cache_rows=[],
+        observed_at=datetime(2026, 9, 21, 14, 0),
+    )
+
+    assert len(result.rows) == 1
+    row = result.rows[0]
+    assert row["hkjc_event_id"] == "FBX"
+    assert row["match_status"] == "HKJC_ANCHOR"
+    assert row["source_count_total"] == 1
+    assert row["sources_total"] == "PRE"
+    assert row["consensus_home"] > 0
