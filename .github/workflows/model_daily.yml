@@ -8,6 +8,7 @@ on:
     - cron: '5 11 * * *' # 19:05 Hong Kong time, after the 18:45 source refresh
   push:
     paths:
+      - 'scripts/team_name_master.py'
       - '.github/workflows/model_daily.yml'
       - 'scripts/build_shadow_model.py'
       - 'scripts/update_hkjc_history.py'
