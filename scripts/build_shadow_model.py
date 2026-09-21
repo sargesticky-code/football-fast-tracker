@@ -35,6 +35,13 @@ HKJC_HISTORY = ROOT / "data" / "hkjc_history.csv"
 HKJC_TEAMS = ROOT / "data" / "hkjc_current_teams.csv"
 BASE = "https://www.football-data.co.uk/mmz4281/{season}/{code}.csv"
 TIMEOUT = 30
+BRAZIL_SERIE_B_2026_URL = (
+    "https://raw.githubusercontent.com/FerrerasRP/FootballData/main/"
+    "database/brasil-serie-b/brasil-serie-b%202026.json"
+)
+SPECIAL_DATASETS_BY_TOURNAMENT = {
+    "BD2": {"SPECIAL:BrazilSerieB2026"},
+}
 MODEL_LOOKBACK_DAYS = int(os.getenv("MODEL_LOOKBACK_DAYS", "540"))
 MODEL_MAX_MATCHES = int(os.getenv("MODEL_MAX_MATCHES", "700"))
 
@@ -211,6 +218,54 @@ def fetch_extra_country(session: requests.Session, page_url: str) -> pd.DataFram
         return pd.DataFrame()
 
 
+def fetch_brazil_serie_b_2026(session: requests.Session) -> pd.DataFrame:
+    """Fetch current Brazil Serie B full-league results from a CC0 GitHub dataset."""
+    try:
+        r = session.get(
+            BRAZIL_SERIE_B_2026_URL,
+            timeout=TIMEOUT,
+            headers={"User-Agent": "football-fast-tracker/1.0"},
+        )
+        r.raise_for_status()
+        payload = r.json()
+    except Exception:
+        return pd.DataFrame()
+
+    if not isinstance(payload, list):
+        return pd.DataFrame()
+
+    rows: list[dict[str, object]] = []
+    for item in payload:
+        if not isinstance(item, dict):
+            continue
+        raw_date = str(item.get("match_date") or "").strip()
+        home = str(item.get("home") or "").strip()
+        away = str(item.get("away") or "").strip()
+        try:
+            hg = int(item.get("goals_home"))
+            ag = int(item.get("goals_away"))
+            dt = datetime.strptime(raw_date, "%d.%m.%Y %H:%M")
+        except (TypeError, ValueError):
+            continue
+
+        # Upstream occasionally carries a scraped footnote marker such as
+        # "Ponte Preta\n2". Strip only a trailing newline-number artifact.
+        home = re.sub(r"\s*\n\s*\d+\s*$", "", home).strip()
+        away = re.sub(r"\s*\n\s*\d+\s*$", "", away).strip()
+        if not home or not away or hg < 0 or ag < 0:
+            continue
+
+        rows.append({
+            "HomeTeam": home,
+            "AwayTeam": away,
+            "FTHG": hg,
+            "FTAG": ag,
+            "Date": dt.strftime("%d/%m/%Y"),
+        })
+
+    return pd.DataFrame(rows, columns=["HomeTeam", "AwayTeam", "FTHG", "FTAG", "Date"])
+
+
 def best_name(name: str, candidates: set[str]) -> tuple[str | None, float]:
     if not candidates:
         return None, 0.0
@@ -231,10 +286,27 @@ def discover_fixture(
 
     verified_home = master_reverse.get(norm(source_home)) if master_reverse else None
     verified_away = master_reverse.get(norm(source_away)) if master_reverse else None
+    tournament = str(
+        row.get("tournament")
+        or row.get("hkjc_league")
+        or row.get("league_zh")
+        or ""
+    ).strip()
+    special_keys = SPECIAL_DATASETS_BY_TOURNAMENT.get(tournament, set())
 
     best = None
     for code, df in current.items():
         if df.empty:
+            continue
+
+        # Special full-league datasets are competition-scoped. A BD2 fixture
+        # may use Brazil Serie B 2026, while every other competition is barred
+        # from discovering against that dataset. Conversely, BD2 does not
+        # accidentally match Football-Data's Brazil top-flight file.
+        if code.startswith("SPECIAL:"):
+            if code not in special_keys:
+                continue
+        elif special_keys:
             continue
         teams = set(df["HomeTeam"].dropna().astype(str)) | set(df["AwayTeam"].dropna().astype(str))
 
@@ -471,6 +543,13 @@ def main() -> int:
         current[key] = frame
         dataset_labels[key] = f"{country} top flight"
 
+    # Brazil Serie B is not included in Football-Data's Brazil top-flight file.
+    # Use a dedicated current-season full-league dataset, scoped only to HKJC
+    # tournament BD2 so it cannot leak into unrelated league discovery.
+    bd2_key = "SPECIAL:BrazilSerieB2026"
+    current[bd2_key] = fetch_brazil_serie_b_2026(session)
+    dataset_labels[bd2_key] = "Brazil Serie B 2026"
+
     football_data_master = build_reverse_map("FOOTBALL_DATA", norm)
     discovered = {
         r["hkjc_event_id"]: discover_fixture(r, current, football_data_master)
@@ -532,11 +611,14 @@ def main() -> int:
                 )
                 base.update(finalize_values(values))
                 base["quality"] = "MODELED"
-                base["model_source"] = (
-                    "football-data.co.uk extra / penaltyblog 1.12.2"
-                    if dataset_key.startswith("EXTRA:")
-                    else "football-data.co.uk main / penaltyblog 1.12.2"
-                )
+                if dataset_key == "SPECIAL:BrazilSerieB2026":
+                    base["model_source"] = (
+                        "FerrerasRP/FootballData Brazil Serie B 2026 / penaltyblog 1.12.2"
+                    )
+                elif dataset_key.startswith("EXTRA:"):
+                    base["model_source"] = "football-data.co.uk extra / penaltyblog 1.12.2"
+                else:
+                    base["model_source"] = "football-data.co.uk main / penaltyblog 1.12.2"
                 modeled += 1
                 modeled_fd += 1
                 out.append(base)
