@@ -146,6 +146,78 @@ def fetch_womens_international_results() -> tuple[list[dict], datetime | None]:
     return rows, latest
 
 
+def clean_brazil_team(value: str) -> str:
+    value = str(value or "").strip()
+    value = re.sub(r"\s*/\s*[A-Z]{2}\s*$", "", value)
+    value = re.sub(r"\s+-\s*$", "", value)
+    return value.strip()
+
+
+def fetch_brazilianfootball_results() -> tuple[list[dict], datetime | None]:
+    rows: list[dict] = []
+    latest: datetime | None = None
+    for url in BRAZIL_RESULTS_URLS:
+        try:
+            response = requests.get(
+                url,
+                timeout=BRAZIL_RESULTS_TIMEOUT,
+                headers={"User-Agent": "football-fast-tracker/1.0"},
+            )
+            response.raise_for_status()
+            payload = response.json()
+        except Exception as exc:
+            print(f"BRAZIL_HISTORY unavailable url={url} error={exc}", flush=True)
+            continue
+
+        games = payload.values() if isinstance(payload, dict) else []
+        source_rows = 0
+        for game in games:
+            if not isinstance(game, dict):
+                continue
+            try:
+                dt = datetime.strptime(str(game.get("Date") or ""), "%d/%m/%Y").replace(tzinfo=HKT)
+                m = re.search(r"(\d+)\s*[Xx]\s*(\d+)", str(game.get("Result") or ""))
+                if not m:
+                    continue
+                hg = float(m.group(1))
+                ag = float(m.group(2))
+            except (TypeError, ValueError):
+                continue
+            home = clean_brazil_team(game.get("Home", ""))
+            away = clean_brazil_team(game.get("Away", ""))
+            if not home or not away:
+                continue
+            rows.append({
+                "date_dt": dt,
+                "home": home,
+                "away": away,
+                "home_goals": hg,
+                "away_goals": ag,
+                "neutral": False,
+            })
+            source_rows += 1
+            if latest is None or dt > latest:
+                latest = dt
+        print(
+            f"BRAZIL_HISTORY_SOURCE url={url.rsplit('/',1)[-1]} rows={source_rows}",
+            flush=True,
+        )
+
+    # Same match cannot occur in both Serie B and C in one season, but keep a
+    # deterministic de-duplication guard in case the source later changes.
+    dedup: dict[tuple[str,str,str],dict] = {}
+    for row in rows:
+        key=(row["date_dt"].date().isoformat(),norm_name(row["home"]),norm_name(row["away"]))
+        dedup[key]=row
+    rows=list(dedup.values())
+    print(
+        f"BRAZIL_HISTORY rows={len(rows)} "
+        f"latest={latest.date().isoformat() if latest else '-'}",
+        flush=True,
+    )
+    return rows, latest
+
+
 def weighted_external_rate(
     rows: list[dict],
     team_name: str,
@@ -451,76 +523,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())def clean_brazil_team(value: str) -> str:
-    value = str(value or "").strip()
-    value = re.sub(r"\s*/\s*[A-Z]{2}\s*$", "", value)
-    value = re.sub(r"\s+-\s*$", "", value)
-    return value.strip()
-
-
-def fetch_brazilianfootball_results() -> tuple[list[dict], datetime | None]:
-    rows: list[dict] = []
-    latest: datetime | None = None
-    for url in BRAZIL_RESULTS_URLS:
-        try:
-            response = requests.get(
-                url,
-                timeout=BRAZIL_RESULTS_TIMEOUT,
-                headers={"User-Agent": "football-fast-tracker/1.0"},
-            )
-            response.raise_for_status()
-            payload = response.json()
-        except Exception as exc:
-            print(f"BRAZIL_HISTORY unavailable url={url} error={exc}", flush=True)
-            continue
-
-        games = payload.values() if isinstance(payload, dict) else []
-        source_rows = 0
-        for game in games:
-            if not isinstance(game, dict):
-                continue
-            try:
-                dt = datetime.strptime(str(game.get("Date") or ""), "%d/%m/%Y").replace(tzinfo=HKT)
-                m = re.search(r"(\d+)\s*[Xx]\s*(\d+)", str(game.get("Result") or ""))
-                if not m:
-                    continue
-                hg = float(m.group(1))
-                ag = float(m.group(2))
-            except (TypeError, ValueError):
-                continue
-            home = clean_brazil_team(game.get("Home", ""))
-            away = clean_brazil_team(game.get("Away", ""))
-            if not home or not away:
-                continue
-            rows.append({
-                "date_dt": dt,
-                "home": home,
-                "away": away,
-                "home_goals": hg,
-                "away_goals": ag,
-                "neutral": False,
-            })
-            source_rows += 1
-            if latest is None or dt > latest:
-                latest = dt
-        print(
-            f"BRAZIL_HISTORY_SOURCE url={url.rsplit('/',1)[-1]} rows={source_rows}",
-            flush=True,
-        )
-
-    # Same match cannot occur in both Serie B and C in one season, but keep a
-    # deterministic de-duplication guard in case the source later changes.
-    dedup: dict[tuple[str,str,str],dict] = {}
-    for row in rows:
-        key=(row["date_dt"].date().isoformat(),norm_name(row["home"]),norm_name(row["away"]))
-        dedup[key]=row
-    rows=list(dedup.values())
-    print(
-        f"BRAZIL_HISTORY rows={len(rows)} "
-        f"latest={latest.date().isoformat() if latest else '-'}",
-        flush=True,
-    )
-    return rows, latest
-
-
-
+    raise SystemExit(main())
