@@ -31,9 +31,9 @@ jobs:
     timeout-minutes: 18
     env:
       HKJC_UPSTREAM_SHA: '1d2234102dc8f1ee23d0b45c25c125dc3ef98176'
-      HKJC_HISTORY_BOOTSTRAP_MONTHS: '12'
+      HKJC_HISTORY_BOOTSTRAP_MONTHS: '2'
       HKJC_HISTORY_REFRESH_MONTHS: '2'
-      HKJC_HISTORY_MAX_BOOTSTRAP_TEAMS: '4'
+      HKJC_HISTORY_MAX_BOOTSTRAP_TEAMS: '12'
       HKJC_HISTORY_MAX_REFRESH_TEAMS: '24'
     steps:
       - name: Checkout latest production feed
