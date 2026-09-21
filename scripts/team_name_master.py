@@ -35,31 +35,42 @@ def fetch_verified_rows(source: str) -> list[dict]:
 
 
 def build_forward_map(source: str, normalizer: Callable[[str], str]) -> dict[str, str]:
-    """source team name -> canonical HKJC English name.
+    """source/global team name -> canonical HKJC English name.
 
-    Only verified/unambiguous rows are exposed by the endpoint. If two returned
-    rows collapse to the same local normalizer but disagree on canonical team,
-    the local key is dropped rather than guessed.
+    Source-specific verified rows win. If a source has never seen a name before,
+    the globally unique cross-source dictionary can still resolve it. Any local
+    normalizer collision is dropped rather than guessed.
     """
+    source_rows = fetch_verified_rows(source)
+    global_rows = fetch_verified_rows("GLOBAL")
     out: dict[str, str] = {}
     bad: set[str] = set()
-    rows = fetch_verified_rows(source)
-    for row in rows:
-        source_name = str(row.get("source_name") or "").strip()
-        canonical = str(row.get("hkjc_name_en") or "").strip()
-        key = normalizer(source_name)
-        if not key or not canonical:
-            continue
-        old = out.get(key)
-        if old and old != canonical:
-            bad.add(key)
-            continue
-        out[key] = canonical
+
+    def add(rows: list[dict], *, override: bool) -> None:
+        for row in rows:
+            source_name = str(row.get("source_name") or "").strip()
+            canonical = str(row.get("hkjc_name_en") or "").strip()
+            key = normalizer(source_name)
+            if not key or not canonical:
+                continue
+            old = out.get(key)
+            if old and old != canonical and not override:
+                bad.add(key)
+                continue
+            if override or key not in out:
+                out[key] = canonical
+
+    # Global gives broad reuse across models; source-specific verified mapping
+    # then overrides it when the provider has an explicit canonical relation.
+    add(global_rows, override=False)
     for key in bad:
         out.pop(key, None)
+    add(source_rows, override=True)
+
     print(
-        f"TEAM_NAME_MASTER source={source.upper()} verified_rows={len(rows)} "
-        f"usable_forward={len(out)} local_collisions={len(bad)}",
+        f"TEAM_NAME_MASTER source={source.upper()} source_rows={len(source_rows)} "
+        f"global_rows={len(global_rows)} usable_forward={len(out)} "
+        f"local_collisions={len(bad)}",
         flush=True,
     )
     return out
