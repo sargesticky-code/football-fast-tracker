@@ -13,20 +13,20 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 from phase3.external_identity import choose_candidate, ranked_candidates
+from phase3.hkjc_authority import evaluate_authority
 
 AUTH=Path("data/phase3_hkjc_authority.json")
 EVIDENCE=Path("data/phase3_identity_evidence.jsonl")
 
 
-def eligible_rows(payload: dict) -> list[dict]:
-    out=[]
-    for r in payload.get("rows") or []:
-        selling=str(r.get("pool_status") or r.get("selling_status") or "").upper()
-        status=str(r.get("status") or "").upper()
-        live=any(x in status for x in ("FIRSTHALF","SECONDHALF","INPLAY","EXTRATIME","PENALTY"))
-        if selling=="SELLINGSTARTED" and live and r.get("hkjc_event_id") and r.get("match_id"):
-            out.append(r)
-    return out
+def eligible_rows(payload: dict) -> tuple[list[dict], str, float | None]:
+    """Reuse Layer 1 authority contract; never reimplement live eligibility here."""
+    result=evaluate_authority(
+        payload.get("rows") or [],
+        source_fetched_at=payload.get("fetched_at"),
+        now=datetime.now(timezone.utc),
+    )
+    return [dict(r) for r in result.rows if r.get("phase3_eligible")], result.health, result.snapshot_age_seconds
 
 
 def fotmob_board(date: str) -> list[dict]:
@@ -60,9 +60,13 @@ def main() -> int:
         print("PHASE3_LAYER2 source_gap=NO_AUTHORITY_SNAPSHOT requests=0")
         return 2
     authority=json.loads(AUTH.read_text(encoding="utf-8"))
-    eligible=eligible_rows(authority)
+    eligible,authority_health,authority_age=eligible_rows(authority)
+    age="NA" if authority_age is None else f"{authority_age:.1f}"
     if not eligible:
-        print("PHASE3_LAYER2 eligible=0 requests=0 evidence_added=0")
+        print(
+            f"PHASE3_LAYER2 eligible=0 requests=0 evidence_added=0 "
+            f"authority_health={authority_health} authority_age_seconds={age}"
+        )
         return 0
 
     dates=sorted({str(r.get("kickoff_hkt") or "")[:10].replace("-","") for r in eligible if r.get("kickoff_hkt")})
