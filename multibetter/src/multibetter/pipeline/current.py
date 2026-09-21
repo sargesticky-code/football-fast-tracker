@@ -23,6 +23,7 @@ from multibetter.matching.fixture_resolver import (
 from multibetter.models import CanonicalFixture, Market, MultiSourceFixture
 from multibetter.sources.github_multi import (
     UPSTREAM_DEFAULT_WEIGHTS,
+    group_sources_around_anchor,
     group_sources_around_forebet,
 )
 
@@ -150,6 +151,146 @@ def load_source_tables(
         if rows:
             result[source] = rows
     return result
+
+
+
+def load_hkjc_target_fixtures(
+    rows: Iterable[Mapping[str, str]],
+) -> tuple[list[CanonicalFixture], dict[str, Mapping[str, str]]]:
+    """Build the canonical Multibetter universe directly from HKJC targets."""
+    fixtures: list[CanonicalFixture] = []
+    raw_by_event: dict[str, Mapping[str, str]] = {}
+
+    for row in rows:
+        event_id = (row.get("hkjc_event_id") or "").strip()
+        home = (row.get("home_en") or row.get("home_team") or "").strip()
+        away = (row.get("away_en") or row.get("away_team") or "").strip()
+        kickoff = _parse_our_forebet_kickoff(row)
+        if not event_id or not home or not away or kickoff is None:
+            continue
+
+        competition = (
+            (row.get("league_zh") or "").strip()
+            or (row.get("tournament") or "").strip()
+            or (row.get("hkjc_league") or "").strip()
+        )
+        fixture = CanonicalFixture(
+            event_id=event_id,
+            kickoff=kickoff,
+            competition=competition,
+            hkjc_home=home,
+            hkjc_away=away,
+            forebet_home=home,
+            forebet_away=away,
+            forebet_competition=competition or None,
+        )
+        fixtures.append(fixture)
+        raw_by_event[event_id] = row
+
+    return fixtures, raw_by_event
+
+
+def build_hkjc_anchored_current(
+    *,
+    hkjc_target_rows: Iterable[Mapping[str, str]],
+    source_tables: Mapping[str, list[dict[str, str]]],
+    cache_rows: Iterable[AliasCacheRow] = (),
+    observed_at: datetime | None = None,
+) -> CurrentBuildResult:
+    """Build consensus for the full HKJC target universe.
+
+    FRB is now one evidence member rather than the gatekeeper for fixture
+    existence. Sources are matched only inside each HKJC date/time/home-away
+    anchor using the same safe upstream matcher.
+    """
+    observed_at = observed_at or datetime.now(ZoneInfo("Asia/Hong_Kong"))
+    fixtures, raw_by_event = load_hkjc_target_fixtures(hkjc_target_rows)
+    output: list[dict[str, object]] = []
+
+    for fixture in fixtures:
+        raw = raw_by_event.get(fixture.event_id, {})
+        anchor = {
+            "DATE": fixture.kickoff.strftime("%d/%m/%Y"),
+            "TIME": fixture.kickoff.strftime("%H:%M"),
+            "LEAGUE": fixture.competition,
+            "HOME TEAM": fixture.hkjc_home,
+            "AWAY TEAM": fixture.hkjc_away,
+        }
+        multi = group_sources_around_anchor(
+            anchor,
+            source_tables,
+            similarity_threshold=55.0,
+            time_tolerance_hours=0,
+            time_tolerance_minutes=5,
+            external_fixture_id=fixture.event_id,
+        )
+
+        hda = _consensus(multi, Market.HDA)
+        goals = _consensus(multi, Market.GOALS)
+        btts = _consensus(multi, Market.BTTS)
+
+        usable_predictions = [
+            p for p in multi.predictions
+            if bool(p.probabilities)
+        ]
+        source_names = [p.source for p in usable_predictions]
+        accepted_source_names = [
+            p.source
+            for p in usable_predictions
+            if _quality_confidence(p.match_quality) >= 0.85
+        ]
+
+        row: dict[str, object] = {
+            "built_at": observed_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "external_fixture_id": fixture.event_id,
+            "github_forebet_date": fixture.kickoff.date().isoformat(),
+            "github_forebet_time": fixture.kickoff.strftime("%H:%M"),
+            "github_forebet_league": fixture.competition,
+            "github_forebet_home": fixture.hkjc_home,
+            "github_forebet_away": fixture.hkjc_away,
+            "home_away_explicit": 1,
+            "match_status": "HKJC_ANCHOR",
+            "match_reason": "HKJC_AUTHORITY_FIXTURE",
+            "candidate_count": len(source_names),
+            "hkjc_event_id": fixture.event_id,
+            "our_forebet_home": fixture.forebet_home,
+            "our_forebet_away": fixture.forebet_away,
+            "hkjc_home": fixture.hkjc_home,
+            "hkjc_away": fixture.hkjc_away,
+            "hkjc_kickoff_hkt": raw.get("kickoff_hkt", ""),
+            "source_count_total": len(source_names),
+            "sources_total": "+".join(source_names),
+            "source_count_consensus": len(accepted_source_names),
+            "sources_consensus": "+".join(accepted_source_names),
+            "learned_alias_count": 0,
+            "learned_aliases": "",
+        }
+
+        if hda and hda.probabilities:
+            row.update({
+                "consensus_home": round(hda.probabilities.get("home", 0.0) * 100, 2),
+                "consensus_draw": round(hda.probabilities.get("draw", 0.0) * 100, 2),
+                "consensus_away": round(hda.probabilities.get("away", 0.0) * 100, 2),
+            })
+        if goals and goals.probabilities:
+            row.update({
+                "consensus_over25": round(goals.probabilities.get("over25", 0.0) * 100, 2),
+                "consensus_under25": round(goals.probabilities.get("under25", 0.0) * 100, 2),
+            })
+        if btts and btts.probabilities:
+            row.update({
+                "consensus_btts_yes": round(btts.probabilities.get("btts_yes", 0.0) * 100, 2),
+                "consensus_btts_no": round(btts.probabilities.get("btts_no", 0.0) * 100, 2),
+            })
+
+        output.append(row)
+
+    return CurrentBuildResult(
+        rows=tuple(output),
+        alias_cache=tuple(cache_rows),
+        learned_alias_count=0,
+        status_counts={"HKJC_ANCHOR": len(output)},
+    )
 
 
 def alias_map(rows: Iterable[AliasCacheRow]) -> dict[str, str]:
