@@ -21,7 +21,21 @@ def cohort(name):
  for x in ("WOMEN","U17","U18","U19","U20","U21","U23","RESERVE"):
   if x in s:return x
  return "SENIOR"
-def get(url):\n headers={"User-Agent":"Mozilla/5.0","Accept":"application/json","Referer":"https://www.sofascore.com/"}\n attempts=[]\n for candidate in (url,url.replace("https://api.sofascore.com/api/v1","https://www.sofascore.com/api/v1")):\n  try:\n   try:r=requests.get(candidate,timeout=15,impersonate="chrome",headers=headers)\n   except TypeError:r=requests.get(candidate,timeout=15,headers=headers)\n   if r.status_code==200:return r.json(),candidate\n   attempts.append({"url":candidate,"status":r.status_code,"body":str(r.text)[:120]})\n  except Exception as e:attempts.append({"url":candidate,"error":type(e).__name__})\n raise RuntimeError(json.dumps(attempts,separators=(",",":")))
+def get(url):
+ headers={"User-Agent":"Mozilla/5.0","Accept":"application/json","Referer":"https://www.sofascore.com/"}
+ attempts=[]
+ for candidate in (url,url.replace("https://api.sofascore.com/api/v1","https://www.sofascore.com/api/v1")):
+  try:
+   try:
+    r=requests.get(candidate,timeout=15,impersonate="chrome",headers=headers)
+   except TypeError:
+    r=requests.get(candidate,timeout=15,headers=headers)
+   if r.status_code==200:
+    return r.json(),candidate
+   attempts.append({"url":candidate,"status":r.status_code,"body":str(r.text)[:120]})
+  except Exception as e:
+   attempts.append({"url":candidate,"error":type(e).__name__})
+ raise RuntimeError(json.dumps(attempts,separators=(",",":")))
 def write_diag(path,ds):
  Path(path).parent.mkdir(parents=True,exist_ok=True)
  with open(path,"w",encoding="utf-8-sig",newline="") as f:
