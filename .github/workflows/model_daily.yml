@@ -11,6 +11,7 @@ on:
       - 'scripts/team_name_master.py'
       - '.github/workflows/model_daily.yml'
       - 'scripts/build_shadow_model.py'
+      - 'scripts/build_form_model.py'
       - 'scripts/update_hkjc_history.py'
       - 'scripts/quality_gate_shadow_models.py'
       - 'scripts/build_team_form_summary.py'
