@@ -12,6 +12,9 @@ on:
       - 'scripts/phase3_capture_hkjc_authority.py'
       - 'scripts/phase3_check_hkjc_authority.py'
       - 'tests/test_phase3_hkjc_authority.py'
+      - 'phase3/identity_registry.py'
+      - 'tests/test_phase3_identity_registry.py'
+      - 'scripts/phase3_build_identity_registry.py'
       - '.github/workflows/phase3_hkjc_authority.yml'
 
 permissions:
@@ -39,6 +42,9 @@ jobs:
 
       - name: Run Layer 1 deterministic tests
         run: python -m unittest tests.test_phase3_hkjc_authority -v
+
+      - name: Run Layer 2 identity registry tests
+        run: python -m unittest tests.test_phase3_identity_registry -v
 
       - name: Checkout pinned HKJC scraper
         run: |
