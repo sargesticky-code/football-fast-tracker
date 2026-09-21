@@ -13,6 +13,7 @@ from typing import Iterable
 
 PROMOTE_CONFIDENCE = 0.85
 PROMOTE_OBSERVATIONS = 3
+PROMOTE_MIN_SPAN_SECONDS = 120
 
 
 def _s(v) -> str:
@@ -41,6 +42,19 @@ class IdentityObservation:
             home=_s(self.home), away=_s(self.away), kickoff=_s(self.kickoff),
             competition=_s(self.competition),
         )
+
+
+def _parse_observed_at(value: str) -> datetime | None:
+    raw = _s(value)
+    if raw.endswith("Z"):
+        raw = raw[:-1] + "+00:00"
+    try:
+        dt = datetime.fromisoformat(raw)
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
 
 
 def _fixture_signature(o: IdentityObservation) -> tuple[str, str, str]:
@@ -84,13 +98,27 @@ def rebuild_registry(observations: Iterable[IdentityObservation]) -> list[dict]:
         competing = {k[2] for k in groups if k[0] == event_id and k[1] == source and k[2] != source_match_id}
         conflict = len(signatures) > 1 or bool(competing) or len(owners[(source, source_match_id)]) > 1
         evidence_count = len({x.observed_at for x in evidence})
+        observed_times = sorted(
+            dt for dt in (_parse_observed_at(x.observed_at) for x in evidence) if dt is not None
+        )
+        evidence_span_seconds = (
+            max(0.0, (observed_times[-1] - observed_times[0]).total_seconds())
+            if len(observed_times) >= 2 else 0.0
+        )
         confidence = min(x.confidence for x in evidence)
-        verified = not conflict and confidence >= PROMOTE_CONFIDENCE and evidence_count >= PROMOTE_OBSERVATIONS
+        verified = (
+            not conflict
+            and confidence >= PROMOTE_CONFIDENCE
+            and evidence_count >= PROMOTE_OBSERVATIONS
+            and evidence_span_seconds >= PROMOTE_MIN_SPAN_SECONDS
+        )
         latest = max(evidence, key=lambda x: x.observed_at)
         rows.append({
             "hkjc_event_id": event_id, "source": source, "source_match_id": source_match_id,
             "status": "VERIFIED" if verified else ("CONFLICT" if conflict else "CANDIDATE"),
             "confidence": round(confidence, 3), "evidence_count": evidence_count,
+            "evidence_span_seconds": round(evidence_span_seconds, 1),
+            "promotion_min_span_seconds": PROMOTE_MIN_SPAN_SECONDS,
             "conflict": conflict, "competing_ids": sorted(competing),
             "last_observed_at": latest.observed_at, "home": latest.home, "away": latest.away,
             "kickoff": latest.kickoff, "competition": latest.competition,
