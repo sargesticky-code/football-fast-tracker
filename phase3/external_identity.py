@@ -83,6 +83,40 @@ def score_candidate(hkjc: dict, external: dict) -> Candidate | None:
     )
 
 
+def coverage_diagnostic(hkjc: dict, external_rows: list[dict], limit: int = 3) -> list[dict]:
+    """Rank name-similar board rows even when kickoff gating rejects them.
+
+    Diagnostic only: these rows can never become evidence. This separates a
+    true provider coverage gap from a kickoff/date mismatch without weakening
+    the fail-closed candidate matcher.
+    """
+    hk_home = hkjc.get("home_en") or hkjc.get("home")
+    hk_away = hkjc.get("away_en") or hkjc.get("away")
+    hk_ts = _ts(str(hkjc.get("kickoff_hkt") or hkjc.get("kickoff") or ""))
+    rows = []
+    for external in external_rows:
+        home_score = _ratio(hk_home, external.get("home"))
+        away_score = _ratio(hk_away, external.get("away"))
+        reverse_score = (_ratio(hk_home, external.get("away")) + _ratio(hk_away, external.get("home"))) / 2
+        direct_score = (home_score + away_score) / 2
+        ex_ts = _ts(str(external.get("kickoff") or ""))
+        drift = None if hk_ts is None or ex_ts is None else int(round(abs(hk_ts - ex_ts)))
+        rows.append({
+            "source_match_id": str(external.get("id") or ""),
+            "name_score": round(direct_score, 4),
+            "reverse_score": round(reverse_score, 4),
+            "home_score": round(home_score, 4),
+            "away_score": round(away_score, 4),
+            "kickoff_drift_seconds": drift,
+            "home": str(external.get("home") or ""),
+            "away": str(external.get("away") or ""),
+            "kickoff": str(external.get("kickoff") or ""),
+            "competition": str(external.get("competition") or ""),
+        })
+    rows.sort(key=lambda x: x["name_score"], reverse=True)
+    return rows[:max(0, limit)]
+
+
 def ranked_candidates(hkjc: dict, external_rows: list[dict], limit: int = 3) -> list[Candidate]:
     """Return best structurally-valid candidates for diagnostics only.
 
