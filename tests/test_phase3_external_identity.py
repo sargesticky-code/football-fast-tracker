@@ -1,5 +1,5 @@
 import unittest
-from phase3.external_identity import choose_candidate, ranked_candidates, coverage_diagnostic
+from phase3.external_identity import choose_candidate, ranked_candidates, coverage_diagnostic, classify_unresolved
 
 HK={"home_en":"Manchester United","away_en":"Arsenal","kickoff_hkt":"2026-09-21T19:00:00+08:00"}
 
@@ -47,6 +47,19 @@ class ExternalIdentityTests(unittest.TestCase):
         self.assertGreater(coverage[0]["kickoff_drift_seconds"],45*60)
         c,reason=choose_candidate(HK,[far])
         self.assertIsNone(c)
+
+    def test_unresolved_classifies_provider_coverage_gap(self):
+        board=[row("1",home="Bayern Women",away="Manchester City Women",kickoff="2026-09-22T11:45:00+00:00")]
+        self.assertEqual(classify_unresolved(
+            {"home_en":"Werder Bremen Women","away_en":"Stuttgart Women","kickoff_hkt":"2026-09-21T19:00:00+08:00"},
+            board,
+        ),"SOURCE_COVERAGE_GAP")
+
+    def test_unresolved_classifies_kickoff_mismatch_without_promoting(self):
+        far=row("88",home="Manchester United",away="Arsenal",kickoff="2026-09-21T15:00:00+00:00")
+        self.assertEqual(classify_unresolved(HK,[far]),"KICKOFF_MISMATCH")
+        candidate,_=choose_candidate(HK,[far])
+        self.assertIsNone(candidate)
 
     def test_ranked_diagnostics_expose_components_without_promoting_weak_match(self):
         weak=row("7",home="Manchester Utd Youth",away="Arsenal Academy")
