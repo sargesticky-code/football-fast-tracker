@@ -448,6 +448,34 @@ def _fetch_forebet_generic_date(match_date: str):
         parts.append(dated)
         matched_ids |= _matched_target_ids(dated, match_date, date_targets)
 
+    # A page can pass the generic HTML health check yet still be only a partial
+    # render (for example before Forebet lazy-load/MORE rows are expanded).
+    # When the dated Jina surface is healthy but does not cover all HKJC targets,
+    # make one bounded browser render of the SAME dated page and merge it only
+    # when it adds target coverage. This avoids event/league-specific scraping,
+    # stays fail-closed, and prevents a partial "healthy" page from being treated
+    # as complete.
+    missing = required_ids - matched_ids
+    if dated and missing:
+        browser_dated = _browser_html(dated_url, f"date_partial_{match_date}")
+        if browser_dated:
+            browser_ids = _matched_target_ids(browser_dated, match_date, date_targets)
+            added_ids = browser_ids - matched_ids
+            if added_ids:
+                parts.append(browser_dated)
+                matched_ids |= browser_ids
+                print(
+                    f"FOREBET_DATED_BROWSER_RECOVERY date={match_date} "
+                    f"added={len(added_ids)} covered={len(matched_ids)}/{len(required_ids)}",
+                    flush=True,
+                )
+            else:
+                print(
+                    f"FOREBET_DATED_BROWSER_RECOVERY date={match_date} "
+                    f"added=0 covered={len(matched_ids)}/{len(required_ids)}",
+                    flush=True,
+                )
+
     missing = required_ids - matched_ids
     for start in range(2, 2 + MAX_GENERIC_PAGES):
         if not missing:
