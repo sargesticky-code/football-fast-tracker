@@ -52,6 +52,21 @@ def main():
     score,e,en,ek=cand[0]; ext=e.get("idHomeTeam" if side=="home" else "idAwayTeam")
     if ext:
      added.append({"hkjc_team_id":hid,"hkjc_name_en":hn,"hkjc_name_ch":f.get(f"{side}_ch",""),"cohort":hc,"external_source":"thesportsdb","external_team_id":str(ext),"external_name":en,"evidence_class":"CONFIRMED_FACT","confirmed":"true","confidence":str(score),"source_url":f"{BASE}?d={ek.date().isoformat()}&s=Soccer","source_timestamp":ek.isoformat(),"fetched_at":now,"raw_context":json.dumps({"hkjc_event_id":f["hkjc_event_id"],"thesportsdb_event_id":e.get("idEvent")},separators=(",",":"))});continue
+   if not cand and search_requests < 60:
+    try:
+     q=f["home_en"]+" vs "+f["away_en"]; sr=requests.get(SEARCH,params={"e":q},timeout=15,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"}); search_requests+=1
+     if sr.status_code==200:
+      for se in sr.json().get("event") or []:
+       sek=event_dt(se)
+       if not sek or abs((sek-kick).total_seconds())>1800: continue
+       sen=se.get("strHomeTeam" if side=="home" else "strAwayTeam",""); seo=se.get("strAwayTeam" if side=="home" else "strHomeTeam",""); ss1,ss2=sim(hn,sen),sim(on,seo)
+       if cohort(sen)==hc and ss1>=.62 and ss2>=.62: cand.append((round((ss1+ss2)/2,3),se,sen,sek))
+    except Exception: pass
+   cand.sort(key=lambda x:x[0],reverse=True)
+   if len(cand)==1 and cand[0][0]>=.72:
+    score,e,en,ek=cand[0]; ext=e.get("idHomeTeam" if side=="home" else "idAwayTeam")
+    if ext:
+     added.append({"hkjc_team_id":hid,"hkjc_name_en":hn,"hkjc_name_ch":f.get(f"{side}_ch",""),"cohort":hc,"external_source":"thesportsdb","external_team_id":str(ext),"external_name":en,"evidence_class":"CONFIRMED_FACT","confirmed":"true","confidence":str(score),"source_url":SEARCH,"source_timestamp":ek.isoformat(),"fetched_at":now,"raw_context":json.dumps({"hkjc_event_id":f["hkjc_event_id"],"thesportsdb_event_id":e.get("idEvent"),"resolution":"targeted_event_search"},separators=(",",":"))}); continue
    reason="SOURCE_ERROR" if errors and not events else "NO_EVENT_WITHIN_30M_OR_NAME_MATCH" if not cand else "AMBIGUOUS_CANDIDATES"
    fail[reason]=fail.get(reason,0)+1
  if added:
