@@ -67,6 +67,7 @@ jobs:
           import csv, json
           from datetime import datetime, timezone
           from pathlib import Path
+          from zoneinfo import ZoneInfo
 
           source = Path("/tmp/hkjc_authority.json")
           out = Path("/tmp/hkjc_targets.csv")
@@ -74,6 +75,7 @@ jobs:
           matches = body.get("matches") or []
           rows = []
           now = datetime.now(timezone.utc)
+          hkt = ZoneInfo("Asia/Hong_Kong")
 
           for m in matches:
               if m.get("liveNow"):
@@ -90,14 +92,18 @@ jobs:
                   continue
               if kickoff.tzinfo is None:
                   kickoff = kickoff.replace(tzinfo=timezone.utc)
-              if kickoff <= now:
+              kickoff_utc = kickoff.astimezone(timezone.utc)
+              if kickoff_utc <= now:
                   continue
+              kickoff_hkt = kickoff_utc.astimezone(hkt)
 
               odds = m.get("odds") or {}
               rows.append({
                   "fetched_at_hkt": body.get("generatedAt") or "",
-                  "match_date": kickoff.date().isoformat(),
-                  "kickoff_hkt": kickoff.isoformat(),
+                  "match_date": kickoff_hkt.date().isoformat(),
+                  # Multibetter's HKJC adapter contract is intentionally
+                  # timezone-naive HKT. Its parser then converts HKT -> UTC.
+                  "kickoff_hkt": kickoff_hkt.strftime("%Y-%m-%d %H:%M"),
                   "hkjc_event_id": event_id,
                   "league_zh": str(m.get("league") or "").strip(),
                   "home_zh": str(m.get("homeZh") or "").strip(),
