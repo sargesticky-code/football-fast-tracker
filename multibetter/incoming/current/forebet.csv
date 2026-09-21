@@ -1,10 +1,8 @@
 DATE,TIME,LEAGUE,HOME TEAM,AWAY TEAM,HOME PER,DRAW PER,AWAY PER,1X PER,12 PER,X2 PER,OVER 1.5,UNDER 2.5,OVER 2.5,BTS,OTS,NAME,SOURCE_URL,SOURCE_DATE,SOURCE_TIME,TIMEZONE,HOME_AWAY_EXPLICIT
-21/09/2026,00:00,Mx1,Deportivo Toluca,Santos Laguna,69,14,18,83,87,32,,,,,,FRB,https://www.forebet.com/en/football/matches/deportivo-toluca-santos-laguna-2468140,2026-09-21,02:00,UTC(normalized from HKJC HKT),1
-21/09/2026,00:00,Mx1,Pachuca CF,Club Tijuana,34,31,35,65,69,66,,,,,,FRB,https://www.forebet.com/en/football/matches/pachuca-cf-club-tijuana-2468141,2026-09-21,02:00,UTC(normalized from HKJC HKT),1
-21/09/2026,00:28,Ar1,Vélez Sársfield,CA Tigre,42,35,23,77,65,58,,,,,,FRB,https://www.forebet.com/en/football/matches/vélez-sársfield-ca-tigre-2417501,2026-09-21,02:30,UTC(normalized from HKJC HKT),1
-21/09/2026,02:05,Mx1,Querétaro FC,Club León,27,32,40,59,67,72,,,,,,FRB,https://www.forebet.com/en/football/matches/querétaro-fc-club-león-2468142,2026-09-21,04:10,UTC(normalized from HKJC HKT),1
-21/09/2026,17:28,Ar1,CA Aldosivi,Atlético Tucumán,19,45,36,64,55,81,,,,,,FRB,https://www.forebet.com/en/football/matches/ca-aldosivi-atlético-tucumán-2417503,2026-09-21,19:30,UTC(normalized from HKJC HKT),1
-21/09/2026,21:58,Ar1,Barracas Central,Independiente Rivadavia,29,33,38,62,67,71,,,,,,FRB,https://www.forebet.com/en/football/matches/barracas-central-independiente-rivadavia-2417494,2026-09-21,00:00,UTC(normalized from HKJC HKT),1
-22/09/2026,00:13,Ar1,Lanús,Estudiantes La Plata,34,34,32,68,66,66,,,,,,FRB,https://www.forebet.com/en/football/matches/lanús-estudiantes-la-plata-2417502,2026-09-22,02:15,UTC(normalized from HKJC HKT),1
+21/09/2026,02:05,Mx1,Querétaro FC,Club León,27,32,40,59,67,72,,46,54,,,FRB,https://www.forebet.com/en/football/matches/querétaro-fc-club-león-2468142,2026-09-21,AM,UTC(normalized from HKJC HKT),1
+21/09/2026,16:00,DeW,Werder Bremen W,Stuttgart W,34,36,30,70,64,66,,70,30,,,FRB,https://www.forebet.com/en/football/matches/werder-bremen-w-stuttgart-w-2512921,2026-09-21,PM,UTC(normalized from HKJC HKT),1
+21/09/2026,17:28,Ar1,CA Aldosivi,Atlético Tucumán,19,45,36,64,55,81,,56,44,,,FRB,https://www.forebet.com/en/football/matches/ca-aldosivi-atlético-tucumán-2417503,2026-09-21,PM,UTC(normalized from HKJC HKT),1
+21/09/2026,21:58,Ar1,Barracas Central,Independiente Rivadavia,29,33,38,62,67,71,,60,40,,,FRB,https://www.forebet.com/en/football/matches/barracas-central-independiente-rivadavia-2417494,2026-09-21,PM,UTC(normalized from HKJC HKT),1
+22/09/2026,00:13,Ar1,Lanús,Estudiantes La Plata,34,34,32,68,66,66,,65,35,,,FRB,https://www.forebet.com/en/football/matches/lanús-estudiantes-la-plata-2417502,2026-09-22,AM,UTC(normalized from HKJC HKT),1
 22/09/2026,00:28,Br2,Cuiabá,Nautico,27,39,35,66,62,74,,,,,,FRB,https://www.forebet.com/en/football/matches/cuiabá-nautico-2442946,2026-09-22,02:30,UTC(normalized from HKJC HKT),1
 22/09/2026,00:30,BrW,Corinthians W,Bahia W,47,41,12,88,59,53,,,,,,FRB,https://www.forebet.com/en/football/matches/corinthians-w-bahia-w-2549882,2026-09-22,02:30,UTC(normalized from HKJC HKT),1
