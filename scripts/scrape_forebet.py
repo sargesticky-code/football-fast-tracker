@@ -35,7 +35,7 @@ GATE_ONLY = os.getenv("HKJC_GATE_ONLY", "0").strip() == "1"
 
 LOOKBACK_MINUTES = 15
 LOOKAHEAD_HOURS = 30
-MAX_FOREBET_DATES = 2
+MAX_FOREBET_DATES = 4
 MAX_SNAPSHOT_AGE_MINUTES = 120
 HTTP_TIMEOUT = 45
 
@@ -617,18 +617,49 @@ def main() -> int:
         print(f"GATE_ONLY_PASS targets={len(targets)} scraperapi_calls=0", flush=True)
         return 0
 
-    target_dates = sorted({r["match_date"] for r in targets})[:MAX_FOREBET_DATES]
+    target_dates = sorted({r["match_date"] for r in targets})
+    if len(target_dates) > MAX_FOREBET_DATES:
+        print(
+            f"FATAL: active HKJC target universe spans {len(target_dates)} Forebet dates "
+            f"({','.join(target_dates)}), above safety ceiling {MAX_FOREBET_DATES}; "
+            "refusing to silently truncate date coverage",
+            file=sys.stderr,
+        )
+        return 2
+
+    print(
+        f"FOREBET_SCAN_DATES target_dates={','.join(target_dates)} "
+        f"count={len(target_dates)} safety_ceiling={MAX_FOREBET_DATES}",
+        flush=True,
+    )
+    scanned_dates: list[str] = []
     parsed: list[dict[str, Any]] = []
     total_known_cost = 0
     calls = 0
 
     for match_date in target_dates:
         html, cost = fetch_forebet_date(match_date)
+        scanned_dates.append(match_date)
         calls += 1
         if cost is not None:
             total_known_cost += cost
         if html is not None:
             parsed.extend(parse_forebet_rows(html, match_date))
+
+    missing_scan_dates = sorted(set(target_dates) - set(scanned_dates))
+    if missing_scan_dates:
+        print(
+            "FATAL: Forebet scan did not execute all active target dates: "
+            + ",".join(missing_scan_dates),
+            file=sys.stderr,
+        )
+        return 2
+
+    print(
+        f"FOREBET_SCAN_COVERAGE target_dates={len(target_dates)} "
+        f"scanned_dates={len(scanned_dates)} missing_dates=0",
+        flush=True,
+    )
 
     if not parsed:
         print("FATAL: no Forebet rows retrieved; existing CSV preserved", file=sys.stderr)
