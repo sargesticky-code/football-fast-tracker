@@ -25,7 +25,7 @@ import pandas as pd
 import penaltyblog as pb
 import requests
 
-from team_name_master import build_reverse_map
+from team_name_master import build_forward_map, build_reverse_map
 
 HKT = ZoneInfo("Asia/Hong_Kong")
 ROOT = Path(__file__).resolve().parent.parent
@@ -335,6 +335,7 @@ def discover_fixture(
     row: dict[str, str],
     current: dict[str, pd.DataFrame],
     master_reverse: dict[str, str] | None = None,
+    master_forward: dict[str, str] | None = None,
 ):
     source_home = row.get("hkjc_home_team") or row.get("home_en") or row.get("home_team") or ""
     source_away = row.get("hkjc_away_team") or row.get("away_en") or row.get("away_team") or ""
@@ -379,6 +380,19 @@ def discover_fixture(
         away, aws = best_name(source_away, teams)
         if not home or not away or home == away:
             continue
+
+        # Discovery must never override an existing one-for-all identity.
+        # If the actual Football-Data candidate name is already known in the
+        # source/global master and points to another HKJC team, reject this
+        # fixture candidate rather than treating name similarity as evidence.
+        if master_forward:
+            mapped_home = master_forward.get(norm(home))
+            mapped_away = master_forward.get(norm(away))
+            if mapped_home and norm(mapped_home) != norm(source_home):
+                continue
+            if mapped_away and norm(mapped_away) != norm(source_away):
+                continue
+
         quality = (hs + aws) / 2
         if best is None or quality > best[0]:
             best = (quality, code, home, away, hs, aws)
@@ -610,8 +624,14 @@ def main() -> int:
     dataset_labels[bd2_key] = "Brazil Serie B 2025-2026"
 
     football_data_master = build_reverse_map("FOOTBALL_DATA", norm)
+    football_data_forward = build_forward_map("FOOTBALL_DATA", norm)
     discovered = {
-        r["hkjc_event_id"]: discover_fixture(r, current, football_data_master)
+        r["hkjc_event_id"]: discover_fixture(
+            r,
+            current,
+            football_data_master,
+            football_data_forward,
+        )
         for r in fixtures
     }
     needed_keys = sorted({d[1] for d in discovered.values() if d})
