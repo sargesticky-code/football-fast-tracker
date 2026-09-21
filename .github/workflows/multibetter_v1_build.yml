@@ -1,5 +1,5 @@
 name: Multibetter V1 Current Intake + Build
-# launcher revision: 10 · previous-day Statarea calibration evidence
+# launcher revision: 11 · HKJC-authority multisource universe
 
 on:
   workflow_dispatch:
@@ -52,11 +52,52 @@ jobs:
           git fetch origin main
           git show origin/main:data/forebet_current.csv > /tmp/forebet_current.csv
           git show origin/main:data/hkjc_current.csv > /tmp/hkjc_current.csv
+          git show origin/main:data/hkjc_targets.csv > /tmp/hkjc_targets.csv
           if git cat-file -e origin/main:data/forebet_supplement_current.csv 2>/dev/null; then
             git show origin/main:data/forebet_supplement_current.csv > /tmp/forebet_supplement_current.csv
           else
             printf '' > /tmp/forebet_supplement_current.csv
           fi
+
+      - name: Build HKJC Multibetter target anchors
+        run: |
+          python - <<'PY'
+          import csv
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          src = Path("/tmp/hkjc_targets.csv")
+          out = Path("/tmp/multisource_hkjc_anchors.csv")
+          rows = []
+          with src.open("r", encoding="utf-8-sig", newline="") as fh:
+              for r in csv.DictReader(fh):
+                  event_id = (r.get("hkjc_event_id") or "").strip()
+                  home = (r.get("home_en") or "").strip()
+                  away = (r.get("away_en") or "").strip()
+                  raw = (r.get("kickoff_hkt") or "").strip()
+                  if not event_id or not home or not away or not raw:
+                      continue
+                  try:
+                      dt = datetime.fromisoformat(raw)
+                  except ValueError:
+                      continue
+                  if dt.tzinfo is None:
+                      dt = dt.replace(tzinfo=timezone(timedelta(hours=8)))
+                  utc = dt.astimezone(timezone.utc)
+                  rows.append({
+                      "DATE": utc.strftime("%d/%m/%Y"),
+                      "TIME": utc.strftime("%H:%M"),
+                      "HOME TEAM": home,
+                      "AWAY TEAM": away,
+                  })
+          with out.open("w", encoding="utf-8", newline="") as fh:
+              w = csv.DictWriter(fh, fieldnames=["DATE","TIME","HOME TEAM","AWAY TEAM"])
+              w.writeheader()
+              w.writerows(rows)
+          print("HKJC_MULTISOURCE_TARGETS", len(rows))
+          if not rows:
+              raise SystemExit("HKJC target universe is empty")
+          PY
 
       - name: Collect FRB anchor
         run: |
@@ -68,10 +109,10 @@ jobs:
             --our-forebet-supplement /tmp/forebet_supplement_current.csv
 
       - name: Collect ACC
-        run: python -m multibetter.scripts.collect_source --source ACC --days 2 --max-seconds 180
+        run: python -m multibetter.scripts.collect_source --source ACC --days 2 --max-seconds 180 --anchor-file /tmp/multisource_hkjc_anchors.csv
 
       - name: Collect BCL
-        run: python -m multibetter.scripts.collect_source --source BCL --days 2 --max-seconds 120
+        run: python -m multibetter.scripts.collect_source --source BCL --days 2 --max-seconds 120 --anchor-file /tmp/multisource_hkjc_anchors.csv
 
       - name: Collect FST
         run: python -m multibetter.scripts.collect_source --source FST --days 2 --max-seconds 60
@@ -130,6 +171,7 @@ jobs:
             --source-dir multibetter/incoming/current \
             --health-dir multibetter/incoming/health \
             --our-forebet /tmp/forebet_current.csv \
+            --hkjc-targets /tmp/hkjc_targets.csv \
             --alias-cache multibetter/data/forebet_bridge_aliases.csv \
             --output multibetter/data/multibetter_current.csv \
             --health-output multibetter/data/multibetter_current_health.json
@@ -150,19 +192,18 @@ jobs:
               Path("multibetter/incoming/health/summary.json").read_text()
           )
           sources = health["sources"]
-          if sources.get("FRB", {}).get("status") != "OK":
-              raise SystemExit("Forebet anchor is not fresh")
-
           optional_ok = [
               key for key in ("ACC", "BCL", "FST", "PRE", "STA")
               if sources.get(key, {}).get("status") == "OK"
           ]
           print("FRESH_OPTIONAL_SOURCES", optional_ok)
           if len(optional_ok) < 2:
-              print(
-                  "::warning::Fewer than two optional prediction sources are fresh; "
-                  "keep workflow manual and investigate parser/source health."
+              raise SystemExit(
+                  "Fewer than two optional prediction sources are fresh; "
+                  "do not publish a degraded Multibetter build."
               )
+          if sources.get("FRB", {}).get("status") != "OK":
+              print("::warning::Forebet evidence is unavailable; continuing with HKJC authority + optional sources.")
           PY
 
       - name: Request GitHub OIDC token for Supabase
