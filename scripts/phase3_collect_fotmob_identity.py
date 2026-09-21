@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-from phase3.external_identity import choose_candidate, ranked_candidates
+from phase3.external_identity import choose_candidate, ranked_candidates, coverage_diagnostic
 from phase3.hkjc_authority import evaluate_authority
 
 AUTH=Path("data/phase3_hkjc_authority.json")
@@ -102,6 +102,17 @@ def main() -> int:
                     f"drift_seconds={x.kickoff_drift_seconds} "
                     f"fixture={x.home}|{x.away} competition={x.competition}"
                 )
+            if not ranked:
+                coverage=coverage_diagnostic(hk,board,limit=3)
+                for rank,x in enumerate(coverage,1):
+                    drift="NA" if x["kickoff_drift_seconds"] is None else x["kickoff_drift_seconds"]
+                    print(
+                        f"PHASE3_IDENTITY_COVERAGE event={event} rank={rank} "
+                        f"external={x['source_match_id']} name_score={x['name_score']:.3f} "
+                        f"home_score={x['home_score']:.3f} away_score={x['away_score']:.3f} "
+                        f"drift_seconds={drift} fixture={x['home']}|{x['away']} "
+                        f"competition={x['competition']}"
+                    )
             continue
         additions.append(json.dumps({
             "hkjc_event_id":str(event),"source":"FOTMOB",
