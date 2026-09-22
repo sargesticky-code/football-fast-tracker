@@ -34,6 +34,71 @@ def _int_or_none(value: Any) -> int | None:
         return None
 
 
+def _parse_time(value: Any) -> datetime | None:
+    if isinstance(value, datetime):
+        dt = value
+    elif isinstance(value, str) and value.strip():
+        try:
+            dt = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    else:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
+
+
+def fast_snapshot_age_seconds(observed_at: Any, now: Any = None) -> float | None:
+    """Return non-negative board age; malformed/future timestamps fail closed."""
+    observed = _parse_time(observed_at)
+    current = _parse_time(now) if now is not None else datetime.now(timezone.utc)
+    if observed is None or current is None:
+        return None
+    age = (current - observed).total_seconds()
+    return age if age >= 0 else None
+
+
+def _is_live_row(row: dict[str, Any]) -> bool:
+    status = str(row.get("status") or "").strip().upper()
+    terminal = {"FT", "FULL TIME", "FULL-TIME", "AET", "PEN", "CANCELLED", "CANCELED", "POSTPONED", "ABANDONED"}
+    if status in terminal:
+        return False
+    return row.get("minute") is not None or status in {"1ST", "2ND", "HT", "LIVE", "HALF TIME", "HALF-TIME"}
+
+
+def fast_lane_health(joined_rows: Iterable[dict[str, Any]], observed_at: Any, *, now: Any = None,
+                     request_failures: int = 0, max_age_seconds: float = 15.0) -> dict[str, Any]:
+    """Summarise Layer 3 heartbeat freshness without fabricating live state.
+
+    Request failures and stale/malformed timestamps fail closed. A fresh board
+    containing only terminal mapped rows is explicitly distinct from live data.
+    """
+    rows = [row for row in joined_rows if isinstance(row, dict)]
+    age = fast_snapshot_age_seconds(observed_at, now)
+    live_rows = [row for row in rows if _is_live_row(row)]
+    failures = max(0, _int_or_none(request_failures) or 0)
+    if failures:
+        health = "REQUEST_FAILED"
+    elif age is None:
+        health = "NO_FAST_SNAPSHOT"
+    elif age > max_age_seconds:
+        health = "STALE_FAST_SNAPSHOT"
+    elif live_rows:
+        health = "FRESH_LIVE"
+    elif rows:
+        health = "FRESH_TERMINAL_ONLY"
+    else:
+        health = "FRESH_NO_MAPPED_ROWS"
+    return {
+        "health": health,
+        "snapshot_age_seconds": age,
+        "request_failures": failures,
+        "mapped_rows": len(rows),
+        "live_rows": len(live_rows),
+    }
+
+
 def verified_index(registry_rows: Iterable[dict[str, Any]]) -> dict[tuple[str, str], dict[str, Any]]:
     """Index only VERIFIED identities; candidates/conflicts fail closed."""
     out = {}
