@@ -62,13 +62,13 @@ def fast_snapshot_age_seconds(observed_at: Any, now: Any = None) -> float | None
 
 
 def _is_live_row(row: dict[str, Any]) -> bool:
-    """Require source status, plausible genuine minute and complete score."""
+    """Require a known live source status, plausible genuine minute and complete score."""
     status = str(row.get("status") or "").strip().upper()
-    terminal = {"FT", "FULL TIME", "FULL-TIME", "AET", "PEN", "CANCELLED", "CANCELED", "POSTPONED", "ABANDONED"}
-    # A minute plus score without a source status is not the complete
-    # score+minute+status heartbeat required by Layer 3. Fail closed instead of
-    # inferring live state from the other fields.
-    if not status or status in terminal:
+    # Fail closed on scheduled/halftime/unknown states even when a source leaves
+    # a minute and score attached. Only explicit in-play states can satisfy the
+    # Layer 3 real heartbeat contract.
+    live_statuses = {"1ST", "2ND", "LIVE", "ET", "EXTRA TIME", "EXTRA-TIME"}
+    if status not in live_statuses:
         return False
     minute = _int_or_none(row.get("minute"))
     home_score = _int_or_none(row.get("home_score"))
@@ -85,8 +85,9 @@ def fast_lane_health(joined_rows: Iterable[dict[str, Any]], observed_at: Any, *,
     """Summarise Layer 3 heartbeat freshness without fabricating live state.
 
     Request failures and stale/malformed timestamps fail closed. FRESH_LIVE
-    requires explicit source status, a plausible real source minute and complete
-    non-negative score; partial/status-less rows cannot satisfy the exit criterion.
+    requires an explicit known in-play source status, a plausible real source
+    minute and complete non-negative score; partial/unknown-state rows cannot
+    satisfy the exit criterion.
     """
     rows = [row for row in joined_rows if isinstance(row, dict)]
     age = fast_snapshot_age_seconds(observed_at, now)
