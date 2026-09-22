@@ -56,6 +56,12 @@ class FastLaneTests(unittest.TestCase):
             health=fast_lane_health([{"status":status,"minute":None,"home_score":0,"away_score":0}],"2026-09-22T09:00:09+00:00",now=now)
             self.assertEqual(health["health"],"FRESH_PARTIAL_OR_TERMINAL"); self.assertEqual(health["live_rows"],0)
 
+    def test_missing_or_blank_status_cannot_satisfy_live_evidence(self):
+        now="2026-09-22T09:00:10+00:00"
+        for status in (None,"","   "):
+            health=fast_lane_health([{"status":status,"minute":67,"home_score":1,"away_score":0}],"2026-09-22T09:00:09+00:00",now=now)
+            self.assertEqual(health["health"],"FRESH_PARTIAL_OR_TERMINAL"); self.assertEqual(health["live_rows"],0)
+
     def test_live_minute_without_complete_score_cannot_satisfy_exit_evidence(self):
         now="2026-09-22T09:00:10+00:00"
         for row in ({"status":"2nd","minute":67,"home_score":None,"away_score":1},{"status":"2nd","minute":67,"home_score":2,"away_score":None}):
