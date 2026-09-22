@@ -87,14 +87,17 @@ jobs:
         run: |
           echo "=== VERCEL ENDPOINT ==="
           curl -i -L --max-time 30 "https://football-fast-tracker-live-sargesticky-9289.vercel.app/api/live_scores?format=csv" || true
-      - name: Publish probe result
+      - name: Keep probe result in workflow log only
         if: always()
         run: |
-          if [ ! -f data/live_score_probe.json ]; then exit 0; fi
-          git config user.name "fast-tracker-bot"
-          git config user.email "fast-tracker-bot@users.noreply.github.com"
-          git add data/live_score_probe.json
-          git diff --cached --quiet && exit 0
-          git commit -m "Update live score probe"
-          git pull --rebase origin main
-          git push origin main
+          if [ -f data/live_score_probe.json ]; then
+            echo "Probe JSON generated locally for diagnostics; no bot commit is created."
+            python - <<'PY'
+          import json
+          p=json.load(open("data/live_score_probe.json",encoding="utf-8"))
+          print("probe.updatedAt",p.get("updatedAt"))
+          print("probe.health",p.get("health"))
+          print("probe.detailPolicy",p.get("detailPolicy"))
+          print("probe.matches",len(p.get("matches") or []))
+          PY
+          fi
