@@ -24,6 +24,13 @@ class FastLaneTests(unittest.TestCase):
         self.assertEqual(rows[0]["minute"],67)
         self.assertEqual((rows[0]["home_score"],rows[0]["away_score"]),(2,1))
 
+    def test_malformed_unrelated_containers_do_not_kill_board(self):
+        payload={"leagues":[None,"bad",{"matches":None},{"matches":[None,{"id":11,"home":"bad","away":None,"status":"bad"}]}]}
+        rows=normalize_fotmob_board(payload,"2026-09-22T03:00:00+00:00")
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["external_id"],"11")
+        self.assertIsNone(rows[0]["home_score"])
+
     def test_only_verified_identity_can_join(self):
         registry=[
             {"hkjc_event_id":"FB1","source":"FOTMOB","external_id":"11","status":"VERIFIED"},
