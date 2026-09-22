@@ -5,6 +5,7 @@ HKJC-authorised match; it never creates HKJC eligibility.
 """
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
+import re
 from typing import Any, Iterable
 
 
@@ -24,6 +25,9 @@ class FastRow:
 
 
 def _int_or_none(value: Any) -> int | None:
+    if isinstance(value, str):
+        match = re.search(r"\d+", value)
+        value = match.group(0) if match else None
     try:
         return int(value) if value is not None else None
     except (TypeError, ValueError):
@@ -37,35 +41,55 @@ def verified_index(registry_rows: Iterable[dict[str, Any]]) -> dict[tuple[str, s
         if row.get("status") != "VERIFIED":
             continue
         source = str(row.get("source") or "").upper()
-        external_id = str(row.get("external_id") or "")
+        external_id = str(row.get("external_id") or row.get("source_match_id") or "")
         event_id = str(row.get("hkjc_event_id") or "")
         if source and external_id and event_id:
             out[(source, external_id)] = row
     return out
 
 
+def _status_text(status: dict[str, Any]) -> str | None:
+    reason = status.get("reason")
+    if isinstance(reason, dict):
+        return reason.get("short") or reason.get("long")
+    return status.get("status") or (str(reason) if reason is not None else None)
+
+
+def _score(match: dict[str, Any], status: dict[str, Any]) -> tuple[int | None, int | None]:
+    score = status.get("scoreStr") or match.get("scoreStr") or ""
+    if isinstance(score, str) and "-" in score:
+        left, right = score.split("-", 1)
+        return _int_or_none(left), _int_or_none(right)
+    home = match.get("home") or {}
+    away = match.get("away") or {}
+    return _int_or_none(home.get("score")), _int_or_none(away.get("score"))
+
+
 def normalize_fotmob_board(payload: dict[str, Any], observed_at: str | None = None) -> list[dict[str, Any]]:
-    """Normalize one FotMob all-matches/date-board response into light rows."""
+    """Normalize FotMob /api/data/matches board into lightweight rows."""
     observed_at = observed_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-    matches = payload.get("matches") or []
-    if not matches and isinstance(payload.get("leagues"), list):
-        matches = [m for league in payload["leagues"] for m in (league.get("matches") or [])]
+    matches = list(payload.get("matches") or [])
+    if isinstance(payload.get("leagues"), list):
+        matches.extend(m for league in payload["leagues"] for m in (league.get("matches") or []))
     rows = []
     for match in matches:
+        if not isinstance(match, dict):
+            continue
         mid = match.get("id")
         if mid is None:
             continue
         status = match.get("status") or {}
-        score = status.get("scoreStr") or ""
-        home_score = away_score = None
-        if isinstance(score, str) and "-" in score:
-            left, right = score.split("-", 1)
-            home_score, away_score = _int_or_none(left.strip()), _int_or_none(right.strip())
+        if not isinstance(status, dict):
+            status = {}
+        live_time = status.get("liveTime")
+        if isinstance(live_time, dict):
+            live_time = live_time.get("short") or live_time.get("long")
+        home_score, away_score = _score(match, status)
         rows.append({
             "source": "FOTMOB",
             "external_id": str(mid),
-            "status": status.get("reason", {}).get("short") if isinstance(status.get("reason"), dict) else status.get("status") or status.get("reason"),
-            "minute": _int_or_none(status.get("liveTime", {}).get("short") if isinstance(status.get("liveTime"), dict) else status.get("liveTime")),
+            "status": _status_text(status),
+            "minute": _int_or_none(live_time),
             "home_score": home_score,
             "away_score": away_score,
             "observed_at": observed_at,
