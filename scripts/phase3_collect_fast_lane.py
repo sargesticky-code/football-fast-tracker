@@ -13,7 +13,8 @@ from phase3.fast_lane import normalize_fotmob_board, join_verified_fast_rows
 REGISTRY=ROOT/'data/phase3_live_identity_map.json'
 OUT=ROOT/'data/phase3_fast_snapshot.json'
 LAST_GOOD=ROOT/'data/phase3_fast_last_good.json'
-URL='https://www.fotmob.com/api/matches?date={date}'
+# Keep the fast lane on the same proven one-board transport used by Layer 2.
+URL='https://www.fotmob.com/api/data/matches?date={date}'
 
 
 def load_rows(path):
