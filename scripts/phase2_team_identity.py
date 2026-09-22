@@ -55,18 +55,26 @@ def main():
    x=active.setdefault(tid,{"en":(r.get(side+"_en") or "").strip(),"ch":(r.get(side+"_ch") or "").strip(),"games":0,"kickoffs":[]})
    x["games"]+=1
    if r.get("kickoff_hkt"):x["kickoffs"].append(r["kickoff_hkt"])
- confirmed={}
+
+ # Provider IDs live in different namespaces. A FotMob ID and a TheSportsDB ID
+ # for the same HKJC team are corroborating mappings, not a collision. Only two
+ # different confirmed IDs from the SAME provider constitute an identity conflict.
+ confirmed_by_source={}
  conflicts=set()
  for r in registry:
   tid=(r.get("hkjc_team_id") or "").strip()
-  if not tid or not truth(r.get("confirmed")) or not (r.get("external_team_id") or "").strip():continue
-  key=((r.get("external_source") or "").strip().lower(),(r.get("external_team_id") or "").strip())
-  old=confirmed.get(tid)
-  if old and old!=key: conflicts.add(tid)
-  else: confirmed[tid]=key
+  source=(r.get("external_source") or "").strip().lower()
+  ext=(r.get("external_team_id") or "").strip()
+  if not tid or not source or not truth(r.get("confirmed")) or not ext: continue
+  key=(tid,source)
+  old=confirmed_by_source.get(key)
+  if old and old!=ext: conflicts.add(tid)
+  else: confirmed_by_source[key]=ext
+ confirmed_teams={tid for tid,_ in confirmed_by_source}
+
  targets=[]
  for tid,x in active.items():
-  if tid in confirmed and tid not in conflicts:continue
+  if tid in confirmed_teams and tid not in conflicts:continue
   targets.append({"hkjc_team_id":tid,"hkjc_name_en":x["en"],"hkjc_name_ch":x["ch"],"cohort":cohort(x["en"],x["ch"]),"match_count":x["games"],"next_kickoff_hkt":min(x["kickoffs"]) if x["kickoffs"] else "","reason":"CONFLICT" if tid in conflicts else "NO_CONFIRMED_EXTERNAL_ID"})
  write(Path(a.targets),TARGET_FIELDS,sorted(targets,key=lambda r:(r["next_kickoff_hkt"],r["hkjc_team_id"])))
  covered=len(active)-len(targets)
