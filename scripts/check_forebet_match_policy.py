@@ -6,6 +6,7 @@ from pathlib import Path
 
 import scrape_forebet as feed
 from forebet_match_policy import install, team_score
+from forebet_availability import _asian_games_equivalent
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -40,6 +41,42 @@ STATIC_ALIASES = {
     "Santos Laguna W": "Santos Laguna Women",
     "Cruz Azul W": "Cruz Azul Women",
 }
+
+
+ASIAN_GAMES_CONTEXT_POSITIVE = [
+    ("Vietnam U23", "Vietnam AM"),
+    ("Uzbekistan U23", "Uzbekistan AM"),
+    ("Philippines U23", "Philippines AM"),
+    ("Kuwait U23", "Kuwait AM"),
+    ("South Korea U23", "Korea Republic AM"),
+    ("North Korea U23", "Korea DPR AM"),
+    ("UAE U23", "United Arab Emirates AM"),
+]
+
+ASIAN_GAMES_CONTEXT_NEGATIVE = [
+    ("Vietnam U20", "Vietnam AM"),
+    ("Vietnam U23", "Vietnam Women"),
+    ("South Korea", "Korea Republic AM"),
+]
+
+
+def check_asian_games_context() -> None:
+    class Production:
+        feed = feed
+
+    production = Production()
+    for source_name, canonical in ASIAN_GAMES_CONTEXT_POSITIVE:
+        if not _asian_games_equivalent(production, source_name, canonical):
+            raise SystemExit(
+                f"Asian Games context regression: {source_name!r} -> {canonical!r}"
+            )
+        print(f"ASIAN_GAMES_CONTEXT {source_name} -> {canonical}")
+    for source_name, canonical in ASIAN_GAMES_CONTEXT_NEGATIVE:
+        if _asian_games_equivalent(production, source_name, canonical):
+            raise SystemExit(
+                f"Asian Games context unsafe match: {source_name!r} -> {canonical!r}"
+            )
+        print(f"ASIAN_GAMES_GUARD {source_name} != {canonical}")
 
 
 def check_static_registry() -> None:
@@ -77,6 +114,7 @@ def check_static_registry() -> None:
 
 def main() -> int:
     check_static_registry()
+    check_asian_games_context()
     for forebet, hkjc in POSITIVE:
         score = team_score(forebet, hkjc)
         if score < 0.90:
