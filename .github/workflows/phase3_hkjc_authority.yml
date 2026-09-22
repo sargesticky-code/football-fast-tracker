@@ -95,9 +95,11 @@ jobs:
           import json
           from pathlib import Path
           from phase3.state_continuity import assert_empty_cycle_retention, registry_fingerprint
-          before_rows = json.loads(Path('/tmp/phase3_identity_before.json').read_text())
+          before_payload = json.loads(Path('/tmp/phase3_identity_before.json').read_text())
+          before_rows = before_payload.get('rows', []) if isinstance(before_payload, dict) else before_payload
           p = Path('data/phase3_live_identity_map.json')
-          after_rows = json.loads(p.read_text()) if p.exists() else []
+          after_payload = json.loads(p.read_text()) if p.exists() else []
+          after_rows = after_payload.get('rows', []) if isinstance(after_payload, dict) else after_payload
           before = registry_fingerprint(before_rows)
           after = registry_fingerprint(after_rows)
           assert_empty_cycle_retention(before, after)
