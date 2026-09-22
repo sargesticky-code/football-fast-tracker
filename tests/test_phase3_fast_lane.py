@@ -76,6 +76,13 @@ class FastLaneTests(unittest.TestCase):
         self.assertEqual(fast_lane_health(terminal,"2026-09-22T09:00:08+00:00",now=now)["health"],"FRESH_TERMINAL_ONLY")
         self.assertEqual(fast_lane_health(live,"2026-09-22T08:59:00+00:00",now=now)["health"],"STALE_FAST_SNAPSHOT")
 
+    def test_status_only_rows_cannot_satisfy_live_minute_evidence(self):
+        now="2026-09-22T09:00:10+00:00"
+        for status in ("1st","2nd","HT","LIVE"):
+            health=fast_lane_health([{"status":status,"minute":None}],"2026-09-22T09:00:09+00:00",now=now)
+            self.assertEqual(health["health"],"FRESH_TERMINAL_ONLY")
+            self.assertEqual(health["live_rows"],0)
+
     def test_fast_health_fails_closed_on_request_failure_or_bad_clock(self):
         now="2026-09-22T09:00:10+00:00"
         row=[{"status":"1st","minute":12}]
