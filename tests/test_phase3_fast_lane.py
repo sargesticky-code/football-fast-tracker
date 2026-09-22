@@ -34,6 +34,18 @@ class FastLaneTests(unittest.TestCase):
         joined,unmapped=join_verified_fast_rows(registry,board)
         self.assertEqual([r["hkjc_event_id"] for r in joined],["FB1"]); self.assertEqual([r["external_id"] for r in unmapped],["12"])
 
+    def test_verified_external_id_collision_fails_closed(self):
+        registry=[{"hkjc_event_id":"FB1","source":"FOTMOB","external_id":"11","status":"VERIFIED"},{"hkjc_event_id":"FB2","source":"FOTMOB","external_id":"11","status":"VERIFIED"}]
+        board=[{"source":"FOTMOB","external_id":"11","status":"2nd","minute":67,"home_score":2,"away_score":1,"observed_at":"t"}]
+        joined,unmapped=join_verified_fast_rows(registry,board)
+        self.assertEqual(joined,[]); self.assertEqual([r["external_id"] for r in unmapped],["11"])
+
+    def test_duplicate_verified_rows_for_same_event_are_safe(self):
+        registry=[{"hkjc_event_id":"FB1","source":"FOTMOB","external_id":"11","status":"VERIFIED"},{"hkjc_event_id":"FB1","source":"FOTMOB","external_id":"11","status":"VERIFIED"}]
+        board=[{"source":"FOTMOB","external_id":"11","status":"1st","minute":23,"home_score":1,"away_score":0,"observed_at":"t"}]
+        joined,unmapped=join_verified_fast_rows(registry,board)
+        self.assertEqual(len(joined),1); self.assertEqual(joined[0]["hkjc_event_id"],"FB1"); self.assertEqual(unmapped,[])
+
     def test_registry_source_match_id_is_accepted(self):
         registry=[{"hkjc_event_id":"FB1","source":"FOTMOB","source_match_id":"11","status":"VERIFIED"}]
         board=[{"source":"FOTMOB","external_id":"11","status":"1st","minute":23,"home_score":1,"away_score":0,"observed_at":"t"}]
