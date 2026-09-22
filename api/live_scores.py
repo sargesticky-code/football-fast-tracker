@@ -35,6 +35,7 @@ SOURCE_GAP_MAX_MINUTES = int(os.environ.get("SOURCE_GAP_MAX_MINUTES", "140"))
 SCENARIO_CSV = Path(__file__).resolve().parent.parent / "data" / "match_scenario_current.csv"
 ENABLE_SCENARIO_SHADOW = os.environ.get("ENABLE_SCENARIO_SHADOW", "0") == "1"
 ENABLE_HKJC_LIVE_MARKET = os.environ.get("ENABLE_HKJC_LIVE_MARKET", "0") == "1"
+UPSTREAM_BUILD = "LIVE-UPSTREAM-20260922-2"
 
 
 def clean(v):
@@ -1251,6 +1252,7 @@ def collect(include_full=False):
 
     rows.sort(key=lambda r: r["kickoff_hkt"])
     return {
+        "buildVersion": UPSTREAM_BUILD,
         "updatedAt": now.isoformat(timespec="seconds"),
         "health": health,
         "targetCount": len(targets),
