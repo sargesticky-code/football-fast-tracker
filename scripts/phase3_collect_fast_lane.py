@@ -23,6 +23,12 @@ def load_rows(path):
     return payload.get('rows',[]) if isinstance(payload,dict) else payload
 
 
+def external_id(row):
+    """Use the persistent Layer-2 ID without attempting any fuzzy rematch."""
+    value=row.get('external_id') or row.get('source_match_id')
+    return str(value) if value is not None else ''
+
+
 def last_good_meta(now):
     if not LAST_GOOD.exists(): return {'last_good_at':None,'last_good_age_seconds':None}
     try:
@@ -38,7 +44,7 @@ def last_good_meta(now):
 def main():
     now=datetime.now(timezone.utc).replace(microsecond=0)
     registry=load_rows(REGISTRY)
-    verified=[r for r in registry if r.get('status')=='VERIFIED' and str(r.get('source','')).upper()=='FOTMOB']
+    verified=[r for r in registry if r.get('status')=='VERIFIED' and str(r.get('source','')).upper()=='FOTMOB' and external_id(r)]
     payload={'schema_version':1,'fast_snapshot_at':now.isoformat(),'source':'FOTMOB','request_count':0,'request_failures':0,'verified_targets':len(verified),'rows':[],'unmapped_count':0,'health':'NO_VERIFIED_TARGETS',**last_good_meta(now)}
     if not verified:
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)); print('PHASE3_FAST health=NO_VERIFIED_TARGETS verified_targets=0 requests=0 failures=0 rows=0'); return 0
@@ -48,14 +54,16 @@ def main():
         with urllib.request.urlopen(req,timeout=12) as response: board=json.load(response)
         normalized=normalize_fotmob_board(board,now.isoformat())
         joined,unmapped=join_verified_fast_rows(registry,normalized)
-        target_ids={str(r.get('external_id')) for r in verified}
-        relevant_unmapped=[r for r in unmapped if str(r.get('external_id')) in target_ids]
-        payload.update(rows=joined,unmapped_count=len(relevant_unmapped),board_rows=len(normalized),health='FRESH' if joined else 'TARGETS_NOT_ON_BOARD')
+        target_ids={external_id(r) for r in verified}
+        relevant_unmapped=[r for r in unmapped if str(r.get('external_id') or '') in target_ids]
+        board_ids={str(r.get('external_id') or '') for r in normalized}
+        missing_target_ids=sorted(target_ids-board_ids)
+        payload.update(rows=joined,unmapped_count=len(relevant_unmapped),missing_target_ids=missing_target_ids,board_rows=len(normalized),health='FRESH' if joined else 'TARGETS_NOT_ON_BOARD')
         if joined:
             payload.update(last_good_at=now.isoformat(),last_good_age_seconds=0)
             LAST_GOOD.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
-        print(f"PHASE3_FAST health={payload['health']} verified_targets={len(verified)} requests=1 failures=0 board_rows={len(normalized)} rows={len(joined)} unmapped={len(relevant_unmapped)} last_good_age={payload['last_good_age_seconds']}")
+        print(f"PHASE3_FAST health={payload['health']} verified_targets={len(verified)} requests=1 failures=0 board_rows={len(normalized)} rows={len(joined)} unmapped={len(relevant_unmapped)} missing_targets={len(missing_target_ids)} last_good_age={payload['last_good_age_seconds']}")
         for row in joined: print(f"PHASE3_FAST_MATCH event={row['hkjc_event_id']} external={row['external_id']} status={row['status']} minute={row['minute']} score={row['home_score']}-{row['away_score']}")
         return 0
     except Exception as exc:
