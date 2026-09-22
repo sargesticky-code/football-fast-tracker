@@ -3,7 +3,7 @@
 import json
 import sys
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -32,6 +32,24 @@ def fotmob_date(now):
     return now.strftime('%Y%m%d')
 
 
+def board_dates(now, verified):
+    """Use one board normally; add adjacent UTC boards only for missing targets.
+
+    This protects matches around the UTC date boundary without ever falling back
+    to one request per match. Maximum upstream fan-out is three daily boards.
+    """
+    dates=[fotmob_date(now)]
+    if verified:
+        dates.extend([fotmob_date(now-timedelta(days=1)),fotmob_date(now+timedelta(days=1))])
+    return dates
+
+
+def fetch_board(day):
+    req=urllib.request.Request(URL.format(date=day),headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
+    with urllib.request.urlopen(req,timeout=12) as response:
+        return json.load(response)
+
+
 def last_good_meta(now):
     """Return age of the last genuine live heartbeat, never terminal evidence."""
     if not LAST_GOOD.exists(): return {'last_good_at':None,'last_good_age_seconds':None}
@@ -56,25 +74,32 @@ def main():
     if not verified:
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)); print('PHASE3_FAST health=NO_VERIFIED_TARGETS verified_targets=0 requests=0 failures=0 rows=0 live_rows=0'); return 0
     try:
-        req=urllib.request.Request(URL.format(date=fotmob_date(now)),headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
-        payload['request_count']=1
-        with urllib.request.urlopen(req,timeout=12) as response: board=json.load(response)
-        normalized=normalize_fotmob_board(board,now.isoformat())
-        joined,unmapped=join_verified_fast_rows(registry,normalized)
         target_ids={external_id(r) for r in verified}
+        normalized=[]
+        seen_ids=set()
+        dates_tried=[]
+        for day in board_dates(now,verified):
+            payload['request_count']+=1
+            dates_tried.append(day)
+            board=fetch_board(day)
+            for row in normalize_fotmob_board(board,now.isoformat()):
+                rid=str(row.get('external_id') or '')
+                if rid and rid not in seen_ids:
+                    normalized.append(row); seen_ids.add(rid)
+            if target_ids.issubset(seen_ids): break
+        joined,unmapped=join_verified_fast_rows(registry,normalized)
         relevant_unmapped=[r for r in unmapped if str(r.get('external_id') or '') in target_ids]
-        board_ids={str(r.get('external_id') or '') for r in normalized}
-        missing_target_ids=sorted(target_ids-board_ids)
+        missing_target_ids=sorted(target_ids-seen_ids)
         freshness=fast_lane_health(joined,now.isoformat(),now=now.isoformat(),request_failures=0)
         live_rows=freshness['live_rows']
         terminal_rows=sum(1 for row in joined if str(row.get('status') or '').strip().upper() in TERMINAL_STATUSES)
         health=freshness['health'] if joined else 'TARGETS_NOT_ON_BOARD'
-        payload.update(rows=joined,live_rows=live_rows,terminal_rows=terminal_rows,unmapped_count=len(relevant_unmapped),missing_target_ids=missing_target_ids,board_rows=len(normalized),health=health,snapshot_age_seconds=freshness['snapshot_age_seconds'])
+        payload.update(rows=joined,live_rows=live_rows,terminal_rows=terminal_rows,unmapped_count=len(relevant_unmapped),missing_target_ids=missing_target_ids,board_rows=len(normalized),board_dates=dates_tried,health=health,snapshot_age_seconds=freshness['snapshot_age_seconds'])
         if health == 'FRESH_LIVE' and live_rows:
             payload.update(last_good_at=now.isoformat(),last_good_age_seconds=0)
             LAST_GOOD.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
-        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests=1 failures=0 board_rows={len(normalized)} rows={len(joined)} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={len(relevant_unmapped)} missing_targets={len(missing_target_ids)} snapshot_age={payload['snapshot_age_seconds']} last_good_age={payload['last_good_age_seconds']}")
+        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests={payload['request_count']} failures=0 board_rows={len(normalized)} rows={len(joined)} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={len(relevant_unmapped)} missing_targets={len(missing_target_ids)} snapshot_age={payload['snapshot_age_seconds']} last_good_age={payload['last_good_age_seconds']}")
         for row in joined: print(f"PHASE3_FAST_MATCH event={row['hkjc_event_id']} external={row['external_id']} status={row['status']} minute={row['minute']} score={row['home_score']}-{row['away_score']}")
         return 0
     except Exception as exc:
