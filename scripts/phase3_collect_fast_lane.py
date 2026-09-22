@@ -42,6 +42,9 @@ def last_good_meta(now):
     if not LAST_GOOD.exists(): return {'last_good_at':None,'last_good_age_seconds':None}
     try:
         old=json.loads(LAST_GOOD.read_text())
+        # Only a prior FRESH_LIVE snapshot is valid live-heartbeat evidence.
+        if old.get('health') != 'FRESH_LIVE' or not old.get('live_rows'):
+            return {'last_good_at':None,'last_good_age_seconds':None}
         stamp=old.get('fast_snapshot_at')
         dt=datetime.fromisoformat(stamp) if stamp else None
         age=max(0,(now-dt).total_seconds()) if dt else None
@@ -71,7 +74,9 @@ def main():
         terminal_rows=sum(1 for row in joined if str(row.get('status') or '').strip().upper() in TERMINAL_STATUSES)
         health='FRESH_LIVE' if live_rows else ('FRESH_TERMINAL_ONLY' if joined else 'TARGETS_NOT_ON_BOARD')
         payload.update(rows=joined,live_rows=live_rows,terminal_rows=terminal_rows,unmapped_count=len(relevant_unmapped),missing_target_ids=missing_target_ids,board_rows=len(normalized),health=health)
-        if joined:
+        # Terminal-only rows prove transport/identity, but must never overwrite
+        # the most recent genuine live-minute heartbeat.
+        if live_rows:
             payload.update(last_good_at=now.isoformat(),last_good_age_seconds=0)
             LAST_GOOD.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
