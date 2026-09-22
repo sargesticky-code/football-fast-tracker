@@ -1,68 +1,85 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 75,
-  "teams_with_squad": 66,
-  "team_coverage_pct": 88.0,
-  "players": 2087,
+  "target_confirmed_fotmob_teams": 79,
+  "teams_with_squad": 68,
+  "team_coverage_pct": 86.1,
+  "players": 2168,
   "position_coverage_pct": 100.0,
   "dob_coverage_pct": 98.2,
   "age_coverage_pct": 98.2,
   "nationality_coverage_pct": 100.0,
+  "failure_classes": {
+    "SCHEMA_UNRESOLVED": 11
+  },
+  "residual_all_classified": false,
+  "layer2_exit": false,
   "failures": [
     {
       "hkjc_team_id": "50000761",
       "team": "China AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     },
     {
       "hkjc_team_id": "50001167",
       "team": "FC Imabari",
-      "class": "SQUAD_ABSENT",
-      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     },
     {
       "hkjc_team_id": "50001803",
       "team": "Korea DPR AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001807",
+      "team": "Korea DPR Women U20",
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     },
     {
       "hkjc_team_id": "50002695",
       "team": "Sagan Tosu",
-      "class": "SQUAD_ABSENT",
-      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     },
     {
       "hkjc_team_id": "50003083",
       "team": "Tochigi City",
-      "class": "SQUAD_ABSENT",
-      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     },
     {
       "hkjc_team_id": "50003085",
       "team": "Tokushima Vortis",
-      "class": "SQUAD_ABSENT",
-      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     },
     {
       "hkjc_team_id": "50003298",
       "team": "Ventforet Kofu",
-      "class": "SQUAD_ABSENT",
-      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50240645",
+      "team": "Colombia Women U20",
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     },
     {
       "hkjc_team_id": "50240649",
       "team": "Spain Women U20",
-      "class": "SQUAD_ABSENT",
-      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     },
     {
       "hkjc_team_id": "50621165",
       "team": "Italy Women U20",
-      "class": "SQUAD_ABSENT",
-      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     }
   ],
-  "fetched_at": "2026-09-22T06:30:10.591339+00:00"
+  "fetched_at": "2026-09-22T09:26:13.736671+00:00"
 }

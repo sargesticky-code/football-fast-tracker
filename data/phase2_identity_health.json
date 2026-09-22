@@ -2,10 +2,10 @@
   "status": "OK",
   "matches": 45,
   "unique_teams": 90,
-  "confirmed": 78,
-  "unresolved": 12,
+  "confirmed": 82,
+  "unresolved": 8,
   "conflicts": 0,
-  "coverage_pct": 86.7,
+  "coverage_pct": 91.1,
   "snapshot_age_hours": 0.0,
-  "layer1_exit": false
+  "layer1_exit": true
 }
