@@ -70,7 +70,7 @@ def main():
     now=datetime.now(timezone.utc).replace(microsecond=0)
     registry=load_rows(REGISTRY)
     verified=[r for r in registry if r.get('status')=='VERIFIED' and str(r.get('source','')).upper()=='FOTMOB' and external_id(r)]
-    payload={'schema_version':1,'fast_snapshot_at':now.isoformat(),'source':'FOTMOB','request_count':0,'request_failures':0,'verified_targets':len(verified),'rows':[],'live_rows':0,'terminal_rows':0,'unmapped_count':0,'health':'NO_VERIFIED_TARGETS',**last_good_meta(now)}
+    payload={'schema_version':1,'fast_snapshot_at':now.isoformat(),'source':'FOTMOB','request_count':0,'primary_board_requests':0,'fallback_board_requests':0,'fallback_trigger_target_ids':[],'request_failures':0,'verified_targets':len(verified),'rows':[],'live_rows':0,'terminal_rows':0,'unmapped_count':0,'health':'NO_VERIFIED_TARGETS',**last_good_meta(now)}
     if not verified:
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)); print('PHASE3_FAST health=NO_VERIFIED_TARGETS verified_targets=0 requests=0 failures=0 rows=0 live_rows=0'); return 0
     try:
@@ -78,8 +78,12 @@ def main():
         normalized=[]
         seen_ids=set()
         dates_tried=[]
-        for day in board_dates(now,verified):
+        for board_index,day in enumerate(board_dates(now,verified)):
+            if board_index > 0 and not payload['fallback_trigger_target_ids']:
+                payload['fallback_trigger_target_ids']=sorted(target_ids-seen_ids)
             payload['request_count']+=1
+            if board_index == 0: payload['primary_board_requests']+=1
+            else: payload['fallback_board_requests']+=1
             dates_tried.append(day)
             board=fetch_board(day)
             for row in normalize_fotmob_board(board,now.isoformat()):
@@ -99,7 +103,7 @@ def main():
             payload.update(last_good_at=now.isoformat(),last_good_age_seconds=0)
             LAST_GOOD.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
-        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests={payload['request_count']} failures=0 board_rows={len(normalized)} rows={len(joined)} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={len(relevant_unmapped)} missing_targets={len(missing_target_ids)} snapshot_age={payload['snapshot_age_seconds']} last_good_age={payload['last_good_age_seconds']}")
+        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests={payload['request_count']} primary_requests={payload['primary_board_requests']} fallback_requests={payload['fallback_board_requests']} failures=0 board_rows={len(normalized)} rows={len(joined)} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={len(relevant_unmapped)} missing_targets={len(missing_target_ids)} snapshot_age={payload['snapshot_age_seconds']} last_good_age={payload['last_good_age_seconds']}")
         for row in joined: print(f"PHASE3_FAST_MATCH event={row['hkjc_event_id']} external={row['external_id']} status={row['status']} minute={row['minute']} score={row['home_score']}-{row['away_score']}")
         return 0
     except Exception as exc:
