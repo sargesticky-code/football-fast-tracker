@@ -59,7 +59,13 @@ def main():
    if q.status_code!=200: failures.append({'hkjc_team_id':hid,'team':r['hkjc_name_en'],'class':'SOURCE_ERROR','detail':str(q.status_code)});continue
    p=q.json(); ms=members(p)
    if not ms:
-    failures.append({'hkjc_team_id':hid,'team':r['hkjc_name_en'],'class':'SQUAD_ABSENT','detail':'no explicit squad.squad[].members[]'});continue
+    sq=p.get('squad')
+    shape={'top_keys':sorted(list(p.keys()))[:30],'squad_type':type(sq).__name__}
+    if isinstance(sq,dict): shape['squad_keys']=sorted(list(sq.keys()))[:30]
+    elif isinstance(sq,list): shape['squad_len']=len(sq)
+    ov=p.get('overview')
+    if isinstance(ov,dict): shape['overview_keys']=sorted(list(ov.keys()))[:30]
+    failures.append({'hkjc_team_id':hid,'team':r['hkjc_name_en'],'class':'SQUAD_ABSENT','detail':json.dumps(shape,separators=(',',':'))});continue
    covered+=1
    for m in ms:
     dob=m.get('birthDate') or m.get('dateOfBirth') or ''
