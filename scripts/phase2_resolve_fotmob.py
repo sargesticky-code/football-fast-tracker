@@ -4,7 +4,7 @@ confirmed only when kickoff, home/away direction, both team names and cohort agr
 Residual candidates are persisted for audit-driven repair; ambiguity remains fail-closed.
 """
 from __future__ import annotations
-import argparse,csv,json,re,time
+import argparse,csv,json,re,time,unicodedata
 from datetime import datetime,timedelta,timezone
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -19,16 +19,21 @@ ALIASES={
  "korearepublic":"southkorea","koreadpr":"northkorea","unitedarabemirates":"uae",
  "bayernmunich":"bayernmunchen","intermilan":"inter","hacken":"bkhacken",
  "deportivonublense":"nublense","ohleuven":"oudheverleeleuven",
- "wigan":"wiganathletic","oldham":"oldhamathletic","fleetwood":"fleetwoodtown"
+ "wigan":"wiganathletic","oldham":"oldhamathletic","fleetwood":"fleetwoodtown",
+ "operarioferroviario":"operariopr"
 }
 def norm(s):
- x=re.sub(r"[^a-z0-9]+","",str(s).lower())
- # Cohort markers are validated separately. Remove them before canonical-name
- # comparison so HKJC AM / Women U20 conventions can match provider U23 / (W).
- for suffix in ("women","woman","u17","u18","u19","u20","u21","u23","am"):
-  if x.endswith(suffix): x=x[:-len(suffix)]
- # Provider women's marker becomes a trailing w after punctuation removal.
- if x.endswith("w"): x=x[:-1]
+ raw=unicodedata.normalize("NFKD",str(s)).encode("ascii","ignore").decode("ascii").lower()
+ x=re.sub(r"[^a-z0-9]+","",raw)
+ # Cohort markers are validated separately. Strip repeatedly because names such
+ # as "Korea DPR Women U20" contain stacked markers in a different order from
+ # provider "North Korea U20 (W)".
+ changed=True
+ while changed:
+  changed=False
+  for suffix in ("women","woman","u17","u18","u19","u20","u21","u23","am","w"):
+   if x.endswith(suffix) and len(x)>len(suffix):
+    x=x[:-len(suffix)]; changed=True; break
  return ALIASES.get(x,x)
 def sim(a,b):return SequenceMatcher(None,norm(a),norm(b)).ratio()
 def cohort(name,tournament=""):
