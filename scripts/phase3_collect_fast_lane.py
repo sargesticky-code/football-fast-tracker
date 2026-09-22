@@ -33,6 +33,7 @@ def fotmob_date(now):
 
 
 def last_good_meta(now):
+    """Return age of the last genuine live heartbeat, never terminal evidence."""
     if not LAST_GOOD.exists(): return {'last_good_at':None,'last_good_age_seconds':None}
     try:
         old=json.loads(LAST_GOOD.read_text())
@@ -40,6 +41,7 @@ def last_good_meta(now):
             return {'last_good_at':None,'last_good_age_seconds':None}
         stamp=old.get('fast_snapshot_at')
         dt=datetime.fromisoformat(stamp) if stamp else None
+        if dt and dt.tzinfo is None: dt=dt.replace(tzinfo=timezone.utc)
         age=max(0,(now-dt).total_seconds()) if dt else None
         return {'last_good_at':stamp,'last_good_age_seconds':age}
     except Exception:
