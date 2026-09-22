@@ -38,7 +38,7 @@ def verified_index(registry_rows: Iterable[dict[str, Any]]) -> dict[tuple[str, s
     """Index only VERIFIED identities; candidates/conflicts fail closed."""
     out = {}
     for row in registry_rows:
-        if row.get("status") != "VERIFIED":
+        if not isinstance(row, dict) or row.get("status") != "VERIFIED":
             continue
         source = str(row.get("source") or "").upper()
         external_id = str(row.get("external_id") or row.get("source_match_id") or "")
@@ -55,22 +55,38 @@ def _status_text(status: dict[str, Any]) -> str | None:
     return status.get("status") or (str(reason) if reason is not None else None)
 
 
+def _team_score(value: Any) -> int | None:
+    return _int_or_none(value.get("score")) if isinstance(value, dict) else None
+
+
 def _score(match: dict[str, Any], status: dict[str, Any]) -> tuple[int | None, int | None]:
     score = status.get("scoreStr") or match.get("scoreStr") or ""
     if isinstance(score, str) and "-" in score:
         left, right = score.split("-", 1)
         return _int_or_none(left), _int_or_none(right)
-    home = match.get("home") or {}
-    away = match.get("away") or {}
-    return _int_or_none(home.get("score")), _int_or_none(away.get("score"))
+    return _team_score(match.get("home")), _team_score(match.get("away"))
 
 
 def normalize_fotmob_board(payload: dict[str, Any], observed_at: str | None = None) -> list[dict[str, Any]]:
-    """Normalize FotMob /api/data/matches board into lightweight rows."""
+    """Normalize FotMob /api/data/matches board into lightweight rows.
+
+    The public board has changed container shapes over time. Ignore malformed
+    containers/rows rather than allowing one unrelated league to erase the
+    whole heartbeat cycle.
+    """
     observed_at = observed_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-    matches = list(payload.get("matches") or [])
-    if isinstance(payload.get("leagues"), list):
-        matches.extend(m for league in payload["leagues"] for m in (league.get("matches") or []))
+    matches = []
+    top_matches = payload.get("matches") if isinstance(payload, dict) else None
+    if isinstance(top_matches, list):
+        matches.extend(top_matches)
+    leagues = payload.get("leagues") if isinstance(payload, dict) else None
+    if isinstance(leagues, list):
+        for league in leagues:
+            if not isinstance(league, dict):
+                continue
+            league_matches = league.get("matches")
+            if isinstance(league_matches, list):
+                matches.extend(league_matches)
     rows = []
     for match in matches:
         if not isinstance(match, dict):
@@ -102,6 +118,8 @@ def join_verified_fast_rows(registry_rows: Iterable[dict[str, Any]], board_rows:
     idx = verified_index(registry_rows)
     joined, unmapped = [], []
     for row in board_rows:
+        if not isinstance(row, dict):
+            continue
         key = (str(row.get("source") or "").upper(), str(row.get("external_id") or ""))
         identity = idx.get(key)
         if not identity:
