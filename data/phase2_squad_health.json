@@ -1,15 +1,15 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 79,
-  "teams_with_squad": 68,
-  "team_coverage_pct": 86.1,
-  "players": 2168,
+  "target_confirmed_fotmob_teams": 87,
+  "teams_with_squad": 75,
+  "team_coverage_pct": 86.2,
+  "players": 2365,
   "position_coverage_pct": 100.0,
-  "dob_coverage_pct": 98.2,
-  "age_coverage_pct": 98.2,
+  "dob_coverage_pct": 98.4,
+  "age_coverage_pct": 98.4,
   "nationality_coverage_pct": 100.0,
   "failure_classes": {
-    "SCHEMA_UNRESOLVED": 11
+    "SCHEMA_UNRESOLVED": 12
   },
   "residual_all_classified": false,
   "layer2_exit": false,
@@ -35,6 +35,12 @@
     {
       "hkjc_team_id": "50001807",
       "team": "Korea DPR Women U20",
+      "class": "SCHEMA_UNRESOLVED",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50002009",
+      "team": "Maldives",
       "class": "SCHEMA_UNRESOLVED",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     },
@@ -81,5 +87,5 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"group_count\":0,\"member_count\":0}"
     }
   ],
-  "fetched_at": "2026-09-22T09:40:56.980986+00:00"
+  "fetched_at": "2026-09-22T11:40:24.098894+00:00"
 }
