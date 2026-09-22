@@ -1,4 +1,4 @@
-name: Phase 2 Identity
+name: Phase 2 Human Intelligence
 on:
   workflow_dispatch:
   pull_request:
@@ -12,13 +12,13 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: phase2-identity-${{ github.event.pull_request.head.ref || github.ref_name }}
+  group: phase2-human-intelligence-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: false
 jobs:
-  identity:
+  phase2:
     if: (github.event_name == 'pull_request' && github.head_ref == 'phase2-human-intelligence') || (github.event_name != 'pull_request' && github.ref == 'refs/heads/phase2-human-intelligence')
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,14 +28,26 @@ jobs:
           python-version: '3.12'
       - name: Install Phase 2 runtime
         run: python -m pip install 'requests==2.32.5' 'curl_cffi>=0.13,<0.15'
-      - name: Execute complete Layer 1 pipeline
+      - name: Refresh Layer 1 identity universe
         run: python scripts/phase2_run_layer1.py
+      - name: Execute Layer 2 squad master after Layer 1 exit
+        run: |
+          python - <<'PY'
+          import json,subprocess,sys
+          h=json.load(open('data/phase2_identity_health.json'))
+          if h.get('layer1_exit'):
+              subprocess.check_call([sys.executable,'scripts/phase2_capture_squads_fotmob.py'])
+          else:
+              print('PHASE2_LAYER2_SKIPPED layer1_exit=false')
+          PY
       - name: Persist Phase 2 snapshots only
         run: |
           git config user.name "phase2-bot"
           git config user.email "phase2-bot@users.noreply.github.com"
           git add data/phase2_hkjc_current.csv data/phase2_hkjc_capture_health.json data/phase2_team_identity_targets.csv data/phase2_team_identity_evidence.csv data/phase2_identity_resolution_diagnostics.csv data/phase2_thesportsdb_diagnostics.csv data/phase2_espn_diagnostics.csv data/phase2_fotmob_diagnostics.csv data/phase2_identity_health.json
+          [ ! -f data/phase2_player_master.csv ] || git add data/phase2_player_master.csv
+          [ ! -f data/phase2_squad_health.json ] || git add data/phase2_squad_health.json
           if ! git diff --cached --quiet; then
-            git commit -m "phase2: refresh current identity universe"
+            git commit -m "phase2: refresh human intelligence evidence"
             git push origin HEAD:phase2-human-intelligence
           fi
