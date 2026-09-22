@@ -4,21 +4,14 @@ from phase3.fast_lane import fast_lane_health, join_verified_fast_rows, normaliz
 
 class FastLaneTests(unittest.TestCase):
     def test_one_board_payload_normalizes_multiple_matches(self):
-        payload={"matches":[
-            {"id":11,"status":{"liveTime":{"short":"23"},"scoreStr":"1 - 0","reason":{"short":"1st"}}},
-            {"id":12,"status":{"liveTime":{"short":"67"},"scoreStr":"2 - 2","reason":{"short":"2nd"}}},
-        ]}
+        payload={"matches":[{"id":11,"status":{"liveTime":{"short":"23"},"scoreStr":"1 - 0","reason":{"short":"1st"}}},{"id":12,"status":{"liveTime":{"short":"67"},"scoreStr":"2 - 2","reason":{"short":"2nd"}}}]}
         rows=normalize_fotmob_board(payload,"2026-09-22T01:00:00+00:00")
         self.assertEqual(len(rows),2); self.assertEqual(rows[1]["minute"],67); self.assertEqual(rows[1]["away_score"],2)
 
     def test_real_data_matches_shape_uses_leagues_and_team_scores(self):
-        payload={"leagues":[{"matches":[{
-            "id":5190727,"home":{"name":"Home","score":2},"away":{"name":"Away","score":1},
-            "status":{"liveTime":{"short":"67'"},"reason":{"short":"2nd"}}
-        }]}]}
+        payload={"leagues":[{"matches":[{"id":5190727,"home":{"name":"Home","score":2},"away":{"name":"Away","score":1},"status":{"liveTime":{"short":"67'"},"reason":{"short":"2nd"}}}]}]}
         rows=normalize_fotmob_board(payload,"2026-09-22T03:00:00+00:00")
-        self.assertEqual(len(rows),1); self.assertEqual(rows[0]["external_id"],"5190727")
-        self.assertEqual(rows[0]["minute"],67); self.assertEqual((rows[0]["home_score"],rows[0]["away_score"]),(2,1))
+        self.assertEqual(len(rows),1); self.assertEqual(rows[0]["external_id"],"5190727"); self.assertEqual(rows[0]["minute"],67); self.assertEqual((rows[0]["home_score"],rows[0]["away_score"]),(2,1))
 
     def test_stoppage_time_keeps_base_minute_without_fabrication(self):
         payload={"matches":[{"id":13,"home":{"score":1},"away":{"score":1},"status":{"liveTime":{"short":"90 + 4'"},"reason":{"short":"2nd"}}}]}
@@ -66,6 +59,13 @@ class FastLaneTests(unittest.TestCase):
     def test_live_minute_without_complete_score_cannot_satisfy_exit_evidence(self):
         now="2026-09-22T09:00:10+00:00"
         for row in ({"status":"2nd","minute":67,"home_score":None,"away_score":1},{"status":"2nd","minute":67,"home_score":2,"away_score":None}):
+            health=fast_lane_health([row],"2026-09-22T09:00:09+00:00",now=now)
+            self.assertEqual(health["health"],"FRESH_PARTIAL_OR_TERMINAL"); self.assertEqual(health["live_rows"],0)
+
+    def test_impossible_minute_or_score_values_fail_closed(self):
+        now="2026-09-22T09:00:10+00:00"
+        bad_rows=[{"status":"1st","minute":0,"home_score":0,"away_score":0},{"status":"2nd","minute":131,"home_score":1,"away_score":0},{"status":"2nd","minute":67,"home_score":-1,"away_score":0},{"status":"2nd","minute":67,"home_score":1,"away_score":-1}]
+        for row in bad_rows:
             health=fast_lane_health([row],"2026-09-22T09:00:09+00:00",now=now)
             self.assertEqual(health["health"],"FRESH_PARTIAL_OR_TERMINAL"); self.assertEqual(health["live_rows"],0)
 
