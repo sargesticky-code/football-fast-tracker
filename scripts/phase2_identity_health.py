@@ -14,8 +14,13 @@ def main():
  age=max(0,(datetime.now(HKT)-max(fetched)).total_seconds()/3600) if fetched else 999
  by={}
  for r in reg:
-  if yes(r.get("confirmed")) and r.get("external_team_id"):by.setdefault(r.get("hkjc_team_id"),set()).add((r.get("external_source"),r.get("external_team_id")))
- conflicts={k for k,v in by.items() if len(v)>1}; confirmed={k for k in teams if k in by and k not in conflicts}
+  if yes(r.get("confirmed")) and r.get("external_team_id"):
+   hid=r.get("hkjc_team_id"); src=r.get("external_source") or "UNKNOWN"
+   by.setdefault(hid,{}).setdefault(src,set()).add(r.get("external_team_id"))
+ # External IDs live in provider-specific namespaces. A conflict exists only when
+ # the same HKJC team has multiple confirmed IDs from the SAME provider.
+ conflicts={k for k,providers in by.items() if any(len(ids)>1 for ids in providers.values())}
+ confirmed={k for k in teams if k in by and k not in conflicts}
  unresolved=teams-confirmed; coverage=100*len(confirmed)/len(teams) if teams else 0
  status="OK" if fs and age<=3 else "FAIL_STALE_OR_EMPTY"
  d={"status":status,"matches":len(fs),"unique_teams":len(teams),"confirmed":len(confirmed),"unresolved":len(unresolved),"conflicts":len(conflicts),"coverage_pct":round(coverage,1),"snapshot_age_hours":round(age,2),"layer1_exit":bool(status=="OK" and coverage>=90 and not conflicts)}
