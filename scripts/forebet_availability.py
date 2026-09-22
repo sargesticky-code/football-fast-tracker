@@ -124,6 +124,27 @@ def _fetch_livescore(production) -> str | None:
     return body if healthy else None
 
 
+def _asian_games_base(production, value: str) -> str:
+    key = production.feed.normalize_team(str(value or ""))
+    key = re.sub(r"\b(?:u23|am)\b$", "", key).strip()
+    aliases = {
+        "south korea": "korea republic",
+        "north korea": "korea dpr",
+        "uae": "united arab emirates",
+    }
+    return aliases.get(key, key)
+
+
+def _asian_games_equivalent(production, source_name: str, canonical_name: str) -> bool:
+    source_norm = production.feed.normalize_team(str(source_name or ""))
+    canonical_norm = production.feed.normalize_team(str(canonical_name or ""))
+    if not source_norm.endswith(" u23") or not canonical_norm.endswith(" am"):
+        return False
+    return _asian_games_base(production, source_norm) == _asian_games_base(
+        production, canonical_norm
+    )
+
+
 def _nearest_competition(lines: list[str], home_index: int) -> str:
     """Best-effort livescore section label retained as audit context only."""
     for index in range(home_index - 1, max(-1, home_index - 18), -1):
@@ -163,26 +184,57 @@ def _fixture_evidence(
         if not event_id or not home or not away:
             continue
 
-        candidates: list[tuple[float, float, float, int, int]] = []
+        candidates: list[dict[str, object]] = []
         for i, line in enumerate(lines):
-            hs = production.feed.team_score(line, home)
+            source_comp = _nearest_competition(lines, i)
+            asian_games_home = (
+                str(target.get("league_zh") or "").strip() == "AMF"
+                and "asian games" in source_comp.casefold()
+                and _asian_games_equivalent(production, line, home)
+            )
+            hs = 1.0 if asian_games_home else production.feed.team_score(line, home)
             if hs < 0.68:
                 continue
             for j in range(i + 1, min(len(lines), i + 6)):
-                aws = production.feed.team_score(lines[j], away)
+                asian_games_away = (
+                    asian_games_home
+                    and _asian_games_equivalent(production, lines[j], away)
+                )
+                aws = (
+                    1.0
+                    if asian_games_away
+                    else production.feed.team_score(lines[j], away)
+                )
                 avg = (hs + aws) / 2
                 if hs >= 0.68 and aws >= 0.68 and avg >= 0.76:
-                    candidates.append((avg, hs, aws, i, j))
+                    candidates.append({
+                        "avg": avg,
+                        "hs": hs,
+                        "aws": aws,
+                        "i": i,
+                        "j": j,
+                        "source_comp": source_comp,
+                        "context_verified": bool(asian_games_home and asian_games_away),
+                    })
 
         if not candidates:
             continue
-        candidates.sort(reverse=True)
-        best, hs, aws, i, j = candidates[0]
-        second = candidates[1][0] if len(candidates) > 1 else 0.0
+        candidates.sort(key=lambda item: float(item["avg"]), reverse=True)
+        top = candidates[0]
+        best = float(top["avg"])
+        hs = float(top["hs"])
+        aws = float(top["aws"])
+        i = int(top["i"])
+        j = int(top["j"])
+        source_comp = str(top["source_comp"])
+        context_verified = bool(top["context_verified"])
+        second = float(candidates[1]["avg"]) if len(candidates) > 1 else 0.0
 
         # Auto-promotion must be much stricter than simple fixture-presence
         # classification. Ambiguous/near-equal candidates remain discoverable
-        # evidence but are never silently promoted into the static dictionary.
+        # evidence but are never silently promoted into the global dictionary.
+        # Asian Games U23 <-> HKJC AM is competition-scoped and therefore uses
+        # CONTEXT_VERIFIED: it is persisted only with league context.
         unique_margin = best - second
         verified = (
             best >= 0.94
@@ -190,13 +242,19 @@ def _fixture_evidence(
             and aws >= 0.90
             and (second < 0.88 or unique_margin >= 0.05)
         )
+        if context_verified:
+            identity_status = "CONTEXT_VERIFIED"
+            identity_source = "FOREBET_LIVESCORE_ASIAN_GAMES_CONTEXT"
+        else:
+            identity_status = "VERIFIED" if verified else "CANDIDATE"
+            identity_source = "FOREBET_LIVESCORE"
         found[event_id] = {
             "source_home_team": lines[i],
             "source_away_team": lines[j],
-            "source_competition": _nearest_competition(lines, i),
+            "source_competition": source_comp,
             "fixture_match_score": f"{best:.3f}",
-            "identity_status": "VERIFIED" if verified else "CANDIDATE",
-            "identity_source": "FOREBET_LIVESCORE",
+            "identity_status": identity_status,
+            "identity_source": identity_source,
         }
     return found
 
