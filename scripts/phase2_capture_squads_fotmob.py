@@ -10,7 +10,8 @@ REG=Path('data/phase2_team_identity_evidence.csv')
 FIX=Path('data/phase2_hkjc_current.csv')
 OUT=Path('data/phase2_player_master.csv')
 HEALTH=Path('data/phase2_squad_health.json')
-BASE='https://www.fotmob.com/api/data/team'
+# Verified current FotMob route is plural /api/data/teams (singular /team returns 404).
+BASE='https://www.fotmob.com/api/data/teams'
 FIELDS=['hkjc_team_id','hkjc_team_name','provider','provider_team_id','player_id','canonical_name','membership','position','date_of_birth','age','nationality','evidence_class','confirmed','confidence','source_url','source_timestamp','fetched_at','raw_context']
 def read(p):
  with p.open(encoding='utf-8-sig',newline='') as f:return list(csv.DictReader(f))
@@ -25,7 +26,7 @@ def members(payload):
    for y in x: walk(y)
   elif isinstance(x,dict):
    if x.get('id') and (x.get('name') or x.get('fullName')): out.append(x)
-   for k in ('members','players','items'): 
+   for k in ('members','players','items'):
     if k in x: walk(x[k])
  walk(sq);return out
 def main():
