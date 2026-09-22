@@ -71,6 +71,7 @@ jobs:
           python -m unittest tests.test_phase3_source_health -v
           python -m unittest tests.test_phase3_espn_identity -v
           python -m unittest tests.test_phase3_identity_exceptions -v
+          python -m unittest tests.test_phase3_state_continuity -v
       - name: Checkout pinned HKJC scraper
         run: |
           rm -rf "$HKJC_SCRAPER_PATH"
