@@ -60,18 +60,21 @@ def fast_snapshot_age_seconds(observed_at: Any, now: Any = None) -> float | None
 
 
 def _is_live_row(row: dict[str, Any]) -> bool:
-    """Require genuine minute and complete score for Layer-3 live evidence."""
+    """Require plausible genuine minute and complete score for live evidence."""
     status = str(row.get("status") or "").strip().upper()
     terminal = {"FT", "FULL TIME", "FULL-TIME", "AET", "PEN", "CANCELLED", "CANCELED", "POSTPONED", "ABANDONED"}
     if status in terminal:
         return False
-    # Status labels alone do not satisfy the Layer-3 exit criterion. Likewise,
-    # a minute with a missing score is only partial source evidence. Never fill
-    # missing score values or manufacture a minute.
+    minute = _int_or_none(row.get("minute"))
+    home_score = _int_or_none(row.get("home_score"))
+    away_score = _int_or_none(row.get("away_score"))
+    # A status label alone is not live evidence. Minute zero can occur before a
+    # match has actually begun, and impossible negative/very large values must
+    # fail closed rather than creating a false FRESH_LIVE exit observation.
     return (
-        _int_or_none(row.get("minute")) is not None
-        and _int_or_none(row.get("home_score")) is not None
-        and _int_or_none(row.get("away_score")) is not None
+        minute is not None and 1 <= minute <= 130
+        and home_score is not None and home_score >= 0
+        and away_score is not None and away_score >= 0
     )
 
 
@@ -80,8 +83,8 @@ def fast_lane_health(joined_rows: Iterable[dict[str, Any]], observed_at: Any, *,
     """Summarise Layer 3 heartbeat freshness without fabricating live state.
 
     Request failures and stale/malformed timestamps fail closed. FRESH_LIVE
-    requires a real source minute plus complete score; partial/status-only rows
-    are kept separate and cannot satisfy the Layer-3 live evidence criterion.
+    requires a plausible real source minute plus complete non-negative score;
+    partial/status-only rows cannot satisfy the Layer-3 exit criterion.
     """
     rows = [row for row in joined_rows if isinstance(row, dict)]
     age = fast_snapshot_age_seconds(observed_at, now)
@@ -99,13 +102,8 @@ def fast_lane_health(joined_rows: Iterable[dict[str, Any]], observed_at: Any, *,
         health = "FRESH_PARTIAL_OR_TERMINAL"
     else:
         health = "FRESH_NO_MAPPED_ROWS"
-    return {
-        "health": health,
-        "snapshot_age_seconds": age,
-        "request_failures": failures,
-        "mapped_rows": len(rows),
-        "live_rows": len(live_rows),
-    }
+    return {"health": health, "snapshot_age_seconds": age, "request_failures": failures,
+            "mapped_rows": len(rows), "live_rows": len(live_rows)}
 
 
 def verified_index(registry_rows: Iterable[dict[str, Any]]) -> dict[tuple[str, str], dict[str, Any]]:
@@ -142,68 +140,43 @@ def _score(match: dict[str, Any], status: dict[str, Any]) -> tuple[int | None, i
 
 
 def normalize_fotmob_board(payload: dict[str, Any], observed_at: str | None = None) -> list[dict[str, Any]]:
-    """Normalize FotMob /api/data/matches board into lightweight rows.
-
-    The public board has changed container shapes over time. Ignore malformed
-    containers/rows rather than allowing one unrelated league to erase the
-    whole heartbeat cycle.
-    """
+    """Normalize FotMob /api/data/matches board into lightweight rows."""
     observed_at = observed_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     matches = []
     top_matches = payload.get("matches") if isinstance(payload, dict) else None
-    if isinstance(top_matches, list):
-        matches.extend(top_matches)
+    if isinstance(top_matches, list): matches.extend(top_matches)
     leagues = payload.get("leagues") if isinstance(payload, dict) else None
     if isinstance(leagues, list):
         for league in leagues:
-            if not isinstance(league, dict):
-                continue
+            if not isinstance(league, dict): continue
             league_matches = league.get("matches")
-            if isinstance(league_matches, list):
-                matches.extend(league_matches)
+            if isinstance(league_matches, list): matches.extend(league_matches)
     rows = []
     for match in matches:
-        if not isinstance(match, dict):
-            continue
+        if not isinstance(match, dict): continue
         mid = match.get("id")
-        if mid is None:
-            continue
+        if mid is None: continue
         status = match.get("status") or {}
-        if not isinstance(status, dict):
-            status = {}
+        if not isinstance(status, dict): status = {}
         live_time = status.get("liveTime")
-        if isinstance(live_time, dict):
-            live_time = live_time.get("short") or live_time.get("long")
+        if isinstance(live_time, dict): live_time = live_time.get("short") or live_time.get("long")
         home_score, away_score = _score(match, status)
-        rows.append({
-            "source": "FOTMOB",
-            "external_id": str(mid),
-            "status": _status_text(status),
-            "minute": _int_or_none(live_time),
-            "home_score": home_score,
-            "away_score": away_score,
-            "observed_at": observed_at,
-        })
+        rows.append({"source":"FOTMOB","external_id":str(mid),"status":_status_text(status),
+                     "minute":_int_or_none(live_time),"home_score":home_score,"away_score":away_score,
+                     "observed_at":observed_at})
     return rows
 
 
 def join_verified_fast_rows(registry_rows: Iterable[dict[str, Any]], board_rows: Iterable[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Join heartbeat rows to persistent identities without fuzzy rematching."""
-    idx = verified_index(registry_rows)
-    joined, unmapped = [], []
+    idx = verified_index(registry_rows); joined, unmapped = [], []
     for row in board_rows:
-        if not isinstance(row, dict):
-            continue
+        if not isinstance(row, dict): continue
         key = (str(row.get("source") or "").upper(), str(row.get("external_id") or ""))
         identity = idx.get(key)
         if not identity:
-            unmapped.append(dict(row))
-            continue
-        joined.append(FastRow(
-            hkjc_event_id=str(identity["hkjc_event_id"]),
-            external_source=key[0], external_id=key[1],
-            status=row.get("status"), minute=_int_or_none(row.get("minute")),
-            home_score=_int_or_none(row.get("home_score")), away_score=_int_or_none(row.get("away_score")),
-            observed_at=str(row.get("observed_at") or ""),
-        ).as_dict())
+            unmapped.append(dict(row)); continue
+        joined.append(FastRow(hkjc_event_id=str(identity["hkjc_event_id"]), external_source=key[0], external_id=key[1],
+            status=row.get("status"), minute=_int_or_none(row.get("minute")), home_score=_int_or_none(row.get("home_score")),
+            away_score=_int_or_none(row.get("away_score")), observed_at=str(row.get("observed_at") or "")).as_dict())
     return joined, unmapped
