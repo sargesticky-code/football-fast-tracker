@@ -70,8 +70,8 @@ class FastLaneTests(unittest.TestCase):
 
     def test_fast_health_distinguishes_live_terminal_and_stale(self):
         now="2026-09-22T09:00:10+00:00"
-        live=[{"status":"2nd","minute":67}]
-        terminal=[{"status":"FT","minute":90}]
+        live=[{"status":"2nd","minute":67,"home_score":2,"away_score":1}]
+        terminal=[{"status":"FT","minute":90,"home_score":2,"away_score":1}]
         self.assertEqual(fast_lane_health(live,"2026-09-22T09:00:08+00:00",now=now)["health"],"FRESH_LIVE")
         self.assertEqual(fast_lane_health(terminal,"2026-09-22T09:00:08+00:00",now=now)["health"],"FRESH_TERMINAL_ONLY")
         self.assertEqual(fast_lane_health(live,"2026-09-22T08:59:00+00:00",now=now)["health"],"STALE_FAST_SNAPSHOT")
@@ -79,13 +79,23 @@ class FastLaneTests(unittest.TestCase):
     def test_status_only_rows_cannot_satisfy_live_minute_evidence(self):
         now="2026-09-22T09:00:10+00:00"
         for status in ("1st","2nd","HT","LIVE"):
-            health=fast_lane_health([{"status":status,"minute":None}],"2026-09-22T09:00:09+00:00",now=now)
-            self.assertEqual(health["health"],"FRESH_TERMINAL_ONLY")
+            health=fast_lane_health([{"status":status,"minute":None,"home_score":0,"away_score":0}],"2026-09-22T09:00:09+00:00",now=now)
+            self.assertNotEqual(health["health"],"FRESH_LIVE")
+            self.assertEqual(health["live_rows"],0)
+
+    def test_live_minute_without_complete_score_cannot_satisfy_exit_evidence(self):
+        now="2026-09-22T09:00:10+00:00"
+        for row in (
+            {"status":"2nd","minute":67,"home_score":None,"away_score":1},
+            {"status":"2nd","minute":67,"home_score":2,"away_score":None},
+        ):
+            health=fast_lane_health([row],"2026-09-22T09:00:09+00:00",now=now)
+            self.assertNotEqual(health["health"],"FRESH_LIVE")
             self.assertEqual(health["live_rows"],0)
 
     def test_fast_health_fails_closed_on_request_failure_or_bad_clock(self):
         now="2026-09-22T09:00:10+00:00"
-        row=[{"status":"1st","minute":12}]
+        row=[{"status":"1st","minute":12,"home_score":0,"away_score":0}]
         self.assertEqual(fast_lane_health(row,"2026-09-22T09:00:09+00:00",now=now,request_failures=1)["health"],"REQUEST_FAILED")
         self.assertEqual(fast_lane_health(row,"not-a-time",now=now)["health"],"NO_FAST_SNAPSHOT")
         self.assertEqual(fast_lane_health(row,"2026-09-22T09:01:00+00:00",now=now)["health"],"NO_FAST_SNAPSHOT")
