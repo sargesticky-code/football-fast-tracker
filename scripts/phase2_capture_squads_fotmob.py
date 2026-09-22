@@ -54,7 +54,10 @@ def main():
     sq=p.get('squad');groups=sq.get('squad') if isinstance(sq,dict) else None
     group_count=len(groups) if isinstance(groups,list) else 0
     member_count=sum(len(g.get('members') or []) for g in groups if isinstance(g,dict)) if isinstance(groups,list) else 0
-    klass='PROVIDER_ROSTER_EMPTY' if isinstance(sq,dict) and isinstance(groups,list) and member_count==0 else 'SCHEMA_UNRESOLVED'
+    # A successful provider response with an explicit squad.squad list and zero
+    # groups/members is an evidenced provider-empty roster, not an unknown schema.
+    # Keep it fail-closed: no players are invented and the empty response is retained.
+    klass='PROVIDER_ROSTER_EMPTY' if isinstance(sq,dict) and isinstance(groups,list) and group_count==0 and member_count==0 else 'SCHEMA_UNRESOLVED'
     failures.append({'hkjc_team_id':hid,'team':r['hkjc_name_en'],'class':klass,'detail':json.dumps({'squad_keys':sorted(sq.keys()) if isinstance(sq,dict) else [],'group_count':group_count,'member_count':member_count},separators=(',',':'))});continue
    covered+=1
    for m in ms:
