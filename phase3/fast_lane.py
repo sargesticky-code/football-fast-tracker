@@ -26,7 +26,9 @@ class FastRow:
 
 def _int_or_none(value: Any) -> int | None:
     if isinstance(value, str):
-        match = re.search(r"\d+", value)
+        # Preserve a leading sign.  Dropping '-' would turn malformed negative
+        # source values such as "-1" into valid positive live evidence.
+        match = re.search(r"[+-]?\d+", value)
         value = match.group(0) if match else None
     try:
         return int(value) if value is not None else None
@@ -68,9 +70,6 @@ def _is_live_row(row: dict[str, Any]) -> bool:
     minute = _int_or_none(row.get("minute"))
     home_score = _int_or_none(row.get("home_score"))
     away_score = _int_or_none(row.get("away_score"))
-    # A status label alone is not live evidence. Minute zero can occur before a
-    # match has actually begun, and impossible negative/very large values must
-    # fail closed rather than creating a false FRESH_LIVE exit observation.
     return (
         minute is not None and 1 <= minute <= 130
         and home_score is not None and home_score >= 0
