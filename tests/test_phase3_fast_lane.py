@@ -1,5 +1,5 @@
 import unittest
-from phase3.fast_lane import join_verified_fast_rows, normalize_fotmob_board
+from phase3.fast_lane import fast_lane_health, join_verified_fast_rows, normalize_fotmob_board
 
 
 class FastLaneTests(unittest.TestCase):
@@ -67,5 +67,20 @@ class FastLaneTests(unittest.TestCase):
         board=[{"source":"FOTMOB","external_id":"999","status":"1st","minute":5,"home_score":0,"away_score":0,"observed_at":"t"}]
         joined,unmapped=join_verified_fast_rows(registry,board)
         self.assertEqual(joined,[]); self.assertEqual(len(unmapped),1)
+
+    def test_fast_health_distinguishes_live_terminal_and_stale(self):
+        now="2026-09-22T09:00:10+00:00"
+        live=[{"status":"2nd","minute":67}]
+        terminal=[{"status":"FT","minute":90}]
+        self.assertEqual(fast_lane_health(live,"2026-09-22T09:00:08+00:00",now=now)["health"],"FRESH_LIVE")
+        self.assertEqual(fast_lane_health(terminal,"2026-09-22T09:00:08+00:00",now=now)["health"],"FRESH_TERMINAL_ONLY")
+        self.assertEqual(fast_lane_health(live,"2026-09-22T08:59:00+00:00",now=now)["health"],"STALE_FAST_SNAPSHOT")
+
+    def test_fast_health_fails_closed_on_request_failure_or_bad_clock(self):
+        now="2026-09-22T09:00:10+00:00"
+        row=[{"status":"1st","minute":12}]
+        self.assertEqual(fast_lane_health(row,"2026-09-22T09:00:09+00:00",now=now,request_failures=1)["health"],"REQUEST_FAILED")
+        self.assertEqual(fast_lane_health(row,"not-a-time",now=now)["health"],"NO_FAST_SNAPSHOT")
+        self.assertEqual(fast_lane_health(row,"2026-09-22T09:01:00+00:00",now=now)["health"],"NO_FAST_SNAPSHOT")
 
 if __name__=="__main__": unittest.main()
