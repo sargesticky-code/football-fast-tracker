@@ -1,5 +1,5 @@
 {
-  "built_at_hkt": "2026-09-22T09:36:13.610489+08:00",
+  "built_at_hkt": "2026-09-22T23:30:07.222413+08:00",
   "sources": {
     "FRB": {
       "source": "FRB",
@@ -7,8 +7,8 @@
       "rows": 36,
       "requests": 0,
       "errors": 0,
-      "started_at": "2026-09-22T09:35:51.174157+08:00",
-      "finished_at": "2026-09-22T09:35:51.178843+08:00",
+      "started_at": "2026-09-22T23:29:36.852321+08:00",
+      "finished_at": "2026-09-22T23:29:36.856675+08:00",
       "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
@@ -17,10 +17,10 @@
       "source": "ACC",
       "status": "OK",
       "rows": 93,
-      "requests": 34,
+      "requests": 32,
       "errors": 0,
-      "started_at": "2026-09-22T09:35:51.362234+08:00",
-      "finished_at": "2026-09-22T09:36:00.005721+08:00",
+      "started_at": "2026-09-22T23:29:37.030117+08:00",
+      "finished_at": "2026-09-22T23:29:51.242014+08:00",
       "note": "",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
@@ -31,8 +31,8 @@
       "rows": 25,
       "requests": 27,
       "errors": 0,
-      "started_at": "2026-09-22T09:36:00.194446+08:00",
-      "finished_at": "2026-09-22T09:36:08.282118+08:00",
+      "started_at": "2026-09-22T23:29:51.419644+08:00",
+      "finished_at": "2026-09-22T23:30:00.918994+08:00",
       "note": "",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
@@ -43,8 +43,8 @@
       "rows": 68,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-22T09:36:08.494951+08:00",
-      "finished_at": "2026-09-22T09:36:10.298738+08:00",
+      "started_at": "2026-09-22T23:30:01.116868+08:00",
+      "finished_at": "2026-09-22T23:30:03.079667+08:00",
       "note": "",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
@@ -52,11 +52,11 @@
     "PRE": {
       "source": "PRE",
       "status": "OK",
-      "rows": 36,
+      "rows": 51,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-22T09:36:10.480881+08:00",
-      "finished_at": "2026-09-22T09:36:11.369900+08:00",
+      "started_at": "2026-09-22T23:30:03.254335+08:00",
+      "finished_at": "2026-09-22T23:30:04.504134+08:00",
       "note": "",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
@@ -64,12 +64,12 @@
     "STA": {
       "source": "STA",
       "status": "OK",
-      "rows": 58,
+      "rows": 66,
       "requests": 3,
       "errors": 0,
-      "started_at": "2026-09-22T09:36:11.619376+08:00",
-      "finished_at": "2026-09-22T09:36:13.506317+08:00",
-      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-21\", \"calibration_rows\": 79, \"dominance\": 1.0, \"dominant_cluster\": [-240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -237], \"dominant_samples\": 20, \"inferred_source_minus_utc_minutes\": -240, \"offset_distribution\": {\"-240\": 19, \"-237\": 1}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 20, \"target_rows\": 58}",
+      "started_at": "2026-09-22T23:30:04.720360+08:00",
+      "finished_at": "2026-09-22T23:30:07.115405+08:00",
+      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-21\", \"calibration_rows\": 101, \"dominance\": 0.96, \"dominant_cluster\": [60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60], \"dominant_samples\": 24, \"inferred_source_minus_utc_minutes\": 60, \"offset_distribution\": {\"0\": 1, \"60\": 24}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 25, \"target_rows\": 66}",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
     }
