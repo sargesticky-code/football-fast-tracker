@@ -1,0 +1,392 @@
+{
+  "status": "OK",
+  "target_confirmed_fotmob_teams": 63,
+  "teams_with_explicit_manager": 0,
+  "team_coverage_pct": 0.0,
+  "manager_rows": 0,
+  "failure_classes": {
+    "NO_EXPLICIT_MANAGER": 63
+  },
+  "failures": [
+    {
+      "hkjc_team_id": "50000186",
+      "team": "Antofagasta",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000291",
+      "team": "Audax Italiano",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000320",
+      "team": "Austria",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000337",
+      "team": "Azerbaijan",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000432",
+      "team": "Belarus U21",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000439",
+      "team": "Belgium U21",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000760",
+      "team": "China",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000761",
+      "team": "China AM",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000790",
+      "team": "Cobreloa",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000796",
+      "team": "Colo Colo",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000894",
+      "team": "Criciuma",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000913",
+      "team": "Curico Unido",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50000950",
+      "team": "Denmark",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001042",
+      "team": "Ecuador",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001167",
+      "team": "FC Imabari",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001338",
+      "team": "Gamba Osaka",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001357",
+      "team": "Germany",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001451",
+      "team": "Greece",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001621",
+      "team": "Iquique",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001624",
+      "team": "Iran AM",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001639",
+      "team": "Iraq",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001650",
+      "team": "Israel",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001684",
+      "team": "Japan",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001685",
+      "team": "Japan AM",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001774",
+      "team": "Kashima Antlers",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001775",
+      "team": "Kashiwa Reysol",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001803",
+      "team": "Korea DPR AM",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001807",
+      "team": "Korea DPR Women U20",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001808",
+      "team": "Korea Republic",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001841",
+      "team": "Kuwait",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001909",
+      "team": "Liechtenstein",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001926",
+      "team": "Lithuania",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50001992",
+      "team": "Machida Zelvia",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50002009",
+      "team": "Maldives",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50002222",
+      "team": "Netherlands",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50002295",
+      "team": "Norway",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50002311",
+      "team": "O'Higgins",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50002340",
+      "team": "Oman",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50002347",
+      "team": "Operario Ferroviario",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50002502",
+      "team": "Portugal",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50002695",
+      "team": "Sagan Tosu",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50002754",
+      "team": "Saudi Arabia",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50002798",
+      "team": "Serbia",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003041",
+      "team": "Tajikistan",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003063",
+      "team": "Thailand AM",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003083",
+      "team": "Tochigi City",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003085",
+      "team": "Tokushima Vortis",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003199",
+      "team": "Union La Calera",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003207",
+      "team": "United Arab Emirates AM",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003210",
+      "team": "Universidad Catolica",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003222",
+      "team": "Uruguay",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003298",
+      "team": "Ventforet Kofu",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003329",
+      "team": "Vissel Kobe",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50003347",
+      "team": "Wales",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fifaRanking\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50240645",
+      "team": "Colombia Women U20",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50240649",
+      "team": "Spain Women U20",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50288881",
+      "team": "Deportes Santa Cruz",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50331022",
+      "team": "Deportes Concepcion",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50355601",
+      "team": "Everton Women",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50355624",
+      "team": "Roma Women",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50362133",
+      "team": "OH Leuven Women",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50600409",
+      "team": "Birmingham Women",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    },
+    {
+      "hkjc_team_id": "50621165",
+      "team": "Italy Women U20",
+      "class": "NO_EXPLICIT_MANAGER",
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
+    }
+  ],
+  "layer3_exit": false,
+  "fetched_at": "2026-09-22T21:32:10.431127+00:00"
+}
