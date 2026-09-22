@@ -1,436 +1,68 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 71,
-  "teams_with_squad": 0,
-  "team_coverage_pct": 0.0,
-  "players": 0,
+  "target_confirmed_fotmob_teams": 75,
+  "teams_with_squad": 66,
+  "team_coverage_pct": 88.0,
+  "players": 2087,
+  "position_coverage_pct": 100.0,
+  "dob_coverage_pct": 98.2,
+  "age_coverage_pct": 98.2,
+  "nationality_coverage_pct": 100.0,
   "failures": [
-    {
-      "hkjc_team_id": "50000186",
-      "team": "Antofagasta",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000291",
-      "team": "Audax Italiano",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000471",
-      "team": "Blackpool",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000654",
-      "team": "Cambridge Utd",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000732",
-      "team": "Cheltenham",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000738",
-      "team": "Chesterfield",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
     {
       "hkjc_team_id": "50000761",
       "team": "China AM",
       "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000790",
-      "team": "Cobreloa",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000793",
-      "team": "Colchester",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000796",
-      "team": "Colo Colo",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000890",
-      "team": "Crawley Town",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000913",
-      "team": "Curico Unido",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50000974",
-      "team": "Deportivo Nublense",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001142",
-      "team": "Exeter City",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
     },
     {
       "hkjc_team_id": "50001167",
       "team": "FC Imabari",
       "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001248",
-      "team": "Fleetwood",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001338",
-      "team": "Gamba Osaka",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001419",
-      "team": "Gillingham",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001462",
-      "team": "Grimsby",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001621",
-      "team": "Iquique",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001624",
-      "team": "Iran AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001685",
-      "team": "Japan AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001774",
-      "team": "Kashima Antlers",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001775",
-      "team": "Kashiwa Reysol",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
     },
     {
       "hkjc_team_id": "50001803",
       "team": "Korea DPR AM",
       "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001809",
-      "team": "Korea Republic AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001842",
-      "team": "Kuwait AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50001992",
-      "team": "Machida Zelvia",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002120",
-      "team": "Milton Keynes Dons",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002256",
-      "team": "Newport County",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002303",
-      "team": "Notts County",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002326",
-      "team": "Oldham",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002449",
-      "team": "Peterborough",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002485",
-      "team": "Port Vale",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002538",
-      "team": "Puerto Montt",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002660",
-      "team": "Rotherham",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
     },
     {
       "hkjc_team_id": "50002695",
       "team": "Sagan Tosu",
       "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002707",
-      "team": "Salford City",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002755",
-      "team": "Saudi Arabia AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002819",
-      "team": "Sheff Wednesday",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002829",
-      "team": "Shrewsbury",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50002980",
-      "team": "Stevenage",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003017",
-      "team": "Swindon",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003063",
-      "team": "Thailand AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
     },
     {
       "hkjc_team_id": "50003083",
       "team": "Tochigi City",
       "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
     },
     {
       "hkjc_team_id": "50003085",
       "team": "Tokushima Vortis",
       "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003113",
-      "team": "Tranmere",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003199",
-      "team": "Union La Calera",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003207",
-      "team": "United Arab Emirates AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003210",
-      "team": "Universidad Catolica",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003246",
-      "team": "Uzbekistan AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
     },
     {
       "hkjc_team_id": "50003298",
       "team": "Ventforet Kofu",
       "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003311",
-      "team": "Vietnam AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003329",
-      "team": "Vissel Kobe",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003349",
-      "team": "Walsall",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003369",
-      "team": "Wigan",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50003402",
-      "team": "York City",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
     },
     {
       "hkjc_team_id": "50240649",
       "team": "Spain Women U20",
       "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50331022",
-      "team": "Deportes Concepcion",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50353888",
-      "team": "Hacken Women",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50355604",
-      "team": "Manchester City Women",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50355608",
-      "team": "Bayern Munich Women",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50355619",
-      "team": "Inter Milan Women",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50355620",
-      "team": "Juventus Women",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50355624",
-      "team": "Roma Women",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50356281",
-      "team": "Real Madrid Women",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50356297",
-      "team": "Benfica Women",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50356306",
-      "team": "Paris Saint Germain Women",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50362133",
-      "team": "OH Leuven Women",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
     },
     {
       "hkjc_team_id": "50621165",
       "team": "Italy Women U20",
       "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
-    },
-    {
-      "hkjc_team_id": "50623690",
-      "team": "Philippines AM",
-      "class": "SQUAD_ABSENT",
-      "detail": "no explicit squad members"
+      "detail": "{\"top_keys\":[\"QAData\",\"allAvailableSeasons\",\"details\",\"fixtures\",\"history\",\"overview\",\"seostr\",\"squad\",\"stats\",\"table\",\"tabs\",\"transfers\"],\"squad_type\":\"dict\",\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"overview_keys\":[\"coachHistory\",\"featuredArticle\",\"fixtureDifficulty\",\"hasOngoingMatch\",\"lastLineupStats\",\"lastMatch\",\"newsSummary\",\"nextMatch\",\"overviewFixtures\",\"previousFixturesUrl\",\"season\",\"selectedSeason\",\"squad\",\"table\",\"teamColors\",\"teamForm\",\"topPlayers\",\"transfers\",\"venue\"]}"
     }
   ],
-  "fetched_at": "2026-09-22T03:29:18.322169+00:00"
+  "fetched_at": "2026-09-22T06:30:10.591339+00:00"
 }
