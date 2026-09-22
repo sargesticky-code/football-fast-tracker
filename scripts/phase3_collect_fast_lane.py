@@ -13,7 +13,7 @@ from phase3.fast_lane import normalize_fotmob_board, join_verified_fast_rows
 REGISTRY=ROOT/'data/phase3_live_identity_map.json'
 OUT=ROOT/'data/phase3_fast_snapshot.json'
 LAST_GOOD=ROOT/'data/phase3_fast_last_good.json'
-# Keep the fast lane on the same proven one-board transport used by Layer 2.
+# Same proven one-board transport and YYYYMMDD date contract as Layer 2.
 URL='https://www.fotmob.com/api/data/matches?date={date}'
 
 
@@ -24,9 +24,13 @@ def load_rows(path):
 
 
 def external_id(row):
-    """Use the persistent Layer-2 ID without attempting any fuzzy rematch."""
     value=row.get('external_id') or row.get('source_match_id')
     return str(value) if value is not None else ''
+
+
+def fotmob_date(now):
+    """FotMob data/matches expects the compact date used by proven Layer 2."""
+    return now.strftime('%Y%m%d')
 
 
 def last_good_meta(now):
@@ -49,7 +53,7 @@ def main():
     if not verified:
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)); print('PHASE3_FAST health=NO_VERIFIED_TARGETS verified_targets=0 requests=0 failures=0 rows=0'); return 0
     try:
-        req=urllib.request.Request(URL.format(date=now.date().isoformat()),headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
+        req=urllib.request.Request(URL.format(date=fotmob_date(now)),headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
         payload['request_count']=1
         with urllib.request.urlopen(req,timeout=12) as response: board=json.load(response)
         normalized=normalize_fotmob_board(board,now.isoformat())
