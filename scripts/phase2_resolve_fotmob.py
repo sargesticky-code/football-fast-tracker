@@ -23,8 +23,12 @@ ALIASES={
 }
 def norm(s):
  x=re.sub(r"[^a-z0-9]+","",str(s).lower())
- for suffix in ("women","woman"):
+ # Cohort markers are validated separately. Remove them before canonical-name
+ # comparison so HKJC AM / Women U20 conventions can match provider U23 / (W).
+ for suffix in ("women","woman","u17","u18","u19","u20","u21","u23","am"):
   if x.endswith(suffix): x=x[:-len(suffix)]
+ # Provider women's marker becomes a trailing w after punctuation removal.
+ if x.endswith("w"): x=x[:-1]
  return ALIASES.get(x,x)
 def sim(a,b):return SequenceMatcher(None,norm(a),norm(b)).ratio()
 def cohort(name,tournament=""):
