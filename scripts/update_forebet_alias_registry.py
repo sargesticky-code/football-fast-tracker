@@ -10,6 +10,7 @@ from forebet_match_policy import team_score
 
 ROOT = Path(__file__).resolve().parent.parent
 CURRENT = ROOT / "data" / "forebet_current.csv"
+AVAILABILITY = ROOT / "data" / "forebet_availability.csv"
 REGISTRY = ROOT / "data" / "team_alias_registry.csv"
 MANUAL = ROOT / "data" / "team_alias_manual.csv"
 HKT = ZoneInfo("Asia/Hong_Kong")
@@ -94,8 +95,62 @@ def main() -> int:
         manual_rows += 1
 
     learned = 0
+    fixture_learned = 0
     conflicts = 0
     rejected_noise = 0
+
+    # A Forebet fixture is identity evidence even when the provider publishes no
+    # usable prediction model.  The availability layer now retains the actual
+    # provider home/away names and promotes only strict, unique >=0.94 matches.
+    # Persist those aliases here too so GitHub has the same learn-once dictionary
+    # as Supabase rather than waiting for a future model row.
+    for row in read_csv(AVAILABILITY):
+        if clean(row.get("identity_status")).upper() != "VERIFIED":
+            continue
+        try:
+            confidence = float(clean(row.get("fixture_match_score")) or 0)
+        except ValueError:
+            confidence = 0.0
+        if confidence < 0.94:
+            continue
+        pairs = (
+            (clean(row.get("source_home_team")), clean(row.get("home_en"))),
+            (clean(row.get("source_away_team")), clean(row.get("away_en"))),
+        )
+        for alias, canonical in pairs:
+            if not alias or not canonical or source_noise(alias):
+                continue
+            k = key(alias)
+            old = store.get(k)
+            if old and clean(old.get("canonical_hkjc_name")) != canonical:
+                if clean(old.get("status")).upper() == "MANUAL":
+                    conflicts += 1
+                    continue
+                old["status"] = "CONFLICT"
+                old["last_seen_hkt"] = now
+                conflicts += 1
+                continue
+            if old is None:
+                store[k] = {
+                    "forebet_alias": alias,
+                    "canonical_hkjc_name": canonical,
+                    "confidence": f"{confidence:.3f}",
+                    "first_seen_hkt": now,
+                    "last_seen_hkt": now,
+                    "match_count": "1",
+                    "status": "ACTIVE",
+                    "source": "FOREBET_LIVESCORE_IDENTITY",
+                }
+                learned += 1
+                fixture_learned += 1
+            else:
+                old["last_seen_hkt"] = now
+                old["confidence"] = f"{max(float(old.get('confidence') or 0), confidence):.3f}"
+                old["match_count"] = str(int(float(old.get("match_count") or 0)) + 1)
+                if old.get("status") != "MANUAL":
+                    old["status"] = "ACTIVE"
+                    old["source"] = old.get("source") or "FOREBET_LIVESCORE_IDENTITY"
+
     for row in read_csv(CURRENT):
         pairs = (
             (clean(row.get("home_team")), clean(row.get("hkjc_home_team"))),
@@ -154,7 +209,8 @@ def main() -> int:
         writer.writerows(rows)
 
     print(
-        f"TEAM_ALIAS_REGISTRY rows={len(rows)} manual={manual_rows} learned={learned} conflicts={conflicts} "
+        f"TEAM_ALIAS_REGISTRY rows={len(rows)} manual={manual_rows} learned={learned} "
+        f"fixture_learned={fixture_learned} conflicts={conflicts} "
         f"pruned_noise={pruned_noise} rejected_noise={rejected_noise}"
     )
     return 0
