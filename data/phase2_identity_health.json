@@ -1,11 +1,11 @@
 {
   "status": "OK",
-  "matches": 45,
-  "unique_teams": 90,
-  "confirmed": 82,
-  "unresolved": 8,
+  "matches": 48,
+  "unique_teams": 96,
+  "confirmed": 80,
+  "unresolved": 16,
   "conflicts": 0,
-  "coverage_pct": 91.1,
-  "snapshot_age_hours": 0.01,
-  "layer1_exit": true
+  "coverage_pct": 83.3,
+  "snapshot_age_hours": 0.0,
+  "layer1_exit": false
 }
