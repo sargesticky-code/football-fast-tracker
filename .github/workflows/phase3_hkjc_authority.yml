@@ -59,6 +59,17 @@ jobs:
               p=Path('data')/name
               print(f"PHASE3_IDENTITY_STATE file={name} present={int(p.exists())} bytes={p.stat().st_size if p.exists() else 0}")
           PY
+      - name: Snapshot Layer 2 registry before cycle
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from phase3.state_continuity import registry_fingerprint
+          p = Path('data/phase3_live_identity_map.json')
+          rows = json.loads(p.read_text()) if p.exists() else []
+          Path('/tmp/phase3_identity_before.json').write_text(json.dumps(registry_fingerprint(rows), sort_keys=True))
+          print(f"PHASE3_IDENTITY_BEFORE rows={len(rows)}")
+          PY
       - name: Run Layer 1 deterministic tests
         run: python -m unittest tests.test_phase3_hkjc_authority -v
       - name: Run Layer 2 identity tests
@@ -86,6 +97,34 @@ jobs:
         run: PYTHONPATH=. python scripts/phase3_collect_fotmob_identity.py
       - name: Build persistent identity registry
         run: PYTHONPATH=. python scripts/phase3_build_identity_registry.py
+      - name: Enforce Layer 2 runtime continuity
+        run: |
+          python - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+          from phase3.state_continuity import assert_empty_cycle_retention, registry_fingerprint
+
+          def restore_fingerprint(raw):
+              return {
+                  'candidates': {ast.literal_eval(k): tuple(v) for k, v in raw.get('candidates', {}).items()},
+                  'verified': {ast.literal_eval(k) for k in raw.get('verified', [])},
+              }
+
+          # JSON cannot encode tuple dictionary keys, so reconstruct the saved fingerprint
+          # from a JSON-safe representation when prior state exists.
+          before_path = Path('/tmp/phase3_identity_before.json')
+          before_raw = json.loads(before_path.read_text()) if before_path.exists() else {'candidates': {}, 'verified': []}
+          if before_raw.get('candidates') or before_raw.get('verified'):
+              before = restore_fingerprint(before_raw)
+          else:
+              before = {'candidates': {}, 'verified': set()}
+          p = Path('data/phase3_live_identity_map.json')
+          rows = json.loads(p.read_text()) if p.exists() else []
+          after = registry_fingerprint(rows)
+          assert_empty_cycle_retention(before, after)
+          print(f"PHASE3_IDENTITY_CONTINUITY verified={len(after['verified'])} candidate={len(after['candidates'])} status=PASS")
+          PY
       - name: Save persistent Layer 2 identity state
         if: always()
         uses: actions/cache/save@v4
