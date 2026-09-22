@@ -1,6 +1,6 @@
 # Football Fast Tracker
 
-Automated football data feeds for the Fast Tracker Google Sheet. Production data is keyed by the HKJC `FBxxxx` event id, so source joins do not depend on loose team-name matching inside the Sheet.
+Automated football data workers for the Supabase-first Fast Tracker app. Production data is keyed by the HKJC `FBxxxx` event id, and Supabase is the canonical serving/storage layer. The former Google Sheet dashboard is frozen legacy and is not a production target.
 
 ## Production architecture
 
@@ -99,16 +99,19 @@ The heavier research stack is manual-only. `.github/workflows/catboost_research.
 - **07:20** — freshness watchdog; dispatches the same zero-credit production workflow only when stale
 - CatBoost ensemble — manual research only
 
-## Google Sheet staging
+## Supabase-first delivery
 
-The Fast Tracker workbook reads the public CSVs with `IMPORTDATA`:
+GitHub Actions remain useful as low-cost compute workers for Forebet, historical models and other batch enrichment, but their outputs are reconciled into Supabase. The public dashboard reads Supabase only.
 
-- `ForebetFeed` → `data/forebet_current.csv`
-- `HKJCFeed` → `data/hkjc_current.csv`
-- `MarketFeed` → `data/bet365_current.csv`
-- `ModelFeed` → `data/model_current.csv`
+Current direction:
 
-`Fast Tracker Live` joins all model and market fields by HKJC `FBxxxx`. The Dashboard remains a concise view; full current coverage stays in `Fast Tracker Live`.
+- direct HKJC upcoming/live authority → Supabase
+- GitHub model artifacts → Supabase reconciliation
+- canonical joins and health gates → Supabase
+- public dashboard/details/health → Supabase-backed app
+- Google Sheet dashboard → frozen legacy / rollback reference only
+
+The CSV files in `data/` remain worker artifacts and recovery inputs; they are no longer the user-facing production database.
 
 ## Reliability principles
 
