@@ -60,19 +60,23 @@ def fast_snapshot_age_seconds(observed_at: Any, now: Any = None) -> float | None
 
 
 def _is_live_row(row: dict[str, Any]) -> bool:
+    """Accept live evidence only when a genuine minute accompanies non-terminal state."""
     status = str(row.get("status") or "").strip().upper()
     terminal = {"FT", "FULL TIME", "FULL-TIME", "AET", "PEN", "CANCELLED", "CANCELED", "POSTPONED", "ABANDONED"}
     if status in terminal:
         return False
-    return row.get("minute") is not None or status in {"1ST", "2ND", "HT", "LIVE", "HALF TIME", "HALF-TIME"}
+    # HT/LIVE labels without a source minute prove status only, not the Layer-3
+    # exit criterion. Never manufacture a minute from a status label.
+    return _int_or_none(row.get("minute")) is not None
 
 
 def fast_lane_health(joined_rows: Iterable[dict[str, Any]], observed_at: Any, *, now: Any = None,
                      request_failures: int = 0, max_age_seconds: float = 15.0) -> dict[str, Any]:
     """Summarise Layer 3 heartbeat freshness without fabricating live state.
 
-    Request failures and stale/malformed timestamps fail closed. A fresh board
-    containing only terminal mapped rows is explicitly distinct from live data.
+    Request failures and stale/malformed timestamps fail closed. FRESH_LIVE
+    requires a real source minute; mapped status-only/terminal rows are kept
+    separate and can never satisfy the Layer-3 live evidence criterion.
     """
     rows = [row for row in joined_rows if isinstance(row, dict)]
     age = fast_snapshot_age_seconds(observed_at, now)
