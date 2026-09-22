@@ -6,7 +6,6 @@ on:
       - app-v1
     paths:
       - 'scripts/phase2_*.py'
-      - 'data/phase2_*'
       - '.github/workflows/phase2_identity.yml'
   schedule:
     - cron: '18 * * * *'
@@ -32,7 +31,6 @@ jobs:
       - name: Execute complete Layer 1 pipeline
         run: python scripts/phase2_run_layer1.py
       - name: Persist Phase 2 snapshots only
-        if: github.event_name != 'pull_request'
         run: |
           git config user.name "phase2-bot"
           git config user.email "phase2-bot@users.noreply.github.com"
