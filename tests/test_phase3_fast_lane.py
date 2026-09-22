@@ -24,6 +24,18 @@ class FastLaneTests(unittest.TestCase):
         self.assertEqual(rows[0]["minute"],67)
         self.assertEqual((rows[0]["home_score"],rows[0]["away_score"]),(2,1))
 
+    def test_stoppage_time_keeps_base_minute_without_fabrication(self):
+        payload={"matches":[{"id":13,"home":{"score":1},"away":{"score":1},"status":{"liveTime":{"short":"90 + 4'"},"reason":{"short":"2nd"}}}]}
+        row=normalize_fotmob_board(payload,"2026-09-22T03:00:00+00:00")[0]
+        self.assertEqual(row["minute"],90)
+        self.assertEqual(row["status"],"2nd")
+
+    def test_halftime_status_is_preserved_without_inventing_minute(self):
+        payload={"matches":[{"id":14,"home":{"score":0},"away":{"score":0},"status":{"reason":{"short":"HT"}}}]}
+        row=normalize_fotmob_board(payload,"2026-09-22T03:00:00+00:00")[0]
+        self.assertEqual(row["status"],"HT")
+        self.assertIsNone(row["minute"])
+
     def test_malformed_unrelated_containers_do_not_kill_board(self):
         payload={"leagues":[None,"bad",{"matches":None},{"matches":[None,{"id":11,"home":"bad","away":None,"status":"bad"}]}]}
         rows=normalize_fotmob_board(payload,"2026-09-22T03:00:00+00:00")
