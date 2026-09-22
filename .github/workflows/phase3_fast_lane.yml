@@ -1,0 +1,63 @@
+name: Phase 3 Fast Lane
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '2,17,32,47 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase3-fast-lane
+  cancel-in-progress: true
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Phase 3 ref
+        uses: actions/checkout@v4
+        with:
+          ref: phase3-live-intelligence
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore persistent Layer 2 identity state
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/phase3_identity_evidence.jsonl
+            data/phase3_live_identity_map.json
+            data/phase3_identity_source_health.json
+            data/phase3_identity_exceptions.json
+          key: phase3-fast-read-${{ github.run_id }}
+          restore-keys: |
+            phase3-identity-
+      - name: Run Layer 3 deterministic tests
+        run: python -m unittest tests.test_phase3_fast_lane -v
+      - name: Collect fast heartbeat
+        run: PYTHONPATH=. python scripts/phase3_collect_fast_lane.py
+      - name: Diagnose fast snapshot
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          p=Path('data/phase3_fast_snapshot.json')
+          d=json.loads(p.read_text())
+          t=datetime.fromisoformat(d['fast_snapshot_at'])
+          age=max(0,(datetime.now(timezone.utc)-t).total_seconds())
+          print(f"PHASE3_FAST_DIAG health={d['health']} age_seconds={age:.1f} verified_targets={d['verified_targets']} requests={d['request_count']} rows={len(d['rows'])} unmapped={d['unmapped_count']}")
+          if age > 180: raise SystemExit('fast snapshot unexpectedly stale')
+          PY
+      - name: Upload Layer 3 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-fast-evidence-${{ github.run_id }}
+          path: |
+            data/phase3_fast_snapshot.json
+            data/phase3_fast_last_good.json
+          if-no-files-found: warn
+          retention-days: 3
