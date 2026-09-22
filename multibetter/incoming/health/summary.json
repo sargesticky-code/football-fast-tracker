@@ -1,14 +1,14 @@
 {
-  "built_at_hkt": "2026-09-22T00:59:42.488634+08:00",
+  "built_at_hkt": "2026-09-22T09:36:13.610489+08:00",
   "sources": {
     "FRB": {
       "source": "FRB",
       "status": "OK",
-      "rows": 3,
+      "rows": 36,
       "requests": 0,
       "errors": 0,
-      "started_at": "2026-09-22T00:59:14.290492+08:00",
-      "finished_at": "2026-09-22T00:59:14.292902+08:00",
+      "started_at": "2026-09-22T09:35:51.174157+08:00",
+      "finished_at": "2026-09-22T09:35:51.178843+08:00",
       "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
@@ -16,11 +16,11 @@
     "ACC": {
       "source": "ACC",
       "status": "OK",
-      "rows": 4,
-      "requests": 40,
+      "rows": 93,
+      "requests": 34,
       "errors": 0,
-      "started_at": "2026-09-22T00:59:14.481081+08:00",
-      "finished_at": "2026-09-22T00:59:26.294443+08:00",
+      "started_at": "2026-09-22T09:35:51.362234+08:00",
+      "finished_at": "2026-09-22T09:36:00.005721+08:00",
       "note": "",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
@@ -28,11 +28,11 @@
     "BCL": {
       "source": "BCL",
       "status": "OK",
-      "rows": 18,
+      "rows": 25,
       "requests": 27,
       "errors": 0,
-      "started_at": "2026-09-22T00:59:26.485906+08:00",
-      "finished_at": "2026-09-22T00:59:36.554028+08:00",
+      "started_at": "2026-09-22T09:36:00.194446+08:00",
+      "finished_at": "2026-09-22T09:36:08.282118+08:00",
       "note": "",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
@@ -40,11 +40,11 @@
     "FST": {
       "source": "FST",
       "status": "OK",
-      "rows": 39,
+      "rows": 68,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-22T00:59:36.785753+08:00",
-      "finished_at": "2026-09-22T00:59:38.763916+08:00",
+      "started_at": "2026-09-22T09:36:08.494951+08:00",
+      "finished_at": "2026-09-22T09:36:10.298738+08:00",
       "note": "",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
@@ -52,11 +52,11 @@
     "PRE": {
       "source": "PRE",
       "status": "OK",
-      "rows": 34,
+      "rows": 36,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-22T00:59:38.964303+08:00",
-      "finished_at": "2026-09-22T00:59:40.028326+08:00",
+      "started_at": "2026-09-22T09:36:10.480881+08:00",
+      "finished_at": "2026-09-22T09:36:11.369900+08:00",
       "note": "",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
@@ -64,12 +64,12 @@
     "STA": {
       "source": "STA",
       "status": "OK",
-      "rows": 34,
+      "rows": 58,
       "requests": 3,
       "errors": 0,
-      "started_at": "2026-09-22T00:59:40.273499+08:00",
-      "finished_at": "2026-09-22T00:59:42.368855+08:00",
-      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-21\", \"calibration_rows\": 55, \"dominance\": 0.9474, \"dominant_cluster\": [-300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300], \"dominant_samples\": 18, \"inferred_source_minus_utc_minutes\": -300, \"offset_distribution\": {\"-300\": 18, \"-237\": 1}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 19, \"target_rows\": 34}",
+      "started_at": "2026-09-22T09:36:11.619376+08:00",
+      "finished_at": "2026-09-22T09:36:13.506317+08:00",
+      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-21\", \"calibration_rows\": 79, \"dominance\": 1.0, \"dominant_cluster\": [-240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -237], \"dominant_samples\": 20, \"inferred_source_minus_utc_minutes\": -240, \"offset_distribution\": {\"-240\": 19, \"-237\": 1}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 20, \"target_rows\": 58}",
       "target_start": "2026-09-22",
       "target_end": "2026-09-23"
     }

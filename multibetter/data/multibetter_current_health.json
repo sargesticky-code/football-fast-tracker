@@ -1,22 +1,26 @@
 {
-  "rows": 46,
+  "rows": 39,
   "learned_alias_count": 0,
   "alias_cache_rows": 0,
   "status_counts": {
-    "HKJC_ANCHOR": 46
+    "HKJC_ANCHOR": 39
   },
-  "master_direct_rows": 11,
+  "master_direct_rows": 31,
   "master_direct_by_source": {
-    "BCL": 10,
-    "FST": 10,
-    "STA": 7,
-    "PRE": 5
+    "FRB": 31,
+    "ACC": 20,
+    "BCL": 20,
+    "FST": 16,
+    "PRE": 15,
+    "STA": 15
   },
-  "master_global_rows": 7,
+  "master_global_rows": 31,
   "master_global_by_source": {
-    "BCL": 6,
-    "FST": 6,
-    "PRE": 5,
-    "STA": 5
+    "FRB": 31,
+    "ACC": 20,
+    "STA": 3,
+    "PRE": 1,
+    "BCL": 5,
+    "FST": 3
   }
 }
