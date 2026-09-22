@@ -64,9 +64,6 @@ def fast_snapshot_age_seconds(observed_at: Any, now: Any = None) -> float | None
 def _is_live_row(row: dict[str, Any]) -> bool:
     """Require a known live source status, plausible genuine minute and complete score."""
     status = str(row.get("status") or "").strip().upper()
-    # Fail closed on scheduled/halftime/unknown states even when a source leaves
-    # a minute and score attached. Only explicit in-play states can satisfy the
-    # Layer 3 real heartbeat contract.
     live_statuses = {"1ST", "2ND", "LIVE", "ET", "EXTRA TIME", "EXTRA-TIME"}
     if status not in live_statuses:
         return False
@@ -82,13 +79,7 @@ def _is_live_row(row: dict[str, Any]) -> bool:
 
 def fast_lane_health(joined_rows: Iterable[dict[str, Any]], observed_at: Any, *, now: Any = None,
                      request_failures: int = 0, max_age_seconds: float = 15.0) -> dict[str, Any]:
-    """Summarise Layer 3 heartbeat freshness without fabricating live state.
-
-    Request failures and stale/malformed timestamps fail closed. FRESH_LIVE
-    requires an explicit known in-play source status, a plausible real source
-    minute and complete non-negative score; partial/unknown-state rows cannot
-    satisfy the exit criterion.
-    """
+    """Summarise Layer 3 heartbeat freshness without fabricating live state."""
     rows = [row for row in joined_rows if isinstance(row, dict)]
     age = fast_snapshot_age_seconds(observed_at, now)
     live_rows = [row for row in rows if _is_live_row(row)]
@@ -110,16 +101,30 @@ def fast_lane_health(joined_rows: Iterable[dict[str, Any]], observed_at: Any, *,
 
 
 def verified_index(registry_rows: Iterable[dict[str, Any]]) -> dict[tuple[str, str], dict[str, Any]]:
-    """Index only VERIFIED identities; candidates/conflicts fail closed."""
-    out = {}
+    """Index only unambiguous VERIFIED identities; collisions fail closed.
+
+    A duplicated source/external ID mapped to different HKJC events is unsafe:
+    choosing either row would attach a real heartbeat to an uncertain match.
+    Remove the collided key entirely instead of allowing last-write-wins.
+    """
+    out: dict[tuple[str, str], dict[str, Any]] = {}
+    collisions: set[tuple[str, str]] = set()
     for row in registry_rows:
         if not isinstance(row, dict) or row.get("status") != "VERIFIED":
             continue
         source = str(row.get("source") or "").upper()
         external_id = str(row.get("external_id") or row.get("source_match_id") or "")
         event_id = str(row.get("hkjc_event_id") or "")
-        if source and external_id and event_id:
-            out[(source, external_id)] = row
+        if not (source and external_id and event_id):
+            continue
+        key = (source, external_id)
+        existing = out.get(key)
+        if existing is not None and str(existing.get("hkjc_event_id") or "") != event_id:
+            collisions.add(key)
+            out.pop(key, None)
+            continue
+        if key not in collisions:
+            out[key] = row
     return out
 
 
