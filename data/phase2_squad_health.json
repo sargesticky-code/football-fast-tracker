@@ -8,429 +8,429 @@
     {
       "hkjc_team_id": "50000186",
       "team": "Antofagasta",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000291",
       "team": "Audax Italiano",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000471",
       "team": "Blackpool",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000654",
       "team": "Cambridge Utd",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000732",
       "team": "Cheltenham",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000738",
       "team": "Chesterfield",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000761",
       "team": "China AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000790",
       "team": "Cobreloa",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000793",
       "team": "Colchester",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000796",
       "team": "Colo Colo",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000890",
       "team": "Crawley Town",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000913",
       "team": "Curico Unido",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50000974",
       "team": "Deportivo Nublense",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001142",
       "team": "Exeter City",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001167",
       "team": "FC Imabari",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001248",
       "team": "Fleetwood",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001338",
       "team": "Gamba Osaka",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001419",
       "team": "Gillingham",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001462",
       "team": "Grimsby",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001621",
       "team": "Iquique",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001624",
       "team": "Iran AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001685",
       "team": "Japan AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001774",
       "team": "Kashima Antlers",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001775",
       "team": "Kashiwa Reysol",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001803",
       "team": "Korea DPR AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001809",
       "team": "Korea Republic AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001842",
       "team": "Kuwait AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50001992",
       "team": "Machida Zelvia",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002120",
       "team": "Milton Keynes Dons",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002256",
       "team": "Newport County",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002303",
       "team": "Notts County",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002326",
       "team": "Oldham",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002449",
       "team": "Peterborough",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002485",
       "team": "Port Vale",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002538",
       "team": "Puerto Montt",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002660",
       "team": "Rotherham",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002695",
       "team": "Sagan Tosu",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002707",
       "team": "Salford City",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002755",
       "team": "Saudi Arabia AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002819",
       "team": "Sheff Wednesday",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002829",
       "team": "Shrewsbury",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50002980",
       "team": "Stevenage",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003017",
       "team": "Swindon",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003063",
       "team": "Thailand AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003083",
       "team": "Tochigi City",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003085",
       "team": "Tokushima Vortis",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003113",
       "team": "Tranmere",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003199",
       "team": "Union La Calera",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003207",
       "team": "United Arab Emirates AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003210",
       "team": "Universidad Catolica",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003246",
       "team": "Uzbekistan AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003298",
       "team": "Ventforet Kofu",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003311",
       "team": "Vietnam AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003329",
       "team": "Vissel Kobe",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003349",
       "team": "Walsall",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003369",
       "team": "Wigan",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50003402",
       "team": "York City",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50240649",
       "team": "Spain Women U20",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50331022",
       "team": "Deportes Concepcion",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50353888",
       "team": "Hacken Women",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50355604",
       "team": "Manchester City Women",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50355608",
       "team": "Bayern Munich Women",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50355619",
       "team": "Inter Milan Women",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50355620",
       "team": "Juventus Women",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50355624",
       "team": "Roma Women",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50356281",
       "team": "Real Madrid Women",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50356297",
       "team": "Benfica Women",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50356306",
       "team": "Paris Saint Germain Women",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50362133",
       "team": "OH Leuven Women",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50621165",
       "team": "Italy Women U20",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     },
     {
       "hkjc_team_id": "50623690",
       "team": "Philippines AM",
-      "class": "SOURCE_ERROR",
-      "detail": "404"
+      "class": "SQUAD_ABSENT",
+      "detail": "no explicit squad members"
     }
   ],
-  "fetched_at": "2026-09-22T02:31:41.331686+00:00"
+  "fetched_at": "2026-09-22T03:29:18.322169+00:00"
 }
