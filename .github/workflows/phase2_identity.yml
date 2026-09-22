@@ -18,7 +18,7 @@ jobs:
   phase2:
     if: (github.event_name == 'pull_request' && github.head_ref == 'phase2-human-intelligence') || (github.event_name != 'pull_request' && github.ref == 'refs/heads/phase2-human-intelligence')
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,6 +40,18 @@ jobs:
           else:
               print('PHASE2_LAYER2_SKIPPED layer1_exit=false')
           PY
+      - name: Execute Layer 3 manager master after Layer 2 exit
+        run: |
+          python - <<'PY'
+          import json,subprocess,sys,os
+          if not os.path.exists('data/phase2_squad_health.json'):
+              print('PHASE2_LAYER3_SKIPPED no_layer2_health'); raise SystemExit(0)
+          h=json.load(open('data/phase2_squad_health.json'))
+          if h.get('layer2_exit'):
+              subprocess.check_call([sys.executable,'scripts/phase2_capture_managers_fotmob.py'])
+          else:
+              print('PHASE2_LAYER3_SKIPPED layer2_exit=false')
+          PY
       - name: Persist Phase 2 snapshots only
         run: |
           git config user.name "phase2-bot"
@@ -47,6 +59,8 @@ jobs:
           git add data/phase2_hkjc_current.csv data/phase2_hkjc_capture_health.json data/phase2_team_identity_targets.csv data/phase2_team_identity_evidence.csv data/phase2_identity_resolution_diagnostics.csv data/phase2_thesportsdb_diagnostics.csv data/phase2_espn_diagnostics.csv data/phase2_fotmob_diagnostics.csv data/phase2_identity_health.json
           [ ! -f data/phase2_player_master.csv ] || git add data/phase2_player_master.csv
           [ ! -f data/phase2_squad_health.json ] || git add data/phase2_squad_health.json
+          [ ! -f data/phase2_manager_master.csv ] || git add data/phase2_manager_master.csv
+          [ ! -f data/phase2_manager_health.json ] || git add data/phase2_manager_health.json
           if ! git diff --cached --quiet; then
             git commit -m "phase2: refresh human intelligence evidence"
             git push origin HEAD:phase2-human-intelligence
