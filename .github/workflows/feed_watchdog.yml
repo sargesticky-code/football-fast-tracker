@@ -3,10 +3,9 @@ name: Feed Freshness Watchdog
 on:
   workflow_dispatch:
   schedule:
-    # Hourly, offset from the main model / capture jobs.
-    # This is a lightweight control-plane check; it only dispatches heavy
-    # recovery when freshness or canonical target coverage actually drifts.
-    - cron: '12 * * * *'
+    # Lightweight control-plane check every 10 minutes. Heavy recovery is
+    # dispatched only when freshness or canonical target coverage actually drifts.
+    - cron: '2,12,22,32,42,52 * * * *'
   push:
     paths:
       - '.github/workflows/feed_watchdog.yml'
@@ -168,12 +167,12 @@ jobs:
           echo "Source recovery required: stale=${{ steps.freshness.outputs.source_stale }} missing=${{ steps.canonical.outputs.missing_count }}"
           gh workflow run forebet_daily.yml --repo "$GITHUB_REPOSITORY" --ref main
 
-      - name: Recover DC/Pi/Form model layer when stale
-        if: steps.freshness.outputs.model_stale == 'true'
+      - name: Recover DC/Pi/Form model layer when stale or target coverage drifts
+        if: steps.freshness.outputs.model_stale == 'true' || steps.canonical.outputs.coverage_gap == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo 'Model layer is stale; dispatching model_daily.yml once.'
+          echo "Model recovery required: stale=${{ steps.freshness.outputs.model_stale }} missing=${{ steps.canonical.outputs.missing_count }}"
           gh workflow run model_daily.yml --repo "$GITHUB_REPOSITORY" --ref main
 
       - name: Healthy feeds
