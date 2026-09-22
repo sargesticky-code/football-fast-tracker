@@ -26,7 +26,7 @@ class FastRow:
 
 def _int_or_none(value: Any) -> int | None:
     if isinstance(value, str):
-        # Preserve a leading sign.  Dropping '-' would turn malformed negative
+        # Preserve a leading sign. Dropping '-' would turn malformed negative
         # source values such as "-1" into valid positive live evidence.
         match = re.search(r"[+-]?\d+", value)
         value = match.group(0) if match else None
@@ -62,10 +62,13 @@ def fast_snapshot_age_seconds(observed_at: Any, now: Any = None) -> float | None
 
 
 def _is_live_row(row: dict[str, Any]) -> bool:
-    """Require plausible genuine minute and complete score for live evidence."""
+    """Require source status, plausible genuine minute and complete score."""
     status = str(row.get("status") or "").strip().upper()
     terminal = {"FT", "FULL TIME", "FULL-TIME", "AET", "PEN", "CANCELLED", "CANCELED", "POSTPONED", "ABANDONED"}
-    if status in terminal:
+    # A minute plus score without a source status is not the complete
+    # score+minute+status heartbeat required by Layer 3. Fail closed instead of
+    # inferring live state from the other fields.
+    if not status or status in terminal:
         return False
     minute = _int_or_none(row.get("minute"))
     home_score = _int_or_none(row.get("home_score"))
@@ -82,8 +85,8 @@ def fast_lane_health(joined_rows: Iterable[dict[str, Any]], observed_at: Any, *,
     """Summarise Layer 3 heartbeat freshness without fabricating live state.
 
     Request failures and stale/malformed timestamps fail closed. FRESH_LIVE
-    requires a plausible real source minute plus complete non-negative score;
-    partial/status-only rows cannot satisfy the Layer-3 exit criterion.
+    requires explicit source status, a plausible real source minute and complete
+    non-negative score; partial/status-less rows cannot satisfy the exit criterion.
     """
     rows = [row for row in joined_rows if isinstance(row, dict)]
     age = fast_snapshot_age_seconds(observed_at, now)
