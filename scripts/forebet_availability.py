@@ -32,6 +32,8 @@ _PREVIOUS_LOADED = False
 FIELDS = [
     "checked_at_hkt", "match_date", "kickoff_hkt", "hkjc_event_id", "league_zh",
     "home_en", "away_en", "state", "reason",
+    "source_home_team", "source_away_team", "source_competition",
+    "fixture_match_score", "identity_status", "identity_source",
 ]
 
 
@@ -122,12 +124,37 @@ def _fetch_livescore(production) -> str | None:
     return body if healthy else None
 
 
-def _fixture_ids(production, body: str | None, targets: list[dict]) -> set[str]:
+def _nearest_competition(lines: list[str], home_index: int) -> str:
+    """Best-effort livescore section label retained as audit context only."""
+    for index in range(home_index - 1, max(-1, home_index - 18), -1):
+        candidate = lines[index].strip()
+        lower = candidate.casefold()
+        if not candidate or len(candidate) > 140:
+            continue
+        if re.fullmatch(r"\d{1,2}:\d{2}", candidate):
+            continue
+        if lower.startswith(("image", "title:", "url source:", "markdown content:")):
+            continue
+        if ":" in candidate:
+            return candidate
+    return ""
+
+
+def _fixture_evidence(
+    production, body: str | None, targets: list[dict]
+) -> dict[str, dict[str, str]]:
+    """Return fixture-presence evidence without throwing away provider identity.
+
+    Availability used to collapse a successful livescore match to only an event
+    ID. That made FIXTURE_ONLY rows useless for the permanent alias census.
+    Keep the actual provider home/away strings and a conservative confidence
+    marker so high-confidence pairs can be learned once and reused forever.
+    """
     if not body:
-        return set()
+        return {}
     lines = [_clean_line(line) for line in body.splitlines() if line.strip()]
     lines = [line for line in lines if line]
-    found: set[str] = set()
+    found: dict[str, dict[str, str]] = {}
 
     for target in targets:
         event_id = str(target.get("hkjc_event_id") or "").strip()
@@ -136,7 +163,7 @@ def _fixture_ids(production, body: str | None, targets: list[dict]) -> set[str]:
         if not event_id or not home or not away:
             continue
 
-        best = 0.0
+        candidates: list[tuple[float, float, float, int, int]] = []
         for i, line in enumerate(lines):
             hs = production.feed.team_score(line, home)
             if hs < 0.68:
@@ -145,11 +172,32 @@ def _fixture_ids(production, body: str | None, targets: list[dict]) -> set[str]:
                 aws = production.feed.team_score(lines[j], away)
                 avg = (hs + aws) / 2
                 if hs >= 0.68 and aws >= 0.68 and avg >= 0.76:
-                    best = max(best, avg)
-            if best >= 0.90:
-                break
-        if best >= 0.76:
-            found.add(event_id)
+                    candidates.append((avg, hs, aws, i, j))
+
+        if not candidates:
+            continue
+        candidates.sort(reverse=True)
+        best, hs, aws, i, j = candidates[0]
+        second = candidates[1][0] if len(candidates) > 1 else 0.0
+
+        # Auto-promotion must be much stricter than simple fixture-presence
+        # classification. Ambiguous/near-equal candidates remain discoverable
+        # evidence but are never silently promoted into the static dictionary.
+        unique_margin = best - second
+        verified = (
+            best >= 0.94
+            and hs >= 0.90
+            and aws >= 0.90
+            and (second < 0.88 or unique_margin >= 0.05)
+        )
+        found[event_id] = {
+            "source_home_team": lines[i],
+            "source_away_team": lines[j],
+            "source_competition": _nearest_competition(lines, i),
+            "fixture_match_score": f"{best:.3f}",
+            "identity_status": "VERIFIED" if verified else "CANDIDATE",
+            "identity_source": "FOREBET_LIVESCORE",
+        }
     return found
 
 
@@ -186,13 +234,14 @@ def install(production) -> None:
             target for target in targets
             if str(target.get("hkjc_event_id") or "").strip() not in model_ids
         ]
-        fixture_ids: set[str] = set()
+        fixture_evidence: dict[str, dict[str, str]] = {}
         if unresolved_targets:
-            fixture_ids = _fixture_ids(
+            fixture_evidence = _fixture_evidence(
                 production,
                 _fetch_livescore(production),
                 unresolved_targets,
             )
+        fixture_ids = set(fixture_evidence)
 
         checked_at = datetime.now(HKT).isoformat(timespec="seconds")
         counts = {"MODEL": 0, "FIXTURE_ONLY": 0, "UNRESOLVED": 0}
@@ -239,6 +288,36 @@ def install(production) -> None:
                 "away_en": str(target.get("away_en") or ""),
                 "state": state,
                 "reason": reason,
+                "source_home_team": str(
+                    fixture_evidence.get(event_id, {}).get("source_home_team")
+                    or previous.get(event_id, {}).get("source_home_team")
+                    or ""
+                ),
+                "source_away_team": str(
+                    fixture_evidence.get(event_id, {}).get("source_away_team")
+                    or previous.get(event_id, {}).get("source_away_team")
+                    or ""
+                ),
+                "source_competition": str(
+                    fixture_evidence.get(event_id, {}).get("source_competition")
+                    or previous.get(event_id, {}).get("source_competition")
+                    or ""
+                ),
+                "fixture_match_score": str(
+                    fixture_evidence.get(event_id, {}).get("fixture_match_score")
+                    or previous.get(event_id, {}).get("fixture_match_score")
+                    or ""
+                ),
+                "identity_status": str(
+                    fixture_evidence.get(event_id, {}).get("identity_status")
+                    or previous.get(event_id, {}).get("identity_status")
+                    or ""
+                ),
+                "identity_source": str(
+                    fixture_evidence.get(event_id, {}).get("identity_source")
+                    or previous.get(event_id, {}).get("identity_source")
+                    or ""
+                ),
             }
             if state != "MODEL":
                 print(
