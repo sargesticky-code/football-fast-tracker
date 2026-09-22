@@ -2,6 +2,13 @@ name: Phase 3 Fast Lane
 
 on:
   workflow_dispatch:
+  push:
+    branches: [phase3-live-intelligence]
+    paths:
+      - 'phase3/fast_lane.py'
+      - 'scripts/phase3_collect_fast_lane.py'
+      - 'tests/test_phase3_fast_lane.py'
+      - '.github/workflows/phase3_fast_lane.yml'
   schedule:
     - cron: '2,17,32,47 * * * *'
 
@@ -35,6 +42,13 @@ jobs:
           key: phase3-fast-read-${{ github.run_id }}
           restore-keys: |
             phase3-identity-
+      - name: Restore Layer 3 last-good state
+        uses: actions/cache/restore@v4
+        with:
+          path: data/phase3_fast_last_good.json
+          key: phase3-fast-state-${{ github.run_id }}
+          restore-keys: |
+            phase3-fast-state-
       - name: Run Layer 3 deterministic tests
         run: python -m unittest tests.test_phase3_fast_lane -v
       - name: Collect fast heartbeat
@@ -45,14 +59,21 @@ jobs:
           import json
           from datetime import datetime, timezone
           from pathlib import Path
-          p=Path('data/phase3_fast_snapshot.json')
-          d=json.loads(p.read_text())
+          d=json.loads(Path('data/phase3_fast_snapshot.json').read_text())
           t=datetime.fromisoformat(d['fast_snapshot_at'])
           age=max(0,(datetime.now(timezone.utc)-t).total_seconds())
-          print(f"PHASE3_FAST_DIAG health={d['health']} age_seconds={age:.1f} verified_targets={d['verified_targets']} requests={d['request_count']} rows={len(d['rows'])} unmapped={d['unmapped_count']}")
+          print(f"PHASE3_FAST_DIAG health={d['health']} age_seconds={age:.1f} verified_targets={d['verified_targets']} requests={d['request_count']} failures={d['request_failures']} rows={len(d['rows'])} unmapped={d['unmapped_count']} last_good_age={d['last_good_age_seconds']}")
           if age > 180: raise SystemExit('fast snapshot unexpectedly stale')
           PY
+      - name: Save Layer 3 last-good state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/phase3_fast_last_good.json
+          key: phase3-fast-state-${{ github.run_id }}
       - name: Upload Layer 3 evidence
+        if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: phase3-fast-evidence-${{ github.run_id }}
