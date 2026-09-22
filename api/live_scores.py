@@ -1086,9 +1086,11 @@ def collect(include_full=False):
         1,
         (len(detail_candidates) + MAX_DETAIL_CALLS_PER_RUN - 1) // MAX_DETAIL_CALLS_PER_RUN
     )
-    # The upstream refresh is five minutes, so rotate once per capture cycle
-    # rather than every wall-clock minute.
-    bucket = (now.minute // 5) % group_count
+    # Supabase now calls this endpoint every minute. Rotate the bounded detail
+    # budget every minute so matches beyond the per-run cap do not wait several
+    # minutes for xG/stats. This changes fairness only; it does not increase the
+    # MAX_DETAIL_CALLS_PER_RUN request ceiling.
+    bucket = now.minute % group_count
     detail_indexes = {
         idx for pos, idx in enumerate(detail_candidates)
         if pos % group_count == bucket
@@ -1274,7 +1276,7 @@ def collect(include_full=False):
             ),
             "rotationGroups": group_count,
             "rotationBucket": bucket,
-            "rotationPolicy": "LIVE_PROVIDER_PRIORITY_5MIN_FAIR_ROTATION",
+            "rotationPolicy": "LIVE_PROVIDER_PRIORITY_1MIN_FAIR_ROTATION",
             "detailFetched": detail_fetched,
             "detailFallbackCalls": detail_fallback_calls,
             "detailErrors": detail_errors,
@@ -1320,7 +1322,7 @@ class handler(BaseHTTPRequestHandler):
                 ctype = "application/json; charset=utf-8"
             self.send_response(200)
             self.send_header("Content-Type", ctype)
-            self.send_header("Cache-Control", "s-maxage=55, stale-while-revalidate=65")
+            self.send_header("Cache-Control", "s-maxage=25, stale-while-revalidate=25")
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(body)
