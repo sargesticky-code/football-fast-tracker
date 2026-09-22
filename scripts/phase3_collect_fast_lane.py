@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from phase3.fast_lane import normalize_fotmob_board, join_verified_fast_rows
+from phase3.fast_lane import fast_lane_health, normalize_fotmob_board, join_verified_fast_rows
 
 REGISTRY=ROOT/'data/phase3_live_identity_map.json'
 OUT=ROOT/'data/phase3_fast_snapshot.json'
@@ -32,17 +32,10 @@ def fotmob_date(now):
     return now.strftime('%Y%m%d')
 
 
-def is_live_evidence(row):
-    """Require a non-terminal status plus a real minute for Layer-3 live proof."""
-    status=str(row.get('status') or '').strip().upper()
-    return row.get('minute') is not None and status not in TERMINAL_STATUSES
-
-
 def last_good_meta(now):
     if not LAST_GOOD.exists(): return {'last_good_at':None,'last_good_age_seconds':None}
     try:
         old=json.loads(LAST_GOOD.read_text())
-        # Only a prior FRESH_LIVE snapshot is valid live-heartbeat evidence.
         if old.get('health') != 'FRESH_LIVE' or not old.get('live_rows'):
             return {'last_good_at':None,'last_good_age_seconds':None}
         stamp=old.get('fast_snapshot_at')
@@ -70,17 +63,16 @@ def main():
         relevant_unmapped=[r for r in unmapped if str(r.get('external_id') or '') in target_ids]
         board_ids={str(r.get('external_id') or '') for r in normalized}
         missing_target_ids=sorted(target_ids-board_ids)
-        live_rows=sum(1 for row in joined if is_live_evidence(row))
+        freshness=fast_lane_health(joined,now.isoformat(),now=now.isoformat(),request_failures=0)
+        live_rows=freshness['live_rows']
         terminal_rows=sum(1 for row in joined if str(row.get('status') or '').strip().upper() in TERMINAL_STATUSES)
-        health='FRESH_LIVE' if live_rows else ('FRESH_TERMINAL_ONLY' if joined else 'TARGETS_NOT_ON_BOARD')
-        payload.update(rows=joined,live_rows=live_rows,terminal_rows=terminal_rows,unmapped_count=len(relevant_unmapped),missing_target_ids=missing_target_ids,board_rows=len(normalized),health=health)
-        # Terminal-only rows prove transport/identity, but must never overwrite
-        # the most recent genuine live-minute heartbeat.
-        if live_rows:
+        health=freshness['health'] if joined else 'TARGETS_NOT_ON_BOARD'
+        payload.update(rows=joined,live_rows=live_rows,terminal_rows=terminal_rows,unmapped_count=len(relevant_unmapped),missing_target_ids=missing_target_ids,board_rows=len(normalized),health=health,snapshot_age_seconds=freshness['snapshot_age_seconds'])
+        if health == 'FRESH_LIVE' and live_rows:
             payload.update(last_good_at=now.isoformat(),last_good_age_seconds=0)
             LAST_GOOD.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
-        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests=1 failures=0 board_rows={len(normalized)} rows={len(joined)} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={len(relevant_unmapped)} missing_targets={len(missing_target_ids)} last_good_age={payload['last_good_age_seconds']}")
+        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests=1 failures=0 board_rows={len(normalized)} rows={len(joined)} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={len(relevant_unmapped)} missing_targets={len(missing_target_ids)} snapshot_age={payload['snapshot_age_seconds']} last_good_age={payload['last_good_age_seconds']}")
         for row in joined: print(f"PHASE3_FAST_MATCH event={row['hkjc_event_id']} external={row['external_id']} status={row['status']} minute={row['minute']} score={row['home_score']}-{row['away_score']}")
         return 0
     except Exception as exc:
