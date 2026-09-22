@@ -166,10 +166,14 @@ def _fixture_evidence(
 ) -> dict[str, dict[str, str]]:
     """Return fixture-presence evidence without throwing away provider identity.
 
-    Availability used to collapse a successful livescore match to only an event
-    ID. That made FIXTURE_ONLY rows useless for the permanent alias census.
-    Keep the actual provider home/away strings and a conservative confidence
-    marker so high-confidence pairs can be learned once and reused forever.
+    Identity resolution is deliberately static-master-first:
+    1) source competition + source team context master;
+    2) globally safe verified source-team master;
+    3) narrowly scoped cohort rules used only to discover new context rows;
+    4) conservative similarity for genuinely unseen names.
+
+    Once an alias/context has been learned, later runs therefore do a dictionary
+    lookup rather than recomputing fuzzy identity.
     """
     if not body:
         return {}
@@ -177,34 +181,109 @@ def _fixture_evidence(
     lines = [line for line in lines if line]
     found: dict[str, dict[str, str]] = {}
 
+    context_map = production.feed.forebet_context_map()
+    global_master = production.feed.forebet_master_map()
+    competition_map = production.feed.forebet_competition_map()
+
+    def canonical_eq(left: str, right: str) -> bool:
+        return (
+            production.feed.normalize_team(str(left or ""))
+            == production.feed.normalize_team(str(right or ""))
+        )
+
     for target in targets:
         event_id = str(target.get("hkjc_event_id") or "").strip()
         home = str(target.get("home_en") or "").strip()
         away = str(target.get("away_en") or "").strip()
+        target_comp = str(target.get("league_zh") or "").strip()
         if not event_id or not home or not away:
             continue
 
         candidates: list[dict[str, object]] = []
         for i, line in enumerate(lines):
             source_comp = _nearest_competition(lines, i)
+            comp_key = production.feed.normalize_competition(source_comp)
+            source_team_key = production.feed.normalize_team(line)
+            mapped_comp = competition_map.get(comp_key, "")
+            competition_compatible = (
+                not mapped_comp
+                or production.feed.normalize_competition(mapped_comp)
+                == production.feed.normalize_competition(target_comp)
+            )
+
+            home_ctx = context_map.get((comp_key, source_team_key))
+            static_context_home = bool(
+                competition_compatible
+                and home_ctx
+                and canonical_eq(home_ctx[0], home)
+                and (
+                    not home_ctx[1]
+                    or production.feed.normalize_competition(home_ctx[1])
+                    == production.feed.normalize_competition(target_comp)
+                )
+            )
+            home_global = global_master.get(source_team_key)
+            static_global_home = bool(
+                home_global and canonical_eq(home_global, home)
+            )
             asian_games_home = (
-                str(target.get("league_zh") or "").strip() == "AMF"
+                target_comp == "AMF"
                 and "asian games" in source_comp.casefold()
                 and _asian_games_equivalent(production, line, home)
             )
-            hs = 1.0 if asian_games_home else production.feed.team_score(line, home)
+
+            if static_context_home:
+                hs = 1.0
+                home_path = "CONTEXT_MASTER"
+            elif static_global_home:
+                hs = 0.995
+                home_path = "GLOBAL_MASTER"
+            elif asian_games_home:
+                hs = 1.0
+                home_path = "ASIAN_GAMES_CONTEXT_DISCOVERY"
+            else:
+                hs = production.feed.team_score(line, home)
+                home_path = "DISCOVERY"
+
             if hs < 0.68:
                 continue
+
             for j in range(i + 1, min(len(lines), i + 6)):
+                away_line = lines[j]
+                away_team_key = production.feed.normalize_team(away_line)
+                away_ctx = context_map.get((comp_key, away_team_key))
+                static_context_away = bool(
+                    competition_compatible
+                    and away_ctx
+                    and canonical_eq(away_ctx[0], away)
+                    and (
+                        not away_ctx[1]
+                        or production.feed.normalize_competition(away_ctx[1])
+                        == production.feed.normalize_competition(target_comp)
+                    )
+                )
+                away_global = global_master.get(away_team_key)
+                static_global_away = bool(
+                    away_global and canonical_eq(away_global, away)
+                )
                 asian_games_away = (
                     asian_games_home
-                    and _asian_games_equivalent(production, lines[j], away)
+                    and _asian_games_equivalent(production, away_line, away)
                 )
-                aws = (
-                    1.0
-                    if asian_games_away
-                    else production.feed.team_score(lines[j], away)
-                )
+
+                if static_context_away:
+                    aws = 1.0
+                    away_path = "CONTEXT_MASTER"
+                elif static_global_away:
+                    aws = 0.995
+                    away_path = "GLOBAL_MASTER"
+                elif asian_games_away:
+                    aws = 1.0
+                    away_path = "ASIAN_GAMES_CONTEXT_DISCOVERY"
+                else:
+                    aws = production.feed.team_score(away_line, away)
+                    away_path = "DISCOVERY"
+
                 avg = (hs + aws) / 2
                 if hs >= 0.68 and aws >= 0.68 and avg >= 0.76:
                     candidates.append({
@@ -214,11 +293,13 @@ def _fixture_evidence(
                         "i": i,
                         "j": j,
                         "source_comp": source_comp,
-                        "context_verified": bool(asian_games_home and asian_games_away),
+                        "home_path": home_path,
+                        "away_path": away_path,
                     })
 
         if not candidates:
             continue
+
         candidates.sort(key=lambda item: float(item["avg"]), reverse=True)
         top = candidates[0]
         best = float(top["avg"])
@@ -227,27 +308,45 @@ def _fixture_evidence(
         i = int(top["i"])
         j = int(top["j"])
         source_comp = str(top["source_comp"])
-        context_verified = bool(top["context_verified"])
+        home_path = str(top["home_path"])
+        away_path = str(top["away_path"])
         second = float(candidates[1]["avg"]) if len(candidates) > 1 else 0.0
 
-        # Auto-promotion must be much stricter than simple fixture-presence
-        # classification. Ambiguous/near-equal candidates remain discoverable
-        # evidence but are never silently promoted into the global dictionary.
-        # Asian Games U23 <-> HKJC AM is competition-scoped and therefore uses
-        # CONTEXT_VERIFIED: it is persisted only with league context.
+        static_context_pair = (
+            home_path == "CONTEXT_MASTER" and away_path == "CONTEXT_MASTER"
+        )
+        static_global_pair = (
+            home_path in {"CONTEXT_MASTER", "GLOBAL_MASTER"}
+            and away_path in {"CONTEXT_MASTER", "GLOBAL_MASTER"}
+        )
+        context_discovery_pair = (
+            home_path == "ASIAN_GAMES_CONTEXT_DISCOVERY"
+            and away_path == "ASIAN_GAMES_CONTEXT_DISCOVERY"
+        )
+
         unique_margin = best - second
-        verified = (
+        discovery_verified = (
             best >= 0.94
             and hs >= 0.90
             and aws >= 0.90
             and (second < 0.88 or unique_margin >= 0.05)
         )
-        if context_verified:
+
+        if static_context_pair:
+            identity_status = "CONTEXT_VERIFIED"
+            identity_source = "FOREBET_STATIC_CONTEXT_MASTER"
+            best = 1.0
+        elif context_discovery_pair:
             identity_status = "CONTEXT_VERIFIED"
             identity_source = "FOREBET_LIVESCORE_ASIAN_GAMES_CONTEXT"
+            best = 1.0
+        elif static_global_pair:
+            identity_status = "VERIFIED"
+            identity_source = "FOREBET_STATIC_TEAM_MASTER"
         else:
-            identity_status = "VERIFIED" if verified else "CANDIDATE"
+            identity_status = "VERIFIED" if discovery_verified else "CANDIDATE"
             identity_source = "FOREBET_LIVESCORE"
+
         found[event_id] = {
             "source_home_team": lines[i],
             "source_away_team": lines[j],
@@ -257,7 +356,6 @@ def _fixture_evidence(
             "identity_source": identity_source,
         }
     return found
-
 
 def _write_availability(production) -> None:
     path = _availability_path(production)
