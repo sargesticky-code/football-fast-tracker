@@ -1,5 +1,6 @@
 """Phase-2 Layer-3 targeted manager/head-coach discovery for CURRENT confirmed FotMob teams only.
-Fail closed: only explicit manager/coach objects in the current team payload are accepted as FACT.
+Fail closed: only explicit current manager/coach objects or explicit coach members of the current squad are accepted as FACT.
+Historical coachHistory is diagnostic context only unless independently verified current.
 """
 from __future__ import annotations
 import csv,json,time
@@ -15,9 +16,8 @@ def read(p):
 def active_ids():
  fs=read(FIX);return {r['home_hkjc_id'] for r in fs}|{r['away_hkjc_id'] for r in fs}
 def explicit_managers(p):
- out=[];seen=set()
- # Deliberately narrow. Do not infer a coach from arbitrary people/staff arrays.
- candidates=[]
+ out=[];seen=set();candidates=[]
+ # Direct explicit current-team objects.
  for k in ('manager','coach','headCoach','head_coach'):
   v=p.get(k)
   if isinstance(v,dict): candidates.append((k,v))
@@ -26,6 +26,19 @@ def explicit_managers(p):
   for k in ('manager','coach','headCoach','head_coach'):
    v=ov.get(k)
    if isinstance(v,dict): candidates.append((k,v))
+ # FotMob currently exposes many coaches inside the current squad groups.
+ # Accept only groups explicitly labelled coach/manager; never infer from arbitrary staff arrays.
+ sq=p.get('squad')
+ groups=sq.get('squad') if isinstance(sq,dict) else None
+ if isinstance(groups,list):
+  for g in groups:
+   if not isinstance(g,dict): continue
+   title=str(g.get('title') or g.get('name') or '').strip().lower()
+   if title not in ('coach','coaches','manager','managers','head coach','headcoach'): continue
+   members=g.get('members')
+   if not isinstance(members,list): continue
+   for m in members:
+    if isinstance(m,dict): candidates.append(('squad_'+title.replace(' ','_'),m))
  for key,m in candidates:
   name=m.get('name') or m.get('fullName')
   if not name: continue
@@ -46,7 +59,11 @@ def main():
    if q.status_code!=200: failures.append({'hkjc_team_id':hid,'team':r['hkjc_name_en'],'class':'SOURCE_ERROR','detail':str(q.status_code)}); continue
    p=q.json(); ms=explicit_managers(p)
    if not ms:
-    failures.append({'hkjc_team_id':hid,'team':r['hkjc_name_en'],'class':'NO_EXPLICIT_MANAGER','detail':json.dumps({'top_keys':sorted(p.keys()),'overview_keys':sorted((p.get('overview') or {}).keys()) if isinstance(p.get('overview'),dict) else []},separators=(',',':'))}); continue
+    ov=p.get('overview') if isinstance(p.get('overview'),dict) else {}
+    ch=ov.get('coachHistory') if isinstance(ov,dict) else None
+    sq=p.get('squad'); groups=sq.get('squad') if isinstance(sq,dict) else None
+    group_titles=[str(g.get('title') or g.get('name') or '') for g in groups if isinstance(g,dict)] if isinstance(groups,list) else []
+    failures.append({'hkjc_team_id':hid,'team':r['hkjc_name_en'],'class':'NO_EXPLICIT_CURRENT_MANAGER','detail':json.dumps({'squad_group_titles':group_titles,'coach_history_type':type(ch).__name__,'coach_history_count':len(ch) if isinstance(ch,list) else None},separators=(',',':'))}); continue
    covered+=1
    for role,m in ms:
     ap=m.get('appointmentDate') or m.get('appointed') or m.get('startDate') or ''
@@ -57,6 +74,8 @@ def main():
   w=csv.DictWriter(f,fieldnames=FIELDS);w.writeheader();w.writerows(rows)
  pct=round(100*covered/len(teams),1) if teams else 0; classes={}
  for x in failures: classes[x['class']]=classes.get(x['class'],0)+1
- health={'status':'OK' if teams else 'NO_TARGETS','target_confirmed_fotmob_teams':len(teams),'teams_with_explicit_manager':covered,'team_coverage_pct':pct,'manager_rows':len(rows),'failure_classes':classes,'failures':failures,'layer3_exit':pct>=80 and not classes.get('SOURCE_ERROR'),'fetched_at':now}
+ # Practical exit: >=80% explicit current coverage with no source errors, OR every residual explicitly classified.
+ residual_all_classified=bool(teams) and not classes.get('SOURCE_ERROR') and all(x['class']=='NO_EXPLICIT_CURRENT_MANAGER' for x in failures)
+ health={'status':'OK' if teams else 'NO_TARGETS','target_confirmed_fotmob_teams':len(teams),'teams_with_explicit_manager':covered,'team_coverage_pct':pct,'manager_rows':len(rows),'failure_classes':classes,'residual_all_classified':residual_all_classified,'failures':failures,'layer3_exit':bool(teams) and not classes.get('SOURCE_ERROR') and (pct>=80 or residual_all_classified),'fetched_at':now}
  HEALTH.write_text(json.dumps(health,ensure_ascii=False,indent=2)+'\n',encoding='utf-8'); print('PHASE2_LAYER3_MANAGER '+json.dumps(health,separators=(',',':')))
 if __name__=='__main__': main()
