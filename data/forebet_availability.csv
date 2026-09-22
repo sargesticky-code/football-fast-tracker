@@ -1,47 +1,45 @@
 ﻿checked_at_hkt,match_date,kickoff_hkt,hkjc_event_id,league_zh,home_en,away_en,state,reason,source_home_team,source_away_team,source_competition,fixture_match_score,identity_status,identity_source
-2026-09-22T08:57:30+08:00,2026-09-21,2026-09-22 06:28,FB5572,BD2,Criciuma,Operario Ferroviario,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-22T08:57:30+08:00,2026-09-21,2026-09-22 07:00,FB5617,MXLW,Club Leon Women,Juarez Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-22 08:00,FB5618,MXLW,Toluca Women,Tigres UANL Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-22 08:13,FB5507,APL,Lanus,Estudiantes,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-22 08:28,FB5573,BD2,Cuiaba,Nautico Recife,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-22 08:30,FB5583,BD1W,Corinthians Women,Bahia Women,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-22 09:06,FB5619,MXLW,Santos Laguna Women,Cruz Azul Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-22 13:00,FB5575,AMF,Vietnam AM,Uzbekistan AM,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Vietnam U23,Uzbekistan U23,Asia: Asian Games,0.788,CANDIDATE,FOREBET_LIVESCORE
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-22 13:00,FB5576,AMF,Philippines AM,Kuwait AM,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Philippines U23,Kuwait U23,Asia: Asian Games,0.782,CANDIDATE,FOREBET_LIVESCORE
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-22 18:00,FB5577,AMF,Korea Republic AM,Saudi Arabia AM,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-22 22:40,FB5631,UPP,Al Orooba,Dubai City FC,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-23 00:45,FB5605,UCLW,Inter Milan Women,Hacken Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-23 00:45,FB5606,UCLW,Bayern Munich Women,Manchester City Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5588,ELT,Swindon,Newport County,MODEL,usable_forebet_prediction_model_after_reconcile,Swindon,Newport,,0.980,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5589,ELT,Milton Keynes Dons,Crawley Town,MODEL,usable_forebet_prediction_model_after_reconcile,MK Dons,Crawley,,0.940,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5590,ELT,Notts County,Grimsby,MODEL,usable_forebet_prediction_model_after_reconcile,Notts County,Grimsby,,1.000,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5591,ELT,Wigan,Blackpool,MODEL,usable_forebet_prediction_model_after_reconcile,Wigan,Blackpool,,1.000,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5620,ELT,Salford City,Sheff Wednesday,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5621,ELT,Oldham,Fleetwood,MODEL,usable_forebet_prediction_model_after_reconcile,Oldham,Fleetwood,,1.000,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5622,ELT,Peterborough,Colchester,MODEL,usable_forebet_prediction_model_after_reconcile,Peterborough,Colchester,,1.000,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5623,ELT,Tranmere,Shrewsbury,MODEL,usable_forebet_prediction_model_after_reconcile,Tranmere,Shrewsbury,,1.000,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5624,ELT,Walsall,Stevenage,MODEL,usable_forebet_prediction_model_after_reconcile,Walsall,Stevenage,,1.000,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5625,ELT,Gillingham,Cambridge Utd,MODEL,usable_forebet_prediction_model_after_reconcile,Gillingham,Cambridge Utd,,1.000,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5626,ELT,Chesterfield,Port Vale,MODEL,usable_forebet_prediction_model_after_reconcile,Chesterfield,Port Vale,England: Efl Trophy,1.000,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5627,ELT,Cheltenham,Exeter City,MODEL,usable_forebet_prediction_model_after_reconcile,Cheltenham,Exeter,England: Efl Trophy,0.980,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 02:00,FB5630,ELT,York City,Rotherham,MODEL,usable_forebet_prediction_model_after_reconcile,York City,Rotherham,,1.000,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-23 03:00,FB5628,UCLW,Juventus Women,Benfica Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:57:59+08:00,2026-09-22,2026-09-23 03:00,FB5629,UCLW,Real Madrid Women,Paris Saint Germain Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 04:57,FB5608,CHC,Puerto Montt,Deportivo Nublense,MODEL,usable_forebet_prediction_model_after_reconcile,D. Puerto Montt,Nublense,Chile: Copa Chile - Play Offs,0.980,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 07:27,FB5607,CHC,Cobreloa,Coquimbo Unido,MODEL,usable_forebet_prediction_model_after_reconcile,Cobreloa,Coquimbo,Chile: Copa Chile - Play Offs,0.980,VERIFIED,FOREBET_LIVESCORE
-2026-09-22T08:58:33+08:00,2026-09-22,2026-09-23 07:27,FB5609,CHC,Audax Italiano,Colo Colo,MODEL,usable_forebet_prediction_model_after_reconcile,A. Italiano,Colo Colo,Chile: Copa Chile - Play Offs,0.917,CANDIDATE,FOREBET_LIVESCORE
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-23 13:30,FB5602,AMF,China AM,United Arab Emirates AM,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-23 13:30,FB5603,AMF,Iran AM,Korea DPR AM,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-23 16:00,FB5610,JEC,Gamba Osaka,Tokushima Vortis,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-23 16:00,FB5611,JEC,Kyoto Sanga,Fujieda MYFC,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-23 16:00,FB5612,JEC,Kashiwa Reysol,FC Imabari,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-23 16:00,FB5613,JEC,Vissel Kobe,Sagan Tosu,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-23 16:00,FB5614,JEC,Kashima Antlers,Ventforet Kofu,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-23 16:00,FB5615,JEC,Machida Zelvia,Tochigi City,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-23 18:30,FB5604,AMF,Japan AM,Thailand AM,FIXTURE_ONLY,previously_observed_forebet_fixture_without_prediction_model,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-23 21:00,FB5584,UWW,Italy Women U20,Spain Women U20,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-24 00:30,FB5638,UWW,Korea DPR Women U20,Colombia Women U20,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-22T08:58:27+08:00,2026-09-23,2026-09-24 00:45,FB5637,UCLW,OH Leuven Women,Roma Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-22T08:58:33+08:00,2026-09-23,2026-09-24 04:57,FB5632,CHC,Curico Unido,Deportes Concepcion,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-22T08:58:33+08:00,2026-09-23,2026-09-24 07:27,FB5633,CHC,Iquique,Antofagasta,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-22T08:58:33+08:00,2026-09-23,2026-09-24 07:27,FB5634,CHC,Union La Calera,Universidad Catolica,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-22 08:00,FB5618,MXLW,Toluca Women,Tigres UANL Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-22 08:13,FB5507,APL,Lanus,Estudiantes,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-22 08:28,FB5573,BD2,Cuiaba,Nautico Recife,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:51+08:00,2026-09-22,2026-09-22 08:30,FB5583,BD1W,Corinthians Women,Bahia Women,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-22 09:06,FB5619,MXLW,Santos Laguna Women,Cruz Azul Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-22 13:00,FB5575,AMF,Vietnam AM,Uzbekistan AM,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Vietnam U23,Uzbekistan U23,Asia: Asian Games,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-22 13:00,FB5576,AMF,Philippines AM,Kuwait AM,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Philippines U23,Kuwait U23,Asia: Asian Games,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-22 18:00,FB5577,AMF,Korea Republic AM,Saudi Arabia AM,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,South Korea U23,Saudi Arabia U23,Asia: Asian Games,1.000,CONTEXT_VERIFIED,FOREBET_LIVESCORE_ASIAN_GAMES_CONTEXT
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-22 22:40,FB5631,UPP,Al Orooba,Dubai City FC,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 00:45,FB5605,UCLW,Inter Milan Women,Hacken Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 00:45,FB5606,UCLW,Bayern Munich Women,Manchester City Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:51+08:00,2026-09-22,2026-09-23 02:00,FB5588,ELT,Swindon,Newport County,MODEL,usable_forebet_prediction_model_after_reconcile,Swindon,Newport,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 02:00,FB5589,ELT,Milton Keynes Dons,Crawley Town,MODEL,usable_forebet_prediction_model,MK Dons,Crawley,,0.940,VERIFIED,FOREBET_LIVESCORE
+2026-09-22T09:07:51+08:00,2026-09-22,2026-09-23 02:00,FB5590,ELT,Notts County,Grimsby,MODEL,usable_forebet_prediction_model_after_reconcile,Notts County,Grimsby,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 02:00,FB5591,ELT,Wigan,Blackpool,MODEL,usable_forebet_prediction_model,Wigan,Blackpool,,1.000,VERIFIED,FOREBET_LIVESCORE
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 02:00,FB5620,ELT,Salford City,Sheff Wednesday,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 02:00,FB5621,ELT,Oldham,Fleetwood,MODEL,usable_forebet_prediction_model,Oldham,Fleetwood,,1.000,VERIFIED,FOREBET_LIVESCORE
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 02:00,FB5622,ELT,Peterborough,Colchester,MODEL,usable_forebet_prediction_model,Peterborough,Colchester,,1.000,VERIFIED,FOREBET_LIVESCORE
+2026-09-22T09:07:51+08:00,2026-09-22,2026-09-23 02:00,FB5623,ELT,Tranmere,Shrewsbury,MODEL,usable_forebet_prediction_model_after_reconcile,Tranmere,Shrewsbury,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 02:00,FB5624,ELT,Walsall,Stevenage,MODEL,usable_forebet_prediction_model,Walsall,Stevenage,,1.000,VERIFIED,FOREBET_LIVESCORE
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 02:00,FB5625,ELT,Gillingham,Cambridge Utd,MODEL,usable_forebet_prediction_model,Gillingham,Cambridge Utd,,1.000,VERIFIED,FOREBET_LIVESCORE
+2026-09-22T09:07:51+08:00,2026-09-22,2026-09-23 02:00,FB5626,ELT,Chesterfield,Port Vale,MODEL,usable_forebet_prediction_model_after_reconcile,Chesterfield,Port Vale,England: Efl Trophy,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-22T09:07:51+08:00,2026-09-22,2026-09-23 02:00,FB5627,ELT,Cheltenham,Exeter City,MODEL,usable_forebet_prediction_model_after_reconcile,Cheltenham,Exeter,England: Efl Trophy,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-22T09:07:51+08:00,2026-09-22,2026-09-23 02:00,FB5630,ELT,York City,Rotherham,MODEL,usable_forebet_prediction_model_after_reconcile,York City,Rotherham,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 03:00,FB5628,UCLW,Juventus Women,Benfica Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 03:00,FB5629,UCLW,Real Madrid Women,Paris Saint Germain Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 04:57,FB5608,CHC,Puerto Montt,Deportivo Nublense,MODEL,usable_forebet_prediction_model,D. Puerto Montt,Nublense,Chile: Copa Chile - Play Offs,0.980,VERIFIED,FOREBET_LIVESCORE
+2026-09-22T09:07:33+08:00,2026-09-22,2026-09-23 07:27,FB5607,CHC,Cobreloa,Coquimbo Unido,MODEL,usable_forebet_prediction_model,Cobreloa,Coquimbo,Chile: Copa Chile - Play Offs,0.980,VERIFIED,FOREBET_LIVESCORE
+2026-09-22T09:07:51+08:00,2026-09-22,2026-09-23 07:27,FB5609,CHC,Audax Italiano,Colo Colo,MODEL,usable_forebet_prediction_model_after_reconcile,A. Italiano,Colo Colo,Chile: Copa Chile - Play Offs,0.914,CANDIDATE,FOREBET_LIVESCORE
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-23 13:30,FB5602,AMF,China AM,United Arab Emirates AM,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-23 13:30,FB5603,AMF,Iran AM,Korea DPR AM,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-23 16:00,FB5610,JEC,Gamba Osaka,Tokushima Vortis,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-23 16:00,FB5611,JEC,Kyoto Sanga,Fujieda MYFC,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-23 16:00,FB5612,JEC,Kashiwa Reysol,FC Imabari,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-23 16:00,FB5613,JEC,Vissel Kobe,Sagan Tosu,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-23 16:00,FB5614,JEC,Kashima Antlers,Ventforet Kofu,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-23 16:00,FB5615,JEC,Machida Zelvia,Tochigi City,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-23 18:30,FB5604,AMF,Japan AM,Thailand AM,FIXTURE_ONLY,previously_observed_forebet_fixture_without_prediction_model,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-23 21:00,FB5584,UWW,Italy Women U20,Spain Women U20,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-24 00:30,FB5638,UWW,Korea DPR Women U20,Colombia Women U20,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-22T09:07:48+08:00,2026-09-23,2026-09-24 00:45,FB5637,UCLW,OH Leuven Women,Roma Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-22T09:07:51+08:00,2026-09-23,2026-09-24 04:57,FB5632,CHC,Curico Unido,Deportes Concepcion,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
+2026-09-22T09:07:51+08:00,2026-09-23,2026-09-24 07:27,FB5633,CHC,Iquique,Antofagasta,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
+2026-09-22T09:07:51+08:00,2026-09-23,2026-09-24 07:27,FB5634,CHC,Union La Calera,Universidad Catolica,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
