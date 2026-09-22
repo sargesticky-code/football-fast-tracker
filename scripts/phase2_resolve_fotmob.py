@@ -15,12 +15,29 @@ DIAG_FIELDS=["hkjc_event_id","hkjc_team_id","side","hkjc_name","other_hkjc_name"
 def rows(p):
  if not Path(p).exists(): return []
  with open(p,encoding="utf-8-sig",newline="") as f:return list(csv.DictReader(f))
-def norm(s):return re.sub(r"[^a-z0-9]+","",str(s).lower())
+ALIASES={
+ "korearepublic":"southkorea","koreadpr":"northkorea","unitedarabemirates":"uae",
+ "bayernmunich":"bayernmunchen","intermilan":"inter","hacken":"bkhacken",
+ "deportivonublense":"nublense","ohleuven":"oudheverleeleuven",
+ "wigan":"wiganathletic","oldham":"oldhamathletic","fleetwood":"fleetwoodtown"
+}
+def norm(s):
+ x=re.sub(r"[^a-z0-9]+","",str(s).lower())
+ for suffix in ("women","woman"):
+  if x.endswith(suffix): x=x[:-len(suffix)]
+ return ALIASES.get(x,x)
 def sim(a,b):return SequenceMatcher(None,norm(a),norm(b)).ratio()
-def cohort(name):
- s=str(name).upper()
- for x in ("WOMEN","U17","U18","U19","U20","U21","U23","RESERVE"):
-  if x in s:return x
+def cohort(name,tournament=""):
+ s=(str(name)+" "+str(tournament)).upper()
+ age=""
+ for x in ("U17","U18","U19","U20","U21","U23"):
+  if x in s: age=x; break
+ women=("WOMEN" in s or "(W)" in s)
+ if "ASIAN GAMES MEN" in s: age="U23"
+ if "RESERVE" in s:return "RESERVE"
+ if women and age:return "WOMEN_"+age
+ if women:return "WOMEN"
+ if age:return age
  return "SENIOR"
 def event_dt(e):
  u=(e.get("status") or {}).get("utcTime")
@@ -51,7 +68,7 @@ def main():
   for side,other in (("home","away"),("away","home")):
    hid=f[f"{side}_hkjc_id"]
    if hid in confirmed_ids or hid in attempted:continue
-   attempted.add(hid); hn=f[f"{side}_en"]; on=f[f"{other}_en"]; hc=cohort(hn); near=[]; named=[]; coh=[]; scored=[]
+   attempted.add(hid); hn=f[f"{side}_en"]; on=f[f"{other}_en"]; hc=cohort(hn,f.get("tournament_en","")); near=[]; named=[]; coh=[]; scored=[]
    for e in events:
     ek=event_dt(e)
     if not ek or abs((ek-kick).total_seconds())>1800:continue
