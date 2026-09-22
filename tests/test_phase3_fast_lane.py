@@ -62,6 +62,18 @@ class FastLaneTests(unittest.TestCase):
             health=fast_lane_health([{"status":status,"minute":67,"home_score":1,"away_score":0}],"2026-09-22T09:00:09+00:00",now=now)
             self.assertEqual(health["health"],"FRESH_PARTIAL_OR_TERMINAL"); self.assertEqual(health["live_rows"],0)
 
+    def test_non_live_or_unknown_status_with_minute_and_score_fails_closed(self):
+        now="2026-09-22T09:00:10+00:00"
+        for status in ("NS","HT","PAUSED","DELAYED","UNKNOWN","FT","POSTPONED"):
+            health=fast_lane_health([{"status":status,"minute":67,"home_score":1,"away_score":0}],"2026-09-22T09:00:09+00:00",now=now)
+            self.assertEqual(health["health"],"FRESH_PARTIAL_OR_TERMINAL"); self.assertEqual(health["live_rows"],0)
+
+    def test_known_in_play_statuses_can_satisfy_live_evidence(self):
+        now="2026-09-22T09:00:10+00:00"
+        for status in ("1st","2nd","LIVE","ET"):
+            health=fast_lane_health([{"status":status,"minute":67,"home_score":1,"away_score":0}],"2026-09-22T09:00:09+00:00",now=now)
+            self.assertEqual(health["health"],"FRESH_LIVE"); self.assertEqual(health["live_rows"],1)
+
     def test_live_minute_without_complete_score_cannot_satisfy_exit_evidence(self):
         now="2026-09-22T09:00:10+00:00"
         for row in ({"status":"2nd","minute":67,"home_score":None,"away_score":1},{"status":"2nd","minute":67,"home_score":2,"away_score":None}):
