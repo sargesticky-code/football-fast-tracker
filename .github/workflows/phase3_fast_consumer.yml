@@ -1,0 +1,24 @@
+name: Phase 3 Fast Consumer
+
+on:
+  push:
+    branches: [phase3-live-intelligence]
+    paths:
+      - 'phase3/fast_consumer.py'
+      - 'phase3/fast_api.py'
+      - 'phase3/fast_service.py'
+      - 'tests/test_phase3_fast_consumer.py'
+      - 'tests/test_phase3_fast_api.py'
+      - '.github/workflows/phase3_fast_consumer.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify Layer 5 read-only consumer contract
+        run: python -m unittest tests.test_phase3_fast_consumer tests.test_phase3_fast_api -v
