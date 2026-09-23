@@ -25,6 +25,10 @@ class FastRow:
 
 
 def _int_or_none(value: Any) -> int | None:
+    # bool is an int subclass in Python. Treating True/False as 1/0 can
+    # fabricate a plausible football score or request-failure count.
+    if isinstance(value, bool):
+        return None
     if isinstance(value, str):
         match = re.search(r"[+-]?\d+", value)
         value = match.group(0) if match else None
