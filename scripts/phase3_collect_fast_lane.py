@@ -50,13 +50,7 @@ def _row_kickoff(row):
 
 
 def board_dates(now, verified):
-    """Query today's board plus only adjacent dates supported by verified identities.
-
-    Verified registries retain terminal mappings, so an old kickoff must never
-    turn the fast heartbeat into an historical-board crawler. Only yesterday or
-    tomorrow may supplement today's UTC board, and only with timezone-aware
-    kickoff evidence. This keeps boundary recovery bounded to at most 3 boards.
-    """
+    """Query today's board plus only adjacent dates supported by verified identities."""
     primary=fotmob_date(now)
     dates=[primary]
     supported=sorted({fotmob_date(dt) for row in verified if (dt:=_row_kickoff(row)) is not None and abs((dt.date()-now.date()).days) <= 1})
@@ -98,11 +92,24 @@ def duplicate_observation_ids(rows):
     return sorted(rid for rid,count in counts.items() if rid and count > 1)
 
 
+def coverage_meta(target_ids, seen_ids, joined, unmapped):
+    """Expose consumer-ready verified mapping coverage without fuzzy rematching."""
+    target_ids={str(value) for value in target_ids if str(value)}
+    seen_ids={str(value) for value in seen_ids if str(value)}
+    unmapped_ids=sorted({str(r.get('external_id')) for r in unmapped if r.get('external_id') is not None and str(r.get('external_id')) in target_ids})
+    return {
+        'mapped_rows': len(joined),
+        'unmapped_count': len(unmapped_ids),
+        'unmapped_external_ids': unmapped_ids,
+        'missing_target_ids': sorted(target_ids-seen_ids),
+    }
+
+
 def main():
     now=datetime.now(timezone.utc).replace(microsecond=0)
     registry=load_rows(REGISTRY)
     verified=[r for r in registry if r.get('status')=='VERIFIED' and str(r.get('source','')).upper()=='FOTMOB' and external_id(r)]
-    payload={'schema_version':1,'fast_snapshot_at':now.isoformat(),'source':'FOTMOB','request_count':0,'primary_board_requests':0,'fallback_board_requests':0,'fallback_trigger_target_ids':[],'fallback_recovered_target_ids':[],'duplicate_observation_ids':[],'request_failures':0,'verified_targets':len(verified),'rows':[],'live_rows':0,'terminal_rows':0,'unmapped_count':0,'health':'NO_VERIFIED_TARGETS',**last_good_meta(now)}
+    payload={'schema_version':1,'fast_snapshot_at':now.isoformat(),'source':'FOTMOB','request_count':0,'primary_board_requests':0,'fallback_board_requests':0,'fallback_trigger_target_ids':[],'fallback_recovered_target_ids':[],'duplicate_observation_ids':[],'request_failures':0,'verified_targets':len(verified),'rows':[],'mapped_rows':0,'live_rows':0,'terminal_rows':0,'unmapped_count':0,'unmapped_external_ids':[],'missing_target_ids':[],'health':'NO_VERIFIED_TARGETS',**last_good_meta(now)}
     if not verified:
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)); print('PHASE3_FAST health=NO_VERIFIED_TARGETS verified_targets=0 requests=0 failures=0 rows=0 live_rows=0'); return 0
     try:
@@ -128,18 +135,17 @@ def main():
                 payload['fallback_recovered_target_ids']=sorted(set(payload['fallback_recovered_target_ids']) | recovered)
             if target_ids.issubset(seen_ids): break
         joined,unmapped=join_verified_fast_rows(registry,normalized)
-        relevant_unmapped=[r for r in unmapped if str(r.get('external_id') or '') in target_ids]
-        missing_target_ids=sorted(target_ids-seen_ids)
+        coverage=coverage_meta(target_ids,seen_ids,joined,unmapped)
         freshness=fast_lane_health(joined,now.isoformat(),now=now.isoformat(),request_failures=0)
         live_rows=freshness['live_rows']
         terminal_rows=sum(1 for row in joined if str(row.get('status') or '').strip().upper() in TERMINAL_STATUSES)
         health=freshness['health'] if joined else 'TARGETS_NOT_ON_BOARD'
-        payload.update(rows=joined,live_rows=live_rows,terminal_rows=terminal_rows,unmapped_count=len(relevant_unmapped),missing_target_ids=missing_target_ids,board_rows=len(normalized),board_dates=dates_tried,duplicate_observation_ids=duplicate_observation_ids(normalized),health=health,snapshot_age_seconds=freshness['snapshot_age_seconds'])
+        payload.update(rows=joined,live_rows=live_rows,terminal_rows=terminal_rows,board_rows=len(normalized),board_dates=dates_tried,duplicate_observation_ids=duplicate_observation_ids(normalized),health=health,snapshot_age_seconds=freshness['snapshot_age_seconds'],**coverage)
         if health == 'FRESH_LIVE' and live_rows:
             payload.update(last_good_at=now.isoformat(),last_good_age_seconds=0)
             LAST_GOOD.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
-        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests={payload['request_count']} primary_requests={payload['primary_board_requests']} fallback_requests={payload['fallback_board_requests']} failures=0 board_rows={len(normalized)} rows={len(joined)} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={len(relevant_unmapped)} missing_targets={len(missing_target_ids)} fallback_recovered={len(payload['fallback_recovered_target_ids'])} duplicate_ids={len(payload['duplicate_observation_ids'])} snapshot_age={payload['snapshot_age_seconds']} last_good_age={payload['last_good_age_seconds']}")
+        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests={payload['request_count']} primary_requests={payload['primary_board_requests']} fallback_requests={payload['fallback_board_requests']} failures=0 board_rows={len(normalized)} mapped_rows={payload['mapped_rows']} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={payload['unmapped_count']} missing_targets={len(payload['missing_target_ids'])} fallback_recovered={len(payload['fallback_recovered_target_ids'])} duplicate_ids={len(payload['duplicate_observation_ids'])} snapshot_age={payload['snapshot_age_seconds']} last_good_age={payload['last_good_age_seconds']}")
         for row in joined: print(f"PHASE3_FAST_MATCH event={row['hkjc_event_id']} external={row['external_id']} status={row['status']} minute={row['minute']} score={row['home_score']}-{row['away_score']}")
         return 0
     except Exception as exc:
