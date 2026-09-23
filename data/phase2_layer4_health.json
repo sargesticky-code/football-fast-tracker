@@ -1,0 +1,32 @@
+{
+  "layer": 4,
+  "name": "current_availability",
+  "observed_at": "2026-09-23T00:28:00Z",
+  "status": "WARN",
+  "layer4_exit": false,
+  "current_targets": 33,
+  "api_football_mapped_fresh": 17,
+  "api_football_unmapped_or_stale": 16,
+  "mapped_coverage_pct": 51.5,
+  "confirmed_player_status_evidence_rows": 0,
+  "confirmed_lineup_evidence_rows": 0,
+  "manager_evidence_rows": 0,
+  "api_football_base": {
+    "status": "PASS",
+    "targets_at_last_run": 36,
+    "fixtures_inspected": 386,
+    "mapped_at_last_run": 18,
+    "injuries_seen": 0,
+    "injury_evidence_added": 0,
+    "requests_used": 4,
+    "quota_remaining": 96,
+    "dates_checked": ["2026-09-23", "2026-09-24"]
+  },
+  "api_football_detail": {
+    "status": "IDLE",
+    "eligible": 0,
+    "requests_used": 0
+  },
+  "residual_failure_class": "UNMAPPED_API_FIXTURE",
+  "notes": "Fail closed. Zero injury rows are not interpreted as proof that all players are available. Current Layer 4 blocker is fresh fixture mapping coverage for 16/33 current targets; detail remains zero-call while no fixture is eligible."
+}
