@@ -1,9 +1,9 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 76,
-  "teams_with_explicit_manager": 63,
-  "team_coverage_pct": 82.9,
-  "manager_rows": 63,
+  "target_confirmed_fotmob_teams": 74,
+  "teams_with_explicit_manager": 61,
+  "team_coverage_pct": 82.4,
+  "manager_rows": 61,
   "failure_classes": {
     "NO_EXPLICIT_CURRENT_MANAGER": 13
   },
@@ -89,5 +89,5 @@
     }
   ],
   "layer3_exit": true,
-  "fetched_at": "2026-09-23T14:26:28.664337+00:00"
+  "fetched_at": "2026-09-23T14:49:23.370774+00:00"
 }
