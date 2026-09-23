@@ -3,6 +3,7 @@
 import json
 import sys
 import urllib.request
+from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -66,11 +67,21 @@ def last_good_meta(now):
         return {'last_good_at':None,'last_good_age_seconds':None}
 
 
+def duplicate_observation_ids(rows):
+    """Expose duplicate external IDs without resolving them here.
+
+    Resolution remains exclusively in join_verified_fast_rows, where identical
+    evidence is deduplicated and conflicting evidence fails closed.
+    """
+    counts=Counter(str(r.get('external_id') or '') for r in rows if r.get('external_id') is not None)
+    return sorted(rid for rid,count in counts.items() if rid and count > 1)
+
+
 def main():
     now=datetime.now(timezone.utc).replace(microsecond=0)
     registry=load_rows(REGISTRY)
     verified=[r for r in registry if r.get('status')=='VERIFIED' and str(r.get('source','')).upper()=='FOTMOB' and external_id(r)]
-    payload={'schema_version':1,'fast_snapshot_at':now.isoformat(),'source':'FOTMOB','request_count':0,'primary_board_requests':0,'fallback_board_requests':0,'fallback_trigger_target_ids':[],'request_failures':0,'verified_targets':len(verified),'rows':[],'live_rows':0,'terminal_rows':0,'unmapped_count':0,'health':'NO_VERIFIED_TARGETS',**last_good_meta(now)}
+    payload={'schema_version':1,'fast_snapshot_at':now.isoformat(),'source':'FOTMOB','request_count':0,'primary_board_requests':0,'fallback_board_requests':0,'fallback_trigger_target_ids':[],'fallback_recovered_target_ids':[],'duplicate_observation_ids':[],'request_failures':0,'verified_targets':len(verified),'rows':[],'live_rows':0,'terminal_rows':0,'unmapped_count':0,'health':'NO_VERIFIED_TARGETS',**last_good_meta(now)}
     if not verified:
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)); print('PHASE3_FAST health=NO_VERIFIED_TARGETS verified_targets=0 requests=0 failures=0 rows=0 live_rows=0'); return 0
     try:
@@ -81,6 +92,7 @@ def main():
         for board_index,day in enumerate(board_dates(now,verified)):
             if board_index > 0 and not payload['fallback_trigger_target_ids']:
                 payload['fallback_trigger_target_ids']=sorted(target_ids-seen_ids)
+            before_ids=set(seen_ids)
             payload['request_count']+=1
             if board_index == 0: payload['primary_board_requests']+=1
             else: payload['fallback_board_requests']+=1
@@ -92,6 +104,9 @@ def main():
                 # quarantine conflicting duplicates. seen_ids is coverage-only.
                 normalized.append(row)
                 if rid: seen_ids.add(rid)
+            if board_index > 0:
+                recovered=(seen_ids-before_ids) & set(payload['fallback_trigger_target_ids'])
+                payload['fallback_recovered_target_ids']=sorted(set(payload['fallback_recovered_target_ids']) | recovered)
             if target_ids.issubset(seen_ids): break
         joined,unmapped=join_verified_fast_rows(registry,normalized)
         relevant_unmapped=[r for r in unmapped if str(r.get('external_id') or '') in target_ids]
@@ -100,12 +115,12 @@ def main():
         live_rows=freshness['live_rows']
         terminal_rows=sum(1 for row in joined if str(row.get('status') or '').strip().upper() in TERMINAL_STATUSES)
         health=freshness['health'] if joined else 'TARGETS_NOT_ON_BOARD'
-        payload.update(rows=joined,live_rows=live_rows,terminal_rows=terminal_rows,unmapped_count=len(relevant_unmapped),missing_target_ids=missing_target_ids,board_rows=len(normalized),board_dates=dates_tried,health=health,snapshot_age_seconds=freshness['snapshot_age_seconds'])
+        payload.update(rows=joined,live_rows=live_rows,terminal_rows=terminal_rows,unmapped_count=len(relevant_unmapped),missing_target_ids=missing_target_ids,board_rows=len(normalized),board_dates=dates_tried,duplicate_observation_ids=duplicate_observation_ids(normalized),health=health,snapshot_age_seconds=freshness['snapshot_age_seconds'])
         if health == 'FRESH_LIVE' and live_rows:
             payload.update(last_good_at=now.isoformat(),last_good_age_seconds=0)
             LAST_GOOD.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
-        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests={payload['request_count']} primary_requests={payload['primary_board_requests']} fallback_requests={payload['fallback_board_requests']} failures=0 board_rows={len(normalized)} rows={len(joined)} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={len(relevant_unmapped)} missing_targets={len(missing_target_ids)} snapshot_age={payload['snapshot_age_seconds']} last_good_age={payload['last_good_age_seconds']}")
+        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests={payload['request_count']} primary_requests={payload['primary_board_requests']} fallback_requests={payload['fallback_board_requests']} failures=0 board_rows={len(normalized)} rows={len(joined)} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={len(relevant_unmapped)} missing_targets={len(missing_target_ids)} fallback_recovered={len(payload['fallback_recovered_target_ids'])} duplicate_ids={len(payload['duplicate_observation_ids'])} snapshot_age={payload['snapshot_age_seconds']} last_good_age={payload['last_good_age_seconds']}")
         for row in joined: print(f"PHASE3_FAST_MATCH event={row['hkjc_event_id']} external={row['external_id']} status={row['status']} minute={row['minute']} score={row['home_score']}-{row['away_score']}")
         return 0
     except Exception as exc:
