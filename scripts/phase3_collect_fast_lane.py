@@ -50,16 +50,16 @@ def _row_kickoff(row):
 
 
 def board_dates(now, verified):
-    """Query today's board plus dates explicitly supported by verified identities.
+    """Query today's board plus only adjacent dates supported by verified identities.
 
-    The previous unconditional yesterday/tomorrow fallback could keep fetching
-    finished historical matches every run. Verified kickoff evidence is a safer
-    board selector: it recovers UTC-boundary targets without speculative fan-out.
-    If old registry rows have no kickoff timestamp, use only today's board.
+    Verified registries retain terminal mappings, so an old kickoff must never
+    turn the fast heartbeat into an historical-board crawler. Only yesterday or
+    tomorrow may supplement today's UTC board, and only with timezone-aware
+    kickoff evidence. This keeps boundary recovery bounded to at most 3 boards.
     """
     primary=fotmob_date(now)
     dates=[primary]
-    supported=sorted({fotmob_date(dt) for row in verified if (dt:=_row_kickoff(row)) is not None})
+    supported=sorted({fotmob_date(dt) for row in verified if (dt:=_row_kickoff(row)) is not None and abs((dt.date()-now.date()).days) <= 1})
     for day in supported:
         if day != primary and day not in dates:
             dates.append(day)
@@ -73,13 +73,7 @@ def fetch_board(day):
 
 
 def last_good_meta(now):
-    """Return age of the last genuine live heartbeat, purging invalid cache state.
-
-    Historical Layer-3 caches may contain terminal/partial snapshots from before
-    the FRESH_LIVE-only persistence contract. Remove those files (and corrupt
-    state) so GitHub Actions cannot keep re-saving them as apparent last-good
-    evidence on every scheduled run.
-    """
+    """Return age of the last genuine live heartbeat, purging invalid cache state."""
     if not LAST_GOOD.exists(): return {'last_good_at':None,'last_good_age_seconds':None}
     try:
         old=json.loads(LAST_GOOD.read_text())
@@ -100,11 +94,6 @@ def last_good_meta(now):
 
 
 def duplicate_observation_ids(rows):
-    """Expose duplicate external IDs without resolving them here.
-
-    Resolution remains exclusively in join_verified_fast_rows, where identical
-    evidence is deduplicated and conflicting evidence fails closed.
-    """
     counts=Counter(str(r.get('external_id') or '') for r in rows if r.get('external_id') is not None)
     return sorted(rid for rid,count in counts.items() if rid and count > 1)
 
