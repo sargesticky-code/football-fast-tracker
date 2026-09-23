@@ -1,0 +1,49 @@
+{
+  "layer": 4,
+  "captured_at_hkt": "2026-09-23T17:30:00+08:00",
+  "branch": "phase2-human-intelligence",
+  "supabase_project": "Fast Tracker 2026",
+  "detail_function_version": 6,
+  "detail_observed_at_utc": "2026-09-23T09:05:02.129Z",
+  "detail_status": "WAITING_LINEUP",
+  "eligible": 1,
+  "fixtures_processed": 1,
+  "api_calls": 1,
+  "quota_remaining": 87,
+  "lineup_teams": 0,
+  "lineup_players": 0,
+  "manager_rows_added": 0,
+  "lineup_confirmed": 0,
+  "live_stats_rows": 0,
+  "request_mode_observed": "single_fixture_id",
+  "configured_window_observed": {
+    "from": "now-10m",
+    "to": "now+55m"
+  },
+  "required_window": {
+    "from": "now-55m",
+    "to": "now+10m"
+  },
+  "window_classification": "ELIGIBILITY_DIRECTION_BUG",
+  "architecture_classification": "REQUEST_MODE_DRIFT",
+  "required_request_mode": "fixtures?ids= batching up to 20 fixture IDs per request",
+  "base_observed_at_utc": "2026-09-23T08:28:10.586Z",
+  "base_status": "PASS",
+  "base_targets": 34,
+  "base_fixtures_inspected": 388,
+  "base_mapped": 20,
+  "base_injuries_seen": 36,
+  "base_injury_evidence": 18,
+  "base_api_calls": 4,
+  "base_quota_remaining": 88,
+  "table_counts": {
+    "api_football_event_map": 43,
+    "phase2_player_status_evidence": 18,
+    "phase2_match_lineup_evidence": 0,
+    "phase2_manager_evidence": 0,
+    "phase2_players": 18,
+    "phase2_managers": 0
+  },
+  "exit_met": false,
+  "next_objective": "Repair detail eligibility to kickoff in [now-55m, now+10m] and restore required fixtures?ids= batching without per-fixture fallback; then verify a real eligible run and quota guard."
+}
