@@ -1,9 +1,9 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 52,
-  "teams_with_squad": 43,
-  "team_coverage_pct": 82.7,
-  "players": 1277,
+  "target_confirmed_fotmob_teams": 50,
+  "teams_with_squad": 41,
+  "team_coverage_pct": 82.0,
+  "players": 1230,
   "position_coverage_pct": 100.0,
   "dob_coverage_pct": 99.3,
   "age_coverage_pct": 99.3,
@@ -69,5 +69,5 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     }
   ],
-  "fetched_at": "2026-09-23T09:32:19.965431+00:00"
+  "fetched_at": "2026-09-23T10:31:32.914515+00:00"
 }
