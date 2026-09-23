@@ -62,8 +62,30 @@ jobs:
           d=json.loads(Path('data/phase3_fast_snapshot.json').read_text())
           t=datetime.fromisoformat(d['fast_snapshot_at'])
           age=max(0,(datetime.now(timezone.utc)-t).total_seconds())
-          print(f"PHASE3_FAST_DIAG health={d['health']} age_seconds={age:.1f} verified_targets={d['verified_targets']} requests={d['request_count']} failures={d['request_failures']} rows={len(d['rows'])} unmapped={d['unmapped_count']} last_good_age={d['last_good_age_seconds']}")
-          if age > 180: raise SystemExit('fast snapshot unexpectedly stale')
+          requests=int(d.get('request_count') or 0)
+          primary=int(d.get('primary_board_requests') or 0)
+          fallback=int(d.get('fallback_board_requests') or 0)
+          mapped=int(d.get('mapped_rows') or 0)
+          live=int(d.get('live_rows') or 0)
+          terminal=int(d.get('terminal_rows') or 0)
+          print(
+              f"PHASE3_FAST_DIAG health={d['health']} age_seconds={age:.1f} "
+              f"verified_targets={d['verified_targets']} requests={requests} "
+              f"primary_requests={primary} fallback_requests={fallback} "
+              f"failures={d['request_failures']} mapped={mapped} live={live} "
+              f"terminal={terminal} unmapped={d['unmapped_count']} "
+              f"missing_targets={len(d.get('missing_target_ids') or [])} "
+              f"last_good_health={d.get('last_good_health')} "
+              f"last_good_age={d['last_good_age_seconds']}"
+          )
+          if age > 180:
+              raise SystemExit('fast snapshot unexpectedly stale')
+          if requests != primary + fallback:
+              raise SystemExit('fast request accounting mismatch')
+          if requests > 3:
+              raise SystemExit('fast path exceeded bounded one-board-plus-boundary request budget')
+          if primary > 1:
+              raise SystemExit('fast path made more than one primary multi-match board request')
           PY
       - name: Save Layer 3 last-good state
         if: ${{ always() && hashFiles('data/phase3_fast_last_good.json') != '' }}
