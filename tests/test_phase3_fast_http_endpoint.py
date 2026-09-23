@@ -1,5 +1,9 @@
 import importlib.util
+import json
 from pathlib import Path
+import tempfile
+import unittest
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,46 +45,48 @@ def base_state(**updates):
     return state
 
 
-def test_http_endpoint_projects_fresh_shared_state_without_bypass():
-    reader = Reader(base_state())
-    status, headers, body = MODULE.http_response(reader)
-    assert status == 200
-    assert headers["Cache-Control"] == "no-store"
-    assert body["display_state"] == "FRESH"
-    assert body["matches"][0]["minute"] == 55
-    assert reader.calls == 1
+class FastHttpEndpointTests(unittest.TestCase):
+    def test_projects_fresh_shared_state_without_bypass(self):
+        reader = Reader(base_state())
+        status, headers, body = MODULE.http_response(reader)
+        self.assertEqual(status, 200)
+        self.assertEqual(headers["Cache-Control"], "no-store")
+        self.assertEqual(body["display_state"], "FRESH")
+        self.assertEqual(body["matches"][0]["minute"], 55)
+        self.assertEqual(reader.calls, 1)
+
+    def test_renders_identity_gap_fail_closed(self):
+        reader = Reader(base_state(duplicate_observation_ids=["123"], rows=[], live_rows=0))
+        status, _, body = MODULE.http_response(reader)
+        self.assertEqual(status, 200)
+        self.assertEqual(body["display_state"], "IDENTITY_GAP")
+        self.assertEqual(body["matches"], [])
+        self.assertEqual(reader.calls, 1)
+
+    def test_renders_unmapped_fail_closed(self):
+        reader = Reader(base_state(unmapped_count=1, unmapped_external_ids=["999"], rows=[], live_rows=0))
+        status, _, body = MODULE.http_response(reader)
+        self.assertEqual(status, 200)
+        self.assertEqual(body["display_state"], "UNMAPPED")
+        self.assertEqual(body["matches"], [])
+
+    def test_service_failure_never_falls_back_to_source(self):
+        reader = Reader(error=RuntimeError("shared service unavailable"))
+        status, _, body = MODULE.http_response(reader)
+        self.assertEqual(status, 503)
+        self.assertEqual(body["display_state"], "REQUEST_FAILED")
+        self.assertEqual(body["matches"], [])
+        self.assertEqual(reader.calls, 1)
+
+    def test_snapshot_refresh_has_no_network_dependency(self):
+        with tempfile.TemporaryDirectory() as directory:
+            snapshot = Path(directory) / "snapshot.json"
+            snapshot.write_text(json.dumps({"health": "FRESH_NO_LIVE_ROWS", "rows": [], "live_rows": 0}), encoding="utf-8")
+            with patch.object(MODULE, "SNAPSHOT", snapshot):
+                state = MODULE._read_snapshot()
+        self.assertEqual(state["health"], "FRESH_NO_LIVE_ROWS")
+        self.assertEqual(state["rows"], [])
 
 
-def test_http_endpoint_renders_identity_gap_fail_closed():
-    reader = Reader(base_state(duplicate_observation_ids=["123"], rows=[], live_rows=0))
-    status, _, body = MODULE.http_response(reader)
-    assert status == 200
-    assert body["display_state"] == "IDENTITY_GAP"
-    assert body["matches"] == []
-    assert reader.calls == 1
-
-
-def test_http_endpoint_renders_unmapped_fail_closed():
-    reader = Reader(base_state(unmapped_count=1, unmapped_external_ids=["999"], rows=[], live_rows=0))
-    status, _, body = MODULE.http_response(reader)
-    assert status == 200
-    assert body["display_state"] == "UNMAPPED"
-    assert body["matches"] == []
-
-
-def test_http_endpoint_service_failure_never_falls_back_to_source():
-    reader = Reader(error=RuntimeError("shared service unavailable"))
-    status, _, body = MODULE.http_response(reader)
-    assert status == 503
-    assert body["display_state"] == "REQUEST_FAILED"
-    assert body["matches"] == []
-    assert reader.calls == 1
-
-
-def test_snapshot_refresh_has_no_network_dependency(monkeypatch, tmp_path):
-    snapshot = tmp_path / "snapshot.json"
-    snapshot.write_text('{"health":"FRESH_NO_LIVE_ROWS","rows":[],"live_rows":0}', encoding="utf-8")
-    monkeypatch.setattr(MODULE, "SNAPSHOT", snapshot)
-    state = MODULE._read_snapshot()
-    assert state["health"] == "FRESH_NO_LIVE_ROWS"
-    assert state["rows"] == []
+if __name__ == "__main__":
+    unittest.main()
