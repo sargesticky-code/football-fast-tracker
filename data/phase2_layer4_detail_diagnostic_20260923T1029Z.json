@@ -1,0 +1,17 @@
+{
+  "layer": 4,
+  "observed_at": "2026-09-23T10:29:54Z",
+  "branch": "phase2-human-intelligence",
+  "deployed_detail_version": 7,
+  "deployed_detail_window": {"kickoff_from": "now-10m", "kickoff_to": "now+55m"},
+  "required_detail_window": {"kickoff_from": "now-55m", "kickoff_to": "now+10m"},
+  "deployed_request_mode": "fixtures?id= per fixture",
+  "required_request_mode": "fixtures?ids= batch up to 20",
+  "current_correct_window_eligible": [{"hkjc_event_id":"FB5684","api_fixture_id":1640459,"kickoff":"2026-09-23T10:00:00Z","detail_last_checked_at":"2026-09-23T09:35:05.747Z","detail_check_count":2,"lineup_confirmed":false}],
+  "latest_detail_health": {"status":"IDLE","observed_at":"2026-09-23T10:05:04.179Z","reported_window":{"from":"2026-09-23T09:55:04.179Z","to":"2026-09-23T11:00:04.179Z"},"batch_max":3},
+  "latest_base_health": {"status":"PASS","observed_at":"2026-09-23T08:28:10.586Z","targets":34,"fixtures":388,"mapped":20,"injuries_seen":36,"injury_evidence":18,"calls":4,"quota_remaining":88},
+  "table_counts": {"api_football_event_map":43,"human_factors_current":43,"phase2_player_status_evidence":18,"phase2_match_lineup_evidence":0,"phase2_manager_evidence":0,"phase2_players":18,"phase2_managers":0},
+  "classification": "DETAIL_WINDOW_AND_BATCH_ARCHITECTURE_DRIFT",
+  "exit_met": false,
+  "next_objective": "Repair detail eligibility to now-55m..now+10m and restore fixtures?ids= batching without per-fixture fallback; then verify against a real eligible fixture while preserving quota floor and 0-call idle behavior."
+}
