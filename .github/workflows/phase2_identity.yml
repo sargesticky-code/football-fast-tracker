@@ -19,7 +19,7 @@ permissions:
   contents: write
 concurrency:
   group: phase2-human-intelligence-${{ github.event.pull_request.head.ref || github.ref_name }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   phase2:
     if: (github.event_name == 'pull_request' && github.head_ref == 'phase2-human-intelligence') || (github.event_name != 'pull_request' && github.ref == 'refs/heads/phase2-human-intelligence')
@@ -32,41 +32,46 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'
       - name: Install Phase 2 runtime
         run: python -m pip install 'requests==2.32.5' 'curl_cffi>=0.13,<0.15'
-      - name: Refresh Layer 1 identity universe
+      - name: Dynamic Phase 2 objective
+        run: |
+          python - <<'PY'
+          import json,os
+          def h(path):
+              try:return json.load(open(path))
+              except:return {}
+          i=h('data/phase2_identity_health.json'); s=h('data/phase2_squad_health.json'); m=h('data/phase2_manager_health.json')
+          if not i.get('layer1_exit'): objective='LAYER1_IDENTITY'
+          elif not s.get('layer2_exit'): objective='LAYER2_SQUAD'
+          elif not m.get('layer3_exit'): objective='LAYER3_MANAGER'
+          else: objective='LAYER4_AVAILABILITY'
+          print('PHASE2_DYNAMIC_OBJECTIVE='+objective)
+          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('PHASE2_OBJECTIVE='+objective+'\n')
+          PY
+      - name: Refresh current identity universe
         run: python scripts/phase2_run_layer1.py
-      - name: Execute Layer 2 squad master after Layer 1 exit
+      - name: Refresh squad master
+        if: env.PHASE2_OBJECTIVE != 'LAYER1_IDENTITY'
+        run: python scripts/phase2_capture_squads_fotmob.py
+      - name: Refresh manager master
+        if: env.PHASE2_OBJECTIVE != 'LAYER1_IDENTITY' && env.PHASE2_OBJECTIVE != 'LAYER2_SQUAD'
+        run: python scripts/phase2_capture_managers_fotmob.py
+      - name: Layer 4 availability objective
+        if: env.PHASE2_OBJECTIVE == 'LAYER4_AVAILABILITY'
         run: |
-          python - <<'PY'
-          import json,subprocess,sys
-          h=json.load(open('data/phase2_identity_health.json'))
-          if h.get('layer1_exit'):
-              subprocess.check_call([sys.executable,'scripts/phase2_capture_squads_fotmob.py'])
-          else:
-              print('PHASE2_LAYER2_SKIPPED layer1_exit=false')
-          PY
-      - name: Execute Layer 3 manager master after Layer 2 exit
-        run: |
-          python - <<'PY'
-          import json,subprocess,sys,os
-          if not os.path.exists('data/phase2_squad_health.json'):
-              print('PHASE2_LAYER3_SKIPPED no_layer2_health'); raise SystemExit(0)
-          h=json.load(open('data/phase2_squad_health.json'))
-          if h.get('layer2_exit'):
-              subprocess.check_call([sys.executable,'scripts/phase2_capture_managers_fotmob.py'])
-          else:
-              print('PHASE2_LAYER3_SKIPPED layer2_exit=false')
-          PY
+          if [ -f scripts/phase2_capture_availability.py ]; then
+            python scripts/phase2_capture_availability.py
+          else
+            echo 'PHASE2_LAYER4_NEXT_ACTION=IMPLEMENT_TARGETED_CURRENT_AVAILABILITY_CAPTURE'
+          fi
       - name: Persist Phase 2 snapshots only
         run: |
           git config user.name "phase2-bot"
           git config user.email "phase2-bot@users.noreply.github.com"
           git add data/phase2_hkjc_current.csv data/phase2_hkjc_capture_health.json data/phase2_team_identity_targets.csv data/phase2_team_identity_evidence.csv data/phase2_identity_resolution_diagnostics.csv data/phase2_thesportsdb_diagnostics.csv data/phase2_espn_diagnostics.csv data/phase2_fotmob_diagnostics.csv data/phase2_identity_health.json
-          [ ! -f data/phase2_player_master.csv ] || git add data/phase2_player_master.csv
-          [ ! -f data/phase2_squad_health.json ] || git add data/phase2_squad_health.json
-          [ ! -f data/phase2_manager_master.csv ] || git add data/phase2_manager_master.csv
-          [ ! -f data/phase2_manager_health.json ] || git add data/phase2_manager_health.json
+          for f in data/phase2_player_master.csv data/phase2_squad_health.json data/phase2_manager_master.csv data/phase2_manager_health.json data/phase2_availability_evidence.csv data/phase2_availability_health.json; do [ ! -f "$f" ] || git add "$f"; done
           if ! git diff --cached --quiet; then
             git commit -m "phase2: refresh human intelligence evidence"
             git push origin HEAD:phase2-human-intelligence
