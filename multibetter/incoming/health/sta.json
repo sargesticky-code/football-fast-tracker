@@ -1,12 +1,12 @@
 {
   "source": "STA",
   "status": "OK",
-  "rows": 29,
+  "rows": 36,
   "requests": 3,
   "errors": 0,
-  "started_at": "2026-09-23T09:29:36.508426+08:00",
-  "finished_at": "2026-09-23T09:29:38.689352+08:00",
-  "note": "calibration={\"calibration_only_previous_day\": \"2026-09-22\", \"calibration_rows\": 88, \"dominance\": 1.0, \"dominant_cluster\": [-240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -237, -237], \"dominant_samples\": 19, \"inferred_source_minus_utc_minutes\": -240, \"offset_distribution\": {\"-240\": 17, \"-237\": 2}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 19, \"target_rows\": 29}",
+  "started_at": "2026-09-23T23:26:14.439560+08:00",
+  "finished_at": "2026-09-23T23:26:16.687084+08:00",
+  "note": "calibration={\"calibration_only_previous_day\": \"2026-09-22\", \"calibration_rows\": 91, \"dominance\": 1.0, \"dominant_cluster\": [60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 63], \"dominant_samples\": 21, \"inferred_source_minus_utc_minutes\": 60, \"offset_distribution\": {\"60\": 20, \"63\": 1}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 21, \"target_rows\": 36}",
   "target_start": "2026-09-23",
   "target_end": "2026-09-24"
 }
