@@ -52,18 +52,29 @@ def fetch_board(day):
 
 
 def last_good_meta(now):
-    """Return age of the last genuine live heartbeat, never terminal evidence."""
+    """Return age of the last genuine live heartbeat, purging invalid cache state.
+
+    Historical Layer-3 caches may contain terminal/partial snapshots from before
+    the FRESH_LIVE-only persistence contract. Remove those files (and corrupt
+    state) so GitHub Actions cannot keep re-saving them as apparent last-good
+    evidence on every scheduled run.
+    """
     if not LAST_GOOD.exists(): return {'last_good_at':None,'last_good_age_seconds':None}
     try:
         old=json.loads(LAST_GOOD.read_text())
         if old.get('health') != 'FRESH_LIVE' or not old.get('live_rows'):
+            LAST_GOOD.unlink(missing_ok=True)
             return {'last_good_at':None,'last_good_age_seconds':None}
         stamp=old.get('fast_snapshot_at')
         dt=datetime.fromisoformat(stamp) if stamp else None
         if dt and dt.tzinfo is None: dt=dt.replace(tzinfo=timezone.utc)
-        age=max(0,(now-dt).total_seconds()) if dt else None
+        if not dt or dt > now:
+            LAST_GOOD.unlink(missing_ok=True)
+            return {'last_good_at':None,'last_good_age_seconds':None}
+        age=(now-dt).total_seconds()
         return {'last_good_at':stamp,'last_good_age_seconds':age}
     except Exception:
+        LAST_GOOD.unlink(missing_ok=True)
         return {'last_good_at':None,'last_good_age_seconds':None}
 
 
@@ -100,8 +111,6 @@ def main():
             board=fetch_board(day)
             for row in normalize_fotmob_board(board,now.isoformat()):
                 rid=str(row.get('external_id') or '')
-                # Preserve every observation so join_verified_fast_rows can
-                # quarantine conflicting duplicates. seen_ids is coverage-only.
                 normalized.append(row)
                 if rid: seen_ids.add(rid)
             if board_index > 0:
