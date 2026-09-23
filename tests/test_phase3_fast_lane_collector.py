@@ -35,6 +35,15 @@ def test_board_dates_add_only_dates_supported_by_verified_kickoff():
     assert collector.board_dates(now, verified) == ["20260923", "20260922", "20260924"]
 
 
+def test_terminal_retention_cannot_trigger_historical_board_crawl():
+    now = datetime(2026, 9, 23, 12, 0, tzinfo=timezone.utc)
+    verified = [
+        {"external_id": "old", "kickoff_utc": "2026-09-10T12:00:00Z"},
+        {"external_id": "boundary", "kickoff_utc": "2026-09-22T23:55:00Z"},
+    ]
+    assert collector.board_dates(now, verified) == ["20260923", "20260922"]
+
+
 def test_naive_kickoff_is_not_used_to_guess_board_timezone():
     now = datetime(2026, 9, 23, 0, 5, tzinfo=timezone.utc)
     assert collector.board_dates(now, [{"external_id": "11", "kickoff_utc": "2026-09-22T23:55:00"}]) == ["20260923"]
