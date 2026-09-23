@@ -145,10 +145,24 @@ def verified_index(registry_rows: Iterable[dict[str, Any]]) -> dict[tuple[str, s
 
 
 def _status_text(status: dict[str, Any]) -> str | None:
+    """Normalize FotMob status using explicit text first, then documented flags."""
     reason = status.get("reason")
     if isinstance(reason, dict):
-        return reason.get("short") or reason.get("long")
-    return status.get("status") or (str(reason) if reason is not None else None)
+        text = reason.get("short") or reason.get("long")
+        if text:
+            return str(text)
+    text = status.get("status") or (str(reason) if reason is not None else None)
+    if text:
+        return str(text)
+    # Public-FotMob-API documents board payloads that expose only boolean
+    # started/finished/cancelled flags. Preserve those states deterministically.
+    if status.get("cancelled") is True:
+        return "CANCELLED"
+    if status.get("finished") is True:
+        return "FT"
+    if status.get("started") is True:
+        return "LIVE"
+    return None
 
 
 def _team_score(value: Any) -> int | None:
