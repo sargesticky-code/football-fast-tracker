@@ -7,7 +7,7 @@ on:
     paths:
       - 'phase3/fast_lane.py'
       - 'scripts/phase3_collect_fast_lane.py'
-      - 'tests/test_phase3_fast_lane.py'
+      - 'tests/test_phase3_fast_lane*.py'
       - '.github/workflows/phase3_fast_lane.yml'
   schedule:
     - cron: '2,17,32,47 * * * *'
@@ -50,7 +50,7 @@ jobs:
           restore-keys: |
             phase3-fast-state-
       - name: Run Layer 3 deterministic tests
-        run: python -m unittest tests.test_phase3_fast_lane -v
+        run: python -m unittest discover -s tests -p 'test_phase3_fast_lane*.py' -v
       - name: Collect fast heartbeat
         run: PYTHONPATH=. python scripts/phase3_collect_fast_lane.py
       - name: Diagnose fast snapshot
