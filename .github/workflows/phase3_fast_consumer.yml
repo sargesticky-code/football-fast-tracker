@@ -7,8 +7,10 @@ on:
       - 'phase3/fast_consumer.py'
       - 'phase3/fast_api.py'
       - 'phase3/fast_service.py'
+      - 'api/phase3_fast.py'
       - 'tests/test_phase3_fast_consumer.py'
       - 'tests/test_phase3_fast_api.py'
+      - 'tests/test_phase3_fast_http_endpoint.py'
       - '.github/workflows/phase3_fast_consumer.yml'
   workflow_dispatch:
 
@@ -20,5 +22,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Verify Layer 5 read-only consumer contract
-        run: python -m unittest tests.test_phase3_fast_consumer tests.test_phase3_fast_api -v
+      - name: Verify Layer 5 read-only consumer and HTTP contracts
+        run: python -m unittest tests.test_phase3_fast_consumer tests.test_phase3_fast_api tests.test_phase3_fast_http_endpoint -v
