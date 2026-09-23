@@ -1,6 +1,12 @@
 name: Phase 2 Human Intelligence
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - phase2-human-intelligence
+    paths:
+      - 'scripts/phase2_*.py'
+      - '.github/workflows/phase2_identity.yml'
   pull_request:
     branches:
       - app-v1
