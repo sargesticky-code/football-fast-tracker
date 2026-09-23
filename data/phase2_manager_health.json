@@ -1,11 +1,11 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 50,
-  "teams_with_explicit_manager": 39,
-  "team_coverage_pct": 78.0,
-  "manager_rows": 39,
+  "target_confirmed_fotmob_teams": 76,
+  "teams_with_explicit_manager": 63,
+  "team_coverage_pct": 82.9,
+  "manager_rows": 63,
   "failure_classes": {
-    "NO_EXPLICIT_CURRENT_MANAGER": 11
+    "NO_EXPLICIT_CURRENT_MANAGER": 13
   },
   "residual_all_classified": true,
   "failures": [
@@ -22,10 +22,22 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":9}"
     },
     {
+      "hkjc_team_id": "50000506",
+      "team": "Botswana",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":21}"
+    },
+    {
       "hkjc_team_id": "50001042",
       "team": "Ecuador",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":28}"
+    },
+    {
+      "hkjc_team_id": "50001501",
+      "team": "Haiti",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":27}"
     },
     {
       "hkjc_team_id": "50001807",
@@ -52,30 +64,30 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":7}"
     },
     {
+      "hkjc_team_id": "50003123",
+      "team": "Trinidad and Tobago",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":30}"
+    },
+    {
       "hkjc_team_id": "50240645",
       "team": "Colombia Women U20",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
     },
     {
-      "hkjc_team_id": "50240649",
-      "team": "Spain Women U20",
+      "hkjc_team_id": "50288636",
+      "team": "Dominican Republic",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":1}"
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":11}"
     },
     {
       "hkjc_team_id": "50601674",
       "team": "Piratas FC",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":1}"
-    },
-    {
-      "hkjc_team_id": "50621165",
-      "team": "Italy Women U20",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
     }
   ],
   "layer3_exit": true,
-  "fetched_at": "2026-09-23T10:32:23.269317+00:00"
+  "fetched_at": "2026-09-23T14:26:28.664337+00:00"
 }
