@@ -88,8 +88,10 @@ def main():
             board=fetch_board(day)
             for row in normalize_fotmob_board(board,now.isoformat()):
                 rid=str(row.get('external_id') or '')
-                if rid and rid not in seen_ids:
-                    normalized.append(row); seen_ids.add(rid)
+                # Preserve every observation so join_verified_fast_rows can
+                # quarantine conflicting duplicates. seen_ids is coverage-only.
+                normalized.append(row)
+                if rid: seen_ids.add(rid)
             if target_ids.issubset(seen_ids): break
         joined,unmapped=join_verified_fast_rows(registry,normalized)
         relevant_unmapped=[r for r in unmapped if str(r.get('external_id') or '') in target_ids]
