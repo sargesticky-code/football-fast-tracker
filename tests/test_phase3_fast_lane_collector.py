@@ -19,6 +19,34 @@ def test_duplicate_diagnostics_reports_only_repeated_external_ids():
     assert collector.duplicate_observation_ids(rows) == ["11"]
 
 
+def test_coverage_meta_exposes_mapped_unmapped_and_missing_verified_ids():
+    joined = [{"external_id": "11", "hkjc_event_id": "FB1"}]
+    unmapped = [
+        {"external_id": "12", "reason": "IDENTITY_GAP"},
+        {"external_id": "999", "reason": "NOT_A_TARGET"},
+    ]
+    meta = collector.coverage_meta({"11", "12", "13"}, {"11", "12"}, joined, unmapped)
+    assert meta == {
+        "mapped_rows": 1,
+        "unmapped_count": 1,
+        "unmapped_external_ids": ["12"],
+        "missing_target_ids": ["13"],
+    }
+
+
+def test_coverage_meta_deduplicates_unmapped_ids_without_fuzzy_promotion():
+    meta = collector.coverage_meta(
+        {"12"},
+        {"12"},
+        [],
+        [{"external_id": "12"}, {"external_id": "12"}],
+    )
+    assert meta["mapped_rows"] == 0
+    assert meta["unmapped_count"] == 1
+    assert meta["unmapped_external_ids"] == ["12"]
+    assert meta["missing_target_ids"] == []
+
+
 def test_board_dates_do_not_speculatively_fetch_adjacent_days_without_kickoff():
     now = datetime(2026, 9, 23, 0, 5, tzinfo=timezone.utc)
     assert collector.board_dates(now, []) == ["20260923"]
