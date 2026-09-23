@@ -5,7 +5,9 @@ on:
     branches: [phase3-live-intelligence]
     paths:
       - 'phase3/shared_fast_cache.py'
+      - 'phase3/fast_service.py'
       - 'tests/test_phase3_shared_fast_cache.py'
+      - 'tests/test_phase3_fast_service.py'
       - '.github/workflows/phase3_shared_fast_cache.yml'
   workflow_dispatch:
 
@@ -17,5 +19,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Verify N consumers share one upstream refresh
-        run: python -m unittest tests.test_phase3_shared_fast_cache -v
+      - name: Verify cache and service consumers share upstream refreshes
+        run: python -m unittest tests.test_phase3_shared_fast_cache tests.test_phase3_fast_service -v
