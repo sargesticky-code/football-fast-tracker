@@ -13,6 +13,20 @@ class FastLaneTests(unittest.TestCase):
         rows=normalize_fotmob_board(payload,"2026-09-22T03:00:00+00:00")
         self.assertEqual(len(rows),1); self.assertEqual(rows[0]["external_id"],"5190727"); self.assertEqual(rows[0]["minute"],67); self.assertEqual((rows[0]["home_score"],rows[0]["away_score"]),(2,1))
 
+
+    def test_documented_fotmob_status_flags_are_supported(self):
+        observed="2026-09-23T14:00:00+00:00"
+        payload={"matches":[
+            {"id":21,"home":{"score":1},"away":{"score":0},"status":{"started":True,"finished":False,"cancelled":False,"liveTime":{"short":"34"}}},
+            {"id":22,"home":{"score":2},"away":{"score":1},"status":{"started":True,"finished":True,"cancelled":False}},
+            {"id":23,"home":{"score":0},"away":{"score":0},"status":{"started":False,"finished":False,"cancelled":True}},
+        ]}
+        rows=normalize_fotmob_board(payload,observed)
+        self.assertEqual([r["status"] for r in rows],["LIVE","FT","CANCELLED"])
+        health=fast_lane_health([rows[0]],observed,now="2026-09-23T14:00:01+00:00")
+        self.assertEqual(health["health"],"FRESH_LIVE")
+        self.assertEqual(health["live_rows"],1)
+
     def test_stoppage_time_preserves_elapsed_minute(self):
         payload={"matches":[{"id":13,"home":{"score":1},"away":{"score":1},"status":{"liveTime":{"short":"90 + 4'"},"reason":{"short":"2nd"}}}]}
         row=normalize_fotmob_board(payload,"2026-09-22T03:00:00+00:00")[0]
