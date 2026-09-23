@@ -33,15 +33,36 @@ def fotmob_date(now):
     return now.strftime('%Y%m%d')
 
 
-def board_dates(now, verified):
-    """Use one board normally; add adjacent UTC boards only for missing targets.
+def _row_kickoff(row):
+    """Read a verified kickoff timestamp without guessing a timezone."""
+    for key in ('kickoff_utc','kickoff','start_time','start_time_utc','match_time_utc'):
+        value=row.get(key)
+        if not isinstance(value,str) or not value.strip():
+            continue
+        try:
+            dt=datetime.fromisoformat(value.strip().replace('Z','+00:00'))
+        except ValueError:
+            continue
+        if dt.tzinfo is None:
+            continue
+        return dt.astimezone(timezone.utc)
+    return None
 
-    This protects matches around the UTC date boundary without ever falling back
-    to one request per match. Maximum upstream fan-out is three daily boards.
+
+def board_dates(now, verified):
+    """Query today's board plus dates explicitly supported by verified identities.
+
+    The previous unconditional yesterday/tomorrow fallback could keep fetching
+    finished historical matches every run. Verified kickoff evidence is a safer
+    board selector: it recovers UTC-boundary targets without speculative fan-out.
+    If old registry rows have no kickoff timestamp, use only today's board.
     """
-    dates=[fotmob_date(now)]
-    if verified:
-        dates.extend([fotmob_date(now-timedelta(days=1)),fotmob_date(now+timedelta(days=1))])
+    primary=fotmob_date(now)
+    dates=[primary]
+    supported=sorted({fotmob_date(dt) for row in verified if (dt:=_row_kickoff(row)) is not None})
+    for day in supported:
+        if day != primary and day not in dates:
+            dates.append(day)
     return dates
 
 
