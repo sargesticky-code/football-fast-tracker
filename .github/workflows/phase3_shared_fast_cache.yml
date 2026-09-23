@@ -1,0 +1,21 @@
+name: Phase 3 Shared Fast Cache
+
+on:
+  push:
+    branches: [phase3-live-intelligence]
+    paths:
+      - 'phase3/shared_fast_cache.py'
+      - 'tests/test_phase3_shared_fast_cache.py'
+      - '.github/workflows/phase3_shared_fast_cache.yml'
+  workflow_dispatch:
+
+jobs:
+  layer4-shared-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify N consumers share one upstream refresh
+        run: python -m unittest tests.test_phase3_shared_fast_cache -v
