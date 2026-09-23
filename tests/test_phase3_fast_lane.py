@@ -18,6 +18,13 @@ class FastLaneTests(unittest.TestCase):
         row=normalize_fotmob_board(payload,"2026-09-22T03:00:00+00:00")[0]
         self.assertEqual(row["minute"],94); self.assertEqual(row["status"],"2nd")
 
+    def test_boolean_numeric_evidence_fails_closed(self):
+        payload={"matches":[{"id":15,"home":{"score":True},"away":{"score":False},"status":{"liveTime":{"short":"23'"},"reason":{"short":"1st"}}}]}
+        row=normalize_fotmob_board(payload,"2026-09-22T03:00:00+00:00")[0]
+        self.assertIsNone(row["home_score"]); self.assertIsNone(row["away_score"])
+        health=fast_lane_health([row],"2026-09-22T03:00:00+00:00",now="2026-09-22T03:00:01+00:00")
+        self.assertEqual(health["health"],"FRESH_PARTIAL_OR_TERMINAL"); self.assertEqual(health["live_rows"],0)
+
     def test_halftime_status_is_preserved_without_inventing_minute(self):
         payload={"matches":[{"id":14,"home":{"score":0},"away":{"score":0},"status":{"reason":{"short":"HT"}}}]}
         row=normalize_fotmob_board(payload,"2026-09-22T03:00:00+00:00")[0]
