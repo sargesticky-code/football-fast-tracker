@@ -19,14 +19,25 @@ def test_duplicate_diagnostics_reports_only_repeated_external_ids():
     assert collector.duplicate_observation_ids(rows) == ["11"]
 
 
-def test_board_dates_are_bounded_to_primary_plus_adjacent_days():
+def test_board_dates_do_not_speculatively_fetch_adjacent_days_without_kickoff():
     now = datetime(2026, 9, 23, 0, 5, tzinfo=timezone.utc)
     assert collector.board_dates(now, []) == ["20260923"]
-    assert collector.board_dates(now, [{"external_id": "11"}]) == [
-        "20260923",
-        "20260922",
-        "20260924",
+    assert collector.board_dates(now, [{"external_id": "11"}]) == ["20260923"]
+
+
+def test_board_dates_add_only_dates_supported_by_verified_kickoff():
+    now = datetime(2026, 9, 23, 0, 5, tzinfo=timezone.utc)
+    verified = [
+        {"external_id": "11", "kickoff_utc": "2026-09-22T23:55:00Z"},
+        {"external_id": "12", "kickoff_utc": "2026-09-24T00:10:00+00:00"},
+        {"external_id": "13", "kickoff_utc": "2026-09-23T12:00:00Z"},
     ]
+    assert collector.board_dates(now, verified) == ["20260923", "20260922", "20260924"]
+
+
+def test_naive_kickoff_is_not_used_to_guess_board_timezone():
+    now = datetime(2026, 9, 23, 0, 5, tzinfo=timezone.utc)
+    assert collector.board_dates(now, [{"external_id": "11", "kickoff_utc": "2026-09-22T23:55:00"}]) == ["20260923"]
 
 
 def test_fotmob_date_uses_supplied_utc_clock_without_local_timezone_drift():
