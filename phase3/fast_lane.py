@@ -141,9 +141,14 @@ def _team_score(value: Any) -> int | None:
 
 def _score(match: dict[str, Any], status: dict[str, Any]) -> tuple[int | None, int | None]:
     score = status.get("scoreStr") or match.get("scoreStr") or ""
-    if isinstance(score, str) and "-" in score:
-        left, right = score.split("-", 1)
-        return _int_or_none(left), _int_or_none(right)
+    if isinstance(score, str):
+        # Parse the entire score pair rather than splitting on the first '-'.
+        # A malformed signed value such as "-1 - 0" must remain negative so
+        # the live plausibility gate can reject it; split("-", 1) would turn
+        # that into an empty left side and a misleading positive right value.
+        pair = re.fullmatch(r"\s*([+-]?\d+)\s*-\s*([+-]?\d+)\s*", score)
+        if pair:
+            return _int_or_none(pair.group(1)), _int_or_none(pair.group(2))
     return _team_score(match.get("home")), _team_score(match.get("away"))
 
 
