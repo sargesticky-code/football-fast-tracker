@@ -1,5 +1,6 @@
 import importlib.util
-from datetime import datetime, timezone
+import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 
@@ -45,6 +46,42 @@ def test_coverage_meta_deduplicates_unmapped_ids_without_fuzzy_promotion():
     assert meta["unmapped_count"] == 1
     assert meta["unmapped_external_ids"] == ["12"]
     assert meta["missing_target_ids"] == []
+
+
+def test_last_good_meta_exposes_consumer_state_for_valid_live_cache(tmp_path, monkeypatch):
+    now = datetime(2026, 9, 23, 12, 0, tzinfo=timezone.utc)
+    path = tmp_path / "last_good.json"
+    path.write_text(json.dumps({
+        "health": "FRESH_LIVE",
+        "live_rows": 2,
+        "fast_snapshot_at": (now - timedelta(seconds=7)).isoformat(),
+    }))
+    monkeypatch.setattr(collector, "LAST_GOOD", path)
+    assert collector.last_good_meta(now) == {
+        "last_good_at": "2026-09-23T11:59:53+00:00",
+        "last_good_age_seconds": 7.0,
+        "last_good_health": "FRESH_LIVE",
+        "last_good_live_rows": 2,
+    }
+    assert path.exists()
+
+
+def test_last_good_meta_purges_non_live_cache_and_exposes_empty_state(tmp_path, monkeypatch):
+    now = datetime(2026, 9, 23, 12, 0, tzinfo=timezone.utc)
+    path = tmp_path / "last_good.json"
+    path.write_text(json.dumps({
+        "health": "FRESH_PARTIAL_OR_TERMINAL",
+        "live_rows": 0,
+        "fast_snapshot_at": now.isoformat(),
+    }))
+    monkeypatch.setattr(collector, "LAST_GOOD", path)
+    assert collector.last_good_meta(now) == {
+        "last_good_at": None,
+        "last_good_age_seconds": None,
+        "last_good_health": None,
+        "last_good_live_rows": 0,
+    }
+    assert not path.exists()
 
 
 def test_board_dates_do_not_speculatively_fetch_adjacent_days_without_kickoff():
