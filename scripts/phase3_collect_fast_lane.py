@@ -66,25 +66,39 @@ def fetch_board(day):
         return json.load(response)
 
 
+def _empty_last_good_meta():
+    return {
+        'last_good_at':None,
+        'last_good_age_seconds':None,
+        'last_good_health':None,
+        'last_good_live_rows':0,
+    }
+
+
 def last_good_meta(now):
-    """Return age of the last genuine live heartbeat, purging invalid cache state."""
-    if not LAST_GOOD.exists(): return {'last_good_at':None,'last_good_age_seconds':None}
+    """Expose the last genuine live heartbeat state, purging invalid cache state."""
+    if not LAST_GOOD.exists(): return _empty_last_good_meta()
     try:
         old=json.loads(LAST_GOOD.read_text())
         if old.get('health') != 'FRESH_LIVE' or not old.get('live_rows'):
             LAST_GOOD.unlink(missing_ok=True)
-            return {'last_good_at':None,'last_good_age_seconds':None}
+            return _empty_last_good_meta()
         stamp=old.get('fast_snapshot_at')
         dt=datetime.fromisoformat(stamp) if stamp else None
         if dt and dt.tzinfo is None: dt=dt.replace(tzinfo=timezone.utc)
         if not dt or dt > now:
             LAST_GOOD.unlink(missing_ok=True)
-            return {'last_good_at':None,'last_good_age_seconds':None}
+            return _empty_last_good_meta()
         age=(now-dt).total_seconds()
-        return {'last_good_at':stamp,'last_good_age_seconds':age}
+        return {
+            'last_good_at':stamp,
+            'last_good_age_seconds':age,
+            'last_good_health':'FRESH_LIVE',
+            'last_good_live_rows':int(old.get('live_rows') or 0),
+        }
     except Exception:
         LAST_GOOD.unlink(missing_ok=True)
-        return {'last_good_at':None,'last_good_age_seconds':None}
+        return _empty_last_good_meta()
 
 
 def duplicate_observation_ids(rows):
@@ -142,16 +156,16 @@ def main():
         health=freshness['health'] if joined else 'TARGETS_NOT_ON_BOARD'
         payload.update(rows=joined,live_rows=live_rows,terminal_rows=terminal_rows,board_rows=len(normalized),board_dates=dates_tried,duplicate_observation_ids=duplicate_observation_ids(normalized),health=health,snapshot_age_seconds=freshness['snapshot_age_seconds'],**coverage)
         if health == 'FRESH_LIVE' and live_rows:
-            payload.update(last_good_at=now.isoformat(),last_good_age_seconds=0)
+            payload.update(last_good_at=now.isoformat(),last_good_age_seconds=0,last_good_health='FRESH_LIVE',last_good_live_rows=live_rows)
             LAST_GOOD.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
-        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests={payload['request_count']} primary_requests={payload['primary_board_requests']} fallback_requests={payload['fallback_board_requests']} failures=0 board_rows={len(normalized)} mapped_rows={payload['mapped_rows']} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={payload['unmapped_count']} missing_targets={len(payload['missing_target_ids'])} fallback_recovered={len(payload['fallback_recovered_target_ids'])} duplicate_ids={len(payload['duplicate_observation_ids'])} snapshot_age={payload['snapshot_age_seconds']} last_good_age={payload['last_good_age_seconds']}")
+        print(f"PHASE3_FAST health={health} verified_targets={len(verified)} requests={payload['request_count']} primary_requests={payload['primary_board_requests']} fallback_requests={payload['fallback_board_requests']} failures=0 board_rows={len(normalized)} mapped_rows={payload['mapped_rows']} live_rows={live_rows} terminal_rows={terminal_rows} unmapped={payload['unmapped_count']} missing_targets={len(payload['missing_target_ids'])} fallback_recovered={len(payload['fallback_recovered_target_ids'])} duplicate_ids={len(payload['duplicate_observation_ids'])} snapshot_age={payload['snapshot_age_seconds']} last_good_health={payload['last_good_health']} last_good_rows={payload['last_good_live_rows']} last_good_age={payload['last_good_age_seconds']}")
         for row in joined: print(f"PHASE3_FAST_MATCH event={row['hkjc_event_id']} external={row['external_id']} status={row['status']} minute={row['minute']} score={row['home_score']}-{row['away_score']}")
         return 0
     except Exception as exc:
         payload.update(health='SOURCE_ERROR',request_failures=1,error=f'{type(exc).__name__}: {exc}')
         OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2))
-        print(f"PHASE3_FAST health=SOURCE_ERROR verified_targets={len(verified)} requests={payload['request_count']} failures=1 last_good_age={payload['last_good_age_seconds']} error={type(exc).__name__}")
+        print(f"PHASE3_FAST health=SOURCE_ERROR verified_targets={len(verified)} requests={payload['request_count']} failures=1 last_good_health={payload['last_good_health']} last_good_rows={payload['last_good_live_rows']} last_good_age={payload['last_good_age_seconds']} error={type(exc).__name__}")
         return 0
 
 if __name__=='__main__': raise SystemExit(main())
