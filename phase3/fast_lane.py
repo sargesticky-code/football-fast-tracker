@@ -34,6 +34,25 @@ def _int_or_none(value: Any) -> int | None:
         return None
 
 
+def _minute_or_none(value: Any) -> int | None:
+    """Parse an elapsed football minute without silently dropping stoppage time."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value) if value.is_integer() else None
+    if not isinstance(value, str):
+        return None
+    text = value.strip()
+    match = re.fullmatch(r"(\d{1,3})(?:\s*\+\s*(\d{1,2}))?\s*['’]?", text)
+    if not match:
+        return None
+    base = int(match.group(1))
+    added = int(match.group(2) or 0)
+    return base + added
+
+
 def _parse_time(value: Any) -> datetime | None:
     if isinstance(value, datetime):
         dt = value
@@ -63,7 +82,7 @@ def _is_live_row(row: dict[str, Any]) -> bool:
     live_statuses = {"1ST", "2ND", "LIVE", "ET", "EXTRA TIME", "EXTRA-TIME"}
     if status not in live_statuses:
         return False
-    minute = _int_or_none(row.get("minute"))
+    minute = _minute_or_none(row.get("minute"))
     home_score = _int_or_none(row.get("home_score"))
     away_score = _int_or_none(row.get("away_score"))
     return (minute is not None and 1 <= minute <= 130
@@ -139,32 +158,39 @@ def normalize_fotmob_board(payload: dict[str, Any], observed_at: str | None = No
     observed_at = observed_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     matches = []
     top_matches = payload.get("matches") if isinstance(payload, dict) else None
-    if isinstance(top_matches, list): matches.extend(top_matches)
+    if isinstance(top_matches, list):
+        matches.extend(top_matches)
     leagues = payload.get("leagues") if isinstance(payload, dict) else None
     if isinstance(leagues, list):
         for league in leagues:
-            if not isinstance(league, dict): continue
+            if not isinstance(league, dict):
+                continue
             league_matches = league.get("matches")
-            if isinstance(league_matches, list): matches.extend(league_matches)
+            if isinstance(league_matches, list):
+                matches.extend(league_matches)
     rows = []
     for match in matches:
-        if not isinstance(match, dict): continue
+        if not isinstance(match, dict):
+            continue
         mid = match.get("id")
-        if mid is None: continue
+        if mid is None:
+            continue
         status = match.get("status") or {}
-        if not isinstance(status, dict): status = {}
+        if not isinstance(status, dict):
+            status = {}
         live_time = status.get("liveTime")
-        if isinstance(live_time, dict): live_time = live_time.get("short") or live_time.get("long")
+        if isinstance(live_time, dict):
+            live_time = live_time.get("short") or live_time.get("long")
         home_score, away_score = _score(match, status)
-        rows.append({"source":"FOTMOB","external_id":str(mid),"status":_status_text(status),
-                     "minute":_int_or_none(live_time),"home_score":home_score,"away_score":away_score,
-                     "observed_at":observed_at})
+        rows.append({"source": "FOTMOB", "external_id": str(mid), "status": _status_text(status),
+                     "minute": _minute_or_none(live_time), "home_score": home_score, "away_score": away_score,
+                     "observed_at": observed_at})
     return rows
 
 
 def _board_signature(row: dict[str, Any]) -> tuple[Any, ...]:
     """Fields that must agree when a board repeats the same external match ID."""
-    return (str(row.get("status") or "").strip().upper(), _int_or_none(row.get("minute")),
+    return (str(row.get("status") or "").strip().upper(), _minute_or_none(row.get("minute")),
             _int_or_none(row.get("home_score")), _int_or_none(row.get("away_score")))
 
 
@@ -196,6 +222,6 @@ def join_verified_fast_rows(registry_rows: Iterable[dict[str, Any]], board_rows:
             continue
         row = candidates[0]
         joined.append(FastRow(hkjc_event_id=str(identity["hkjc_event_id"]), external_source=key[0], external_id=key[1],
-            status=row.get("status"), minute=_int_or_none(row.get("minute")), home_score=_int_or_none(row.get("home_score")),
+            status=row.get("status"), minute=_minute_or_none(row.get("minute")), home_score=_int_or_none(row.get("home_score")),
             away_score=_int_or_none(row.get("away_score")), observed_at=str(row.get("observed_at") or "")).as_dict())
     return joined, unmapped
