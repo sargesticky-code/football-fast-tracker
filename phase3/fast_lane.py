@@ -29,9 +29,15 @@ def _int_or_none(value: Any) -> int | None:
     # fabricate a plausible football score or request-failure count.
     if isinstance(value, bool):
         return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value) if value.is_integer() else None
     if isinstance(value, str):
-        match = re.search(r"[+-]?\d+", value)
-        value = match.group(0) if match else None
+        text = value.strip()
+        if not re.fullmatch(r"[+-]?\d+", text):
+            return None
+        value = text
     try:
         return int(value) if value is not None else None
     except (TypeError, ValueError):
