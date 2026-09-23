@@ -1,11 +1,11 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 60,
-  "teams_with_explicit_manager": 43,
-  "team_coverage_pct": 71.7,
-  "manager_rows": 43,
+  "target_confirmed_fotmob_teams": 52,
+  "teams_with_explicit_manager": 41,
+  "team_coverage_pct": 78.8,
+  "manager_rows": 41,
   "failure_classes": {
-    "NO_EXPLICIT_CURRENT_MANAGER": 17
+    "NO_EXPLICIT_CURRENT_MANAGER": 11
   },
   "residual_all_classified": true,
   "failures": [
@@ -22,34 +22,10 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":9}"
     },
     {
-      "hkjc_team_id": "50000761",
-      "team": "China AM",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":2}"
-    },
-    {
       "hkjc_team_id": "50001042",
       "team": "Ecuador",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":28}"
-    },
-    {
-      "hkjc_team_id": "50001167",
-      "team": "FC Imabari",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":3}"
-    },
-    {
-      "hkjc_team_id": "50001624",
-      "team": "Iran AM",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":2}"
-    },
-    {
-      "hkjc_team_id": "50001803",
-      "team": "Korea DPR AM",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
     },
     {
       "hkjc_team_id": "50001807",
@@ -70,28 +46,10 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":16}"
     },
     {
-      "hkjc_team_id": "50002695",
-      "team": "Sagan Tosu",
+      "hkjc_team_id": "50002123",
+      "team": "Mineros Zacatecas",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":26}"
-    },
-    {
-      "hkjc_team_id": "50003083",
-      "team": "Tochigi City",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
-    },
-    {
-      "hkjc_team_id": "50003085",
-      "team": "Tokushima Vortis",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":15}"
-    },
-    {
-      "hkjc_team_id": "50003298",
-      "team": "Ventforet Kofu",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":17}"
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":7}"
     },
     {
       "hkjc_team_id": "50240645",
@@ -106,6 +64,12 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":1}"
     },
     {
+      "hkjc_team_id": "50601674",
+      "team": "Piratas FC",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":1}"
+    },
+    {
       "hkjc_team_id": "50621165",
       "team": "Italy Women U20",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
@@ -113,5 +77,5 @@
     }
   ],
   "layer3_exit": true,
-  "fetched_at": "2026-09-23T00:30:56.169862+00:00"
+  "fetched_at": "2026-09-23T08:30:05.897404+00:00"
 }

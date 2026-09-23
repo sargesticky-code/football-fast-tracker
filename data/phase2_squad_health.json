@@ -1,15 +1,15 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 60,
-  "teams_with_squad": 46,
-  "team_coverage_pct": 76.7,
-  "players": 1387,
+  "target_confirmed_fotmob_teams": 52,
+  "teams_with_squad": 43,
+  "team_coverage_pct": 82.7,
+  "players": 1277,
   "position_coverage_pct": 100.0,
-  "dob_coverage_pct": 99.4,
-  "age_coverage_pct": 99.4,
+  "dob_coverage_pct": 99.3,
+  "age_coverage_pct": 99.3,
   "nationality_coverage_pct": 100.0,
   "failure_classes": {
-    "PROVIDER_ROSTER_EMPTY": 14
+    "PROVIDER_ROSTER_EMPTY": 9
   },
   "residual_all_classified": true,
   "layer2_exit": true,
@@ -27,24 +27,6 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
     {
-      "hkjc_team_id": "50000761",
-      "team": "China AM",
-      "class": "PROVIDER_ROSTER_EMPTY",
-      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
-    },
-    {
-      "hkjc_team_id": "50001167",
-      "team": "FC Imabari",
-      "class": "PROVIDER_ROSTER_EMPTY",
-      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
-    },
-    {
-      "hkjc_team_id": "50001803",
-      "team": "Korea DPR AM",
-      "class": "PROVIDER_ROSTER_EMPTY",
-      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
-    },
-    {
       "hkjc_team_id": "50001807",
       "team": "Korea DPR Women U20",
       "class": "PROVIDER_ROSTER_EMPTY",
@@ -57,26 +39,8 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
     {
-      "hkjc_team_id": "50002695",
-      "team": "Sagan Tosu",
-      "class": "PROVIDER_ROSTER_EMPTY",
-      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
-    },
-    {
-      "hkjc_team_id": "50003083",
-      "team": "Tochigi City",
-      "class": "PROVIDER_ROSTER_EMPTY",
-      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
-    },
-    {
-      "hkjc_team_id": "50003085",
-      "team": "Tokushima Vortis",
-      "class": "PROVIDER_ROSTER_EMPTY",
-      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
-    },
-    {
-      "hkjc_team_id": "50003298",
-      "team": "Ventforet Kofu",
+      "hkjc_team_id": "50002123",
+      "team": "Mineros Zacatecas",
       "class": "PROVIDER_ROSTER_EMPTY",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
@@ -93,11 +57,17 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
     {
+      "hkjc_team_id": "50601674",
+      "team": "Piratas FC",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
       "hkjc_team_id": "50621165",
       "team": "Italy Women U20",
       "class": "PROVIDER_ROSTER_EMPTY",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     }
   ],
-  "fetched_at": "2026-09-23T00:30:16.557786+00:00"
+  "fetched_at": "2026-09-23T08:29:31.398173+00:00"
 }
