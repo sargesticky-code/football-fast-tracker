@@ -181,19 +181,45 @@ def build_http_session() -> requests.Session:
     return session
 
 
-def fetch_csv(session: requests.Session, season: str, code: str) -> pd.DataFrame:
-    url = BASE.format(season=season, code=code)
+def football_data_get(
+    session: requests.Session,
+    url: str,
+    *,
+    label: str,
+) -> requests.Response | None:
+    """Bound Football-Data failures so one slow source cannot stall the lane."""
+    if getattr(session, "_fft_fd_circuit_open", False):
+        print(f"FOOTBALL_DATA_CIRCUIT_OPEN skip={label}")
+        return None
     try:
-        r = session.get(
+        response = session.get(
             url,
             timeout=TIMEOUT,
             headers={"User-Agent": "football-fast-tracker/1.0"},
         )
     except requests.RequestException as exc:
+        failures = int(getattr(session, "_fft_fd_failures", 0)) + 1
+        setattr(session, "_fft_fd_failures", failures)
+        if failures >= 3:
+            setattr(session, "_fft_fd_circuit_open", True)
         print(
-            f"FOOTBALL_DATA_FETCH_WARN season={season} code={code} "
-            f"error={type(exc).__name__}"
+            f"FOOTBALL_DATA_FETCH_WARN source={label} "
+            f"error={type(exc).__name__} failures={failures} "
+            f"circuit_open={int(failures >= 3)}"
         )
+        return None
+
+    # A successful HTTP response proves the host is responsive again.
+    setattr(session, "_fft_fd_failures", 0)
+    if response.status_code in RETRY_STATUS:
+        return None
+    return response
+
+
+def fetch_csv(session: requests.Session, season: str, code: str) -> pd.DataFrame:
+    url = BASE.format(season=season, code=code)
+    r = football_data_get(session, url, label=f"{season}:{code}")
+    if r is None:
         return pd.DataFrame()
     if r.status_code != 200 or len(r.content) < 100:
         print(
@@ -240,11 +266,9 @@ def standardize_result_frame(df: pd.DataFrame) -> pd.DataFrame:
 def fetch_extra_country(session: requests.Session, page_url: str) -> pd.DataFrame:
     """Resolve and fetch one Football-Data extra-league historical CSV."""
     try:
-        page = session.get(
-            page_url,
-            timeout=TIMEOUT,
-            headers={"User-Agent": "football-fast-tracker/1.0"},
-        )
+        page = football_data_get(session, page_url, label=f"country-page:{page_url}")
+        if page is None:
+            return pd.DataFrame()
         page.raise_for_status()
         hrefs = re.findall(r"""href=["']([^"']+\.csv)["']""", page.text, flags=re.I)
         candidates = [urljoin(page_url, h) for h in hrefs if "/new/" in urljoin(page_url, h)]
@@ -253,11 +277,9 @@ def fetch_extra_country(session: requests.Session, page_url: str) -> pd.DataFram
         # Country pages expose one canonical CSV link. Prefer the shortest URL
         # if the page happens to include more than one CSV reference.
         csv_url = sorted(set(candidates), key=len)[0]
-        r = session.get(
-            csv_url,
-            timeout=TIMEOUT,
-            headers={"User-Agent": "football-fast-tracker/1.0"},
-        )
+        r = football_data_get(session, csv_url, label=f"country-csv:{csv_url}")
+        if r is None:
+            return pd.DataFrame()
         r.raise_for_status()
         df = pd.read_csv(io.BytesIO(r.content))
         return standardize_result_frame(df)
