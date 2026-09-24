@@ -149,6 +149,65 @@ def fetch_womens_international_results() -> tuple[list[dict], datetime | None]:
     return rows, latest
 
 
+
+def fetch_mens_international_results() -> tuple[list[dict], datetime | None]:
+    try:
+        response = requests.get(
+            MENS_RESULTS_URL,
+            timeout=MENS_RESULTS_TIMEOUT,
+            headers={"User-Agent": "football-fast-tracker/1.0"},
+        )
+        response.raise_for_status()
+    except Exception as exc:
+        print(f"MENS_INTL_HISTORY unavailable error={exc}", flush=True)
+        return [], None
+
+    rows: list[dict] = []
+    latest: datetime | None = None
+    try:
+        reader = csv.DictReader(io.StringIO(response.text))
+        for row in reader:
+            try:
+                dt = datetime.strptime(str(row.get("date") or ""), "%Y-%m-%d").replace(tzinfo=HKT)
+                hg = float(row.get("home_score") or "")
+                ag = float(row.get("away_score") or "")
+            except (TypeError, ValueError):
+                continue
+            item = {
+                "date_dt": dt,
+                "home": str(row.get("home_team") or "").strip(),
+                "away": str(row.get("away_team") or "").strip(),
+                "home_goals": hg,
+                "away_goals": ag,
+                "neutral": str(row.get("neutral") or "").strip().upper() == "TRUE",
+            }
+            if not item["home"] or not item["away"]:
+                continue
+            rows.append(item)
+            if latest is None or dt > latest:
+                latest = dt
+    except Exception as exc:
+        print(f"MENS_INTL_HISTORY parse_failed error={exc}", flush=True)
+        return [], None
+
+    print(
+        f"MENS_INTL_HISTORY rows={len(rows)} "
+        f"latest={latest.date().isoformat() if latest else '-'}",
+        flush=True,
+    )
+    return rows, latest
+
+
+def external_team_name_index(rows: list[dict]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for row in rows:
+        for key in ("home", "away"):
+            name = str(row.get(key) or "").strip()
+            norm = norm_name(name)
+            if norm and norm not in out:
+                out[norm] = name
+    return out
+
 def clean_brazil_team(value: str) -> str:
     value = str(value or "").strip()
     value = re.sub(r"\s*/\s*[A-Z]{2}\s*$", "", value)
@@ -384,6 +443,12 @@ def main() -> int:
     if women_latest is not None:
         women_cutoff = women_latest.replace(hour=23, minute=59, second=59, microsecond=999999)
 
+    mens_rows, mens_latest = fetch_mens_international_results()
+    mens_names = external_team_name_index(mens_rows)
+    mens_cutoff = None
+    if mens_latest is not None:
+        mens_cutoff = mens_latest.replace(hour=23, minute=59, second=59, microsecond=999999)
+
     brazil_rows, brazil_latest = fetch_brazilianfootball_results()
     brazil_master = build_reverse_map("BRAZILIANFOOTBALL_DATA", norm_name) if brazil_rows else {}
     brazil_cutoff = None
@@ -394,6 +459,7 @@ def main() -> int:
     out = []
     modeled = 0
     women_modeled = 0
+    mens_modeled = 0
     brazil_modeled = 0
 
     for m in mappings:
@@ -452,6 +518,44 @@ def main() -> int:
                 base["external_latest_date"] = women_latest.date().isoformat() if women_latest else ""
                 base["model_source"] = (
                     "martj42/womens-international-results + HKJC recent · "
+                    "recency-weighted Team-Form Poisson"
+                )
+
+        # Senior men's internationals: use the broad full-international archive,
+        # but only for known senior national-team tournament codes. Youth / AM
+        # fixtures are deliberately excluded and remain fail-closed.
+        tournament = str(m.get("tournament") or "").strip()
+        home_name = str(m.get("home") or "").strip()
+        away_name = str(m.get("away") or "").strip()
+        youth_markers = (" U21", " U23", " U20", " U19", " U18", " U17", " AM", " Women")
+        senior_men = (
+            tournament in SENIOR_MENS_TOURNAMENTS
+            and not any(marker in home_name or marker in away_name for marker in youth_markers)
+        )
+        if senior_men and mens_rows:
+            source_home = mens_names.get(norm_name(home_name))
+            source_away = mens_names.get(norm_name(away_name))
+            if source_home and source_away:
+                h_ext = weighted_external_rate(mens_rows, source_home, kickoff)
+                a_ext = weighted_external_rate(mens_rows, source_away, kickoff)
+                h_ext_venue = weighted_external_rate(mens_rows, source_home, kickoff, "H")
+                a_ext_venue = weighted_external_rate(mens_rows, source_away, kickoff, "A")
+
+                h_recent = weighted_rate(history, home_id, kickoff, after=mens_cutoff) if mens_cutoff else None
+                a_recent = weighted_rate(history, away_id, kickoff, after=mens_cutoff) if mens_cutoff else None
+                h_recent_venue = weighted_rate(history, home_id, kickoff, "H", after=mens_cutoff) if mens_cutoff else None
+                a_recent_venue = weighted_rate(history, away_id, kickoff, "A", after=mens_cutoff) if mens_cutoff else None
+
+                h_all = combine_rates(h_ext, h_recent)
+                a_all = combine_rates(a_ext, a_recent)
+                h_venue = combine_rates(h_ext_venue, h_recent_venue)
+                a_venue = combine_rates(a_ext_venue, a_recent_venue)
+                base["history_source"] = "MENS_INTL_RESULTS+HKJC_RECENT"
+                base["external_home_games"] = h_ext["n"] if h_ext else 0
+                base["external_away_games"] = a_ext["n"] if a_ext else 0
+                base["external_latest_date"] = mens_latest.date().isoformat() if mens_latest else ""
+                base["model_source"] = (
+                    "martj42/international_results + HKJC recent · "
                     "recency-weighted Team-Form Poisson"
                 )
 
@@ -523,6 +627,8 @@ def main() -> int:
         modeled += 1
         if base.get("history_source") == "WOMENS_INTL_RESULTS+HKJC_RECENT":
             women_modeled += 1
+        if base.get("history_source") == "MENS_INTL_RESULTS+HKJC_RECENT":
+            mens_modeled += 1
         if base.get("history_source") == "BRAZILIANFOOTBALL_SERIE_BC_2025+HKJC_RECENT":
             brazil_modeled += 1
         out.append(base)
@@ -531,9 +637,11 @@ def main() -> int:
     write(out)
     print(
         f"FORM_MODEL fixtures={len(mappings)} modeled={modeled} "
-        f"women_external_modeled={women_modeled} brazil_external_modeled={brazil_modeled} "
+        f"women_external_modeled={women_modeled} mens_external_modeled={mens_modeled} "
+        f"brazil_external_modeled={brazil_modeled} "
         f"fail_closed={len(mappings)-modeled} history_rows={len(history)} "
-        f"womens_history_rows={len(women_rows)} brazil_history_rows={len(brazil_rows)}"
+        f"womens_history_rows={len(women_rows)} mens_history_rows={len(mens_rows)} "
+        f"brazil_history_rows={len(brazil_rows)}"
     )
     return 0
 
