@@ -124,7 +124,12 @@ jobs:
               "data/h2h_summary.csv",
           }
           core_changed=any(bool(x.get("changed")) and x.get("path") in core for x in payload.get("results",[]))
-          print(changed, "true" if core_changed else "false")
+          recovery_needed=bool(payload.get("needsSync")) or any(
+              bool(x.get("needsSync")) and x.get("path") in core
+              for x in payload.get("results",[])
+          )
+          sync_needed=core_changed or recovery_needed
+          print(changed, "true" if sync_needed else "false")
           PY
           )
           EOF
