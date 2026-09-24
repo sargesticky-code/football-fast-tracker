@@ -13,6 +13,7 @@ on:
       - 'scripts/update_hkjc_history.py'
       - 'scripts/quality_gate_shadow_models.py'
       - 'scripts/build_team_form_summary.py'
+      - 'scripts/build_h2h_summary.py'
       - 'requirements-model.txt'
 # Phase 1 recovery heartbeat 2026-09-20
 
@@ -187,6 +188,10 @@ jobs:
         if: steps.model_gate.outputs.run_models == 'true'
         run: python scripts/build_team_form_summary.py
 
+      - name: Build verified HKJC head-to-head summary
+        if: steps.model_gate.outputs.run_models == 'true'
+        run: python scripts/build_h2h_summary.py
+
       - name: Validate shadow model outputs and history coverage
         if: steps.model_gate.outputs.run_models == 'true'
         run: |
@@ -297,6 +302,7 @@ jobs:
             data/model_current.csv
             data/form_current.csv
             data/team_form_summary.csv
+            data/h2h_summary.csv
             data/hkjc_history.csv
             data/hkjc_current_teams.csv
             data/hkjc_history_coverage.csv
