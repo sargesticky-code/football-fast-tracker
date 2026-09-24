@@ -32,6 +32,9 @@ jobs:
           ref: main
           fetch-depth: 1
 
+      - name: Build current H2H summary from verified HKJC history
+        run: python scripts/build_h2h_summary.py
+
       - name: Request GitHub OIDC token
         id: oidc
         shell: bash
@@ -68,6 +71,7 @@ jobs:
               "hkjc_live_odds.csv",
               "hkjc_power_current.csv",
               "team_form_summary.csv",
+              "h2h_summary.csv",
               "match_scenario_current.csv",
           ]
 
@@ -117,6 +121,7 @@ jobs:
               "data/form_current.csv",
               "data/prediction_fallback_current.csv",
               "data/forebet_availability.csv",
+              "data/h2h_summary.csv",
           }
           core_changed=any(bool(x.get("changed")) and x.get("path") in core for x in payload.get("results",[]))
           print(changed, "true" if core_changed else "false")
