@@ -52,7 +52,9 @@ jobs:
         run: |
           python - <<'PY'
           import csv
+          from datetime import datetime
           from pathlib import Path
+          from zoneinfo import ZoneInfo
 
           paths = [
               'data/prediction_archive.csv',
@@ -91,12 +93,38 @@ jobs:
           if 'HKJC Team-Form Poisson' not in names:
               raise SystemExit('Team-Form Poisson missing from evaluation summary')
 
-          current_ids = {r.get('hkjc_event_id') for r in source if r.get('hkjc_event_id')}
+          # prediction_archive only accepts snapshots captured before kickoff.
+          # forebet_current may retain a match for a few minutes after kickoff,
+          # so validate only events that are still genuinely pre-match.
+          HKT = ZoneInfo('Asia/Hong_Kong')
+          now = datetime.now(HKT)
+
+          def parse_kickoff(value):
+              value = str(value or '').strip()
+              if not value:
+                  return None
+              try:
+                  dt = datetime.fromisoformat(value.replace('Z', '+00:00'))
+              except ValueError:
+                  try:
+                      dt = datetime.strptime(value, '%Y-%m-%d %H:%M')
+                  except ValueError:
+                      return None
+              if dt.tzinfo is None:
+                  dt = dt.replace(tzinfo=HKT)
+              return dt.astimezone(HKT)
+
+          current_ids = {
+              r.get('hkjc_event_id')
+              for r in source
+              if r.get('hkjc_event_id')
+              and (parse_kickoff(r.get('hkjc_kickoff_hkt')) or now) >= now
+          }
           pred_by_id = {r.get('hkjc_event_id'): r for r in preds if r.get('hkjc_event_id')}
           for event_id in current_ids:
               row = pred_by_id.get(event_id)
               if row is None:
-                  raise SystemExit(f'current event missing from prediction archive: {event_id}')
+                  raise SystemExit(f'pre-match event missing from prediction archive: {event_id}')
               if row.get('form_quality') == 'FORM_MODELED' and not all(row.get(k) for k in ('form_home','form_draw','form_away')):
                   raise SystemExit(f'incomplete form probabilities in prediction archive: {event_id}')
 
