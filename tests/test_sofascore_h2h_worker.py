@@ -89,6 +89,51 @@ class SofascoreWorkerTests(unittest.TestCase):
         self.assertEqual(by_id["FB2"]["mapping_status"], "UNMAPPED")
         self.assertEqual(client.h2h_calls, [333])
 
+    def test_schedule_source_failure_degrades_to_source_unavailable(self):
+        class FailingScheduleClient(FakeClient):
+            def scheduled_events(self, date):
+                raise RuntimeError("blocked")
+
+        client = FailingScheduleClient()
+        rows = [
+            {
+                "hkjc_event_id": "FB3",
+                "kickoff_hkt": "2026-09-25T03:00:00+08:00",
+                "home_id": "H3",
+                "away_id": "A3",
+                "home": "Home Club",
+                "away": "Away Club",
+                "tournament": "TST",
+            }
+        ]
+        out = build_sofascore_h2h(rows, client=client, max_h2h_events=10)
+        self.assertEqual(out[0]["mapping_status"], "SOURCE_UNAVAILABLE")
+        self.assertEqual(out[0]["quality"], "SOURCE_UNAVAILABLE")
+        self.assertEqual(client.h2h_calls, [])
+
+    def test_h2h_failure_preserves_verified_mapping_but_no_override(self):
+        class FailingH2HClient(FakeClient):
+            def h2h_events(self, event_id):
+                self.h2h_calls.append(event_id)
+                raise RuntimeError("h2h unavailable")
+
+        client = FailingH2HClient()
+        rows = [
+            {
+                "hkjc_event_id": "FB4",
+                "kickoff_hkt": "2026-09-25T03:00:00+08:00",
+                "home_id": "H4",
+                "away_id": "A4",
+                "home": "Home Club",
+                "away": "Away Club",
+                "tournament": "TST",
+            }
+        ]
+        out = build_sofascore_h2h(rows, client=client, max_h2h_events=10)
+        self.assertEqual(out[0]["mapping_status"], "VERIFIED")
+        self.assertEqual(out[0]["quality"], "SOURCE_UNAVAILABLE")
+        self.assertEqual(client.h2h_calls, [333])
+
     def test_budget_deferral_is_not_failure(self):
         client = FakeClient()
         rows = [
