@@ -104,15 +104,30 @@ jobs:
             -o /tmp/fast-tracker-ingest-response.json
 
           cat /tmp/fast-tracker-ingest-response.json
-          changed="$(python - <<'PY'
+          read -r changed sync_needed <<EOF
+          $(python - <<'PY'
           import json
-          print(int(json.load(open("/tmp/fast-tracker-ingest-response.json", encoding="utf-8")).get("changed", 0)))
+          payload=json.load(open("/tmp/fast-tracker-ingest-response.json", encoding="utf-8"))
+          changed=int(payload.get("changed",0))
+          core={
+              "data/hkjc_current.csv",
+              "data/forebet_current.csv",
+              "data/model_current.csv",
+              "data/team_alias_registry.csv",
+              "data/form_current.csv",
+              "data/prediction_fallback_current.csv",
+              "data/forebet_availability.csv",
+          }
+          core_changed=any(bool(x.get("changed")) and x.get("path") in core for x in payload.get("results",[]))
+          print(changed, "true" if core_changed else "false")
           PY
-          )"
+          )
+          EOF
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          echo "sync_needed=$sync_needed" >> "$GITHUB_OUTPUT"
 
-      - name: Refresh canonical core only when static inputs changed
-        if: steps.ingest.outputs.changed != '0'
+      - name: Refresh canonical core only when canonical inputs changed
+        if: steps.ingest.outputs.sync_needed == 'true'
         env:
           OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
         shell: bash
