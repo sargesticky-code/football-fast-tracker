@@ -10,6 +10,7 @@ on:
     paths:
       - 'scripts/sofascore_h2h.py'
       - 'scripts/sofascore_h2h_worker.py'
+      - 'scripts/build_h2h_summary.py'
       - '.github/workflows/sofascore_h2h.yml'
 
 permissions:
@@ -41,31 +42,43 @@ jobs:
       - name: Build bounded SofaScore H2H enrichment
         env:
           SOFASCORE_H2H_MAX_EVENTS: '30'
-        run: python scripts/sofascore_h2h_worker.py
+        run: |
+          python scripts/sofascore_h2h_worker.py
+          python scripts/build_h2h_summary.py
 
-      - name: Validate enrichment artifact
+      - name: Validate enrichment artifacts
         run: |
           python - <<'PY'
           import csv
           from collections import Counter
           from pathlib import Path
-          p=Path('data/sofascore_h2h_current.csv')
-          if not p.exists():
-              raise SystemExit('missing SofaScore H2H artifact')
-          with p.open(encoding='utf-8-sig', newline='') as fh:
-              rows=list(csv.DictReader(fh))
-          if not rows:
-              raise SystemExit('empty SofaScore H2H artifact')
-          counts=Counter(r.get('quality') or 'UNKNOWN' for r in rows)
-          mapped=sum((r.get('mapping_status') or '') == 'VERIFIED' for r in rows)
-          print(f'SOFASCORE_H2H_VALID rows={len(rows)} mapped={mapped} quality={dict(counts)}')
+
+          def rows(path):
+              p=Path(path)
+              if not p.exists():
+                  raise SystemExit(f'missing {path}')
+              with p.open(encoding='utf-8-sig', newline='') as fh:
+                  data=list(csv.DictReader(fh))
+              if not data:
+                  raise SystemExit(f'empty {path}')
+              return data
+
+          sofa=rows('data/sofascore_h2h_current.csv')
+          merged=rows('data/h2h_summary.csv')
+          counts=Counter(r.get('quality') or 'UNKNOWN' for r in sofa)
+          mapped=sum((r.get('mapping_status') or '') == 'VERIFIED' for r in sofa)
+          used=sum((r.get('source') or '').startswith('SOFASCORE') for r in merged)
+          print(
+              f'SOFASCORE_H2H_VALID rows={len(sofa)} mapped={mapped} '
+              f'quality={dict(counts)} merged_sofascore={used}'
+          )
           PY
 
       - name: Commit changed SofaScore H2H state
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/sofascore_h2h_current.csv
+          git add data/sofascore_h2h_current.csv data/h2h_summary.csv
           if git diff --cached --quiet; then
             echo 'No SofaScore H2H changes to commit.'
             exit 0
