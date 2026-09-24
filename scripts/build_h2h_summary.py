@@ -18,6 +18,7 @@ HISTORY = ROOT / "data" / "hkjc_history.csv"
 CURRENT = ROOT / "data" / "hkjc_current_teams.csv"
 COVERAGE = ROOT / "data" / "hkjc_history_coverage.csv"
 SOFASCORE = ROOT / "data" / "sofascore_h2h_current.csv"
+FOTMOB = ROOT / "data" / "fotmob_h2h_current.csv"
 OUT = ROOT / "data" / "h2h_summary.csv"
 HKT = ZoneInfo("Asia/Hong_Kong")
 LIMIT = 5
@@ -105,6 +106,41 @@ def valid_sofascore_summary(row: dict[str, str] | None) -> dict | None:
     }
 
 
+def valid_fotmob_summary(row: dict[str, str] | None) -> dict | None:
+    """Return a safe FotMob H2H override only for verified direct-H2H rows."""
+    if not row or clean(row.get("mapping_status")) != "VERIFIED" or clean(row.get("quality")) != "H2H_OK":
+        return None
+    games = score(row.get("h2h_games"))
+    home_wins = score(row.get("home_wins"))
+    draws = score(row.get("draws"))
+    away_wins = score(row.get("away_wins"))
+    home_goals = score(row.get("home_goals"))
+    away_goals = score(row.get("away_goals"))
+    if None in (games, home_wins, draws, away_wins, home_goals, away_goals):
+        return None
+    if games <= 0 or home_wins + draws + away_wins != games:
+        return None
+    try:
+        meetings = json.loads(clean(row.get("meetings_json")) or "[]")
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(meetings, list) or not meetings:
+        return None
+    return {
+        "h2h_games": games,
+        "home_wins": home_wins,
+        "draws": draws,
+        "away_wins": away_wins,
+        "home_goals": home_goals,
+        "away_goals": away_goals,
+        "avg_total_goals": clean(row.get("avg_total_goals")),
+        "last5": clean(row.get("last5")),
+        "meetings_json": json.dumps(meetings[:LIMIT], ensure_ascii=False, separators=(",", ":")),
+        "source": "FOTMOB verified direct H2H",
+        "quality": "H2H_OK",
+    }
+
+
 def write(rows: list[dict]) -> None:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     tmp = OUT.with_suffix(".csv.tmp")
@@ -126,6 +162,12 @@ def main() -> int:
         for r in sofa_rows
         if clean(r.get("hkjc_event_id"))
     }
+    fotmob_rows = read(FOTMOB)
+    fotmob_by_event = {
+        clean(r.get("hkjc_event_id")): r
+        for r in fotmob_rows
+        if clean(r.get("hkjc_event_id"))
+    }
     coverage = {
         clean(r.get("team_id")): clean(r.get("status"))
         for r in coverage_rows
@@ -135,6 +177,7 @@ def main() -> int:
     fetched_at = datetime.now(HKT).replace(microsecond=0).isoformat()
     output: list[dict] = []
     sofa_used = 0
+    fotmob_used = 0
 
     for fixture in current:
         event_id = clean(fixture.get("hkjc_event_id"))
@@ -218,10 +261,17 @@ def main() -> int:
             "quality": quality,
         }
 
+        # Prefer a verified SofaScore direct-H2H row if it is available.
+        # Otherwise use verified FotMob direct H2H. Source failures never erase
+        # the HKJC fallback built above.
         sofa = valid_sofascore_summary(sofa_by_event.get(event_id))
+        fotmob = valid_fotmob_summary(fotmob_by_event.get(event_id))
         if sofa is not None:
             summary = sofa
             sofa_used += 1
+        elif fotmob is not None:
+            summary = fotmob
+            fotmob_used += 1
 
         output.append({
             "fetched_at_hkt": fetched_at,
@@ -242,7 +292,7 @@ def main() -> int:
     print(
         "H2H_SUMMARY "
         f"fixtures={len(output)} history_rows={len(history)} sofascore_rows={len(sofa_rows)} "
-        f"sofascore_used={sofa_used} "
+        f"fotmob_rows={len(fotmob_rows)} sofascore_used={sofa_used} fotmob_used={fotmob_used} "
         + " ".join(f"{k}={v}" for k, v in sorted(counts.items()))
     )
     return 0

@@ -1,2 +1,67 @@
 ﻿source_name,source_key,team_key,hkjc_name_en,hkjc_name_zh,confidence,event_count
-
+Australia,australia,HKJC:australia,Australia,澳洲,0.98,1
+Austria,austria,HKJC:austria,Austria,奧地利,0.98,1
+Azerbaijan U21,azerbaijanu21,HKJC:azerbaijanu21,Azerbaijan U21,阿塞拜疆U21,0.98,1
+Bahrain,bahrain,HKJC:bahrain,Bahrain,巴林,0.98,1
+Bangladesh,bangladesh,HKJC:bangladesh,Bangladesh,孟加拉,0.98,1
+Belarus U21,belarusu21,HKJC:belarusu21,Belarus U21,白俄羅斯U21,0.98,1
+Belgium U21,belgiumu21,HKJC:belgiumu21,Belgium U21,比利時U21,0.98,1
+Botswana,botswana,HKJC:botswana,Botswana,博茲瓦納,0.98,1
+Brazil,brazil,HKJC:brazil,Brazil,巴西,0.98,1
+Bulgaria U21,bulgariau21,HKJC:bulgariau21,Bulgaria U21,保加利亞U21,0.98,1
+Cameroon,cameroon,HKJC:cameroon,Cameroon,喀麥隆,0.98,1
+Central African Republic,centralafricanrepublic,HKJC:centralafricanrepublic,Central African Republic,中非共和國,0.98,1
+China,china,HKJC:china,China,中國,0.98,1
+Comoros,comoros,HKJC:comoros,Comoros,科摩羅,0.98,1
+Congo,congo,HKJC:congo,Congo,剛果,0.98,1
+Costa Rica,costarica,HKJC:costarica,Costa Rica,哥斯達黎加,0.98,1
+Curacao,curacao,HKJC:curacao,Curacao,庫拉索,0.98,1
+Czechia U21,czechiau21,HKJC:czechiau21,Czechia U21,捷克U21,0.98,1
+DR Congo,drcongo,HKJC:drcongo,D R Congo,剛果民主共和國,0.98,1
+Denmark,denmark,HKJC:denmark,Denmark,丹麥,0.98,1
+Deportes Santa Cruz,deportessantacruz,HKJC:deportessantacruz,Deportes Santa Cruz,聖達古斯,0.98,1
+Dominican Republic,dominicanrepublic,HKJC:dominicanrepublic,Dominican Republic,多明尼加共和國,0.98,1
+Equatorial Guinea,equatorialguinea,HKJC:equatorialguinea,Equatorial Guinea,赤道畿內亞,0.98,1
+Finland U21,finlandu21,HKJC:finlandu21,Finland U21,芬蘭U21,0.98,1
+France U21,franceu21,HKJC:franceu21,France U21,法國U21,0.98,1
+Germany,germany,HKJC:germany,Germany,德國,0.98,1
+Greece,greece,HKJC:greece,Greece,希臘,0.98,1
+Guinea-Bissau,guineabissau,HKJC:guineabissau,Guinea Bissau,畿內亞比紹,0.98,1
+Haiti,haiti,HKJC:haiti,Haiti,海地,0.98,1
+Iceland U21,icelandu21,HKJC:icelandu21,Iceland U21,冰島U21,0.98,1
+India,india,HKJC:india,India,印度,0.98,1
+Indonesia,indonesia,HKJC:indonesia,Indonesia,印尼,0.98,1
+Iran,iran,HKJC:iran,Iran,伊朗,0.98,1
+Israel,israel,HKJC:israel,Israel,以色列,0.98,1
+Japan,japan,HKJC:japan,Japan,日本,0.98,1
+Lesotho,lesotho,HKJC:lesotho,Lesotho,萊索托,0.98,1
+Libya,libya,HKJC:libya,Libya,利比亞,0.98,1
+Liechtenstein,liechtenstein,HKJC:liechtenstein,Liechtenstein,列支敦士登,0.98,1
+Lithuania,lithuania,HKJC:lithuania,Lithuania,立陶宛,0.98,1
+Malaysia,malaysia,HKJC:malaysia,Malaysia,馬來西亞,0.98,1
+Maldives,maldives,HKJC:maldives,Maldives,馬爾代夫,0.98,1
+Mauritania,mauritania,HKJC:mauritania,Mauritania,毛里塔尼亞,0.98,1
+Mozambique,mozambique,HKJC:mozambique,Mozambique,莫桑比克,0.98,1
+Namibia,namibia,HKJC:namibia,Namibia,納米比亞,0.98,1
+Netherlands,netherlands,HKJC:netherlands,Netherlands,荷蘭,0.98,1
+New Zealand,newzealand,HKJC:newzealand,New Zealand,新西蘭,0.98,1
+Nicaragua,nicaragua,HKJC:nicaragua,Nicaragua,尼加拉瓜,0.98,1
+Niger,niger,HKJC:niger,Niger,尼日爾,0.98,1
+Norway,norway,HKJC:norway,Norway,挪威,0.98,1
+O'Higgins,ohiggins,HKJC:ohiggins,O'Higgins,奧希金斯,0.98,1
+Palestine,palestine,HKJC:palestine,Palestine,巴勒斯坦,0.98,1
+Panama,panama,HKJC:panama,Panama,巴拿馬,0.98,1
+Portugal,portugal,HKJC:portugal,Portugal,葡萄牙,0.98,1
+Portugal U21,portugalu21,HKJC:portugalu21,Portugal U21,葡萄牙U21,0.98,1
+Qatar,qatar,HKJC:qatar,Qatar,卡塔爾,0.98,1
+Senegal,senegal,HKJC:senegal,Senegal,塞內加爾,0.98,1
+Serbia,serbia,HKJC:serbia,Serbia,塞爾維亞,0.98,1
+Singapore,singapore,HKJC:singapore,Singapore,新加坡,0.98,1
+Spain U21,spainu21,HKJC:spainu21,Spain U21,西班牙U21,0.98,1
+Tanzania,tanzania,HKJC:tanzania,Tanzania,坦桑尼亞,0.98,1
+Trinidad and Tobago,trinidadandtobago,HKJC:trinidadandtobago,Trinidad and Tobago,千里達,0.98,1
+Tunisia,tunisia,HKJC:tunisia,Tunisia,突尼西亞,0.98,1
+Uganda,uganda,HKJC:uganda,Uganda,烏干達,0.98,1
+Uruguay,uruguay,HKJC:uruguay,Uruguay,烏拉圭,0.98,1
+Uzbekistan,uzbekistan,HKJC:uzbekistan,Uzbekistan,烏茲別克,0.98,1
+Wales,wales,HKJC:wales,Wales,威爾斯,0.98,1

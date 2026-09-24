@@ -2,9 +2,6 @@ name: SofaScore H2H Enrichment
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '55 22 * * *' # 06:55 Hong Kong time
-    - cron: '55 10 * * *' # 18:55 Hong Kong time
   push:
     branches: [main]
     paths:

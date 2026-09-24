@@ -161,6 +161,15 @@ def match_fixture(
                 candidates.append((row,delta))
     if not candidates:
         return MatchResult("UNMAPPED","no_exact_pair_in_kickoff_window")
+    # The same FotMob match can appear on both UTC/HKT date-board requests.
+    # De-duplicate by stable match id before ambiguity checks.
+    deduped={}
+    for row,delta in candidates:
+        key=text(row.get("id"))
+        prior=deduped.get(key)
+        if prior is None or delta < prior[1]:
+            deduped[key]=(row,delta)
+    candidates=list(deduped.values())
     candidates.sort(key=lambda x:x[1])
     best_delta=candidates[0][1]
     best=[x for x in candidates if abs(x[1]-best_delta)<1]
