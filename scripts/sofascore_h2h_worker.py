@@ -16,14 +16,25 @@ import os
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from scripts.sofascore_h2h import (
-    FixtureIdentity,
-    SofascoreClient,
-    match_scheduled_event,
-    normalize_h2h_events,
-    parse_timestamp,
-    summarize_h2h,
-)
+try:
+    from scripts.sofascore_h2h import (
+        FixtureIdentity,
+        SofascoreClient,
+        match_scheduled_event,
+        normalize_h2h_events,
+        parse_timestamp,
+        summarize_h2h,
+    )
+except ModuleNotFoundError:
+    # Support direct execution: python scripts/sofascore_h2h_worker.py
+    from sofascore_h2h import (
+        FixtureIdentity,
+        SofascoreClient,
+        match_scheduled_event,
+        normalize_h2h_events,
+        parse_timestamp,
+        summarize_h2h,
+    )
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT = ROOT / "data" / "hkjc_current_teams.csv"
