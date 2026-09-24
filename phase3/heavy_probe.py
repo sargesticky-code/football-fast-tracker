@@ -21,18 +21,34 @@ def _exit_evidence(result: Mapping[str, Any]) -> tuple[bool, str | None]:
     """Return whether this cycle proves the Layer-6 real-source exit evidence.
 
     This is deliberately strict: a zero-target cycle is useful fail-closed
-    evidence but cannot be mistaken for real-source usable coverage.
+    evidence but cannot be mistaken for real-source usable coverage. Exit
+    evidence must also prove that the bounded source request actually
+    succeeded and stayed inside the configured request budget.
     """
     eligible = int(result.get("eligible_rows", 0) or 0)
     source_requests = result.get("source_requests") or {}
     attempted = int(source_requests.get("attempted", 0) or 0)
+    succeeded = int(source_requests.get("succeeded", 0) or 0)
+    failed = int(source_requests.get("failed", 0) or 0)
     usable = int(result.get("heavy_usable_rows", 0) or 0)
+    requests_used = int(result.get("requests_used", 0) or 0)
+    request_budget = result.get("request_budget")
+    min_interval = float(result.get("min_interval_seconds", 0) or 0)
+
     if eligible <= 0:
         return False, "NO_HKJC_VERIFIED_LIVE_TARGET"
+    if min_interval < 30.0:
+        return False, "UNSAFE_HEAVY_CADENCE"
     if attempted <= 0:
         return False, "NO_UPSTREAM_REQUEST"
+    if request_budget is not None and (attempted > int(request_budget) or requests_used > int(request_budget)):
+        return False, "REQUEST_BUDGET_EXCEEDED"
     if not bool(result.get("request_count_consistent", False)):
         return False, "REQUEST_COUNT_MISMATCH"
+    if succeeded <= 0:
+        if failed > 0:
+            return False, "SOURCE_REQUEST_FAILED"
+        return False, "NO_SUCCESSFUL_UPSTREAM_REQUEST"
     if usable <= 0:
         if int(result.get("detail_empty_rows", 0) or 0) > 0:
             return False, "DETAIL_EMPTY"
