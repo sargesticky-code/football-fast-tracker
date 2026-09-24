@@ -3,8 +3,8 @@
 Reads current HKJC fixtures, resolves only identity-safe exact SofaScore events,
 then fetches direct H2H for a bounded number of verified events.
 
-This worker is intentionally prematch/slow-plane only. It must never be used as
-the 5-second live-score loop.
+This worker is intentionally prematch/slow-plane only. GitHub Actions runs it
+twice daily; it must never be used as the 5-second live-score loop.
 """
 from __future__ import annotations
 
