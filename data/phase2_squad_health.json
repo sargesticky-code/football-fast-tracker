@@ -1,19 +1,37 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 60,
-  "teams_with_squad": 54,
-  "team_coverage_pct": 90.0,
-  "players": 1636,
+  "target_confirmed_fotmob_teams": 166,
+  "teams_with_squad": 128,
+  "team_coverage_pct": 77.1,
+  "players": 3870,
   "position_coverage_pct": 100.0,
-  "dob_coverage_pct": 99.7,
-  "age_coverage_pct": 99.7,
+  "dob_coverage_pct": 99.3,
+  "age_coverage_pct": 99.3,
   "nationality_coverage_pct": 100.0,
   "failure_classes": {
-    "PROVIDER_ROSTER_EMPTY": 6
+    "PROVIDER_ROSTER_EMPTY": 38
   },
   "residual_all_classified": true,
   "layer2_exit": true,
   "failures": [
+    {
+      "hkjc_team_id": "50000127",
+      "team": "Albirex Niigata",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50000338",
+      "team": "Azerbaijan U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50000361",
+      "team": "Bangladesh",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
     {
       "hkjc_team_id": "50000432",
       "team": "Belarus U21",
@@ -27,8 +45,86 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
     {
-      "hkjc_team_id": "50002009",
-      "team": "Maldives",
+      "hkjc_team_id": "50000474",
+      "team": "Blaublitz Akita",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50000594",
+      "team": "Bulgaria U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50000761",
+      "team": "China AM",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50000919",
+      "team": "Czechia U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001167",
+      "team": "FC Imabari",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001196",
+      "team": "FC Yokohama",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001272",
+      "team": "France U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001550",
+      "team": "Hokkaido Consadole Sapporo",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001584",
+      "team": "Iceland U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001598",
+      "team": "India",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001732",
+      "team": "Jubilo Iwata",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001776",
+      "team": "Kataller Toyama",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001803",
+      "team": "Korea DPR AM",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001973",
+      "team": "Luxembourg U21",
       "class": "PROVIDER_ROSTER_EMPTY",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
@@ -39,8 +135,104 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
     {
+      "hkjc_team_id": "50002148",
+      "team": "Montedio Yamagata",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50002225",
+      "team": "Netherlands U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50002297",
+      "team": "Norway U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50002324",
+      "team": "Oita Trinita",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50002343",
+      "team": "RB Omiya Ardija",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50002505",
+      "team": "Portugal U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50002695",
+      "team": "Sagan Tosu",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50002827",
+      "team": "Shonan Bellmare",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50003022",
+      "team": "Switzerland U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50003083",
+      "team": "Tochigi City",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50003085",
+      "team": "Tokushima Vortis",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50003268",
+      "team": "Vanraure Hachinohe",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50003284",
+      "team": "Vegalta Sendai",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50003298",
+      "team": "Ventforet Kofu",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50267911",
+      "team": "Iwaki FC",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
       "hkjc_team_id": "50288636",
       "team": "Dominican Republic",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50319129",
+      "team": "Tegevajaro Miyazaki",
       "class": "PROVIDER_ROSTER_EMPTY",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
@@ -52,5 +244,5 @@
     }
   ],
   "workers": 8,
-  "fetched_at": "2026-09-24T03:31:45.314642+00:00"
+  "fetched_at": "2026-09-24T14:30:55.152205+00:00"
 }

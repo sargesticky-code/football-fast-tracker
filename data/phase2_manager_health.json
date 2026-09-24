@@ -1,14 +1,38 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 60,
-  "teams_with_explicit_manager": 49,
-  "team_coverage_pct": 81.7,
-  "manager_rows": 49,
+  "target_confirmed_fotmob_teams": 166,
+  "teams_with_explicit_manager": 120,
+  "team_coverage_pct": 72.3,
+  "manager_rows": 120,
   "failure_classes": {
-    "NO_EXPLICIT_CURRENT_MANAGER": 11
+    "NO_EXPLICIT_CURRENT_MANAGER": 46
   },
   "residual_all_classified": true,
   "failures": [
+    {
+      "hkjc_team_id": "50000127",
+      "team": "Albirex Niigata",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":15}"
+    },
+    {
+      "hkjc_team_id": "50000138",
+      "team": "Algeria",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":47}"
+    },
+    {
+      "hkjc_team_id": "50000338",
+      "team": "Azerbaijan U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":3}"
+    },
+    {
+      "hkjc_team_id": "50000361",
+      "team": "Bangladesh",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":18}"
+    },
     {
       "hkjc_team_id": "50000432",
       "team": "Belarus U21",
@@ -22,16 +46,52 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":9}"
     },
     {
+      "hkjc_team_id": "50000474",
+      "team": "Blaublitz Akita",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":2}"
+    },
+    {
       "hkjc_team_id": "50000506",
       "team": "Botswana",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":21}"
     },
     {
-      "hkjc_team_id": "50001042",
-      "team": "Ecuador",
+      "hkjc_team_id": "50000594",
+      "team": "Bulgaria U21",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":28}"
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":3}"
+    },
+    {
+      "hkjc_team_id": "50000761",
+      "team": "China AM",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":2}"
+    },
+    {
+      "hkjc_team_id": "50000919",
+      "team": "Czechia U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":14}"
+    },
+    {
+      "hkjc_team_id": "50001167",
+      "team": "FC Imabari",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":3}"
+    },
+    {
+      "hkjc_team_id": "50001196",
+      "team": "FC Yokohama",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":13}"
+    },
+    {
+      "hkjc_team_id": "50001272",
+      "team": "France U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":15}"
     },
     {
       "hkjc_team_id": "50001501",
@@ -40,16 +100,52 @@
       "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":27}"
     },
     {
-      "hkjc_team_id": "50001808",
-      "team": "Korea Republic",
+      "hkjc_team_id": "50001550",
+      "team": "Hokkaido Consadole Sapporo",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":39}"
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":21}"
     },
     {
-      "hkjc_team_id": "50002009",
-      "team": "Maldives",
+      "hkjc_team_id": "50001584",
+      "team": "Iceland U21",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":16}"
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":8}"
+    },
+    {
+      "hkjc_team_id": "50001598",
+      "team": "India",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":22}"
+    },
+    {
+      "hkjc_team_id": "50001732",
+      "team": "Jubilo Iwata",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":10}"
+    },
+    {
+      "hkjc_team_id": "50001776",
+      "team": "Kataller Toyama",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
+    },
+    {
+      "hkjc_team_id": "50001803",
+      "team": "Korea DPR AM",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
+    },
+    {
+      "hkjc_team_id": "50001898",
+      "team": "Lesotho",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":23}"
+    },
+    {
+      "hkjc_team_id": "50001973",
+      "team": "Luxembourg U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":3}"
     },
     {
       "hkjc_team_id": "50002123",
@@ -58,16 +154,130 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":7}"
     },
     {
+      "hkjc_team_id": "50002148",
+      "team": "Montedio Yamagata",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":14}"
+    },
+    {
+      "hkjc_team_id": "50002183",
+      "team": "Mozambique",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
+    },
+    {
+      "hkjc_team_id": "50002225",
+      "team": "Netherlands U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":15}"
+    },
+    {
+      "hkjc_team_id": "50002297",
+      "team": "Norway U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":9}"
+    },
+    {
+      "hkjc_team_id": "50002324",
+      "team": "Oita Trinita",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":16}"
+    },
+    {
+      "hkjc_team_id": "50002343",
+      "team": "RB Omiya Ardija",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":16}"
+    },
+    {
+      "hkjc_team_id": "50002505",
+      "team": "Portugal U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":17}"
+    },
+    {
+      "hkjc_team_id": "50002695",
+      "team": "Sagan Tosu",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":26}"
+    },
+    {
+      "hkjc_team_id": "50002827",
+      "team": "Shonan Bellmare",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":25}"
+    },
+    {
+      "hkjc_team_id": "50002890",
+      "team": "South Sudan",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":6}"
+    },
+    {
+      "hkjc_team_id": "50003022",
+      "team": "Switzerland U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":8}"
+    },
+    {
+      "hkjc_team_id": "50003083",
+      "team": "Tochigi City",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
+    },
+    {
+      "hkjc_team_id": "50003085",
+      "team": "Tokushima Vortis",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":15}"
+    },
+    {
       "hkjc_team_id": "50003123",
       "team": "Trinidad and Tobago",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":30}"
     },
     {
+      "hkjc_team_id": "50003268",
+      "team": "Vanraure Hachinohe",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
+    },
+    {
+      "hkjc_team_id": "50003284",
+      "team": "Vegalta Sendai",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":25}"
+    },
+    {
+      "hkjc_team_id": "50003298",
+      "team": "Ventforet Kofu",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":17}"
+    },
+    {
+      "hkjc_team_id": "50003409",
+      "team": "Zambia",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":34}"
+    },
+    {
+      "hkjc_team_id": "50267911",
+      "team": "Iwaki FC",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
+    },
+    {
       "hkjc_team_id": "50288636",
       "team": "Dominican Republic",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":11}"
+    },
+    {
+      "hkjc_team_id": "50319129",
+      "team": "Tegevajaro Miyazaki",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":1}"
     },
     {
       "hkjc_team_id": "50601674",
@@ -77,5 +287,5 @@
     }
   ],
   "layer3_exit": true,
-  "fetched_at": "2026-09-24T03:31:49.182378+00:00"
+  "fetched_at": "2026-09-24T14:31:11.690502+00:00"
 }
