@@ -83,7 +83,10 @@ class HeavyProbeTests(unittest.TestCase):
             "detail_empty_rows": 0,
             "source_gap_rows": 0,
             "deferred_rows": 0,
-            "source_requests": {"attempted": 1},
+            "requests_used": 1,
+            "request_budget": 1,
+            "min_interval_seconds": 45.0,
+            "source_requests": {"attempted": 1, "succeeded": 1, "failed": 0},
             "request_count_consistent": True,
         }
         ready, blocker = _exit_evidence({**base, "request_count_consistent": False})
@@ -95,6 +98,39 @@ class HeavyProbeTests(unittest.TestCase):
         ready, blocker = _exit_evidence({**base, "source_gap_rows": 1})
         self.assertFalse(ready)
         self.assertEqual("SOURCE_GAP", blocker)
+
+    def test_exit_evidence_requires_safe_cadence_budget_and_successful_source(self):
+        base = {
+            "eligible_rows": 1,
+            "heavy_usable_rows": 1,
+            "detail_empty_rows": 0,
+            "source_gap_rows": 0,
+            "deferred_rows": 0,
+            "requests_used": 1,
+            "request_budget": 1,
+            "min_interval_seconds": 45.0,
+            "source_requests": {"attempted": 1, "succeeded": 1, "failed": 0},
+            "request_count_consistent": True,
+        }
+        ready, blocker = _exit_evidence({**base, "min_interval_seconds": 5.0})
+        self.assertFalse(ready)
+        self.assertEqual("UNSAFE_HEAVY_CADENCE", blocker)
+
+        ready, blocker = _exit_evidence({
+            **base,
+            "requests_used": 2,
+            "source_requests": {"attempted": 2, "succeeded": 2, "failed": 0},
+        })
+        self.assertFalse(ready)
+        self.assertEqual("REQUEST_BUDGET_EXCEEDED", blocker)
+
+        ready, blocker = _exit_evidence({
+            **base,
+            "heavy_usable_rows": 0,
+            "source_requests": {"attempted": 1, "succeeded": 0, "failed": 1},
+        })
+        self.assertFalse(ready)
+        self.assertEqual("SOURCE_REQUEST_FAILED", blocker)
 
 
 if __name__ == "__main__":
