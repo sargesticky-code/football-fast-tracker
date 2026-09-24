@@ -97,15 +97,19 @@ class SofascoreClient:
         base_url: str = BASE_URL,
         timeout: float = DEFAULT_TIMEOUT_SECONDS,
         session: requests.Session | None = None,
-        user_agent: str = "football-fast-tracker/1.0",
+        user_agent: str = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/153 Safari/537.36",
     ):
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
         self.session = session or requests.Session()
         self.session.headers.update(
             {
-                "Accept": "application/json",
+                "Accept": "application/json, text/plain, */*",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Origin": "https://www.sofascore.com",
+                "Referer": "https://www.sofascore.com/",
                 "User-Agent": user_agent,
+                "X-Requested-With": "XMLHttpRequest",
             }
         )
 
