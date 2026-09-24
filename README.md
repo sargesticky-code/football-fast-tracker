@@ -124,3 +124,45 @@ The CSV files in `data/` remain worker artifacts and recovery inputs; they are n
 - Routine Forebet production uses zero ScraperAPI credits.
 - Shadow models cannot influence Best Bet until validated out of sample.
 - Production does not depend on ChatGPT, Opera, or a local computer after setup.
+
+## Runtime workflow policy
+
+The production pipeline is intentionally split into three planes to prevent connection storms and duplicate work.
+
+### 1. Live plane — Supabase owns freshness
+
+- HKJC live odds: every 2 minutes.
+- Live score: every 2 minutes, staggered from HKJC live odds.
+- Live layer / shadow comparison: every 2 minutes.
+- Live source shadow: every 5 minutes.
+- HKJC upcoming authority: every 15 minutes.
+- Phase 4 quotes: every 2 minutes.
+- GitHub `HKJC Live Odds Fallback` is manual/code-change fallback only and must not become a scheduled production heartbeat.
+
+### 2. Static plane — batch, hash, then sync
+
+- `Supabase Static Data Push` runs at minute 07 and 37 only, plus manual/config-change runs.
+- Do not add `workflow_run` fan-out to this workflow.
+- All current CSV artifacts are sent in one OIDC-authenticated batch request.
+- Supabase compares SHA-256 hashes and uploads only changed files.
+- Canonical sync runs only when canonical inputs changed.
+- `sync-fast-tracker` reads Supabase Storage first; GitHub raw files are fallback only.
+- Pure telemetry/identity diagnostics must stay out of the canonical hot path.
+
+### 3. Slow enrichment plane
+
+- Alias maintenance: hourly.
+- Phase 3 GitHub identity evidence runner: hourly.
+- Feed recovery watchdog: every 30 minutes.
+- API-Football detail: every 30 minutes; base layer every 6 hours.
+- Football-Data and archive/evaluation workloads remain daily or otherwise bounded.
+
+### Guardrails
+
+- Avoid new 1-minute external HTTP cron jobs unless live trading freshness genuinely requires them.
+- Prefer staggered schedules over multiple jobs firing on the same minute.
+- Prefer one batch request over one request per file.
+- Prefer change detection over unconditional rebuilds.
+- A health `WARN` for source absence/staleness is not a pipeline failure.
+- Do not call disabled `sync-fast-tracker` modes such as `live` or `archive`.
+- One subsystem should have one production owner; GitHub and Supabase must not both poll the same live source on the same cadence.
