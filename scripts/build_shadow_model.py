@@ -24,6 +24,8 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 import penaltyblog as pb
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from team_name_master import build_forward_map, build_reverse_map, fetch_master_payload
 
@@ -34,7 +36,11 @@ OUT = ROOT / "data" / "model_current.csv"
 HKJC_HISTORY = ROOT / "data" / "hkjc_history.csv"
 HKJC_TEAMS = ROOT / "data" / "hkjc_current_teams.csv"
 BASE = "https://www.football-data.co.uk/mmz4281/{season}/{code}.csv"
-TIMEOUT = 30
+# External historical feeds are useful enrichment, but must never take down the
+# whole shadow-model lane. Keep each network attempt bounded and retry only
+# transient GET failures.
+TIMEOUT = (5, 15)
+RETRY_STATUS = (429, 500, 502, 503, 504)
 BRAZIL_SERIE_B_2026_URL = (
     "https://raw.githubusercontent.com/FerrerasRP/FootballData/main/"
     "database/brasil-serie-b/brasil-serie-b%202026.json"
@@ -157,14 +163,51 @@ def season_codes(now: datetime) -> list[str]:
     return [f"{s % 100:02d}{(s + 1) % 100:02d}" for s in (start, start - 1, start - 2)]
 
 
+def build_http_session() -> requests.Session:
+    session = build_http_session()
+    retry = Retry(
+        total=2,
+        connect=2,
+        read=1,
+        status=2,
+        backoff_factor=0.6,
+        status_forcelist=RETRY_STATUS,
+        allowed_methods=frozenset({"GET"}),
+        raise_on_status=False,
+    )
+    adapter = HTTPAdapter(max_retries=retry, pool_connections=8, pool_maxsize=8)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
 def fetch_csv(session: requests.Session, season: str, code: str) -> pd.DataFrame:
     url = BASE.format(season=season, code=code)
-    r = session.get(url, timeout=TIMEOUT, headers={"User-Agent": "football-fast-tracker/1.0"})
+    try:
+        r = session.get(
+            url,
+            timeout=TIMEOUT,
+            headers={"User-Agent": "football-fast-tracker/1.0"},
+        )
+    except requests.RequestException as exc:
+        print(
+            f"FOOTBALL_DATA_FETCH_WARN season={season} code={code} "
+            f"error={type(exc).__name__}"
+        )
+        return pd.DataFrame()
     if r.status_code != 200 or len(r.content) < 100:
+        print(
+            f"FOOTBALL_DATA_FETCH_WARN season={season} code={code} "
+            f"status={r.status_code} bytes={len(r.content)}"
+        )
         return pd.DataFrame()
     try:
         df = pd.read_csv(io.BytesIO(r.content))
-    except Exception:
+    except Exception as exc:
+        print(
+            f"FOOTBALL_DATA_PARSE_WARN season={season} code={code} "
+            f"error={type(exc).__name__}"
+        )
         return pd.DataFrame()
     required = {"HomeTeam", "AwayTeam", "FTHG", "FTAG", "Date"}
     if not required.issubset(df.columns):
