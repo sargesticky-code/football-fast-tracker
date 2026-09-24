@@ -8,6 +8,7 @@ on:
       - 'phase3/fast_api.py'
       - 'phase3/fast_service.py'
       - 'api/phase3_fast.py'
+      - 'tests/__init__.py'
       - 'tests/test_phase3_fast_consumer.py'
       - 'tests/test_phase3_fast_api.py'
       - 'tests/test_phase3_fast_http_endpoint.py'
