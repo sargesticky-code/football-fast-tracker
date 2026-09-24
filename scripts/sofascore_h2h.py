@@ -18,7 +18,10 @@ from typing import Any, Iterable
 
 import requests
 
-BASE_URL = "https://api.sofascore.com/api/v1"
+BASE_URLS = (
+    "https://www.sofascore.com/api/v1",
+    "https://api.sofascore.com/api/v1",
+)
 DEFAULT_TIMEOUT_SECONDS = 8.0
 DEFAULT_KICKOFF_TOLERANCE_SECONDS = 20 * 60
 DEFAULT_H2H_LIMIT = 5
@@ -94,12 +97,12 @@ class SofascoreClient:
     def __init__(
         self,
         *,
-        base_url: str = BASE_URL,
+        base_urls: tuple[str, ...] = BASE_URLS,
         timeout: float = DEFAULT_TIMEOUT_SECONDS,
         session: requests.Session | None = None,
         user_agent: str = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/153 Safari/537.36",
     ):
-        self.base_url = base_url.rstrip("/")
+        self.base_urls = tuple(url.rstrip("/") for url in base_urls)
         self.timeout = timeout
         self.session = session or requests.Session()
         self.session.headers.update(
@@ -114,22 +117,25 @@ class SofascoreClient:
         )
 
     def _get_json(self, path: str) -> dict[str, Any]:
-        url = f"{self.base_url}/{path.lstrip('/')}"
         last_error: Exception | None = None
-        for attempt in range(2):
-            try:
-                response = self.session.get(url, timeout=self.timeout)
-                if response.status_code == 429:
-                    raise requests.HTTPError("SofaScore rate limited request", response=response)
-                response.raise_for_status()
-                payload = response.json()
-                if not isinstance(payload, dict):
-                    raise ValueError("SofaScore response is not an object")
-                return payload
-            except (requests.RequestException, ValueError) as exc:
-                last_error = exc
-                if attempt == 0:
-                    time.sleep(0.35)
+        for base_index, base_url in enumerate(self.base_urls):
+            url = f"{base_url}/{path.lstrip('/')}"
+            for attempt in range(2):
+                try:
+                    response = self.session.get(url, timeout=self.timeout)
+                    if response.status_code == 429:
+                        raise requests.HTTPError("SofaScore rate limited request", response=response)
+                    response.raise_for_status()
+                    payload = response.json()
+                    if not isinstance(payload, dict):
+                        raise ValueError("SofaScore response is not an object")
+                    return payload
+                except (requests.RequestException, ValueError) as exc:
+                    last_error = exc
+                    if attempt == 0:
+                        time.sleep(0.35)
+                    elif base_index + 1 < len(self.base_urls):
+                        break
         assert last_error is not None
         raise last_error
 
