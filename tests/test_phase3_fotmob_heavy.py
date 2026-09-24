@@ -29,6 +29,44 @@ class FotMobHeavyTests(unittest.TestCase):
         self.assertEqual(len(row["events"]), 1)
         self.assertEqual(len(row["momentum"]), 1)
 
+    def test_normalizes_matchdetails_periods_all_shape(self):
+        payload = {
+            "content": {
+                "stats": {"Periods": {"All": {"stats": [
+                    {"title": "Expected goals (xG)", "stats": [1.84, 0.72]},
+                    {"title": "Total shots", "stats": [14, 8]},
+                    {"title": "Shots on target", "stats": [6, 3]},
+                    {"title": "Ball possession", "stats": [65, 35]},
+                    {"title": "Touches in opposition box", "stats": [31, 15]},
+                    {"title": "Big chances", "stats": [4, 2]},
+                    {"title": "Corners", "stats": [7, 3]},
+                ]}}},
+                "matchFacts": {"events": {"events": [{"type": "Goal", "time": 52}]}},
+                "momentum": {"main": {"data": [{"minute": 52, "value": 15.1}]}},
+            }
+        }
+        row = normalize_fotmob_heavy(payload)
+        self.assertEqual(row["xg"], {"home": 1.84, "away": 0.72})
+        self.assertEqual(row["shots"], {"home": 14, "away": 8})
+        self.assertEqual(row["shots_on_target"], {"home": 6, "away": 3})
+        self.assertEqual(row["possession"], {"home": 65, "away": 35})
+        self.assertEqual(row["box_touches"], {"home": 31, "away": 15})
+        self.assertEqual(row["big_chances"], {"home": 4, "away": 2})
+        self.assertEqual(row["corners"], {"home": 7, "away": 3})
+        self.assertEqual(row["events"][0]["type"], "Goal")
+        self.assertEqual(row["momentum"][0]["minute"], 52)
+
+    def test_normalizes_grouped_all_shape(self):
+        payload = {"content": {"stats": {"Periods": {"All": [
+            {"title": "Top stats", "stats": [
+                {"title": "Expected goals", "stats": ["0.91", "1.27"]},
+                {"title": "Ball possession", "stats": ["48%", "52%"]},
+            ]}
+        ]}}}}
+        row = normalize_fotmob_heavy(payload)
+        self.assertEqual(row["xg"], {"home": 0.91, "away": 1.27})
+        self.assertEqual(row["possession"], {"home": 48, "away": 52})
+
     def test_missing_detail_is_not_fabricated(self):
         row = normalize_fotmob_heavy({"stats": {}})
         self.assertTrue(all(value is None for value in row.values()))
