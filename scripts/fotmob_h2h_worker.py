@@ -60,8 +60,10 @@ def board_dates(items):
         dates.add(f.kickoff.astimezone(HKT).strftime("%Y%m%d"))
     return sorted(dates)
 
-def build(current_rows,alias_rows,client,max_details=MAX_DETAILS):
+def build(current_rows,alias_rows,client,max_details=MAX_DETAILS,previous_rows=None):
     items=fixtures(current_rows); amap=alias_map(alias_rows)
+    previous_rows=previous_rows or []
+    previous_by_event={clean(r.get("hkjc_event_id")):r for r in previous_rows if clean(r.get("hkjc_event_id"))}
     boards=[]; board_errors=[]
     for day in board_dates(items):
         try: boards.append(client.matches(day))
@@ -72,6 +74,14 @@ def build(current_rows,alias_rows,client,max_details=MAX_DETAILS):
         mapping=match_fixture(fixture,boards,aliases=amap)
         if not boards and mapping.status=="UNMAPPED":
             mapping=type(mapping)("SOURCE_UNAVAILABLE","board_fetch_failed")
+        prior=previous_by_event.get(fixture.hkjc_event_id)
+        prior_usable=bool(
+            prior
+            and clean(prior.get("quality")) in {"H2H_OK","NO_HISTORY"}
+            and clean(prior.get("home"))==fixture.home
+            and clean(prior.get("away"))==fixture.away
+            and clean(prior.get("fotmob_match_id"))
+        )
         base={
             "fetched_at_utc":fetched,"hkjc_event_id":fixture.hkjc_event_id,
             "kickoff_hkt":fixture.kickoff.astimezone(HKT).isoformat(),
@@ -83,6 +93,23 @@ def build(current_rows,alias_rows,client,max_details=MAX_DETAILS):
             "kickoff_delta_seconds":"" if mapping.kickoff_delta_seconds is None else f"{mapping.kickoff_delta_seconds:.0f}",
             "mapping_status":mapping.status,"mapping_reason":mapping.reason,"source":"FOTMOB",
         }
+        # Reuse stable prematch H2H evidence for the same HKJC event instead of
+        # re-fetching it every run. This makes the detail budget rotate naturally
+        # toward previously deferred/unresolved matches and preserves last-good
+        # data during a transient board failure.
+        if prior_usable and (
+            mapping.status!="VERIFIED"
+            or clean(prior.get("fotmob_match_id"))==str(mapping.match_id)
+        ):
+            keep={**prior,**base}
+            keep["mapping_status"]="VERIFIED"
+            keep["mapping_reason"]="reused_verified_h2h"
+            keep["quality"]=clean(prior.get("quality"))
+            for key in ("h2h_games","home_wins","draws","away_wins","home_goals","away_goals",
+                        "avg_total_goals","last5","meetings_json"):
+                keep[key]=prior.get(key,"")
+            out.append(keep)
+            continue
         if mapping.status!="VERIFIED":
             out.append({**base,"h2h_games":0,"home_wins":0,"draws":0,"away_wins":0,"home_goals":0,"away_goals":0,
                         "avg_total_goals":"","last5":"","meetings_json":"[]","quality":mapping.status})
@@ -109,7 +136,10 @@ def main():
     ap.add_argument("--output",default=str(OUT)); ap.add_argument("--max-details",type=int,default=MAX_DETAILS); args=ap.parse_args()
     rows=read(Path(args.input))
     if not rows: raise SystemExit(f"no HKJC fixture rows in {args.input}")
-    out=build(rows,read(Path(args.aliases)),FotMobClient(),max(0,args.max_details)); write(Path(args.output),out)
+    output_path=Path(args.output)
+    previous=read(output_path)
+    out=build(rows,read(Path(args.aliases)),FotMobClient(),max(0,args.max_details),previous_rows=previous)
+    write(output_path,out)
     counts={}
     for r in out: counts[r["quality"]]=counts.get(r["quality"],0)+1
     mapped=sum(r["mapping_status"]=="VERIFIED" for r in out)
