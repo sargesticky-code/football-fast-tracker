@@ -154,7 +154,13 @@ def build_sofascore_h2h(
         source_row_by_id[fixture.hkjc_event_id] = row
 
     fixtures = sorted(fixtures_by_id.values(), key=lambda f: (f.kickoff, f.hkjc_event_id))
-    payloads = [client.scheduled_events(day) for day in schedule_dates(fixtures)]
+    payloads = []
+    schedule_errors: list[str] = []
+    for day in schedule_dates(fixtures):
+        try:
+            payloads.append(client.scheduled_events(day))
+        except Exception as exc:
+            schedule_errors.append(f"{day}:{exc.__class__.__name__}")
     combined = combine_schedules(payloads)
     fetched_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
@@ -163,6 +169,11 @@ def build_sofascore_h2h(
     for fixture in fixtures:
         raw = source_row_by_id[fixture.hkjc_event_id]
         mapping = match_scheduled_event(fixture, combined)
+        if schedule_errors and mapping.status == "UNMAPPED":
+            mapping = type(mapping)(
+                status="SOURCE_UNAVAILABLE" if not payloads else "SOURCE_PARTIAL",
+                reason="schedule_fetch_failed",
+            )
         base = {
             "fetched_at_utc": fetched_at,
             "hkjc_event_id": fixture.hkjc_event_id,
@@ -221,25 +232,44 @@ def build_sofascore_h2h(
             )
             continue
 
-        payload = client.h2h_events(mapping.event_id)
-        h2h_calls += 1
-        meetings = normalize_h2h_events(
-            payload,
-            current_home_team_id=mapping.home_team_id,
-            current_away_team_id=mapping.away_team_id,
-            current_kickoff=fixture.kickoff,
-        )
-        summary = summarize_h2h(meetings)
-        output.append(
-            {
-                **base,
-                **{k: v for k, v in summary.items() if k != "meetings"},
-                "avg_total_goals": (
-                    "" if summary["avg_total_goals"] is None else f"{summary['avg_total_goals']:.2f}"
-                ),
-                "meetings_json": json.dumps(meetings, ensure_ascii=False, separators=(",", ":")),
-            }
-        )
+        try:
+            payload = client.h2h_events(mapping.event_id)
+            h2h_calls += 1
+            meetings = normalize_h2h_events(
+                payload,
+                current_home_team_id=mapping.home_team_id,
+                current_away_team_id=mapping.away_team_id,
+                current_kickoff=fixture.kickoff,
+            )
+            summary = summarize_h2h(meetings)
+            output.append(
+                {
+                    **base,
+                    **{k: v for k, v in summary.items() if k != "meetings"},
+                    "avg_total_goals": (
+                        "" if summary["avg_total_goals"] is None else f"{summary['avg_total_goals']:.2f}"
+                    ),
+                    "meetings_json": json.dumps(meetings, ensure_ascii=False, separators=(",", ":")),
+                }
+            )
+        except Exception:
+            output.append(
+                {
+                    **base,
+                    "mapping_status": "VERIFIED",
+                    "mapping_reason": "exact_pair_and_kickoff_h2h_fetch_failed",
+                    "h2h_games": 0,
+                    "home_wins": 0,
+                    "draws": 0,
+                    "away_wins": 0,
+                    "home_goals": 0,
+                    "away_goals": 0,
+                    "avg_total_goals": "",
+                    "last5": "",
+                    "meetings_json": "[]",
+                    "quality": "SOURCE_UNAVAILABLE",
+                }
+            )
 
     output.sort(key=lambda row: (row["kickoff_hkt"], row["hkjc_event_id"]))
     return output
