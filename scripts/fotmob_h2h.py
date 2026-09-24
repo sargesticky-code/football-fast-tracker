@@ -96,11 +96,27 @@ class FotMobClient:
             raise ValueError("FotMob payload is not an object")
         return payload
 
+    def _get_first(self, candidates: list[tuple[str,dict[str,Any]]]) -> dict[str,Any]:
+        last_error: Exception | None = None
+        for path,params in candidates:
+            try:
+                return self._get(path,params)
+            except (requests.RequestException,ValueError) as exc:
+                last_error=exc
+        assert last_error is not None
+        raise last_error
+
     def matches(self, date_yyyymmdd: str) -> dict[str,Any]:
-        return self._get("matches", {"date":date_yyyymmdd})
+        return self._get_first([
+            ("data/matches", {"date":date_yyyymmdd,"timezone":"Asia/Hong_Kong","ccode3":"HKG"}),
+            ("matches", {"date":date_yyyymmdd}),
+        ])
 
     def match_details(self, match_id: int | str) -> dict[str,Any]:
-        return self._get("matchDetails", {"matchId":str(match_id)})
+        return self._get_first([
+            ("data/matchDetails", {"matchId":str(match_id)}),
+            ("matchDetails", {"matchId":str(match_id)}),
+        ])
 
 
 def flatten_matches(payload: dict[str,Any]) -> list[dict[str,Any]]:
