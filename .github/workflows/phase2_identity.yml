@@ -7,6 +7,7 @@ on:
     paths:
       - 'scripts/phase2_*.py'
       - '.github/workflows/phase2_identity.yml'
+      - 'data/phase2_layer_status.json'
   pull_request:
     branches:
       - app-v1
@@ -42,11 +43,14 @@ jobs:
           def h(path):
               try:return json.load(open(path))
               except:return {}
-          i=h('data/phase2_identity_health.json'); s=h('data/phase2_squad_health.json'); m=h('data/phase2_manager_health.json')
+          i=h('data/phase2_identity_health.json'); s=h('data/phase2_squad_health.json'); m=h('data/phase2_manager_health.json'); p=h('data/phase2_layer_status.json'); r=h('data/phase2_rotation_health.json')
           if not i.get('layer1_exit'): objective='LAYER1_IDENTITY'
           elif not s.get('layer2_exit'): objective='LAYER2_SQUAD'
           elif not m.get('layer3_exit'): objective='LAYER3_MANAGER'
-          else: objective='LAYER4_AVAILABILITY'
+          elif not p.get('layer4_exit'): objective='LAYER4_AVAILABILITY'
+          elif not p.get('layer5_exit'): objective='LAYER5_LINEUP'
+          elif not r.get('layer6_exit'): objective='LAYER6_ROTATION'
+          else: objective='LAYER7_MANAGER_TACTICS'
           print('PHASE2_DYNAMIC_OBJECTIVE='+objective)
           with open(os.environ['GITHUB_ENV'],'a') as f:f.write('PHASE2_OBJECTIVE='+objective+'\n')
           PY
@@ -61,17 +65,16 @@ jobs:
       - name: Layer 4 availability objective
         if: env.PHASE2_OBJECTIVE == 'LAYER4_AVAILABILITY'
         run: |
-          if [ -f scripts/phase2_capture_availability.py ]; then
-            python scripts/phase2_capture_availability.py
-          else
-            echo 'PHASE2_LAYER4_NEXT_ACTION=IMPLEMENT_TARGETED_CURRENT_AVAILABILITY_CAPTURE'
-          fi
+          if [ -f scripts/phase2_capture_availability.py ]; then python scripts/phase2_capture_availability.py; else echo 'PHASE2_LAYER4_NEXT_ACTION=IMPLEMENT_TARGETED_CURRENT_AVAILABILITY_CAPTURE'; fi
+      - name: Layer 6 rotation rest congestion depth
+        if: env.PHASE2_OBJECTIVE == 'LAYER6_ROTATION'
+        run: python scripts/phase2_build_rotation_context.py
       - name: Persist Phase 2 snapshots only
         run: |
           git config user.name "phase2-bot"
           git config user.email "phase2-bot@users.noreply.github.com"
-          git add data/phase2_hkjc_current.csv data/phase2_hkjc_capture_health.json data/phase2_team_identity_targets.csv data/phase2_team_identity_evidence.csv data/phase2_identity_resolution_diagnostics.csv data/phase2_thesportsdb_diagnostics.csv data/phase2_espn_diagnostics.csv data/phase2_fotmob_diagnostics.csv data/phase2_identity_health.json
-          for f in data/phase2_player_master.csv data/phase2_squad_health.json data/phase2_manager_master.csv data/phase2_manager_health.json data/phase2_availability_evidence.csv data/phase2_availability_health.json; do [ ! -f "$f" ] || git add "$f"; done
+          git add data/phase2_hkjc_current.csv data/phase2_hkjc_capture_health.json data/phase2_team_identity_targets.csv data/phase2_team_identity_evidence.csv data/phase2_identity_resolution_diagnostics.csv data/phase2_thesportsdb_diagnostics.csv data/phase2_espn_diagnostics.csv data/phase2_fotmob_diagnostics.csv data/phase2_identity_health.json data/phase2_layer_status.json
+          for f in data/phase2_player_master.csv data/phase2_squad_health.json data/phase2_manager_master.csv data/phase2_manager_health.json data/phase2_availability_evidence.csv data/phase2_availability_health.json data/phase2_rotation_context.csv data/phase2_rotation_health.json; do [ ! -f "$f" ] || git add "$f"; done
           if ! git diff --cached --quiet; then
             git commit -m "phase2: refresh human intelligence evidence"
             git push origin HEAD:phase2-human-intelligence
