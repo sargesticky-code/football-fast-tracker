@@ -38,6 +38,21 @@ WOMENS_RESULTS_URL = (
     "martj42/womens-international-results/master/results.csv"
 )
 WOMENS_RESULTS_TIMEOUT = 30
+MENS_RESULTS_URL = (
+    "https://raw.githubusercontent.com/"
+    "martj42/international_results/master/results.csv"
+)
+MENS_RESULTS_TIMEOUT = 20
+# HKJC tournament codes currently used for senior men's national-team fixtures.
+# Name checks below additionally exclude youth, AM and women's fixtures.
+SENIOR_MENS_TOURNAMENTS = frozenset({
+    "INT",  # senior internationals / friendlies
+    "ANQ",  # Africa senior qualification
+    "GUC",  # Gulf senior competition
+    "ENL",  # UEFA Nations League
+    "CNL",  # CONCACAF Nations League
+    "AEC",  # AFC senior competition
+})
 BRAZIL_RESULTS_URLS = (
     "https://raw.githubusercontent.com/BrazilianFootball/Data/main/results/processed/Serie_B_2025_games.json",
     "https://raw.githubusercontent.com/BrazilianFootball/Data/main/results/processed/Serie_C_2025_games.json",
