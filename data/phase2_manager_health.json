@@ -1,11 +1,11 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 74,
-  "teams_with_explicit_manager": 61,
-  "team_coverage_pct": 82.4,
-  "manager_rows": 61,
+  "target_confirmed_fotmob_teams": 60,
+  "teams_with_explicit_manager": 49,
+  "team_coverage_pct": 81.7,
+  "manager_rows": 49,
   "failure_classes": {
-    "NO_EXPLICIT_CURRENT_MANAGER": 13
+    "NO_EXPLICIT_CURRENT_MANAGER": 11
   },
   "residual_all_classified": true,
   "failures": [
@@ -40,12 +40,6 @@
       "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":27}"
     },
     {
-      "hkjc_team_id": "50001807",
-      "team": "Korea DPR Women U20",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
-    },
-    {
       "hkjc_team_id": "50001808",
       "team": "Korea Republic",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
@@ -70,12 +64,6 @@
       "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":30}"
     },
     {
-      "hkjc_team_id": "50240645",
-      "team": "Colombia Women U20",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
-    },
-    {
       "hkjc_team_id": "50288636",
       "team": "Dominican Republic",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
@@ -89,5 +77,5 @@
     }
   ],
   "layer3_exit": true,
-  "fetched_at": "2026-09-23T14:49:23.370774+00:00"
+  "fetched_at": "2026-09-24T03:31:49.182378+00:00"
 }

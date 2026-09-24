@@ -1,15 +1,15 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 74,
-  "teams_with_squad": 66,
-  "team_coverage_pct": 89.2,
-  "players": 1917,
+  "target_confirmed_fotmob_teams": 60,
+  "teams_with_squad": 54,
+  "team_coverage_pct": 90.0,
+  "players": 1636,
   "position_coverage_pct": 100.0,
-  "dob_coverage_pct": 99.3,
-  "age_coverage_pct": 99.3,
+  "dob_coverage_pct": 99.7,
+  "age_coverage_pct": 99.7,
   "nationality_coverage_pct": 100.0,
   "failure_classes": {
-    "PROVIDER_ROSTER_EMPTY": 8
+    "PROVIDER_ROSTER_EMPTY": 6
   },
   "residual_all_classified": true,
   "layer2_exit": true,
@@ -27,12 +27,6 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
     {
-      "hkjc_team_id": "50001807",
-      "team": "Korea DPR Women U20",
-      "class": "PROVIDER_ROSTER_EMPTY",
-      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
-    },
-    {
       "hkjc_team_id": "50002009",
       "team": "Maldives",
       "class": "PROVIDER_ROSTER_EMPTY",
@@ -41,12 +35,6 @@
     {
       "hkjc_team_id": "50002123",
       "team": "Mineros Zacatecas",
-      "class": "PROVIDER_ROSTER_EMPTY",
-      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
-    },
-    {
-      "hkjc_team_id": "50240645",
-      "team": "Colombia Women U20",
       "class": "PROVIDER_ROSTER_EMPTY",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
@@ -64,5 +52,5 @@
     }
   ],
   "workers": 8,
-  "fetched_at": "2026-09-23T14:49:16.757193+00:00"
+  "fetched_at": "2026-09-24T03:31:45.314642+00:00"
 }

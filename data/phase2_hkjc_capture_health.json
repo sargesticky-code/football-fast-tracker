@@ -1,13 +1,13 @@
 {
   "status": "OK",
-  "fetched_at_hkt": "2026-09-23T22:49:02+08:00",
-  "raw_matches": 126,
-  "upcoming_matches": 59,
-  "unique_hkjc_teams": 118,
+  "fetched_at_hkt": "2026-09-24T11:31:33+08:00",
+  "raw_matches": 108,
+  "upcoming_matches": 38,
+  "unique_hkjc_teams": 76,
   "horizon_hours": 48,
   "request_count": 1,
-  "ended": 59,
-  "outside_horizon": 8,
+  "ended": 68,
+  "outside_horizon": 2,
   "bad_identity": 0,
   "bad_kickoff": 0
 }
