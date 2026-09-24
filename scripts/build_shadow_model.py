@@ -164,7 +164,7 @@ def season_codes(now: datetime) -> list[str]:
 
 
 def build_http_session() -> requests.Session:
-    session = build_http_session()
+    session = requests.Session()
     retry = Retry(
         total=2,
         connect=2,
@@ -646,7 +646,7 @@ def main() -> int:
 
     now = datetime.now(HKT)
     seasons = season_codes(now)
-    session = requests.Session()
+    session = build_http_session()
 
     current: dict[str, pd.DataFrame] = {}
     dataset_labels: dict[str, str] = {}
