@@ -1,67 +1,167 @@
 ﻿source_name,source_key,team_key,hkjc_name_en,hkjc_name_zh,confidence,event_count
-Australia,australia,HKJC:australia,Australia,澳洲,0.98,1
-Austria,austria,HKJC:austria,Austria,奧地利,0.98,1
-Azerbaijan U21,azerbaijanu21,HKJC:azerbaijanu21,Azerbaijan U21,阿塞拜疆U21,0.98,1
-Bahrain,bahrain,HKJC:bahrain,Bahrain,巴林,0.98,1
-Bangladesh,bangladesh,HKJC:bangladesh,Bangladesh,孟加拉,0.98,1
-Belarus U21,belarusu21,HKJC:belarusu21,Belarus U21,白俄羅斯U21,0.98,1
-Belgium U21,belgiumu21,HKJC:belgiumu21,Belgium U21,比利時U21,0.98,1
-Botswana,botswana,HKJC:botswana,Botswana,博茲瓦納,0.98,1
-Brazil,brazil,HKJC:brazil,Brazil,巴西,0.98,1
-Bulgaria U21,bulgariau21,HKJC:bulgariau21,Bulgaria U21,保加利亞U21,0.98,1
-Cameroon,cameroon,HKJC:cameroon,Cameroon,喀麥隆,0.98,1
-Central African Republic,centralafricanrepublic,HKJC:centralafricanrepublic,Central African Republic,中非共和國,0.98,1
-China,china,HKJC:china,China,中國,0.98,1
-Comoros,comoros,HKJC:comoros,Comoros,科摩羅,0.98,1
-Congo,congo,HKJC:congo,Congo,剛果,0.98,1
-Costa Rica,costarica,HKJC:costarica,Costa Rica,哥斯達黎加,0.98,1
-Curacao,curacao,HKJC:curacao,Curacao,庫拉索,0.98,1
-Czechia U21,czechiau21,HKJC:czechiau21,Czechia U21,捷克U21,0.98,1
-DR Congo,drcongo,HKJC:drcongo,D R Congo,剛果民主共和國,0.98,1
-Denmark,denmark,HKJC:denmark,Denmark,丹麥,0.98,1
-Deportes Santa Cruz,deportessantacruz,HKJC:deportessantacruz,Deportes Santa Cruz,聖達古斯,0.98,1
-Dominican Republic,dominicanrepublic,HKJC:dominicanrepublic,Dominican Republic,多明尼加共和國,0.98,1
-Equatorial Guinea,equatorialguinea,HKJC:equatorialguinea,Equatorial Guinea,赤道畿內亞,0.98,1
-Finland U21,finlandu21,HKJC:finlandu21,Finland U21,芬蘭U21,0.98,1
-France U21,franceu21,HKJC:franceu21,France U21,法國U21,0.98,1
-Germany,germany,HKJC:germany,Germany,德國,0.98,1
-Greece,greece,HKJC:greece,Greece,希臘,0.98,1
-Guinea-Bissau,guineabissau,HKJC:guineabissau,Guinea Bissau,畿內亞比紹,0.98,1
-Haiti,haiti,HKJC:haiti,Haiti,海地,0.98,1
-Iceland U21,icelandu21,HKJC:icelandu21,Iceland U21,冰島U21,0.98,1
-India,india,HKJC:india,India,印度,0.98,1
-Indonesia,indonesia,HKJC:indonesia,Indonesia,印尼,0.98,1
-Iran,iran,HKJC:iran,Iran,伊朗,0.98,1
-Israel,israel,HKJC:israel,Israel,以色列,0.98,1
+Albacete,albacete,HKJC:albacete,Albacete,阿爾巴塞特,0.99,1
+Albania,albania,HKJC:albania,Albania,阿爾巴尼亞,0.99,1
+Albirex Niigata,albirexniigata,HKJC:albirexniigata,Albirex Niigata,新潟天鵝,0.99,1
+Algeria,algeria,HKJC:algeria,Algeria,阿爾及利亞,0.99,1
+Almería,almería,HKJC:almeria,Almeria,艾美利亞,0.99,1
+Angola,angola,HKJC:angola,Angola,安哥拉,0.99,1
+Armenia,armenia,HKJC:armenia,Armenia,阿美尼亞,0.99,1
+Atlante,atlante,HKJC:atlante,Atlante,阿蘭特,0.99,1
+Atlas,atlas,HKJC:atlas,Atlas,阿特拿斯,0.99,1
+Audax Italiano,audaxitaliano,HKJC:audaxitaliano,Audax Italiano,奧達斯,0.99,1
+Australia,australia,HKJC:australia,Australia,澳洲,0.99,1
+Austria,austria,HKJC:austria,Austria,奧地利,0.99,1
+Azerbaijan U21,azerbaijanu21,HKJC:azerbaijanu21,Azerbaijan U21,阿塞拜疆U21,0.99,1
+Bahrain,bahrain,HKJC:bahrain,Bahrain,巴林,0.99,1
+Bangladesh,bangladesh,HKJC:bangladesh,Bangladesh,孟加拉,0.99,1
+Belarus,belarus,HKJC:belarus,Belarus,白俄羅斯,0.99,1
+Belarus U21,belarusu21,HKJC:belarusu21,Belarus U21,白俄羅斯U21,0.99,1
+Belgium,belgium,HKJC:belgium,Belgium,比利時,0.99,1
+Belgium U21,belgiumu21,HKJC:belgiumu21,Belgium U21,比利時U21,0.99,1
+Blaublitz Akita,blaublitzakita,HKJC:blaublitzakita,Blaublitz Akita,秋田藍閃電,0.99,1
+Boca Juniors,bocajuniors,HKJC:bocajuniors,Boca Juniors,小保加,0.99,1
+Botswana,botswana,HKJC:botswana,Botswana,博茲瓦納,0.99,1
+Brazil,brazil,HKJC:brazil,Brazil,巴西,0.99,1
+Bristol Rovers,bristolrovers,HKJC:bristolrovers,Bristol Rovers,布里斯托流浪,0.99,1
+Bulgaria,bulgaria,HKJC:bulgaria,Bulgaria,保加利亞,0.99,1
+Bulgaria U21,bulgariau21,HKJC:bulgariau21,Bulgaria U21,保加利亞U21,0.99,1
+Cádiz,cádiz,HKJC:cadiz,Cadiz,卡迪斯,0.99,1
+Cameroon,cameroon,HKJC:cameroon,Cameroon,喀麥隆,0.99,1
+Castellón,castellón,HKJC:castellon,Castellon,卡斯迪隆,0.99,1
+Celta Fortuna,celtafortuna,HKJC:celtafortuna,Celta Fortuna,幸運切爾達,0.99,1
+Central African Republic,centralafricanrepublic,HKJC:centralafricanrepublic,Central African Republic,中非共和國,0.99,1
+China,china,HKJC:china,China,中國,0.99,1
+Colo Colo,colocolo,HKJC:colocolo,Colo Colo,高路高路,0.99,1
+Comoros,comoros,HKJC:comoros,Comoros,科摩羅,0.99,1
+Congo,congo,HKJC:congo,Congo,剛果,0.99,1
+Costa Rica,costarica,HKJC:costarica,Costa Rica,哥斯達黎加,0.99,1
+Croatia,croatia,HKJC:croatia,Croatia,克羅地亞,0.99,1
+Croatia U21,croatiau21,HKJC:croatiau21,Croatia U21,克羅地亞U21,0.99,1
+Curacao,curacao,HKJC:curacao,Curacao,庫拉索,0.99,1
+Cyprus,cyprus,HKJC:cyprus,Cyprus,塞浦路斯,0.99,1
+Czechia,czechia,HKJC:czechia,Czechia,捷克,0.99,1
+Czechia U21,czechiau21,HKJC:czechiau21,Czechia U21,捷克U21,0.99,1
+DR Congo,drcongo,HKJC:drcongo,D R Congo,剛果民主共和國,0.99,1
+Denmark,denmark,HKJC:denmark,Denmark,丹麥,0.99,1
+Deportes Santa Cruz,deportessantacruz,HKJC:deportessantacruz,Deportes Santa Cruz,聖達古斯,0.99,1
+Dominican Republic,dominicanrepublic,HKJC:dominicanrepublic,Dominican Republic,多明尼加共和國,0.99,1
+Egypt,egypt,HKJC:egypt,Egypt,埃及,0.99,1
+Eibar,eibar,HKJC:eibar,Eibar,伊巴,0.99,1
+England,england,HKJC:england,England,英格蘭,0.99,1
+Equatorial Guinea,equatorialguinea,HKJC:equatorialguinea,Equatorial Guinea,赤道畿內亞,0.99,1
+Estonia,estonia,HKJC:estonia,Estonia,愛沙尼亞,0.99,1
+Exeter City,exetercity,HKJC:exetercity,Exeter City,埃克塞特,0.99,1
+Faroe Islands,faroeislands,HKJC:faroeislands,Faroe Islands,法羅群島,0.99,1
+FC Imabari,fcimabari,HKJC:fcimabari,FC Imabari,FC今治,0.99,1
+Finland,finland,HKJC:finland,Finland,芬蘭,0.99,1
+Finland U21,finlandu21,HKJC:finlandu21,Finland U21,芬蘭U21,0.99,1
+France,france,HKJC:france,France,法國,0.99,1
+France U21,franceu21,HKJC:franceu21,France U21,法國U21,0.99,1
+Fujieda MYFC,fujiedamyfc,HKJC:fujiedamyfc,Fujieda MYFC,藤枝MYFC,0.99,1
+Gabon,gabon,HKJC:gabon,Gabon,加蓬,0.99,1
+Georgia,georgia,HKJC:georgia,Georgia,格魯吉亞,0.99,1
+Georgia U21,georgiau21,HKJC:georgiau21,Georgia U21,格魯吉亞U21,0.99,1
+Germany,germany,HKJC:germany,Germany,德國,0.99,1
+Gillingham,gillingham,HKJC:gillingham,Gillingham,基寧咸,0.99,1
+Girona,girona,HKJC:girona,Girona,基羅納,0.99,1
+Greece,greece,HKJC:greece,Greece,希臘,0.99,1
+Greece U21,greeceu21,HKJC:greeceu21,Greece U21,希臘U21,0.99,1
+Guinea-Bissau,guineabissau,HKJC:guineabissau,Guinea Bissau,畿內亞比紹,0.99,1
+Haiti,haiti,HKJC:haiti,Haiti,海地,0.99,1
+Heracles,heracles,HKJC:heracles,Heracles,荷華高斯,0.99,1
+Hokkaido Consadole Sapporo,hokkaidoconsadolesapporo,HKJC:hokkaidoconsadolesapporo,Hokkaido Consadole Sapporo,北海道札幌岡薩多,0.99,1
+Hungary,hungary,HKJC:hungary,Hungary,匈牙利,0.99,1
+Hungary U21,hungaryu21,HKJC:hungaryu21,Hungary U21,匈牙利U21,0.99,1
+Iceland,iceland,HKJC:iceland,Iceland,冰島,0.99,1
+Iceland U21,icelandu21,HKJC:icelandu21,Iceland U21,冰島U21,0.99,1
+India,india,HKJC:india,India,印度,0.99,1
+Indonesia,indonesia,HKJC:indonesia,Indonesia,印尼,0.99,1
+Iran,iran,HKJC:iran,Iran,伊朗,0.99,1
+Israel,israel,HKJC:israel,Israel,以色列,0.99,1
+Italy,italy,HKJC:italy,Italy,意大利,0.99,1
+Iwaki FC,iwakifc,HKJC:iwakifc,Iwaki FC,磐城FC,0.99,1
 Japan,japan,HKJC:japan,Japan,日本,0.98,1
-Lesotho,lesotho,HKJC:lesotho,Lesotho,萊索托,0.98,1
-Libya,libya,HKJC:libya,Libya,利比亞,0.98,1
-Liechtenstein,liechtenstein,HKJC:liechtenstein,Liechtenstein,列支敦士登,0.98,1
-Lithuania,lithuania,HKJC:lithuania,Lithuania,立陶宛,0.98,1
-Malaysia,malaysia,HKJC:malaysia,Malaysia,馬來西亞,0.98,1
-Maldives,maldives,HKJC:maldives,Maldives,馬爾代夫,0.98,1
-Mauritania,mauritania,HKJC:mauritania,Mauritania,毛里塔尼亞,0.98,1
-Mozambique,mozambique,HKJC:mozambique,Mozambique,莫桑比克,0.98,1
-Namibia,namibia,HKJC:namibia,Namibia,納米比亞,0.98,1
-Netherlands,netherlands,HKJC:netherlands,Netherlands,荷蘭,0.98,1
+Júbilo Iwata,júbiloiwata,HKJC:jubiloiwata,Jubilo Iwata,磐田山葉,0.99,1
+Kazakhstan,kazakhstan,HKJC:kazakhstan,Kazakhstan,哈薩克,0.99,1
+Las Palmas,laspalmas,HKJC:laspalmas,Las Palmas,拉斯彭馬斯,0.99,1
+Latvia,latvia,HKJC:latvia,Latvia,拉脫維亞,0.99,1
+Leganés,leganés,HKJC:leganes,Leganes,雷加利斯,0.99,1
+Lesotho,lesotho,HKJC:lesotho,Lesotho,萊索托,0.99,1
+Libya,libya,HKJC:libya,Libya,利比亞,0.99,1
+Liechtenstein,liechtenstein,HKJC:liechtenstein,Liechtenstein,列支敦士登,0.99,1
+Lithuania,lithuania,HKJC:lithuania,Lithuania,立陶宛,0.99,1
+Londrina,londrina,HKJC:londrina,Londrina,隆德里納,0.99,1
+Luxembourg,luxembourg,HKJC:luxembourg,Luxembourg,盧森堡,0.99,1
+Luxembourg U21,luxembourgu21,HKJC:luxembourgu21,Luxembourg U21,盧森堡U21,0.99,1
+Madagascar,madagascar,HKJC:madagascar,Madagascar,馬達加斯加,0.99,1
+Malawi,malawi,HKJC:malawi,Malawi,馬拉維,0.99,1
+Malaysia,malaysia,HKJC:malaysia,Malaysia,馬來西亞,0.99,1
+Maldives,maldives,HKJC:maldives,Maldives,馬爾代夫,0.99,1
+Mallorca,mallorca,HKJC:mallorca,Mallorca,馬略卡,0.99,1
+Mauritania,mauritania,HKJC:mauritania,Mauritania,毛里塔尼亞,0.99,1
+Moldova,moldova,HKJC:moldova,Moldova,摩爾多瓦,0.99,1
+Montedio Yamagata,montedioyamagata,HKJC:montedioyamagata,Montedio Yamagata,山形山神,0.99,1
+Montenegro,montenegro,HKJC:montenegro,Montenegro,黑山,0.99,1
+Monterrey,monterrey,HKJC:monterrey,Monterrey,蒙特雷,0.99,1
+Morocco,morocco,HKJC:morocco,Morocco,摩洛哥,0.99,1
+Mozambique,mozambique,HKJC:mozambique,Mozambique,莫桑比克,0.99,1
+Namibia,namibia,HKJC:namibia,Namibia,納米比亞,0.99,1
+Netherlands,netherlands,HKJC:netherlands,Netherlands,荷蘭,0.99,1
+Netherlands U21,netherlandsu21,HKJC:netherlandsu21,Netherlands U21,荷蘭U21,0.99,1
 New Zealand,newzealand,HKJC:newzealand,New Zealand,新西蘭,0.98,1
-Nicaragua,nicaragua,HKJC:nicaragua,Nicaragua,尼加拉瓜,0.98,1
-Niger,niger,HKJC:niger,Niger,尼日爾,0.98,1
-Norway,norway,HKJC:norway,Norway,挪威,0.98,1
-O'Higgins,ohiggins,HKJC:ohiggins,O'Higgins,奧希金斯,0.98,1
+Nicaragua,nicaragua,HKJC:nicaragua,Nicaragua,尼加拉瓜,0.99,1
+Niger,niger,HKJC:niger,Niger,尼日爾,0.99,1
+Nigeria,nigeria,HKJC:nigeria,Nigeria,尼日利亞,0.99,1
+North Macedonia,northmacedonia,HKJC:northmacedonia,North Macedonia,北馬其頓,0.99,1
+Northern Ireland,northernireland,HKJC:northernireland,Northern Ireland,北愛爾蘭,0.99,1
+Norway,norway,HKJC:norway,Norway,挪威,0.99,1
+Norway U21,norwayu21,HKJC:norwayu21,Norway U21,挪威U21,0.99,1
+Novorizontino,novorizontino,HKJC:novorizontino,Novorizontino,路禾利桑天奴,0.99,1
+O'Higgins,ohiggins,HKJC:ohiggins,O'Higgins,奧希金斯,0.99,1
+Oita Trinita,oitatrinita,HKJC:oitatrinita,Oita Trinita,大分三神,0.99,1
 Palestine,palestine,HKJC:palestine,Palestine,巴勒斯坦,0.98,1
-Panama,panama,HKJC:panama,Panama,巴拿馬,0.98,1
-Portugal,portugal,HKJC:portugal,Portugal,葡萄牙,0.98,1
-Portugal U21,portugalu21,HKJC:portugalu21,Portugal U21,葡萄牙U21,0.98,1
-Qatar,qatar,HKJC:qatar,Qatar,卡塔爾,0.98,1
-Senegal,senegal,HKJC:senegal,Senegal,塞內加爾,0.98,1
-Serbia,serbia,HKJC:serbia,Serbia,塞爾維亞,0.98,1
-Singapore,singapore,HKJC:singapore,Singapore,新加坡,0.98,1
-Spain U21,spainu21,HKJC:spainu21,Spain U21,西班牙U21,0.98,1
-Tanzania,tanzania,HKJC:tanzania,Tanzania,坦桑尼亞,0.98,1
-Trinidad and Tobago,trinidadandtobago,HKJC:trinidadandtobago,Trinidad and Tobago,千里達,0.98,1
-Tunisia,tunisia,HKJC:tunisia,Tunisia,突尼西亞,0.98,1
-Uganda,uganda,HKJC:uganda,Uganda,烏干達,0.98,1
+Panama,panama,HKJC:panama,Panama,巴拿馬,0.99,1
+Portugal,portugal,HKJC:portugal,Portugal,葡萄牙,0.99,1
+Portugal U21,portugalu21,HKJC:portugalu21,Portugal U21,葡萄牙U21,0.99,1
+Qatar,qatar,HKJC:qatar,Qatar,卡塔爾,0.99,1
+Racing Club,racingclub,HKJC:racingclub,Racing Club,競賽會,0.99,1
+RB Omiya Ardija,rbomiyaardija,HKJC:rbomiyaardija,RB Omiya Ardija,RB大宮松鼠,0.99,1
+Romania,romania,HKJC:romania,Romania,羅馬尼亞,0.99,1
+Sabadell,sabadell,HKJC:sabadell,Sabadell,沙巴度爾,0.99,1
+Sagan Tosu,sagantosu,HKJC:sagantosu,Sagan Tosu,鳥棲砂岩,0.99,1
+San Marino,sanmarino,HKJC:sanmarino,San Marino,聖馬力諾,0.99,1
+São Bernardo,sãobernardo,HKJC:saobernardo,Sao Bernardo,聖貝拿度,0.99,1
+Scotland,scotland,HKJC:scotland,Scotland,蘇格蘭,0.99,1
+Senegal,senegal,HKJC:senegal,Senegal,塞內加爾,0.99,1
+Serbia,serbia,HKJC:serbia,Serbia,塞爾維亞,0.99,1
+Shonan Bellmare,shonanbellmare,HKJC:shonanbellmare,Shonan Bellmare,湘南比馬,0.99,1
+Singapore,singapore,HKJC:singapore,Singapore,新加坡,0.99,1
+Slovakia,slovakia,HKJC:slovakia,Slovakia,斯洛伐克,0.99,1
+Slovenia,slovenia,HKJC:slovenia,Slovenia,斯洛文尼亞,0.99,1
+South Sudan,southsudan,HKJC:southsudan,South Sudan,南蘇丹,0.99,1
+Spain,spain,HKJC:spain,Spain,西班牙,0.99,1
+Spain U21,spainu21,HKJC:spainu21,Spain U21,西班牙U21,0.99,1
+Sweden,sweden,HKJC:sweden,Sweden,瑞典,0.99,1
+Switzerland,switzerland,HKJC:switzerland,Switzerland,瑞士,0.99,1
+Switzerland U21,switzerlandu21,HKJC:switzerlandu21,Switzerland U21,瑞士U21,0.99,1
+Tanzania,tanzania,HKJC:tanzania,Tanzania,坦桑尼亞,0.99,1
+Tegevajaro Miyazaki,tegevajaromiyazaki,HKJC:tegevajaromiyazaki,Tegevajaro Miyazaki,宮崎棒牛鳥,0.99,1
+Tenerife,tenerife,HKJC:tenerife,Tenerife,特內里費,0.99,1
+Tijuana,tijuana,HKJC:tijuana,Tijuana,迪祖亞拿,0.99,1
+Trinidad and Tobago,trinidadandtobago,HKJC:trinidadandtobago,Trinidad and Tobago,千里達,0.99,1
+Tunisia,tunisia,HKJC:tunisia,Tunisia,突尼西亞,0.99,1
+Turkiye,turkiye,HKJC:turkiye,Turkiye,土耳其,0.99,1
+Turkiye U21,turkiyeu21,HKJC:turkiyeu21,Turkiye U21,土耳其U21,0.99,1
+Uganda,uganda,HKJC:uganda,Uganda,烏干達,0.99,1
+Ukraine,ukraine,HKJC:ukraine,Ukraine,烏克蘭,0.99,1
+Ukraine U21,ukraineu21,HKJC:ukraineu21,Ukraine U21,烏克蘭U21,0.99,1
 Uruguay,uruguay,HKJC:uruguay,Uruguay,烏拉圭,0.98,1
-Uzbekistan,uzbekistan,HKJC:uzbekistan,Uzbekistan,烏茲別克,0.98,1
-Wales,wales,HKJC:wales,Wales,威爾斯,0.98,1
+Uzbekistan,uzbekistan,HKJC:uzbekistan,Uzbekistan,烏茲別克,0.99,1
+Vanraure Hachinohe,vanraurehachinohe,HKJC:vanraurehachinohe,Vanraure Hachinohe,八戶雲羅里,0.99,1
+Vegalta Sendai,vegaltasendai,HKJC:vegaltasendai,Vegalta Sendai,仙台維加泰,0.99,1
+Ventforet Kofu,ventforetkofu,HKJC:ventforetkofu,Ventforet Kofu,甲府風林,0.99,1
+Vila Nova,vilanova,HKJC:vilanova,Vila Nova,維拉諾瓦,0.99,1
+Vitesse,vitesse,HKJC:vitesse,Vitesse,維迪斯,0.99,1
+Wales,wales,HKJC:wales,Wales,威爾斯,0.99,1
+York City,yorkcity,HKJC:yorkcity,York City,約克城,0.99,1
+Zambia,zambia,HKJC:zambia,Zambia,贊比亞,0.99,1
