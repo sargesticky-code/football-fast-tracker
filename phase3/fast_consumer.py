@@ -11,10 +11,20 @@ from typing import Any, Mapping
 
 
 def _identity_state(state: Mapping[str, Any]) -> str:
-    collisions = int(state.get("collision_count") or state.get("duplicate_external_ids") or 0)
+    """Collapse Layer-3 identity diagnostics into a fail-closed UI state.
+
+    Layer 3 has emitted collision diagnostics under both count fields and
+    explicit duplicate-ID collections over time.  Treat any of those forms as
+    an identity gap so a consumer can never render a colliding observation as
+    a verified match merely because the diagnostic representation changed.
+    """
+    collision_count = int(state.get("collision_count") or 0)
+    duplicate_external_ids = state.get("duplicate_external_ids") or []
+    duplicate_observation_ids = state.get("duplicate_observation_ids") or []
+    has_collision = bool(collision_count or duplicate_external_ids or duplicate_observation_ids)
     unmapped = int(state.get("unmapped_count") or 0)
     missing = state.get("missing_target_ids") or []
-    if collisions:
+    if has_collision:
         return "IDENTITY_GAP"
     if unmapped or missing:
         return "UNMAPPED"
