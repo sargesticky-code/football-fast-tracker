@@ -1,133 +1,133 @@
 ﻿fetched_at_hkt,hkjc_event_id,kickoff_hkt,home_id,away_id,home,away,h2h_games,home_wins,draws,away_wins,home_goals,away_goals,avg_total_goals,last5,meetings_json,source,quality
-2026-09-24T20:48:05+08:00,FB5661,2026-09-24T19:35:00+08:00,50000760,50002009,China,Maldives,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5691,2026-09-24T21:00:00+08:00,50002207,50000828,Namibia,Congo,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5698,2026-09-24T22:00:00+08:00,50003245,50001623,Uzbekistan,Iran,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5701,2026-09-24T23:55:00+08:00,50003206,50003395,United Arab Emirates,Yemen,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5692,2026-09-25T00:00:00+08:00,50001907,50000506,Libya,Botswana,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5693,2026-09-25T00:00:00+08:00,50002063,50000696,Mauritania,Central African Republic,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5695,2026-09-25T00:00:00+08:00,50000923,50001110,D R Congo,Equatorial Guinea,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5616,2026-09-25T02:00:00+08:00,50000439,50000432,Belgium U21,Belarus U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5699,2026-09-25T02:00:00+08:00,50002546,50000349,Qatar,Bahrain,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5592,2026-09-25T02:45:00+08:00,50001909,50001926,Liechtenstein,Lithuania,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5593,2026-09-25T02:45:00+08:00,50002502,50003347,Portugal,Wales,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5594,2026-09-25T02:45:00+08:00,50002295,50000950,Norway,Denmark,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5595,2026-09-25T02:45:00+08:00,50002798,50001451,Serbia,Greece,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5596,2026-09-25T02:45:00+08:00,50002222,50001357,Netherlands,Germany,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5597,2026-09-25T02:45:00+08:00,50001834,50002623,Kosovo,Republic of Ireland,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5598,2026-09-25T02:45:00+08:00,50000320,50001650,Austria,Israel,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5690,2026-09-25T03:00:00+08:00,50003134,50003183,Tunisia,Uganda,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5694,2026-09-25T03:00:00+08:00,50000656,50000823,Cameroon,Comoros,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5696,2026-09-25T03:00:00+08:00,50000857,50001394,Cote d'Ivoire,Ghana,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5635,2026-09-25T04:57:00+08:00,50002311,50288881,O'Higgins,Deportes Santa Cruz,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5636,2026-09-25T07:27:00+08:00,50001139,50003212,Everton VM,Universidad Chile,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5689,2026-09-25T08:00:00+08:00,50001501,50003123,Haiti,Trinidad and Tobago,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5700,2026-09-25T08:00:00+08:00,50288636,50002258,Dominican Republic,Nicaragua,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5673,2026-09-25T09:00:00+08:00,50002123,50601674,Mineros Zacatecas,Piratas FC,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5674,2026-09-25T09:00:00+08:00,50002315,50334216,Oaxaca,Atletico La Paz,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5688,2026-09-25T10:00:00+08:00,50000847,50000912,Costa Rica,Curacao,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5702,2026-09-25T13:00:00+08:00,50003246,50002755,Uzbekistan AM,Saudi Arabia AM,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5666,2026-09-25T14:00:00+08:00,50001806,50000768,Korea DPR Women,Chinese Taipei Women,1,1,0,0,4,0,4.00,H,"[{""kickoff_hkt"":""2026-03-19T17:00:00+08:00"",""tournament"":""ASCW"",""home"":""Chinese Taipei Women"",""away"":""Korea DPR Women"",""home_goals"":0,""away_goals"":4,""current_home_goals"":4,""current_away_goals"":0,""result"":""H"",""hkjc_event_id"":""FB5717"",""match_id"":""50064947""}]",HKJC accumulated matchResult history,H2H_OK
-2026-09-24T20:48:05+08:00,FB5667,2026-09-25T14:00:00+08:00,50000765,50003314,China Women,Vietnam Women,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5785,2026-09-25T17:00:00+08:00,50000361,50002005,Bangladesh,Malaysia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5719,2026-09-25T18:00:00+08:00,50000299,50000524,Australia,Brazil,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5668,2026-09-25T18:30:00+08:00,50001689,50002456,Japan Women,Philippines Women,1,1,0,0,7,0,7.00,H,"[{""kickoff_hkt"":""2026-03-15T13:00:00+08:00"",""tournament"":""ASCW"",""home"":""Japan Women"",""away"":""Philippines Women"",""home_goals"":7,""away_goals"":0,""current_home_goals"":7,""current_away_goals"":0,""result"":""H"",""hkjc_event_id"":""FB5370"",""match_id"":""50064852""}]",HKJC accumulated matchResult history,H2H_OK
-2026-09-24T20:48:05+08:00,FB5669,2026-09-25T18:30:00+08:00,50001814,50264497,Korea Republic Women,Uzbekistan Women,1,1,0,0,6,0,6.00,H,"[{""kickoff_hkt"":""2026-03-14T17:00:00+08:00"",""tournament"":""ASCW"",""home"":""Korea Republic Women"",""away"":""Uzbekistan Women"",""home_goals"":6,""away_goals"":0,""current_home_goals"":6,""current_away_goals"":0,""result"":""H"",""hkjc_event_id"":""FB5369"",""match_id"":""50064851""}]",HKJC accumulated matchResult history,H2H_OK
-2026-09-24T20:48:05+08:00,FB5703,2026-09-25T18:30:00+08:00,50001809,50003311,Korea Republic AM,Vietnam AM,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5760,2026-09-25T21:00:00+08:00,50002997,50001133,Sudan,Ethiopia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5763,2026-09-25T21:00:00+08:00,50003051,50001484,Tanzania,Guinea Bissau,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5791,2026-09-25T21:00:00+08:00,50002183,50002777,Mozambique,Senegal,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5804,2026-09-25T21:00:00+08:00,50001601,50002837,Indonesia,Singapore,1,0,1,0,1,1,2.00,D,"[{""kickoff_hkt"":""2026-08-07T21:00:00+08:00"",""tournament"":""SEC"",""home"":""Singapore"",""away"":""Indonesia"",""home_goals"":1,""away_goals"":1,""current_home_goals"":1,""current_away_goals"":1,""result"":""D"",""hkjc_event_id"":""FB2486"",""match_id"":""50072416""}]",HKJC accumulated matchResult history,H2H_OK
-2026-09-24T20:48:05+08:00,FB5766,2026-09-25T21:45:00+08:00,50000338,50000919,Azerbaijan U21,Czechia U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5787,2026-09-25T22:00:00+08:00,50001598,50002398,India,Panama,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5738,2026-09-25T23:00:00+08:00,50001584,50001272,Iceland U21,France U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5757,2026-09-25T23:00:00+08:00,50002260,50001898,Niger,Lesotho,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5740,2026-09-25T23:30:00+08:00,50000594,50002505,Bulgaria U21,Portugal U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5765,2026-09-25T23:30:00+08:00,50001243,50002897,Finland U21,Spain U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5715,2026-09-26T00:00:00+08:00,50001354,50002291,Georgia,Northern Ireland,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5716,2026-09-26T00:00:00+08:00,50000236,50001873,Armenia,Latvia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5723,2026-09-26T00:00:00+08:00,50002859,50002624,Slovakia U21,Republic of Ireland U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5746,2026-09-26T00:00:00+08:00,50002261,50001993,Nigeria,Madagascar,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5761,2026-09-26T00:00:00+08:00,50002004,50002890,Malawi,South Sudan,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5724,2026-09-26T00:30:00+08:00,50002225,50002297,Netherlands U21,Norway U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5786,2026-09-26T00:58:00+08:00,50429168,50429165,Independiente Women,Ferro Carril Oeste Women,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5756,2026-09-26T01:30:00+08:00,50003022,50001973,Switzerland U21,Luxembourg U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5708,2026-09-26T02:30:00+08:00,50001424,50000121,Girona,Albacete,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5710,2026-09-26T02:45:00+08:00,50001655,50000438,Italy,Belgium,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5711,2026-09-26T02:45:00+08:00,50002150,50000915,Montenegro,Cyprus,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5712,2026-09-26T02:45:00+08:00,50003010,50002649,Sweden,Romania,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5713,2026-09-26T02:45:00+08:00,50002470,50000498,Poland,Bosnia-Herzegovina,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5714,2026-09-26T02:45:00+08:00,50001573,50003185,Hungary,Ukraine,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5717,2026-09-26T02:45:00+08:00,50003142,50001268,Turkiye,France,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5709,2026-09-26T03:00:00+08:00,50001004,50000155,Dordrecht,Almere City,2,0,0,2,1,5,3.00,AA,"[{""kickoff_hkt"":""2026-04-18T02:00:00+08:00"",""tournament"":""DF2"",""home"":""Almere City"",""away"":""Dordrecht"",""home_goals"":4,""away_goals"":1,""current_home_goals"":1,""current_away_goals"":4,""result"":""A"",""hkjc_event_id"":""FB7624"",""match_id"":""50066963""},{""kickoff_hkt"":""2025-11-04T03:00:00+08:00"",""tournament"":""DF2"",""home"":""Dordrecht"",""away"":""Almere City"",""home_goals"":0,""away_goals"":1,""current_home_goals"":0,""current_away_goals"":1,""result"":""A"",""hkjc_event_id"":""FB8900"",""match_id"":""50056322""}]",HKJC accumulated matchResult history,H2H_OK
-2026-09-24T20:48:05+08:00,FB5758,2026-09-26T03:00:00+08:00,50001051,50000180,Egypt,Angola,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5759,2026-09-26T03:00:00+08:00,50002012,50000673,Mali,Cape Verde Islands,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5762,2026-09-26T03:00:00+08:00,50000138,50003409,Algeria,Zambia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5788,2026-09-26T03:00:00+08:00,50002168,50001326,Morocco,Gabon,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5705,2026-09-26T06:28:00+08:00,50002305,50002743,Novorizontino,Sao Bernardo,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5704,2026-09-26T06:57:00+08:00,50000796,50000291,Colo Colo,Audax Italiano,2,1,1,0,5,1,3.00,DH,"[{""kickoff_hkt"":""2026-09-23T07:27:00+08:00"",""tournament"":""CHC"",""home"":""Audax Italiano"",""away"":""Colo Colo"",""home_goals"":0,""away_goals"":0,""current_home_goals"":0,""current_away_goals"":0,""result"":""D"",""hkjc_event_id"":""FB5609"",""match_id"":""50075343""},{""kickoff_hkt"":""2026-08-31T05:27:00+08:00"",""tournament"":""CD1"",""home"":""Colo Colo"",""away"":""Audax Italiano"",""home_goals"":5,""away_goals"":1,""current_home_goals"":5,""current_away_goals"":1,""result"":""H"",""hkjc_event_id"":""FB3869"",""match_id"":""50070623""}]",HKJC accumulated matchResult history,H2H_OK
-2026-09-24T20:48:05+08:00,FB5739,2026-09-26T07:00:00+08:00,50283454,50001959,Hartford Athletic,Louisville City,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5706,2026-09-26T07:28:00+08:00,50003322,50001955,Vila Nova,Londrina,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5764,2026-09-26T07:30:00+08:00,50566596,50283463,Sporting Club Jacksonville,Loudoun Utd,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5718,2026-09-26T09:00:00+08:00,50000257,50002152,Atlante,Monterrey,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5782,2026-09-26T09:00:00+08:00,50325834,50001193,El Paso Locomotive,FC Tulsa,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5707,2026-09-26T11:00:00+08:00,50003076,50000258,Tijuana,Atlas,2,1,0,1,3,2,2.50,AH,"[{""kickoff_hkt"":""2026-03-05T11:00:00+08:00"",""tournament"":""MXL"",""home"":""Atlas"",""away"":""Tijuana"",""home_goals"":2,""away_goals"":1,""current_home_goals"":1,""current_away_goals"":2,""result"":""A"",""hkjc_event_id"":""FB4863"",""match_id"":""50063228""},{""kickoff_hkt"":""2025-11-08T11:00:00+08:00"",""tournament"":""MXL"",""home"":""Tijuana"",""away"":""Atlas"",""home_goals"":2,""away_goals"":0,""current_home_goals"":2,""current_away_goals"":0,""result"":""H"",""hkjc_event_id"":""FB9197"",""match_id"":""50054801""}]",HKJC accumulated matchResult history,H2H_OK
-2026-09-24T20:48:05+08:00,FB5720,2026-09-26T14:00:00+08:00,50000761,50003063,China AM,Thailand AM,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5725,2026-09-26T16:00:00+08:00,50002148,50002695,Montedio Yamagata,Sagan Tosu,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5726,2026-09-26T16:00:00+08:00,50000474,50000127,Blaublitz Akita,Albirex Niigata,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5727,2026-09-26T16:00:00+08:00,50002324,50001318,Oita Trinita,Fujieda MYFC,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5728,2026-09-26T16:00:00+08:00,50001776,50001196,Kataller Toyama,FC Yokohama,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5729,2026-09-26T16:00:00+08:00,50001167,50002827,FC Imabari,Shonan Bellmare,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5730,2026-09-26T16:00:00+08:00,50002343,50003298,RB Omiya Ardija,Ventforet Kofu,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5741,2026-09-26T16:00:00+08:00,50319129,50001550,Tegevajaro Miyazaki,Hokkaido Consadole Sapporo,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5742,2026-09-26T16:00:00+08:00,50001732,50003268,Jubilo Iwata,Vanraure Hachinohe,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5743,2026-09-26T16:00:00+08:00,50003085,50003083,Tokushima Vortis,Tochigi City,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5744,2026-09-26T16:00:00+08:00,50267911,50003284,Iwaki FC,Vegalta Sendai,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5721,2026-09-26T18:30:00+08:00,50001685,50001803,Japan AM,Korea DPR AM,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5794,2026-09-26T20:00:00+08:00,50000705,50002611,Ceuta,Real Sociedad B,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5747,2026-09-26T21:00:00+08:00,50002862,50002769,Slovenia,Scotland,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5768,2026-09-26T22:00:00+08:00,50002985,50002449,Stockport,Peterborough,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5769,2026-09-26T22:00:00+08:00,50003385,50002585,Wycombe,Reading,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5770,2026-09-26T22:00:00+08:00,50000654,50000022,Cambridge Utd,AFC Wimbledon,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5771,2026-09-26T22:00:00+08:00,50002466,50000604,Plymouth,Burton Albion,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5772,2026-09-26T22:00:00+08:00,50002256,50001462,Newport County,Grimsby,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5773,2026-09-26T22:00:00+08:00,50001248,50002641,Fleetwood,Rochdale,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5774,2026-09-26T22:00:00+08:00,50002660,50000893,Rotherham,Crewe,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5775,2026-09-26T22:00:00+08:00,50000732,50000738,Cheltenham,Chesterfield,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5776,2026-09-26T22:00:00+08:00,50003113,50003349,Tranmere,Walsall,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5777,2026-09-26T22:00:00+08:00,50000578,50001142,Bristol Rovers,Exeter City,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5778,2026-09-26T22:00:00+08:00,50002829,50000793,Shrewsbury,Colchester,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5779,2026-09-26T22:00:00+08:00,50003017,50000049,Swindon,Accrington Stanley,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5784,2026-09-26T22:00:00+08:00,50003402,50001419,York City,Gillingham,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5795,2026-09-26T22:15:00+08:00,50000630,50001144,CF Granada,FC Andorra,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5731,2026-09-26T22:30:00+08:00,50001536,50003330,Heracles,Vitesse,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5745,2026-09-26T23:00:00+08:00,50001355,50001453,Georgia U21,Greece U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5781,2026-09-26T23:00:00+08:00,50000897,50001575,Croatia U21,Hungary U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5751,2026-09-27T00:00:00+08:00,50002719,50001242,San Marino,Finland,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5753,2026-09-27T00:00:00+08:00,50001583,50001123,Iceland,Estonia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5754,2026-09-27T00:00:00+08:00,50000593,50001972,Bulgaria,Luxembourg,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5767,2026-09-27T00:00:00+08:00,50001224,50001782,Faroe Islands,Kazakhstan,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5790,2026-09-27T00:00:00+08:00,50003187,50003144,Ukraine U21,Turkiye U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5780,2026-09-27T00:30:00+08:00,50002326,50002707,Oldham,Salford City,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5796,2026-09-27T00:30:00+08:00,50003058,50000644,Tenerife,Cadiz,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5803,2026-09-27T00:30:00+08:00,50602800,50002691,Celta Fortuna,Sabadell,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5732,2026-09-27T02:00:00+08:00,50001074,50002361,Emmen,Oss,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5733,2026-09-27T02:00:00+08:00,50001984,50001534,Maastricht,Helmond,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5734,2026-09-27T02:00:00+08:00,50003336,50003297,Volendam,Venlo,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5735,2026-09-27T02:00:00+08:00,50002644,50002561,Roda,RKC Waalwijk,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5736,2026-09-27T02:00:00+08:00,50002197,50001157,NAC,FC Eindhoven,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5748,2026-09-27T02:45:00+08:00,50001076,50002894,England,Spain,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5749,2026-09-27T02:45:00+08:00,50000917,50000895,Czechia,Croatia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5750,2026-09-27T02:45:00+08:00,50000122,50000430,Albania,Belarus,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5752,2026-09-27T02:45:00+08:00,50002287,50003019,North Macedonia,Switzerland,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5755,2026-09-27T02:45:00+08:00,50002857,50002138,Slovakia,Moldova,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5783,2026-09-27T10:00:00+08:00,50283457,50000231,Oakland Roots,Phoenix Rising,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5789,2026-09-27T10:00:00+08:00,50002348,50002461,Orange County SC,Pittsburgh Riverhounds,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5687,2026-09-27T18:00:00+08:00,50001343,50001589,Gangwon FC,Incheon Utd,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
-2026-09-24T20:48:05+08:00,FB5797,2026-09-27T20:00:00+08:00,50003261,50000837,Valladolid,Cordoba,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5737,2026-09-27T20:30:00+08:00,50000940,50000947,De Graafschap,Den Bosch,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5798,2026-09-27T22:15:00+08:00,50002016,50000156,Mallorca,Almeria,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5799,2026-09-28T00:30:00+08:00,50001060,50001872,Eibar,Las Palmas,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5800,2026-09-28T00:30:00+08:00,50000597,50267252,Burgos,CD Eldense,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5801,2026-09-28T03:00:00+08:00,50002367,50001417,Oviedo,Gijon,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5793,2026-09-28T03:58:00+08:00,50002565,50000481,Racing Club,Boca Juniors,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
-2026-09-24T20:48:05+08:00,FB5802,2026-09-29T02:30:00+08:00,50001888,50000687,Leganes,Castellon,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5661,2026-09-24T19:35:00+08:00,50000760,50002009,China,Maldives,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5691,2026-09-24T21:00:00+08:00,50002207,50000828,Namibia,Congo,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5698,2026-09-24T22:00:00+08:00,50003245,50001623,Uzbekistan,Iran,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5701,2026-09-24T23:55:00+08:00,50003206,50003395,United Arab Emirates,Yemen,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5692,2026-09-25T00:00:00+08:00,50001907,50000506,Libya,Botswana,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5693,2026-09-25T00:00:00+08:00,50002063,50000696,Mauritania,Central African Republic,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5695,2026-09-25T00:00:00+08:00,50000923,50001110,D R Congo,Equatorial Guinea,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5616,2026-09-25T02:00:00+08:00,50000439,50000432,Belgium U21,Belarus U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5699,2026-09-25T02:00:00+08:00,50002546,50000349,Qatar,Bahrain,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5592,2026-09-25T02:45:00+08:00,50001909,50001926,Liechtenstein,Lithuania,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5593,2026-09-25T02:45:00+08:00,50002502,50003347,Portugal,Wales,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5594,2026-09-25T02:45:00+08:00,50002295,50000950,Norway,Denmark,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5595,2026-09-25T02:45:00+08:00,50002798,50001451,Serbia,Greece,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5596,2026-09-25T02:45:00+08:00,50002222,50001357,Netherlands,Germany,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5597,2026-09-25T02:45:00+08:00,50001834,50002623,Kosovo,Republic of Ireland,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5598,2026-09-25T02:45:00+08:00,50000320,50001650,Austria,Israel,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5690,2026-09-25T03:00:00+08:00,50003134,50003183,Tunisia,Uganda,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5694,2026-09-25T03:00:00+08:00,50000656,50000823,Cameroon,Comoros,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5696,2026-09-25T03:00:00+08:00,50000857,50001394,Cote d'Ivoire,Ghana,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5635,2026-09-25T04:57:00+08:00,50002311,50288881,O'Higgins,Deportes Santa Cruz,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5636,2026-09-25T07:27:00+08:00,50001139,50003212,Everton VM,Universidad Chile,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5689,2026-09-25T08:00:00+08:00,50001501,50003123,Haiti,Trinidad and Tobago,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5700,2026-09-25T08:00:00+08:00,50288636,50002258,Dominican Republic,Nicaragua,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5673,2026-09-25T09:00:00+08:00,50002123,50601674,Mineros Zacatecas,Piratas FC,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5674,2026-09-25T09:00:00+08:00,50002315,50334216,Oaxaca,Atletico La Paz,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5688,2026-09-25T10:00:00+08:00,50000847,50000912,Costa Rica,Curacao,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5702,2026-09-25T13:00:00+08:00,50003246,50002755,Uzbekistan AM,Saudi Arabia AM,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5666,2026-09-25T14:00:00+08:00,50001806,50000768,Korea DPR Women,Chinese Taipei Women,1,1,0,0,4,0,4.00,H,"[{""kickoff_hkt"":""2026-03-19T17:00:00+08:00"",""tournament"":""ASCW"",""home"":""Chinese Taipei Women"",""away"":""Korea DPR Women"",""home_goals"":0,""away_goals"":4,""current_home_goals"":4,""current_away_goals"":0,""result"":""H"",""hkjc_event_id"":""FB5717"",""match_id"":""50064947""}]",HKJC accumulated matchResult history,H2H_OK
+2026-09-24T23:43:34+08:00,FB5667,2026-09-25T14:00:00+08:00,50000765,50003314,China Women,Vietnam Women,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5785,2026-09-25T17:00:00+08:00,50000361,50002005,Bangladesh,Malaysia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5719,2026-09-25T18:00:00+08:00,50000299,50000524,Australia,Brazil,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5668,2026-09-25T18:30:00+08:00,50001689,50002456,Japan Women,Philippines Women,1,1,0,0,7,0,7.00,H,"[{""kickoff_hkt"":""2026-03-15T13:00:00+08:00"",""tournament"":""ASCW"",""home"":""Japan Women"",""away"":""Philippines Women"",""home_goals"":7,""away_goals"":0,""current_home_goals"":7,""current_away_goals"":0,""result"":""H"",""hkjc_event_id"":""FB5370"",""match_id"":""50064852""}]",HKJC accumulated matchResult history,H2H_OK
+2026-09-24T23:43:34+08:00,FB5669,2026-09-25T18:30:00+08:00,50001814,50264497,Korea Republic Women,Uzbekistan Women,1,1,0,0,6,0,6.00,H,"[{""kickoff_hkt"":""2026-03-14T17:00:00+08:00"",""tournament"":""ASCW"",""home"":""Korea Republic Women"",""away"":""Uzbekistan Women"",""home_goals"":6,""away_goals"":0,""current_home_goals"":6,""current_away_goals"":0,""result"":""H"",""hkjc_event_id"":""FB5369"",""match_id"":""50064851""}]",HKJC accumulated matchResult history,H2H_OK
+2026-09-24T23:43:34+08:00,FB5703,2026-09-25T18:30:00+08:00,50001809,50003311,Korea Republic AM,Vietnam AM,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5760,2026-09-25T21:00:00+08:00,50002997,50001133,Sudan,Ethiopia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5763,2026-09-25T21:00:00+08:00,50003051,50001484,Tanzania,Guinea Bissau,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5791,2026-09-25T21:00:00+08:00,50002183,50002777,Mozambique,Senegal,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5804,2026-09-25T21:00:00+08:00,50001601,50002837,Indonesia,Singapore,1,0,1,0,1,1,2.00,D,"[{""kickoff_hkt"":""2026-08-07T21:00:00+08:00"",""tournament"":""SEC"",""home"":""Singapore"",""away"":""Indonesia"",""home_goals"":1,""away_goals"":1,""current_home_goals"":1,""current_away_goals"":1,""result"":""D"",""hkjc_event_id"":""FB2486"",""match_id"":""50072416""}]",HKJC accumulated matchResult history,H2H_OK
+2026-09-24T23:43:34+08:00,FB5766,2026-09-25T21:45:00+08:00,50000338,50000919,Azerbaijan U21,Czechia U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5787,2026-09-25T22:00:00+08:00,50001598,50002398,India,Panama,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5738,2026-09-25T23:00:00+08:00,50001584,50001272,Iceland U21,France U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5757,2026-09-25T23:00:00+08:00,50002260,50001898,Niger,Lesotho,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5740,2026-09-25T23:30:00+08:00,50000594,50002505,Bulgaria U21,Portugal U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5765,2026-09-25T23:30:00+08:00,50001243,50002897,Finland U21,Spain U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5715,2026-09-26T00:00:00+08:00,50001354,50002291,Georgia,Northern Ireland,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5716,2026-09-26T00:00:00+08:00,50000236,50001873,Armenia,Latvia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5723,2026-09-26T00:00:00+08:00,50002859,50002624,Slovakia U21,Republic of Ireland U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5746,2026-09-26T00:00:00+08:00,50002261,50001993,Nigeria,Madagascar,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5761,2026-09-26T00:00:00+08:00,50002004,50002890,Malawi,South Sudan,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5724,2026-09-26T00:30:00+08:00,50002225,50002297,Netherlands U21,Norway U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5786,2026-09-26T00:58:00+08:00,50429168,50429165,Independiente Women,Ferro Carril Oeste Women,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5756,2026-09-26T01:30:00+08:00,50003022,50001973,Switzerland U21,Luxembourg U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5708,2026-09-26T02:30:00+08:00,50001424,50000121,Girona,Albacete,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5710,2026-09-26T02:45:00+08:00,50001655,50000438,Italy,Belgium,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5711,2026-09-26T02:45:00+08:00,50002150,50000915,Montenegro,Cyprus,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5712,2026-09-26T02:45:00+08:00,50003010,50002649,Sweden,Romania,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5713,2026-09-26T02:45:00+08:00,50002470,50000498,Poland,Bosnia-Herzegovina,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5714,2026-09-26T02:45:00+08:00,50001573,50003185,Hungary,Ukraine,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5717,2026-09-26T02:45:00+08:00,50003142,50001268,Turkiye,France,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5709,2026-09-26T03:00:00+08:00,50001004,50000155,Dordrecht,Almere City,2,0,0,2,1,5,3.00,AA,"[{""kickoff_hkt"":""2026-04-18T02:00:00+08:00"",""tournament"":""DF2"",""home"":""Almere City"",""away"":""Dordrecht"",""home_goals"":4,""away_goals"":1,""current_home_goals"":1,""current_away_goals"":4,""result"":""A"",""hkjc_event_id"":""FB7624"",""match_id"":""50066963""},{""kickoff_hkt"":""2025-11-04T03:00:00+08:00"",""tournament"":""DF2"",""home"":""Dordrecht"",""away"":""Almere City"",""home_goals"":0,""away_goals"":1,""current_home_goals"":0,""current_away_goals"":1,""result"":""A"",""hkjc_event_id"":""FB8900"",""match_id"":""50056322""}]",HKJC accumulated matchResult history,H2H_OK
+2026-09-24T23:43:34+08:00,FB5758,2026-09-26T03:00:00+08:00,50001051,50000180,Egypt,Angola,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5759,2026-09-26T03:00:00+08:00,50002012,50000673,Mali,Cape Verde Islands,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5762,2026-09-26T03:00:00+08:00,50000138,50003409,Algeria,Zambia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5788,2026-09-26T03:00:00+08:00,50002168,50001326,Morocco,Gabon,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5705,2026-09-26T06:28:00+08:00,50002305,50002743,Novorizontino,Sao Bernardo,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5704,2026-09-26T06:57:00+08:00,50000796,50000291,Colo Colo,Audax Italiano,2,1,1,0,5,1,3.00,DH,"[{""kickoff_hkt"":""2026-09-23T07:27:00+08:00"",""tournament"":""CHC"",""home"":""Audax Italiano"",""away"":""Colo Colo"",""home_goals"":0,""away_goals"":0,""current_home_goals"":0,""current_away_goals"":0,""result"":""D"",""hkjc_event_id"":""FB5609"",""match_id"":""50075343""},{""kickoff_hkt"":""2026-08-31T05:27:00+08:00"",""tournament"":""CD1"",""home"":""Colo Colo"",""away"":""Audax Italiano"",""home_goals"":5,""away_goals"":1,""current_home_goals"":5,""current_away_goals"":1,""result"":""H"",""hkjc_event_id"":""FB3869"",""match_id"":""50070623""}]",HKJC accumulated matchResult history,H2H_OK
+2026-09-24T23:43:34+08:00,FB5739,2026-09-26T07:00:00+08:00,50283454,50001959,Hartford Athletic,Louisville City,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5706,2026-09-26T07:28:00+08:00,50003322,50001955,Vila Nova,Londrina,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5764,2026-09-26T07:30:00+08:00,50566596,50283463,Sporting Club Jacksonville,Loudoun Utd,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5718,2026-09-26T09:00:00+08:00,50000257,50002152,Atlante,Monterrey,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5782,2026-09-26T09:00:00+08:00,50325834,50001193,El Paso Locomotive,FC Tulsa,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5707,2026-09-26T11:00:00+08:00,50003076,50000258,Tijuana,Atlas,2,1,0,1,3,2,2.50,AH,"[{""kickoff_hkt"":""2026-03-05T11:00:00+08:00"",""tournament"":""MXL"",""home"":""Atlas"",""away"":""Tijuana"",""home_goals"":2,""away_goals"":1,""current_home_goals"":1,""current_away_goals"":2,""result"":""A"",""hkjc_event_id"":""FB4863"",""match_id"":""50063228""},{""kickoff_hkt"":""2025-11-08T11:00:00+08:00"",""tournament"":""MXL"",""home"":""Tijuana"",""away"":""Atlas"",""home_goals"":2,""away_goals"":0,""current_home_goals"":2,""current_away_goals"":0,""result"":""H"",""hkjc_event_id"":""FB9197"",""match_id"":""50054801""}]",HKJC accumulated matchResult history,H2H_OK
+2026-09-24T23:43:34+08:00,FB5720,2026-09-26T14:00:00+08:00,50000761,50003063,China AM,Thailand AM,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5725,2026-09-26T16:00:00+08:00,50002148,50002695,Montedio Yamagata,Sagan Tosu,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5726,2026-09-26T16:00:00+08:00,50000474,50000127,Blaublitz Akita,Albirex Niigata,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5727,2026-09-26T16:00:00+08:00,50002324,50001318,Oita Trinita,Fujieda MYFC,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5728,2026-09-26T16:00:00+08:00,50001776,50001196,Kataller Toyama,FC Yokohama,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5729,2026-09-26T16:00:00+08:00,50001167,50002827,FC Imabari,Shonan Bellmare,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5730,2026-09-26T16:00:00+08:00,50002343,50003298,RB Omiya Ardija,Ventforet Kofu,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5741,2026-09-26T16:00:00+08:00,50319129,50001550,Tegevajaro Miyazaki,Hokkaido Consadole Sapporo,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5742,2026-09-26T16:00:00+08:00,50001732,50003268,Jubilo Iwata,Vanraure Hachinohe,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5743,2026-09-26T16:00:00+08:00,50003085,50003083,Tokushima Vortis,Tochigi City,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5744,2026-09-26T16:00:00+08:00,50267911,50003284,Iwaki FC,Vegalta Sendai,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5721,2026-09-26T18:30:00+08:00,50001685,50001803,Japan AM,Korea DPR AM,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5794,2026-09-26T20:00:00+08:00,50000705,50002611,Ceuta,Real Sociedad B,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5747,2026-09-26T21:00:00+08:00,50002862,50002769,Slovenia,Scotland,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5768,2026-09-26T22:00:00+08:00,50002985,50002449,Stockport,Peterborough,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5769,2026-09-26T22:00:00+08:00,50003385,50002585,Wycombe,Reading,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5770,2026-09-26T22:00:00+08:00,50000654,50000022,Cambridge Utd,AFC Wimbledon,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5771,2026-09-26T22:00:00+08:00,50002466,50000604,Plymouth,Burton Albion,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5772,2026-09-26T22:00:00+08:00,50002256,50001462,Newport County,Grimsby,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5773,2026-09-26T22:00:00+08:00,50001248,50002641,Fleetwood,Rochdale,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5774,2026-09-26T22:00:00+08:00,50002660,50000893,Rotherham,Crewe,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5775,2026-09-26T22:00:00+08:00,50000732,50000738,Cheltenham,Chesterfield,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5776,2026-09-26T22:00:00+08:00,50003113,50003349,Tranmere,Walsall,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5777,2026-09-26T22:00:00+08:00,50000578,50001142,Bristol Rovers,Exeter City,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5778,2026-09-26T22:00:00+08:00,50002829,50000793,Shrewsbury,Colchester,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5779,2026-09-26T22:00:00+08:00,50003017,50000049,Swindon,Accrington Stanley,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5784,2026-09-26T22:00:00+08:00,50003402,50001419,York City,Gillingham,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5795,2026-09-26T22:15:00+08:00,50000630,50001144,CF Granada,FC Andorra,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5731,2026-09-26T22:30:00+08:00,50001536,50003330,Heracles,Vitesse,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5745,2026-09-26T23:00:00+08:00,50001355,50001453,Georgia U21,Greece U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5781,2026-09-26T23:00:00+08:00,50000897,50001575,Croatia U21,Hungary U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5751,2026-09-27T00:00:00+08:00,50002719,50001242,San Marino,Finland,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5753,2026-09-27T00:00:00+08:00,50001583,50001123,Iceland,Estonia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5754,2026-09-27T00:00:00+08:00,50000593,50001972,Bulgaria,Luxembourg,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5767,2026-09-27T00:00:00+08:00,50001224,50001782,Faroe Islands,Kazakhstan,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5790,2026-09-27T00:00:00+08:00,50003187,50003144,Ukraine U21,Turkiye U21,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5780,2026-09-27T00:30:00+08:00,50002326,50002707,Oldham,Salford City,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5796,2026-09-27T00:30:00+08:00,50003058,50000644,Tenerife,Cadiz,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5803,2026-09-27T00:30:00+08:00,50602800,50002691,Celta Fortuna,Sabadell,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5732,2026-09-27T02:00:00+08:00,50001074,50002361,Emmen,Oss,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5733,2026-09-27T02:00:00+08:00,50001984,50001534,Maastricht,Helmond,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5734,2026-09-27T02:00:00+08:00,50003336,50003297,Volendam,Venlo,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5735,2026-09-27T02:00:00+08:00,50002644,50002561,Roda,RKC Waalwijk,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5736,2026-09-27T02:00:00+08:00,50002197,50001157,NAC,FC Eindhoven,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5748,2026-09-27T02:45:00+08:00,50001076,50002894,England,Spain,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5749,2026-09-27T02:45:00+08:00,50000917,50000895,Czechia,Croatia,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5750,2026-09-27T02:45:00+08:00,50000122,50000430,Albania,Belarus,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5752,2026-09-27T02:45:00+08:00,50002287,50003019,North Macedonia,Switzerland,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5755,2026-09-27T02:45:00+08:00,50002857,50002138,Slovakia,Moldova,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5783,2026-09-27T10:00:00+08:00,50283457,50000231,Oakland Roots,Phoenix Rising,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5789,2026-09-27T10:00:00+08:00,50002348,50002461,Orange County SC,Pittsburgh Riverhounds,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5687,2026-09-27T18:00:00+08:00,50001343,50001589,Gangwon FC,Incheon Utd,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,NO_PREVIOUS_H2H_IN_AVAILABLE_HISTORY
+2026-09-24T23:43:34+08:00,FB5797,2026-09-27T20:00:00+08:00,50003261,50000837,Valladolid,Cordoba,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5737,2026-09-27T20:30:00+08:00,50000940,50000947,De Graafschap,Den Bosch,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5798,2026-09-27T22:15:00+08:00,50002016,50000156,Mallorca,Almeria,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5799,2026-09-28T00:30:00+08:00,50001060,50001872,Eibar,Las Palmas,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5800,2026-09-28T00:30:00+08:00,50000597,50267252,Burgos,CD Eldense,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5801,2026-09-28T03:00:00+08:00,50002367,50001417,Oviedo,Gijon,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5793,2026-09-28T03:58:00+08:00,50002565,50000481,Racing Club,Boca Juniors,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
+2026-09-24T23:43:34+08:00,FB5802,2026-09-29T02:30:00+08:00,50001888,50000687,Leganes,Castellon,0,0,0,0,0,0,,,[],HKJC accumulated matchResult history,HISTORY_PARTIAL
