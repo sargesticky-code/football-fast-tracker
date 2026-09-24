@@ -1,7 +1,7 @@
 """Executable Phase 3 Layer 6 Heavy Lane verification probe.
 
 Consumes a saved/current Fast Lane state JSON document and runs exactly one
-bounded HeavyService cycle.  It is intentionally a backend diagnostic: it does
+bounded HeavyService cycle. It is intentionally a backend diagnostic: it does
 not discover matches, fuzzy-match identities, poll, or write production state.
 Only HKJC-authorised VERIFIED live rows already present in the Fast state can
 reach FotMob matchDetails through HeavyCollector/HeavyLane.
@@ -17,6 +17,33 @@ from typing import Any, Mapping
 from phase3.heavy_service import HeavyService
 
 
+def _exit_evidence(result: Mapping[str, Any]) -> tuple[bool, str | None]:
+    """Return whether this cycle proves the Layer-6 real-source exit evidence.
+
+    This is deliberately strict: a zero-target cycle is useful fail-closed
+    evidence but cannot be mistaken for real-source usable coverage.
+    """
+    eligible = int(result.get("eligible_rows", 0) or 0)
+    source_requests = result.get("source_requests") or {}
+    attempted = int(source_requests.get("attempted", 0) or 0)
+    usable = int(result.get("heavy_usable_rows", 0) or 0)
+    if eligible <= 0:
+        return False, "NO_HKJC_VERIFIED_LIVE_TARGET"
+    if attempted <= 0:
+        return False, "NO_UPSTREAM_REQUEST"
+    if not bool(result.get("request_count_consistent", False)):
+        return False, "REQUEST_COUNT_MISMATCH"
+    if usable <= 0:
+        if int(result.get("detail_empty_rows", 0) or 0) > 0:
+            return False, "DETAIL_EMPTY"
+        if int(result.get("source_gap_rows", 0) or 0) > 0:
+            return False, "SOURCE_GAP"
+        if int(result.get("deferred_rows", 0) or 0) >= eligible:
+            return False, "ALL_ELIGIBLE_DEFERRED"
+        return False, "NO_USABLE_HEAVY_COVERAGE"
+    return True, None
+
+
 def run_probe(
     fast_state: Mapping[str, Any], *, now: Any = None,
     min_interval_seconds: float = 45.0,
@@ -30,8 +57,11 @@ def run_probe(
     )
     result = heavy.collect(fast_state, now=now)
     rows = result.get("heavy_rows") or []
+    exit_ready, blocker = _exit_evidence(result)
     return {
         "layer": 6,
+        "exit_evidence_ready": exit_ready,
+        "exit_evidence_blocker": blocker,
         "fast_observed_at": result.get("fast_observed_at"),
         "heavy_observed_at": result.get("heavy_observed_at"),
         "eligible_rows": result.get("eligible_rows", 0),
