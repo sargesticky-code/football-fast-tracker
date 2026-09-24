@@ -1,4 +1,5 @@
 name: Phase 3 Fast Consumer
+# Current-branch verification heartbeat
 
 on:
   push:
