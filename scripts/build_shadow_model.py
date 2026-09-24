@@ -39,7 +39,7 @@ BASE = "https://www.football-data.co.uk/mmz4281/{season}/{code}.csv"
 # External historical feeds are useful enrichment, but must never take down the
 # whole shadow-model lane. Keep each network attempt bounded and retry only
 # transient GET failures.
-TIMEOUT = (5, 15)
+TIMEOUT = (4, 8)
 RETRY_STATUS = (429, 500, 502, 503, 504)
 BRAZIL_SERIE_B_2026_URL = (
     "https://raw.githubusercontent.com/FerrerasRP/FootballData/main/"
@@ -166,11 +166,11 @@ def season_codes(now: datetime) -> list[str]:
 def build_http_session() -> requests.Session:
     session = requests.Session()
     retry = Retry(
-        total=2,
-        connect=2,
-        read=1,
-        status=2,
-        backoff_factor=0.6,
+        total=1,
+        connect=1,
+        read=0,
+        status=1,
+        backoff_factor=0.3,
         status_forcelist=RETRY_STATUS,
         allowed_methods=frozenset({"GET"}),
         raise_on_status=False,
