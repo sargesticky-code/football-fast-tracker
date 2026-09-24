@@ -251,10 +251,11 @@ def normalize_h2h(
         cag=ag if same else hg
         result="H" if chg>cag else ("A" if chg<cag else "D")
         match_url=text(row.get("matchUrl"))
-        id_match=re.search(r"/livescores/(\d+)/",match_url)
+        id_match=re.search(r"#(\d+)$",match_url) or re.search(r"/livescores/(\d+)/",match_url)
+        time_obj=row.get("time") if isinstance(row.get("time"),dict) else {}
         out.append({
             "source_event_id": int(id_match.group(1)) if id_match else None,
-            "date": text(status.get("startDateStr") or row.get("time")),
+            "date": text(time_obj.get("utcTime") or status.get("utcTime") or status.get("startDateStr") or row.get("time")),
             "tournament": text((row.get("league") or {}).get("name")) if isinstance(row.get("league"),dict) else "",
             "home": text(home.get("name")),
             "away": text(away.get("name")),
