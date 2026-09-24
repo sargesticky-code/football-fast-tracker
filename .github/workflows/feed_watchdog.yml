@@ -3,9 +3,9 @@ name: Feed Freshness Watchdog
 on:
   workflow_dispatch:
   schedule:
-    # Lightweight control-plane check every 10 minutes. Heavy recovery is
-    # dispatched only when freshness or canonical target coverage actually drifts.
-    - cron: '2,12,22,32,42,52 * * * *'
+    # Lightweight control-plane fallback every 30 minutes. Supabase health guards
+    # own the primary monitoring path; GitHub only recovers genuine drift.
+    - cron: '12,42 * * * *'
   push:
     paths:
       - '.github/workflows/feed_watchdog.yml'
