@@ -1,6 +1,6 @@
 import unittest
 
-from phase3.heavy_probe import run_probe
+from phase3.heavy_probe import _exit_evidence, run_probe
 
 
 class _FakeService:
@@ -44,6 +44,8 @@ class HeavyProbeTests(unittest.TestCase):
             service=_FakeService(),
         )
         self.assertEqual(6, evidence["layer"])
+        self.assertTrue(evidence["exit_evidence_ready"])
+        self.assertIsNone(evidence["exit_evidence_blocker"])
         self.assertEqual(2, evidence["eligible_rows"])
         self.assertEqual(1, evidence["heavy_usable_rows"])
         self.assertEqual(1, evidence["deferred_rows"])
@@ -68,9 +70,31 @@ class HeavyProbeTests(unittest.TestCase):
                     "rejected_event_ids": ["FBX", "FBY"], "heavy_rows": [],
                 }
         evidence = run_probe({"rows": []}, service=ZeroService())
+        self.assertFalse(evidence["exit_evidence_ready"])
+        self.assertEqual("NO_HKJC_VERIFIED_LIVE_TARGET", evidence["exit_evidence_blocker"])
         self.assertEqual(0, evidence["source_requests"]["attempted"])
         self.assertEqual([], evidence["observations"])
         self.assertTrue(evidence["request_count_consistent"])
+
+    def test_exit_evidence_reports_request_and_source_blockers(self):
+        base = {
+            "eligible_rows": 1,
+            "heavy_usable_rows": 0,
+            "detail_empty_rows": 0,
+            "source_gap_rows": 0,
+            "deferred_rows": 0,
+            "source_requests": {"attempted": 1},
+            "request_count_consistent": True,
+        }
+        ready, blocker = _exit_evidence({**base, "request_count_consistent": False})
+        self.assertFalse(ready)
+        self.assertEqual("REQUEST_COUNT_MISMATCH", blocker)
+        ready, blocker = _exit_evidence({**base, "detail_empty_rows": 1})
+        self.assertFalse(ready)
+        self.assertEqual("DETAIL_EMPTY", blocker)
+        ready, blocker = _exit_evidence({**base, "source_gap_rows": 1})
+        self.assertFalse(ready)
+        self.assertEqual("SOURCE_GAP", blocker)
 
 
 if __name__ == "__main__":
