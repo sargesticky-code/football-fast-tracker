@@ -72,6 +72,27 @@ class HeavyServiceTests(unittest.TestCase):
         self.assertEqual("2026-09-24T08:00:01Z", result["heavy_observed_at"])
         self.assertEqual({"home": 1.25, "away": 0.61}, result["heavy_rows"][0]["xg"])
 
+    def test_exposes_field_level_coverage_without_fabricating_missing_stats(self):
+        source = FotMobHeavySource(opener=lambda request, timeout=None: _Response(_payload()))
+        service = HeavyService(source=source, min_interval_seconds=45, max_requests_per_cycle=1)
+        result = service.collect({"rows": [_row("FB1", "101")]}, now="2026-09-24T08:00:01Z")
+
+        row = result["heavy_rows"][0]
+        self.assertEqual(6, row["heavy_usable_field_count"])
+        self.assertEqual(
+            ["xg", "shots", "shots_on_target", "possession", "corners", "momentum"],
+            row["heavy_usable_fields"],
+        )
+        self.assertEqual(1, result["heavy_field_coverage"]["xg"])
+        self.assertEqual(1, result["heavy_field_coverage"]["momentum"])
+        self.assertEqual(0, result["heavy_field_coverage"]["box_touches"])
+        self.assertEqual(0, result["heavy_field_coverage"]["big_chances"])
+        self.assertEqual(0, result["heavy_field_coverage"]["events"])
+        self.assertEqual(6, result["heavy_fields_observed"])
+        self.assertIsNone(row["box_touches"])
+        self.assertIsNone(row["big_chances"])
+        self.assertIsNone(row["events"])
+
     def test_non_verified_or_non_live_rows_make_zero_source_requests(self):
         calls = []
         source = FotMobHeavySource(opener=lambda *args, **kwargs: calls.append(args))
@@ -84,6 +105,7 @@ class HeavyServiceTests(unittest.TestCase):
         self.assertEqual(0, result["source_requests"]["attempted"])
         self.assertEqual(0, result["heavy_usable_rows"])
         self.assertTrue(result["request_count_consistent"])
+        self.assertEqual(0, result["heavy_fields_observed"])
 
     def test_cadence_guard_prevents_second_http_request_inside_45_seconds(self):
         calls = []
