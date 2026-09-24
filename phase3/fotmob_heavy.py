@@ -66,24 +66,35 @@ def _stats_root(payload: dict[str, Any]) -> Any:
 
 
 def _walk_stats(node: Any):
-    """Yield title/key -> value pairs from both known FotMob stats shapes.
+    """Yield every observed stat label -> value pair from known FotMob shapes.
 
-    Live matchDetails commonly nests stats at content.stats.Periods.All and can
-    represent All either as {stats:[...]} or a list of titled groups.  Recursing
-    here makes the adapter tolerant to those presentation wrappers without
-    guessing any values.
+    FotMob presentation objects may carry both a machine ``key`` and a human
+    ``title``.  They are not guaranteed to be identical (and historic payloads
+    contain spelling/casing differences), so preserve both labels whenever the
+    object itself contains an observed home/away pair.  This avoids coupling
+    Layer 6 coverage to an unstable presentation key while still never guessing
+    a value.
     """
     if isinstance(node, dict):
-        title = node.get("key") or node.get("title") or node.get("name")
-        if title:
-            if "stats" in node:
-                yield str(title), node.get("stats")
-            elif any(k in node for k in ("home", "away", "homeValue", "awayValue")):
-                yield str(title), node
+        labels = []
+        for label_key in ("key", "title", "name"):
+            label = node.get(label_key)
+            if label is not None and str(label) not in labels:
+                labels.append(str(label))
+
+        observed = None
+        if "stats" in node:
+            observed = node.get("stats")
+        elif any(k in node for k in ("home", "away", "homeValue", "awayValue")):
+            observed = node
+        if _pair(observed) is not None:
+            for label in labels:
+                yield label, observed
+
         for key, value in node.items():
             if key not in {"key", "title", "name"}:
                 # Flat FotMob payloads can expose the metric name as the dict key,
-                # with the observed home/away pair in the value.  Preserve that
+                # with the observed home/away pair in the value. Preserve that
                 # parent key before descending into presentation wrappers.
                 if isinstance(value, (dict, list, tuple)):
                     if _pair(value) is not None:
