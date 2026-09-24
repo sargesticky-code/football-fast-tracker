@@ -7,11 +7,13 @@ on:
       - 'phase3/heavy_lane.py'
       - 'phase3/heavy_collector.py'
       - 'phase3/heavy_service.py'
+      - 'phase3/heavy_probe.py'
       - 'phase3/fotmob_heavy.py'
       - 'phase3/fotmob_heavy_source.py'
       - 'tests/test_phase3_heavy_lane.py'
       - 'tests/test_phase3_heavy_collector.py'
       - 'tests/test_phase3_heavy_service.py'
+      - 'tests/test_phase3_heavy_probe.py'
       - 'tests/test_phase3_fotmob_heavy.py'
       - 'tests/test_phase3_fotmob_heavy_source.py'
       - '.github/workflows/phase3_heavy_lane.yml'
@@ -32,5 +34,6 @@ jobs:
             tests.test_phase3_heavy_lane \
             tests.test_phase3_heavy_collector \
             tests.test_phase3_heavy_service \
+            tests.test_phase3_heavy_probe \
             tests.test_phase3_fotmob_heavy \
             tests.test_phase3_fotmob_heavy_source
