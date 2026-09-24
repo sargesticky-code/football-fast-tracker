@@ -67,6 +67,15 @@ class FotMobHeavyTests(unittest.TestCase):
         self.assertEqual(row["xg"], {"home": 0.91, "away": 1.27})
         self.assertEqual(row["possession"], {"home": 48, "away": 52})
 
+    def test_human_title_survives_unstable_machine_key(self):
+        payload = {"content": {"stats": {"Periods": {"All": {"stats": [
+            {"key": "BallPossesion", "title": "Ball possession", "stats": ["57%", "43%"]},
+            {"key": "TouchesOppBoxV2", "title": "Touches in opposition box", "stats": [22, 9]},
+        ]}}}}}
+        row = normalize_fotmob_heavy(payload)
+        self.assertEqual(row["possession"], {"home": 57, "away": 43})
+        self.assertEqual(row["box_touches"], {"home": 22, "away": 9})
+
     def test_missing_detail_is_not_fabricated(self):
         row = normalize_fotmob_heavy({"stats": {}})
         self.assertTrue(all(value is None for value in row.values()))
