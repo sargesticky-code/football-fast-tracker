@@ -1,0 +1,37 @@
+create table if not exists public.match_scenario_current (
+    hkjc_event_id text not null references public.matches(hkjc_event_id) on delete cascade,
+    segment text not null,
+    fetched_at_hkt timestamptz,
+    kickoff_hkt timestamptz,
+    league text,
+    home text,
+    away text,
+    model_hda_consensus text,
+    forebet_hda text,
+    dc_hda text,
+    pi_hda text,
+    forebet_ou25 text,
+    forebet_corner text,
+    macro_control_side text,
+    control_basis text,
+    home_possession_baseline numeric,
+    away_possession_baseline numeric,
+    home_manager text,
+    away_manager text,
+    home_lineup_status text,
+    context_coverage_score numeric,
+    p_home_goal_segment numeric,
+    p_away_goal_segment numeric,
+    p_no_goal_segment numeric,
+    expected_home_corners_segment numeric,
+    expected_away_corners_segment numeric,
+    expected_score_state text,
+    segment_prediction_status text,
+    notes text,
+    raw jsonb not null default '{}'::jsonb,
+    updated_at timestamptz not null default now(),
+    primary key (hkjc_event_id, segment)
+  );
+  alter table public.match_scenario_current enable row level security;
+  create index if not exists idx_match_scenario_current_kickoff on public.match_scenario_current(kickoff_hkt);
+  create index if not exists idx_match_scenario_current_control on public.match_scenario_current(macro_control_side,segment);

@@ -1,0 +1,141 @@
+
+alter table public.forebet_availability
+  add column if not exists source_home_team text,
+  add column if not exists source_away_team text,
+  add column if not exists source_competition text,
+  add column if not exists fixture_match_score numeric,
+  add column if not exists identity_status text,
+  add column if not exists identity_source text;
+
+create or replace function public.ft_learn_forebet_availability_identity()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog, public, pg_temp
+as $$
+declare
+  v_home_key text;
+  v_away_key text;
+  v_home_zh text;
+  v_away_zh text;
+  v_score numeric;
+  v_comp_key text;
+  v_source_comp text;
+begin
+  if coalesce(new.identity_status,'') <> 'VERIFIED'
+     or nullif(trim(new.source_home_team),'') is null
+     or nullif(trim(new.source_away_team),'') is null
+     or nullif(trim(new.home_en),'') is null
+     or nullif(trim(new.away_en),'') is null
+     or nullif(trim(new.league_zh),'') is null then
+    return new;
+  end if;
+
+  v_score := coalesce(new.fixture_match_score,0);
+  if v_score < 0.94 then
+    return new;
+  end if;
+
+  select team_key,hkjc_name_zh
+    into v_home_key,v_home_zh
+  from public.team_entities_v2
+  where hkjc_name_en=new.home_en
+  order by case when status='ACTIVE' then 0 else 1 end, updated_at desc
+  limit 1;
+
+  select team_key,hkjc_name_zh
+    into v_away_key,v_away_zh
+  from public.team_entities_v2
+  where hkjc_name_en=new.away_en
+  order by case when status='ACTIVE' then 0 else 1 end, updated_at desc
+  limit 1;
+
+  if v_home_key is null or v_away_key is null then
+    return new;
+  end if;
+
+  insert into public.team_name_master(
+    source,source_name,source_key,team_key,hkjc_name_en,hkjc_name_zh,
+    status,confidence,event_count,first_seen_at,last_seen_at,evidence_sources,updated_at
+  )
+  values
+    ('FOREBET',new.source_home_team,public.ft_team_name_key(new.source_home_team),
+     v_home_key,new.home_en,v_home_zh,'VERIFIED',v_score,1,
+     coalesce(new.checked_at,now()),coalesce(new.checked_at,now()),
+     '["FOREBET_LIVESCORE_IDENTITY"]'::jsonb,now()),
+    ('FOREBET',new.source_away_team,public.ft_team_name_key(new.source_away_team),
+     v_away_key,new.away_en,v_away_zh,'VERIFIED',v_score,1,
+     coalesce(new.checked_at,now()),coalesce(new.checked_at,now()),
+     '["FOREBET_LIVESCORE_IDENTITY"]'::jsonb,now())
+  on conflict (source,source_key,team_key) do update
+  set source_name=excluded.source_name,
+      hkjc_name_en=excluded.hkjc_name_en,
+      hkjc_name_zh=excluded.hkjc_name_zh,
+      status='VERIFIED',
+      confidence=greatest(public.team_name_master.confidence,excluded.confidence),
+      event_count=greatest(public.team_name_master.event_count,excluded.event_count),
+      first_seen_at=least(public.team_name_master.first_seen_at,excluded.first_seen_at),
+      last_seen_at=greatest(public.team_name_master.last_seen_at,excluded.last_seen_at),
+      evidence_sources=(
+        select coalesce(jsonb_agg(distinct x),'[]'::jsonb)
+        from jsonb_array_elements(
+          coalesce(public.team_name_master.evidence_sources,'[]'::jsonb)
+          || excluded.evidence_sources
+        ) x
+      ),
+      updated_at=now();
+
+  v_source_comp := coalesce(new.source_competition,'');
+  v_comp_key := coalesce(public.ft_team_name_key(v_source_comp),'');
+
+  insert into public.team_name_context_master(
+    source,source_name,source_key,source_competition,competition_key,
+    canonical_tournament,team_key,hkjc_name_en,hkjc_name_zh,
+    status,confidence,event_count,first_seen_at,last_seen_at,evidence_sources,updated_at
+  )
+  values
+    ('FOREBET',new.source_home_team,public.ft_team_name_key(new.source_home_team),
+     v_source_comp,v_comp_key,new.league_zh,v_home_key,new.home_en,v_home_zh,
+     'VERIFIED',v_score,1,coalesce(new.checked_at,now()),coalesce(new.checked_at,now()),
+     '["FOREBET_LIVESCORE_IDENTITY"]'::jsonb,now()),
+    ('FOREBET',new.source_away_team,public.ft_team_name_key(new.source_away_team),
+     v_source_comp,v_comp_key,new.league_zh,v_away_key,new.away_en,v_away_zh,
+     'VERIFIED',v_score,1,coalesce(new.checked_at,now()),coalesce(new.checked_at,now()),
+     '["FOREBET_LIVESCORE_IDENTITY"]'::jsonb,now())
+  on conflict (source,source_key,competition_key,canonical_tournament,team_key) do update
+  set source_name=excluded.source_name,
+      source_competition=excluded.source_competition,
+      hkjc_name_en=excluded.hkjc_name_en,
+      hkjc_name_zh=excluded.hkjc_name_zh,
+      status='VERIFIED',
+      confidence=greatest(public.team_name_context_master.confidence,excluded.confidence),
+      event_count=greatest(public.team_name_context_master.event_count,excluded.event_count),
+      first_seen_at=least(public.team_name_context_master.first_seen_at,excluded.first_seen_at),
+      last_seen_at=greatest(public.team_name_context_master.last_seen_at,excluded.last_seen_at),
+      evidence_sources=(
+        select coalesce(jsonb_agg(distinct x),'[]'::jsonb)
+        from jsonb_array_elements(
+          coalesce(public.team_name_context_master.evidence_sources,'[]'::jsonb)
+          || excluded.evidence_sources
+        ) x
+      ),
+      updated_at=now();
+
+  return new;
+end
+$$;
+
+drop trigger if exists trg_forebet_availability_identity_learn
+  on public.forebet_availability;
+
+create trigger trg_forebet_availability_identity_learn
+after insert or update of
+  source_home_team,source_away_team,source_competition,
+  fixture_match_score,identity_status,identity_source
+on public.forebet_availability
+for each row
+execute function public.ft_learn_forebet_availability_identity();
+
+revoke all on function public.ft_learn_forebet_availability_identity() from public;
+revoke all on function public.ft_learn_forebet_availability_identity() from anon;
+revoke all on function public.ft_learn_forebet_availability_identity() from authenticated;

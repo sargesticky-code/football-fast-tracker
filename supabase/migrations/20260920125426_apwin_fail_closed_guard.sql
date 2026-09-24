@@ -1,0 +1,1 @@
+alter table public.prediction_fallback_current add constraint prediction_fallback_apwin_fail_closed check (source <> 'APWIN' or status <> 'OK' or (match_score >= 0.75 and recommendation is not null and btrim(recommendation) <> '')) not valid; alter table public.prediction_fallback_current validate constraint prediction_fallback_apwin_fail_closed;
