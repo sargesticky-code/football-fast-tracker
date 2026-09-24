@@ -82,25 +82,34 @@ class HeavyLane:
             try:
                 payload = self.fetch_detail(target) or {}
                 stats = {field: payload.get(field) for field in HEAVY_FIELDS}
-                usable = any(value is not None for value in stats.values())
+                usable_fields = [field for field, value in stats.items() if value is not None]
+                usable = bool(usable_fields)
                 rows.append({
                     "hkjc_event_id": target.hkjc_event_id,
                     "external_source": target.external_source,
                     "external_id": target.external_id,
                     "heavy_observed_at": observed.isoformat().replace("+00:00", "Z"),
                     "heavy_status": "USABLE" if usable else "DETAIL_EMPTY",
+                    "heavy_usable_fields": usable_fields,
+                    "heavy_usable_field_count": len(usable_fields),
                     **stats,
                 })
             except Exception as exc:  # source failure is diagnostic, never fabricated data
                 failures.append({"hkjc_event_id": target.hkjc_event_id, "error": type(exc).__name__})
         if eligible:
             self._cursor = (self._cursor + attempted) % len(eligible)
+        field_coverage = {
+            field: sum(row.get(field) is not None for row in rows)
+            for field in HEAVY_FIELDS
+        }
         return {
             "heavy_observed_at": observed.isoformat().replace("+00:00", "Z"),
             "heavy_rows": rows,
             "heavy_usable_rows": sum(r["heavy_status"] == "USABLE" for r in rows),
             "detail_empty_rows": sum(r["heavy_status"] == "DETAIL_EMPTY" for r in rows),
             "source_gap_rows": len(failures),
+            "heavy_field_coverage": field_coverage,
+            "heavy_fields_observed": sum(count > 0 for count in field_coverage.values()),
             "request_failures": failures,
             "requests_used": attempted,
             "request_budget": self.max_requests_per_cycle,
