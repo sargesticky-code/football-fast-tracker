@@ -1,0 +1,83 @@
+name: SofaScore H2H Enrichment
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '55 22 * * *' # 06:55 Hong Kong time
+    - cron: '55 10 * * *' # 18:55 Hong Kong time
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/sofascore_h2h.py'
+      - 'scripts/sofascore_h2h_worker.py'
+      - '.github/workflows/sofascore_h2h.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sofascore-h2h-enrichment
+  cancel-in-progress: true
+
+jobs:
+  enrich:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout current state
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build bounded SofaScore H2H enrichment
+        env:
+          SOFASCORE_H2H_MAX_EVENTS: '30'
+        run: python scripts/sofascore_h2h_worker.py
+
+      - name: Validate enrichment artifact
+        run: |
+          python - <<'PY'
+          import csv
+          from collections import Counter
+          from pathlib import Path
+          p=Path('data/sofascore_h2h_current.csv')
+          if not p.exists():
+              raise SystemExit('missing SofaScore H2H artifact')
+          with p.open(encoding='utf-8-sig', newline='') as fh:
+              rows=list(csv.DictReader(fh))
+          if not rows:
+              raise SystemExit('empty SofaScore H2H artifact')
+          counts=Counter(r.get('quality') or 'UNKNOWN' for r in rows)
+          mapped=sum((r.get('mapping_status') or '') == 'VERIFIED' for r in rows)
+          print(f'SOFASCORE_H2H_VALID rows={len(rows)} mapped={mapped} quality={dict(counts)}')
+          PY
+
+      - name: Commit changed SofaScore H2H state
+        run: |
+          git config user.name 'fast-tracker-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/sofascore_h2h_current.csv
+          if git diff --cached --quiet; then
+            echo 'No SofaScore H2H changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh SofaScore H2H enrichment [skip ci]'
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo 'SofaScore H2H publish failed after retries.' >&2
+              exit 1
+            fi
+            sleep 2
+          done
