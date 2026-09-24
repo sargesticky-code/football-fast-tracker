@@ -1,10 +1,8 @@
-name: HKJC Live Odds 5min
-# Production heartbeat. Successful runs fan into Supabase Static Data Push, refreshing live odds, scores and full team-stat snapshots.
+name: HKJC Live Odds Fallback
+# Manual/code-change fallback only. Production live capture is owned by Supabase direct cron jobs.
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/5 * * * *'
   push:
     paths:
       - 'scripts/capture_hkjc_live_odds.py'
