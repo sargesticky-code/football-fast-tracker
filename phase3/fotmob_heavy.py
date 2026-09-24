@@ -82,7 +82,13 @@ def _walk_stats(node: Any):
                 yield str(title), node
         for key, value in node.items():
             if key not in {"key", "title", "name"}:
-                if not isinstance(value, (dict, list, tuple)):
+                # Flat FotMob payloads can expose the metric name as the dict key,
+                # with the observed home/away pair in the value.  Preserve that
+                # parent key before descending into presentation wrappers.
+                if isinstance(value, (dict, list, tuple)):
+                    if _pair(value) is not None:
+                        yield str(key), value
+                else:
                     yield str(key), value
                 yield from _walk_stats(value)
     elif isinstance(node, (list, tuple)):
