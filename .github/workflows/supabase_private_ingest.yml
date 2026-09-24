@@ -1,27 +1,17 @@
 name: Supabase Static Data Push
 
+# Static/control-plane reconciliation only.
+# Live capture is owned by Supabase cron + Edge Functions.
+# Upstream workflow completions no longer fan out into extra ingest runs.
+
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '7,37 * * * *'
   push:
     branches: [main]
     paths:
-      - 'data/**'
       - '.github/workflows/supabase_private_ingest.yml'
-  schedule:
-    - cron: '7,37 * * * *' # static artifact reconciliation only; no source scraping
-  workflow_run:
-    workflows:
-      - "HKJC Live Market Feed"
-      - "HKJC Live Odds 5min"
-      - "Forebet Daily Feed"
-      - "Football Shadow Models"
-      - "Odds Movement Snapshot"
-      - "Prediction fallback refresh"
-      - "Bet365 HKJC Benchmark"
-      - "Forebet supplement refresh"
-      - "Prediction Archive and Evaluation"
-      - "Match Scenario Features"
-    types: [completed]
 
 permissions:
   contents: read
@@ -33,7 +23,6 @@ concurrency:
 
 jobs:
   push-current-artifacts:
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -48,72 +37,82 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          response="$(curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 --connect-timeout 10 --max-time 120 \
+          response="$(curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 --connect-timeout 10 --max-time 60 \
             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=fast-tracker-supabase")"
           token="$(python -c 'import json,sys; print(json.load(sys.stdin)["value"])' <<<"$response")"
           echo "::add-mask::$token"
           echo "token=$token" >> "$GITHUB_OUTPUT"
 
-      - name: Push current artifacts to Supabase private storage
+      - name: Build one static ingest batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          names = [
+              "hkjc_current.csv",
+              "forebet_current.csv",
+              "model_current.csv",
+              "team_alias_registry.csv",
+              "form_current.csv",
+              "odds_movement.csv",
+              "prediction_fallback_current.csv",
+              "bet365_current.csv",
+              "forebet_supplement_current.csv",
+              "forebet_availability.csv",
+              "forebet_archive.csv",
+              "evaluation_summary.csv",
+              "hkjc_live_odds.csv",
+              "hkjc_power_current.csv",
+              "team_form_summary.csv",
+              "match_scenario_current.csv",
+          ]
+
+          files = []
+          for name in names:
+              p = Path("data") / name
+              if not p.exists():
+                  continue
+              files.append({
+                  "path": f"data/{name}",
+                  "content": p.read_text(encoding="utf-8-sig"),
+              })
+
+          Path("/tmp/fast-tracker-ingest-batch.json").write_text(
+              json.dumps({"files": files}, ensure_ascii=False),
+              encoding="utf-8",
+          )
+          print(f"BATCH files={len(files)} bytes={Path('/tmp/fast-tracker-ingest-batch.json').stat().st_size}")
+          PY
+
+      - name: Push static batch to Supabase private storage
+        id: ingest
         env:
           OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
         shell: bash
         run: |
           set -euo pipefail
-          files=(
-            data/hkjc_current.csv
-            data/forebet_current.csv
-            data/model_current.csv
-            data/team_alias_registry.csv
-            data/form_current.csv
-            data/odds_movement.csv
-            data/prediction_fallback_current.csv
-            data/bet365_current.csv
-            data/forebet_supplement_current.csv
-            data/forebet_availability.csv
-            data/forebet_archive.csv
-            data/evaluation_summary.csv
-            data/hkjc_live_odds.csv
-            data/hkjc_power_current.csv
-            data/team_form_summary.csv
-            data/match_scenario_current.csv
-          )
+          curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 --connect-timeout 10 --max-time 120 \
+            -X POST \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data-binary @/tmp/fast-tracker-ingest-batch.json \
+            "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/github-data-ingest" \
+            -o /tmp/fast-tracker-ingest-response.json
 
-          for file in "${files[@]}"; do
-            if [ ! -f "$file" ]; then
-              echo "SKIP missing $file"
-              continue
-            fi
-
-            FILE="$file" python - <<'PY'
-          import json, os
-          from pathlib import Path
-          path = os.environ["FILE"]
-          content = Path(path).read_text(encoding="utf-8-sig")
-          Path("/tmp/fast-tracker-ingest.json").write_text(
-              json.dumps({"path": path, "content": content}),
-              encoding="utf-8",
-          )
+          cat /tmp/fast-tracker-ingest-response.json
+          changed="$(python - <<'PY'
+          import json
+          print(int(json.load(open("/tmp/fast-tracker-ingest-response.json", encoding="utf-8")).get("changed", 0)))
           PY
+          )"
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
 
-            echo "PUSH $file"
-            if ! curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 --connect-timeout 10 --max-time 120 \
-              -X POST \
-              -H "Authorization: Bearer $OIDC_TOKEN" \
-              -H "Content-Type: application/json" \
-              --data-binary @/tmp/fast-tracker-ingest.json \
-              "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/github-data-ingest"; then
-              if [ "$file" = "data/match_scenario_current.csv" ]; then
-                echo "::warning::Optional scenario ingest failed; continuing canonical refresh"
-                continue
-              fi
-              exit 1
-            fi
-            echo
-          done
-
-      - name: Refresh Supabase canonical core once
+      - name: Refresh canonical core only when static inputs changed
+        if: steps.ingest.outputs.changed != '0'
         env:
           OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
         shell: bash
@@ -126,5 +125,3 @@ jobs:
             --data '{"mode":"current"}' \
             "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/sync-fast-tracker"
           echo
-      # Live odds/scores are refreshed by the dedicated Supabase live cron jobs.
-      # Do not call sync-fast-tracker with mode=live: that mode is intentionally disabled.
