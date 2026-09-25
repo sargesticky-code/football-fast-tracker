@@ -1,116 +1,111 @@
 ﻿fetched_at_hkt,hkjc_event_id,home,away,model_league,model_home_name,model_away_name,dc_prob_home,dc_prob_draw,dc_prob_away,dc_xg_home,dc_xg_away,dc_prob_over25,pi_prob_home,pi_prob_draw,pi_prob_away,pi_home_rating,pi_away_rating,pi_diff,training_matches,team_match_quality,quality,model_source
-2026-09-25T09:39:23+08:00,FB5666,Korea DPR Women,Chinese Taipei Women,HKJC connected history (AWF),Korea DPR Women,Chinese Taipei Women,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5667,China Women,Vietnam Women,HKJC connected history (AWF),China Women,Vietnam Women,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5668,Japan Women,Philippines Women,HKJC connected history (AWF),Japan Women,Philippines Women,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5669,Korea Republic Women,Uzbekistan Women,HKJC connected history (AWF),Korea Republic Women,Uzbekistan Women,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5673,Mineros Zacatecas,Piratas FC,HKJC connected history (MD1),Mineros Zacatecas,Piratas FC,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5674,Oaxaca,Atletico La Paz,HKJC MD1,Oaxaca,Atletico La Paz,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5687,Gangwon FC,Incheon Utd,HKJC KD1,Gangwon FC,Incheon Utd,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5688,Costa Rica,Curacao,HKJC CNL,Costa Rica,Curacao,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5689,Haiti,Trinidad and Tobago,HKJC CNL,Haiti,Trinidad and Tobago,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5702,Uzbekistan AM,Saudi Arabia AM,HKJC connected history (AMF),Uzbekistan AM,Saudi Arabia AM,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5703,Korea Republic AM,Vietnam AM,HKJC connected history (AMF),Korea Republic AM,Vietnam AM,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5704,Colo Colo,Audax Italiano,HKJC connected history (CHC),Colo Colo,Audax Italiano,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5705,Novorizontino,Sao Bernardo,HKJC connected history (BD2),Novorizontino,Sao Bernardo,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5706,Vila Nova,Londrina,HKJC connected history (BD2),Vila Nova,Londrina,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5707,Tijuana,Atlas,Mexico top flight,Club Tijuana,Atlas,0.582461,0.242299,0.175240,1.83309,0.91156,0.517237,0.601508,0.294161,0.104331,0.33682,-0.14150,0.47832,468,1.000,MODELED,football-data.co.uk extra / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5708,Girona,Albacete,HKJC connected history (SF2),Girona,Albacete,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5709,Dordrecht,Almere City,HKJC connected history (DF2),Dordrecht,Almere City,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5710,Italy,Belgium,HKJC ENL,Italy,Belgium,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5711,Montenegro,Cyprus,HKJC ENL,Montenegro,Cyprus,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5712,Sweden,Romania,HKJC ENL,Sweden,Romania,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5713,Poland,Bosnia-Herzegovina,HKJC ENL,Poland,Bosnia-Herzegovina,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5714,Hungary,Ukraine,HKJC ENL,Hungary,Ukraine,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5715,Georgia,Northern Ireland,HKJC ENL,Georgia,Northern Ireland,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5716,Armenia,Latvia,HKJC ENL,Armenia,Latvia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5717,Turkiye,France,HKJC ENL,Turkiye,France,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5718,Atlante,Monterrey,HKJC connected history (MXL),Atlante,Monterrey,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5719,Australia,Brazil,HKJC INT,Australia,Brazil,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5720,China AM,Thailand AM,HKJC connected history (AMF),China AM,Thailand AM,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5721,Japan AM,Korea DPR AM,HKJC connected history (AMF),Japan AM,Korea DPR AM,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5723,Slovakia U21,Republic of Ireland U21,HKJC E2Q,Slovakia U21,Republic of Ireland U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5724,Netherlands U21,Norway U21,HKJC E2Q,Netherlands U21,Norway U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5725,Montedio Yamagata,Sagan Tosu,HKJC connected history (JD2),Montedio Yamagata,Sagan Tosu,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5726,Blaublitz Akita,Albirex Niigata,HKJC connected history (JD2),Blaublitz Akita,Albirex Niigata,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5727,Oita Trinita,Fujieda MYFC,HKJC connected history (JD2),Oita Trinita,Fujieda MYFC,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5728,Kataller Toyama,FC Yokohama,HKJC connected history (JD2),Kataller Toyama,FC Yokohama,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5729,FC Imabari,Shonan Bellmare,HKJC connected history (JD2),FC Imabari,Shonan Bellmare,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5730,RB Omiya Ardija,Ventforet Kofu,HKJC connected history (JD2),RB Omiya Ardija,Ventforet Kofu,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5731,Heracles,Vitesse,HKJC connected history (DF2),Heracles,Vitesse,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5732,Emmen,Oss,HKJC connected history (DF2),Emmen,Oss,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5733,Maastricht,Helmond,HKJC connected history (DF2),Maastricht,Helmond,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5734,Volendam,Venlo,HKJC connected history (DF2),Volendam,Venlo,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5735,Roda,RKC Waalwijk,HKJC connected history (DF2),Roda,RKC Waalwijk,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5736,NAC,FC Eindhoven,HKJC connected history (DF2),NAC,FC Eindhoven,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5737,De Graafschap,Den Bosch,HKJC connected history (DF2),De Graafschap,Den Bosch,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5738,Iceland U21,France U21,HKJC E2Q,Iceland U21,France U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5739,Hartford Athletic,Louisville City,HKJC connected history (USL),Hartford Athletic,Louisville City,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5740,Bulgaria U21,Portugal U21,HKJC E2Q,Bulgaria U21,Portugal U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5741,Tegevajaro Miyazaki,Hokkaido Consadole Sapporo,HKJC connected history (JD2),Tegevajaro Miyazaki,Hokkaido Consadole Sapporo,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5742,Jubilo Iwata,Vanraure Hachinohe,HKJC connected history (JD2),Jubilo Iwata,Vanraure Hachinohe,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5743,Tokushima Vortis,Tochigi City,HKJC connected history (JD2),Tokushima Vortis,Tochigi City,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5744,Iwaki FC,Vegalta Sendai,HKJC connected history (JD2),Iwaki FC,Vegalta Sendai,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5745,Georgia U21,Greece U21,HKJC E2Q,Georgia U21,Greece U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5746,Nigeria,Madagascar,HKJC ANQ,Nigeria,Madagascar,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5747,Slovenia,Scotland,HKJC ENL,Slovenia,Scotland,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5748,England,Spain,HKJC ENL,England,Spain,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5749,Czechia,Croatia,HKJC ENL,Czechia,Croatia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5750,Albania,Belarus,HKJC ENL,Albania,Belarus,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5751,San Marino,Finland,HKJC ENL,San Marino,Finland,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5752,North Macedonia,Switzerland,HKJC ENL,North Macedonia,Switzerland,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5753,Iceland,Estonia,HKJC ENL,Iceland,Estonia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5754,Bulgaria,Luxembourg,HKJC ENL,Bulgaria,Luxembourg,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5755,Slovakia,Moldova,HKJC ENL,Slovakia,Moldova,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5756,Switzerland U21,Luxembourg U21,HKJC E2Q,Switzerland U21,Luxembourg U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5757,Niger,Lesotho,HKJC ANQ,Niger,Lesotho,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5758,Egypt,Angola,HKJC ANQ,Egypt,Angola,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5759,Mali,Cape Verde Islands,HKJC ANQ,Mali,Cape Verde Islands,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5760,Sudan,Ethiopia,HKJC ANQ,Sudan,Ethiopia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5761,Malawi,South Sudan,HKJC ANQ,Malawi,South Sudan,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5762,Algeria,Zambia,HKJC ANQ,Algeria,Zambia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5763,Tanzania,Guinea Bissau,HKJC ANQ,Tanzania,Guinea Bissau,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5764,Sporting Club Jacksonville,Loudoun Utd,HKJC connected history (USL),Sporting Club Jacksonville,Loudoun Utd,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5765,Finland U21,Spain U21,HKJC E2Q,Finland U21,Spain U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5766,Azerbaijan U21,Czechia U21,HKJC E2Q,Azerbaijan U21,Czechia U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5767,Faroe Islands,Kazakhstan,HKJC ENL,Faroe Islands,Kazakhstan,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5768,Stockport,Peterborough,ENG League One,Stockport,Peterboro,0.626650,0.195412,0.177939,2.21212,1.09653,0.642271,0.763442,0.193607,0.042951,0.40900,-0.59316,1.00216,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5769,Wycombe,Reading,ENG League One,Wycombe,Reading,0.428711,0.240732,0.330556,1.61076,1.38722,0.576354,0.413433,0.369247,0.217320,0.10701,0.09121,0.01580,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5770,Cambridge Utd,AFC Wimbledon,HKJC connected history (ED2),Cambridge Utd,AFC Wimbledon,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5771,Plymouth,Burton Albion,ENG League One,Plymouth,Burton,0.553005,0.223253,0.223742,1.88751,1.12065,0.578625,0.578497,0.306054,0.115449,0.52401,-0.12625,0.65026,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5772,Newport County,Grimsby,ENG League Two,Newport County,Grimsby,0.205519,0.226695,0.567786,1.01375,1.84198,0.543711,0.096801,0.285289,0.617909,-0.41799,0.56252,-0.98051,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5773,Fleetwood,Rochdale,HKJC connected history (ED3),Fleetwood,Rochdale,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5774,Rotherham,Crewe,HKJC connected history (ED3),Rotherham,Crewe,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5775,Cheltenham,Chesterfield,ENG League Two,Cheltenham,Chesterfield,0.286943,0.232386,0.480671,1.32197,1.77207,0.597539,0.196203,0.361338,0.442458,-0.01061,0.45180,-0.46241,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5776,Tranmere,Walsall,ENG League Two,Tranmere,Walsall,0.330849,0.264662,0.404490,1.20667,1.36320,0.473980,0.141736,0.329345,0.528919,-0.39861,0.04924,-0.44785,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5777,Bristol Rovers,Exeter City,HKJC connected history (ED3),Bristol Rovers,Exeter City,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5778,Shrewsbury,Colchester,ENG League Two,Shrewsbury,Colchester,0.243311,0.283202,0.473487,0.85674,1.31613,0.370002,0.285436,0.382141,0.332423,-0.46759,-0.03693,-0.43066,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5779,Swindon,Accrington Stanley,ENG League Two,Swindon,Accrington,0.550024,0.233886,0.216090,1.76609,1.01494,0.526004,0.569353,0.310595,0.120052,-0.04711,-0.43687,0.38976,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5780,Oldham,Salford City,ENG League Two,Oldham,Salford,0.422034,0.287283,0.290683,1.23530,0.97312,0.379542,0.376743,0.376886,0.246371,0.12375,0.23580,-0.11205,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5781,Croatia U21,Hungary U21,HKJC E2Q,Croatia U21,Hungary U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5782,El Paso Locomotive,FC Tulsa,HKJC connected history (USL),El Paso Locomotive,FC Tulsa,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5783,Oakland Roots,Phoenix Rising,HKJC connected history (USL),Oakland Roots,Phoenix Rising,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5784,York City,Gillingham,HKJC connected history (ED3),York City,Gillingham,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5785,Bangladesh,Malaysia,HKJC connected history (AEC),Bangladesh,Malaysia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5786,Independiente Women,Ferro Carril Oeste Women,HKJC connected history (APLW),Independiente Women,Ferro Carril Oeste Women,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5787,India,Panama,HKJC INT,India,Panama,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5788,Morocco,Gabon,HKJC ANQ,Morocco,Gabon,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5789,Orange County SC,Pittsburgh Riverhounds,HKJC connected history (USL),Orange County SC,Pittsburgh Riverhounds,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5790,Ukraine U21,Turkiye U21,HKJC E2Q,Ukraine U21,Turkiye U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5791,Mozambique,Senegal,HKJC ANQ,Mozambique,Senegal,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5793,Racing Club,Boca Juniors,Argentina top flight,Racing Club,Boca Juniors,0.257996,0.315632,0.426373,0.87718,1.20580,0.345771,0.124227,0.314533,0.561240,-0.03368,0.60566,-0.63934,700,1.000,MODELED,football-data.co.uk extra / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5794,Ceuta,Real Sociedad B,ESP Segunda,Ceuta,Sociedad B,0.354736,0.246052,0.399212,1.34108,1.43888,0.525754,0.278511,0.381587,0.339902,-0.49170,-0.19549,-0.29621,627,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5795,CF Granada,FC Andorra,ESP Segunda,Granada,Andorra,0.448750,0.238071,0.313179,1.59552,1.29139,0.550997,0.329827,0.382300,0.287873,-0.20867,-0.20273,-0.00595,627,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5796,Tenerife,Cadiz,HKJC connected history (SF2),Tenerife,Cadiz,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5797,Valladolid,Cordoba,ESP Segunda,Valladolid,Cordoba,0.369974,0.257050,0.372976,1.28852,1.29491,0.477403,0.284904,0.382104,0.332992,-0.42050,-0.24322,-0.17727,627,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5798,Mallorca,Almeria,HKJC connected history (SF2),Mallorca,Almeria,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5799,Eibar,Las Palmas,ESP Segunda,Eibar,Las Palmas,0.444905,0.292048,0.263047,1.18497,0.83429,0.328535,0.562803,0.313781,0.123416,0.62219,0.25582,0.36637,627,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5800,Burgos,CD Eldense,HKJC connected history (SF2),Burgos,CD Eldense,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5801,Oviedo,Gijon,HKJC connected history (SF2),Oviedo,Gijon,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5802,Leganes,Castellon,ESP Segunda,Leganes,Castellon,0.277040,0.265613,0.457347,0.99243,1.36346,0.418725,0.116332,0.306942,0.576726,-0.14961,0.78663,-0.93624,627,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
-2026-09-25T09:39:23+08:00,FB5803,Celta Fortuna,Sabadell,HKJC SF2,Celta Fortuna,Sabadell,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5804,Indonesia,Singapore,HKJC connected history (AEC),Indonesia,Singapore,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5805,Jamaica,Guatemala,HKJC CNL,Jamaica,Guatemala,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5806,Honduras,Suriname,HKJC CNL,Honduras,Suriname,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5807,El Salvador,Martinique,HKJC CNL,El Salvador,Martinique,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5808,Spain Women U20,Korea DPR Women U20,HKJC connected history (UWW),Spain Women U20,Korea DPR Women U20,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
-2026-09-25T09:39:23+08:00,FB5809,Italy Women U20,Colombia Women U20,HKJC connected history (UWW),Italy Women U20,Colombia Women U20,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5668,Japan Women,Philippines Women,HKJC connected history (AWF),Japan Women,Philippines Women,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5669,Korea Republic Women,Uzbekistan Women,HKJC connected history (AWF),Korea Republic Women,Uzbekistan Women,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5687,Gangwon FC,Incheon Utd,HKJC KD1,Gangwon FC,Incheon Utd,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5703,Korea Republic AM,Vietnam AM,HKJC connected history (AMF),Korea Republic AM,Vietnam AM,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5704,Colo Colo,Audax Italiano,HKJC connected history (CHC),Colo Colo,Audax Italiano,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5705,Novorizontino,Sao Bernardo,HKJC connected history (BD2),Novorizontino,Sao Bernardo,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5706,Vila Nova,Londrina,HKJC connected history (BD2),Vila Nova,Londrina,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5707,Tijuana,Atlas,Mexico top flight,Club Tijuana,Atlas,0.582461,0.242299,0.175240,1.83309,0.91156,0.517237,0.601508,0.294161,0.104331,0.33682,-0.14150,0.47832,468,1.000,MODELED,football-data.co.uk extra / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5708,Girona,Albacete,HKJC connected history (SF2),Girona,Albacete,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5709,Dordrecht,Almere City,HKJC connected history (DF2),Dordrecht,Almere City,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5710,Italy,Belgium,HKJC ENL,Italy,Belgium,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5711,Montenegro,Cyprus,HKJC ENL,Montenegro,Cyprus,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5712,Sweden,Romania,HKJC ENL,Sweden,Romania,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5713,Poland,Bosnia-Herzegovina,HKJC ENL,Poland,Bosnia-Herzegovina,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5714,Hungary,Ukraine,HKJC ENL,Hungary,Ukraine,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5715,Georgia,Northern Ireland,HKJC ENL,Georgia,Northern Ireland,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5716,Armenia,Latvia,HKJC ENL,Armenia,Latvia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5717,Turkiye,France,HKJC ENL,Turkiye,France,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5718,Atlante,Monterrey,HKJC connected history (MXL),Atlante,Monterrey,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5719,Australia,Brazil,HKJC INT,Australia,Brazil,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5720,China AM,Thailand AM,HKJC connected history (AMF),China AM,Thailand AM,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5721,Japan AM,Korea DPR AM,HKJC connected history (AMF),Japan AM,Korea DPR AM,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5723,Slovakia U21,Republic of Ireland U21,HKJC E2Q,Slovakia U21,Republic of Ireland U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5724,Netherlands U21,Norway U21,HKJC E2Q,Netherlands U21,Norway U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5725,Montedio Yamagata,Sagan Tosu,HKJC connected history (JD2),Montedio Yamagata,Sagan Tosu,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5726,Blaublitz Akita,Albirex Niigata,HKJC connected history (JD2),Blaublitz Akita,Albirex Niigata,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5727,Oita Trinita,Fujieda MYFC,HKJC connected history (JD2),Oita Trinita,Fujieda MYFC,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5728,Kataller Toyama,FC Yokohama,HKJC connected history (JD2),Kataller Toyama,FC Yokohama,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5729,FC Imabari,Shonan Bellmare,HKJC connected history (JD2),FC Imabari,Shonan Bellmare,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5730,RB Omiya Ardija,Ventforet Kofu,HKJC connected history (JD2),RB Omiya Ardija,Ventforet Kofu,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5731,Heracles,Vitesse,HKJC connected history (DF2),Heracles,Vitesse,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5732,Emmen,Oss,HKJC connected history (DF2),Emmen,Oss,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5733,Maastricht,Helmond,HKJC connected history (DF2),Maastricht,Helmond,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5734,Volendam,Venlo,HKJC connected history (DF2),Volendam,Venlo,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5735,Roda,RKC Waalwijk,HKJC connected history (DF2),Roda,RKC Waalwijk,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5736,NAC,FC Eindhoven,HKJC connected history (DF2),NAC,FC Eindhoven,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5737,De Graafschap,Den Bosch,HKJC connected history (DF2),De Graafschap,Den Bosch,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5738,Iceland U21,France U21,HKJC E2Q,Iceland U21,France U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5739,Hartford Athletic,Louisville City,HKJC connected history (USL),Hartford Athletic,Louisville City,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5740,Bulgaria U21,Portugal U21,HKJC E2Q,Bulgaria U21,Portugal U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5741,Tegevajaro Miyazaki,Hokkaido Consadole Sapporo,HKJC connected history (JD2),Tegevajaro Miyazaki,Hokkaido Consadole Sapporo,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5742,Jubilo Iwata,Vanraure Hachinohe,HKJC connected history (JD2),Jubilo Iwata,Vanraure Hachinohe,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5743,Tokushima Vortis,Tochigi City,HKJC connected history (JD2),Tokushima Vortis,Tochigi City,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5744,Iwaki FC,Vegalta Sendai,HKJC connected history (JD2),Iwaki FC,Vegalta Sendai,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5745,Georgia U21,Greece U21,HKJC E2Q,Georgia U21,Greece U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5746,Nigeria,Madagascar,HKJC ANQ,Nigeria,Madagascar,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5747,Slovenia,Scotland,HKJC ENL,Slovenia,Scotland,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5748,England,Spain,HKJC ENL,England,Spain,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5749,Czechia,Croatia,HKJC ENL,Czechia,Croatia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5750,Albania,Belarus,HKJC ENL,Albania,Belarus,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5751,San Marino,Finland,HKJC ENL,San Marino,Finland,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5752,North Macedonia,Switzerland,HKJC ENL,North Macedonia,Switzerland,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5753,Iceland,Estonia,HKJC ENL,Iceland,Estonia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5754,Bulgaria,Luxembourg,HKJC ENL,Bulgaria,Luxembourg,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5755,Slovakia,Moldova,HKJC ENL,Slovakia,Moldova,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5756,Switzerland U21,Luxembourg U21,HKJC E2Q,Switzerland U21,Luxembourg U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5757,Niger,Lesotho,HKJC ANQ,Niger,Lesotho,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5758,Egypt,Angola,HKJC ANQ,Egypt,Angola,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5759,Mali,Cape Verde Islands,HKJC ANQ,Mali,Cape Verde Islands,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5760,Sudan,Ethiopia,HKJC ANQ,Sudan,Ethiopia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5761,Malawi,South Sudan,HKJC ANQ,Malawi,South Sudan,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5762,Algeria,Zambia,HKJC ANQ,Algeria,Zambia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5763,Tanzania,Guinea Bissau,HKJC ANQ,Tanzania,Guinea Bissau,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5764,Sporting Club Jacksonville,Loudoun Utd,HKJC connected history (USL),Sporting Club Jacksonville,Loudoun Utd,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5765,Finland U21,Spain U21,HKJC E2Q,Finland U21,Spain U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5766,Azerbaijan U21,Czechia U21,HKJC E2Q,Azerbaijan U21,Czechia U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5767,Faroe Islands,Kazakhstan,HKJC ENL,Faroe Islands,Kazakhstan,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5768,Stockport,Peterborough,ENG League One,Stockport,Peterboro,0.626650,0.195412,0.177939,2.21212,1.09653,0.642271,0.763442,0.193607,0.042951,0.40900,-0.59316,1.00216,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5769,Wycombe,Reading,ENG League One,Wycombe,Reading,0.428711,0.240732,0.330556,1.61076,1.38722,0.576354,0.413433,0.369247,0.217320,0.10701,0.09121,0.01580,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5770,Cambridge Utd,AFC Wimbledon,HKJC connected history (ED2),Cambridge Utd,AFC Wimbledon,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5771,Plymouth,Burton Albion,ENG League One,Plymouth,Burton,0.553005,0.223253,0.223742,1.88751,1.12065,0.578625,0.578497,0.306054,0.115449,0.52401,-0.12625,0.65026,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5772,Newport County,Grimsby,ENG League Two,Newport County,Grimsby,0.205519,0.226695,0.567786,1.01375,1.84198,0.543711,0.096801,0.285289,0.617909,-0.41799,0.56252,-0.98051,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5773,Fleetwood,Rochdale,HKJC connected history (ED3),Fleetwood,Rochdale,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5774,Rotherham,Crewe,HKJC connected history (ED3),Rotherham,Crewe,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5775,Cheltenham,Chesterfield,ENG League Two,Cheltenham,Chesterfield,0.286943,0.232386,0.480671,1.32197,1.77207,0.597539,0.196203,0.361338,0.442458,-0.01061,0.45180,-0.46241,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5776,Tranmere,Walsall,ENG League Two,Tranmere,Walsall,0.330849,0.264662,0.404490,1.20667,1.36320,0.473980,0.141736,0.329345,0.528919,-0.39861,0.04924,-0.44785,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5777,Bristol Rovers,Exeter City,HKJC connected history (ED3),Bristol Rovers,Exeter City,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5778,Shrewsbury,Colchester,ENG League Two,Shrewsbury,Colchester,0.243311,0.283202,0.473487,0.85674,1.31613,0.370002,0.285436,0.382141,0.332423,-0.46759,-0.03693,-0.43066,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5779,Swindon,Accrington Stanley,ENG League Two,Swindon,Accrington,0.550024,0.233886,0.216090,1.76609,1.01494,0.526004,0.569353,0.310595,0.120052,-0.04711,-0.43687,0.38976,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5780,Oldham,Salford City,ENG League Two,Oldham,Salford,0.422034,0.287283,0.290683,1.23530,0.97312,0.379542,0.376743,0.376886,0.246371,0.12375,0.23580,-0.11205,700,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5781,Croatia U21,Hungary U21,HKJC E2Q,Croatia U21,Hungary U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5782,El Paso Locomotive,FC Tulsa,HKJC connected history (USL),El Paso Locomotive,FC Tulsa,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5783,Oakland Roots,Phoenix Rising,HKJC connected history (USL),Oakland Roots,Phoenix Rising,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5784,York City,Gillingham,HKJC connected history (ED3),York City,Gillingham,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5785,Bangladesh,Malaysia,HKJC connected history (AEC),Bangladesh,Malaysia,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5786,Independiente Women,Ferro Carril Oeste Women,HKJC connected history (APLW),Independiente Women,Ferro Carril Oeste Women,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5787,India,Panama,HKJC INT,India,Panama,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5788,Morocco,Gabon,HKJC ANQ,Morocco,Gabon,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5789,Orange County SC,Pittsburgh Riverhounds,HKJC connected history (USL),Orange County SC,Pittsburgh Riverhounds,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5790,Ukraine U21,Turkiye U21,HKJC E2Q,Ukraine U21,Turkiye U21,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5791,Mozambique,Senegal,HKJC ANQ,Mozambique,Senegal,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5793,Racing Club,Boca Juniors,Argentina top flight,Racing Club,Boca Juniors,0.257996,0.315632,0.426373,0.87718,1.20580,0.345771,0.124227,0.314533,0.561240,-0.03368,0.60566,-0.63934,700,1.000,MODELED,football-data.co.uk extra / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5794,Ceuta,Real Sociedad B,ESP Segunda,Ceuta,Sociedad B,0.354736,0.246052,0.399212,1.34108,1.43888,0.525754,0.278511,0.381587,0.339902,-0.49170,-0.19549,-0.29621,627,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5795,CF Granada,FC Andorra,ESP Segunda,Granada,Andorra,0.448750,0.238071,0.313179,1.59552,1.29139,0.550997,0.329827,0.382300,0.287873,-0.20867,-0.20273,-0.00595,627,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5796,Tenerife,Cadiz,HKJC connected history (SF2),Tenerife,Cadiz,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5797,Valladolid,Cordoba,ESP Segunda,Valladolid,Cordoba,0.369974,0.257050,0.372976,1.28852,1.29491,0.477403,0.284904,0.382104,0.332992,-0.42050,-0.24322,-0.17727,627,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5798,Mallorca,Almeria,HKJC connected history (SF2),Mallorca,Almeria,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5799,Eibar,Las Palmas,ESP Segunda,Eibar,Las Palmas,0.444905,0.292048,0.263047,1.18497,0.83429,0.328535,0.562803,0.313781,0.123416,0.62219,0.25582,0.36637,627,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5800,Burgos,CD Eldense,HKJC connected history (SF2),Burgos,CD Eldense,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5801,Oviedo,Gijon,HKJC connected history (SF2),Oviedo,Gijon,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5802,Leganes,Castellon,ESP Segunda,Leganes,Castellon,0.277040,0.265613,0.457347,0.99243,1.36346,0.418725,0.116332,0.306942,0.576726,-0.14961,0.78663,-0.93624,627,1.000,MODELED,football-data.co.uk main / penaltyblog 1.12.2
+2026-09-25T15:51:56+08:00,FB5803,Celta Fortuna,Sabadell,HKJC SF2,Celta Fortuna,Sabadell,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5804,Indonesia,Singapore,HKJC connected history (AEC),Indonesia,Singapore,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5805,Jamaica,Guatemala,HKJC CNL,Jamaica,Guatemala,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5806,Honduras,Suriname,HKJC CNL,Honduras,Suriname,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5807,El Salvador,Martinique,HKJC CNL,El Salvador,Martinique,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5808,Spain Women U20,Korea DPR Women U20,HKJC connected history (UWW),Spain Women U20,Korea DPR Women U20,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5809,Italy Women U20,Colombia Women U20,HKJC connected history (UWW),Italy Women U20,Colombia Women U20,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5810,Italy U20,England U20,HKJC INT,Italy U20,England U20,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
+2026-09-25T15:51:56+08:00,FB5811,Germany U20,France U20,HKJC INT,Germany U20,France U20,,,,,,,,,,,,,,1.000,SPARSE_GRAPH_REJECTED,HKJC history reserved for Team-Form Poisson
