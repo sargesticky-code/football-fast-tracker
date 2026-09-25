@@ -1,11 +1,11 @@
 {
   "source": "FRB",
   "status": "OK",
-  "rows": 17,
+  "rows": 12,
   "requests": 0,
   "errors": 0,
-  "started_at": "2026-09-25T09:27:58.731790+08:00",
-  "finished_at": "2026-09-25T09:27:58.734535+08:00",
+  "started_at": "2026-09-25T23:48:00.270717+08:00",
+  "finished_at": "2026-09-25T23:48:00.273570+08:00",
   "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
   "target_start": "2026-09-25",
   "target_end": "2026-09-26"

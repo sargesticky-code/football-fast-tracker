@@ -1,11 +1,11 @@
 {
   "source": "BCL",
   "status": "OK",
-  "rows": 92,
-  "requests": 94,
+  "rows": 98,
+  "requests": 100,
   "errors": 0,
-  "started_at": "2026-09-25T09:28:23.857193+08:00",
-  "finished_at": "2026-09-25T09:28:58.325093+08:00",
+  "started_at": "2026-09-25T23:48:26.550289+08:00",
+  "finished_at": "2026-09-25T23:49:08.174680+08:00",
   "note": "",
   "target_start": "2026-09-25",
   "target_end": "2026-09-26"
