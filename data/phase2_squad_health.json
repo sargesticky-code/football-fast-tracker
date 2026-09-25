@@ -1,9 +1,9 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 176,
-  "teams_with_squad": 134,
-  "team_coverage_pct": 76.1,
-  "players": 4177,
+  "target_confirmed_fotmob_teams": 174,
+  "teams_with_squad": 132,
+  "team_coverage_pct": 75.9,
+  "players": 4116,
   "position_coverage_pct": 100.0,
   "dob_coverage_pct": 99.3,
   "age_coverage_pct": 99.3,
@@ -268,5 +268,5 @@
     }
   ],
   "workers": 8,
-  "fetched_at": "2026-09-25T00:16:22.154160+00:00"
+  "fetched_at": "2026-09-25T00:21:33.909714+00:00"
 }

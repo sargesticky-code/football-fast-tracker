@@ -1,11 +1,11 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 176,
+  "target_confirmed_fotmob_teams": 174,
   "teams_with_explicit_manager": 127,
-  "team_coverage_pct": 72.2,
+  "team_coverage_pct": 73.0,
   "manager_rows": 127,
   "failure_classes": {
-    "NO_EXPLICIT_CURRENT_MANAGER": 49
+    "NO_EXPLICIT_CURRENT_MANAGER": 47
   },
   "residual_all_classified": true,
   "failures": [
@@ -86,12 +86,6 @@
       "team": "Greece U21",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":5}"
-    },
-    {
-      "hkjc_team_id": "50001501",
-      "team": "Haiti",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":27}"
     },
     {
       "hkjc_team_id": "50001550",
@@ -232,12 +226,6 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":15}"
     },
     {
-      "hkjc_team_id": "50003123",
-      "team": "Trinidad and Tobago",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":30}"
-    },
-    {
       "hkjc_team_id": "50003144",
       "team": "Turkiye U21",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
@@ -305,5 +293,5 @@
     }
   ],
   "layer3_exit": true,
-  "fetched_at": "2026-09-25T00:16:34.197028+00:00"
+  "fetched_at": "2026-09-25T00:21:44.655657+00:00"
 }

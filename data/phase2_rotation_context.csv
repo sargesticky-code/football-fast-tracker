@@ -1,6 +1,4 @@
 ﻿hkjc_event_id,kickoff_hkt,hkjc_team_id,hkjc_team_name,side,verified_history_matches,previous_verified_kickoff,rest_hours,starter_overlap,starters_changed,verified_squad_size,goalkeepers,defenders,midfielders,attackers,future_fixtures_7d,future_fixtures_14d,rotation_evidence_class,depth_evidence_class,congestion_evidence_class,source
-FB5689,2026-09-25T08:20:00+08:00,50001501,Haiti,HOME,0,,,,,26,0,9,7,7,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
-FB5689,2026-09-25T08:20:00+08:00,50003123,Trinidad and Tobago,AWAY,0,,,,,35,0,13,8,10,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
 FB5673,2026-09-25T09:00:00+08:00,50002123,Mineros Zacatecas,HOME,0,,,,,0,0,0,0,0,0,0,INSUFFICIENT_HISTORY,NO_VERIFIED_SQUAD,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
 FB5673,2026-09-25T09:00:00+08:00,50601674,Piratas FC,AWAY,0,,,,,0,0,0,0,0,0,0,INSUFFICIENT_HISTORY,NO_VERIFIED_SQUAD,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
 FB5674,2026-09-25T09:00:00+08:00,50002315,Oaxaca,HOME,0,,,,,0,0,0,0,0,0,0,INSUFFICIENT_HISTORY,NO_VERIFIED_SQUAD,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
