@@ -62,6 +62,9 @@ jobs:
       - name: Refresh manager master
         if: env.PHASE2_OBJECTIVE != 'LAYER1_IDENTITY' && env.PHASE2_OBJECTIVE != 'LAYER2_SQUAD'
         run: python scripts/phase2_capture_managers_fotmob.py
+      - name: Reep identity corroboration
+        if: env.PHASE2_OBJECTIVE != 'LAYER1_IDENTITY'
+        run: python scripts/phase2_enrich_reep.py
       - name: Layer 4 availability objective
         if: env.PHASE2_OBJECTIVE == 'LAYER4_AVAILABILITY'
         run: |
@@ -74,7 +77,7 @@ jobs:
           git config user.name "phase2-bot"
           git config user.email "phase2-bot@users.noreply.github.com"
           git add data/phase2_hkjc_current.csv data/phase2_hkjc_capture_health.json data/phase2_team_identity_targets.csv data/phase2_team_identity_evidence.csv data/phase2_identity_resolution_diagnostics.csv data/phase2_thesportsdb_diagnostics.csv data/phase2_espn_diagnostics.csv data/phase2_fotmob_diagnostics.csv data/phase2_identity_health.json data/phase2_layer_status.json
-          for f in data/phase2_player_master.csv data/phase2_squad_health.json data/phase2_manager_master.csv data/phase2_manager_health.json data/phase2_availability_evidence.csv data/phase2_availability_health.json data/phase2_rotation_context.csv data/phase2_rotation_health.json; do [ ! -f "$f" ] || git add "$f"; done
+          for f in data/phase2_player_master.csv data/phase2_squad_health.json data/phase2_manager_master.csv data/phase2_manager_health.json data/phase2_availability_evidence.csv data/phase2_availability_health.json data/phase2_rotation_context.csv data/phase2_rotation_health.json data/phase2_reep_crosswalk.csv data/phase2_reep_health.json; do [ ! -f "$f" ] || git add "$f"; done
           if ! git diff --cached --quiet; then
             git commit -m "phase2: refresh human intelligence evidence"
             git push origin HEAD:phase2-human-intelligence
