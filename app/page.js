@@ -1,4 +1,5 @@
 import MatchCard from "@/components/match-card";
+import { phase2Summary } from "@/lib/phase2-data";
 import {
   dataAgeMinutes,
   divergence,
@@ -19,6 +20,7 @@ const filters = [
 export default async function Home() {
   const filter = "focus";
   const feed = await getFeed();
+  const p2 = phase2Summary();
   const all = feed.matches;
   const nowMs = Date.now();
 
@@ -71,6 +73,10 @@ export default async function Home() {
         </span>
       </header>
 
+      <a href="/phase2" className="panel" style={{display:"block",marginBottom:12}}>
+        <div className="section-head" style={{margin:0}}><div><h2>Phase 2 · Human Intelligence</h2><p>{p2.players.toLocaleString()} players · {p2.managers.toLocaleString()} managers · Layer {p2.layer} active</p></div><span>{p2.identity.coverage_pct??"—"}% identity</span></div>
+      </a>
+
       <section className="health-strip">
         <div><b>{all.length}</b><span>24H賽事</span></div>
         <div><b>{modeled}</b><span>有模型</span></div>
@@ -115,7 +121,7 @@ export default async function Home() {
       <footer className="bottom-nav">
         <a className="selected" href="/">賽事</a>
         <span>Live</span>
-        <span>模型</span>
+        <a href="/phase2">Human</a>
         <a href="/health">系統</a>
       </footer>
     </main>

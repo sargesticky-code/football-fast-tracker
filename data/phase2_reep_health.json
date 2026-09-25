@@ -1,0 +1,10 @@
+{
+  "status": "OK",
+  "targets": 4226,
+  "resolved": 0,
+  "resolution_pct": 0.0,
+  "errors": 4226,
+  "register": "Reep v0 frozen public bridge",
+  "use": "identity corroboration only",
+  "fetched_at": "2026-09-25T00:22:28.558127+00:00"
+}

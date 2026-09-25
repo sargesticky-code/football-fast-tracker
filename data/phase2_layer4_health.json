@@ -1,0 +1,43 @@
+{
+  "layer": 4,
+  "name": "current_availability",
+  "observed_at": "2026-09-23T08:28:15Z",
+  "status": "WARN",
+  "layer4_exit": false,
+  "current_targets": 34,
+  "api_football_mapped_fresh": 20,
+  "api_football_unmapped_or_stale": 14,
+  "mapped_coverage_pct": 58.8,
+  "confirmed_player_status_evidence_rows": 18,
+  "confirmed_player_status_matches": 1,
+  "confirmed_lineup_evidence_rows": 0,
+  "manager_evidence_rows": 0,
+  "api_football_base": {
+    "status": "PASS",
+    "targets_at_last_run": 34,
+    "fixtures_inspected": 388,
+    "mapped_at_last_run": 20,
+    "injuries_seen": 36,
+    "injury_evidence_added": 18,
+    "requests_used": 4,
+    "quota_remaining": 88,
+    "dates_checked": ["2026-09-23", "2026-09-24"]
+  },
+  "api_football_detail": {
+    "status": "IDLE",
+    "eligible": 0,
+    "requests_used": 0,
+    "diagnosis": "ELIGIBILITY_WINDOW_DIRECTION_BUG",
+    "configured_window": "kickoff between now-10m and now+55m",
+    "required_window": "current time between kickoff-10m and kickoff+55m, equivalent to kickoff between now-55m and now+10m",
+    "evidence": "At 2026-09-23T08:28Z six mapped 08:00Z fixtures remained detail_check_count=0 while the function reported eligible=0."
+  },
+  "injury_status_breakdown": {
+    "FB5651": {
+      "MISSING FIXTURE": 16,
+      "QUESTIONABLE": 2
+    }
+  },
+  "residual_failure_class": "DETAIL_ELIGIBILITY_WINDOW_DIRECTION_BUG",
+  "notes": "Layer 4 now has real positive availability evidence. Do not interpret zero rows on other fixtures as healthy. Highest-priority blocker is the reversed near-kickoff detail eligibility window; repair before further mapping polish."
+}

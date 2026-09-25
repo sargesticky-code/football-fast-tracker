@@ -1,0 +1,14 @@
+{
+  "current_layer": 6,
+  "layer1_exit": true,
+  "layer2_exit": true,
+  "layer3_exit": true,
+  "layer4_exit": true,
+  "layer5_exit": true,
+  "layer6_exit": false,
+  "basis": {
+    "layer4": "current availability evidence lifecycle verified; fail-closed residual classification",
+    "layer5": "official XI lifecycle verified on current fixtures including successful 25-minute recheck; projected and official evidence separated"
+  },
+  "next_objective": "LAYER6_ROTATION_REST_CONGESTION_DEPTH"
+}

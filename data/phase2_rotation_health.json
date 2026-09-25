@@ -1,0 +1,13 @@
+{
+  "layer": 6,
+  "generated_at": "2026-09-25T04:00:02.115190+00:00",
+  "fixtures": 101,
+  "team_sides": 202,
+  "unique_teams": 202,
+  "depth_fact_sides": 132,
+  "rotation_verified_sides": 0,
+  "rotation_insufficient_history_sides": 202,
+  "layer6_exit": false,
+  "next_objective": "ADD_VERIFIED_HISTORICAL_XI_OR_FIXTURE_HISTORY_FOR_ROTATION_AND_REST",
+  "guardrail": "Current fixture universe is used only for forward congestion; no past rest/rotation is inferred."
+}
