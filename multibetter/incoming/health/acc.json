@@ -1,12 +1,12 @@
 {
   "source": "ACC",
   "status": "OK",
-  "rows": 92,
-  "requests": 43,
+  "rows": 202,
+  "requests": 74,
   "errors": 0,
-  "started_at": "2026-09-24T09:22:22.823634+08:00",
-  "finished_at": "2026-09-24T09:22:34.058274+08:00",
+  "started_at": "2026-09-25T09:27:58.899664+08:00",
+  "finished_at": "2026-09-25T09:28:23.662517+08:00",
   "note": "",
-  "target_start": "2026-09-24",
-  "target_end": "2026-09-25"
+  "target_start": "2026-09-25",
+  "target_end": "2026-09-26"
 }

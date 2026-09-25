@@ -1,12 +1,12 @@
 {
   "source": "STA",
   "status": "OK",
-  "rows": 54,
+  "rows": 184,
   "requests": 3,
   "errors": 0,
-  "started_at": "2026-09-24T09:22:49.296311+08:00",
-  "finished_at": "2026-09-24T09:22:51.560035+08:00",
-  "note": "calibration={\"calibration_only_previous_day\": \"2026-09-23\", \"calibration_rows\": 75, \"dominance\": 1.0, \"dominant_cluster\": [-300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -298, -298], \"dominant_samples\": 33, \"inferred_source_minus_utc_minutes\": -300, \"offset_distribution\": {\"-300\": 31, \"-298\": 2}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 33, \"target_rows\": 54}",
-  "target_start": "2026-09-24",
-  "target_end": "2026-09-25"
+  "started_at": "2026-09-25T09:29:03.786546+08:00",
+  "finished_at": "2026-09-25T09:29:06.950816+08:00",
+  "note": "calibration={\"calibration_only_previous_day\": \"2026-09-24\", \"calibration_rows\": 209, \"dominance\": 1.0, \"dominant_cluster\": [-240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -238, -238], \"dominant_samples\": 77, \"inferred_source_minus_utc_minutes\": -240, \"offset_distribution\": {\"-240\": 75, \"-238\": 2}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 77, \"target_rows\": 184}",
+  "target_start": "2026-09-25",
+  "target_end": "2026-09-26"
 }
