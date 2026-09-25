@@ -8,12 +8,6 @@ on:
       - 'scripts/phase2_*.py'
       - '.github/workflows/phase2_identity.yml'
       - 'data/phase2_layer_status.json'
-  pull_request:
-    branches:
-      - app-v1
-    paths:
-      - 'scripts/phase2_*.py'
-      - '.github/workflows/phase2_identity.yml'
   schedule:
     - cron: '18 * * * *'
 permissions:
@@ -23,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   phase2:
-    if: (github.event_name == 'pull_request' && github.head_ref == 'phase2-human-intelligence') || (github.event_name != 'pull_request' && github.ref == 'refs/heads/phase2-human-intelligence')
+    if: github.ref == 'refs/heads/phase2-human-intelligence'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
