@@ -1,0 +1,24 @@
+{
+  "phase": 3,
+  "diagnostic": "same_window_live_source_benchmark",
+  "mode": "shadow_only",
+  "required_sources": 2,
+  "default_rounds": 3,
+  "expected_request_count": 6,
+  "request_strategy": "sequential_interleaved",
+  "required_metrics": [
+    "network_latency_ms",
+    "source_data_age_seconds",
+    "score_minute_freshness",
+    "coverage",
+    "request_failure_rate",
+    "identity_match_rate",
+    "mapped_rows",
+    "unmapped_rows",
+    "collision_rows"
+  ],
+  "identity_policy": "persistent_verified_only",
+  "eligibility_authority": "HKJC",
+  "production_primary_change_allowed": false,
+  "heavy_lane_poll_at_fast_cadence": false
+}
