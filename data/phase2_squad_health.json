@@ -1,15 +1,15 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 166,
-  "teams_with_squad": 128,
-  "team_coverage_pct": 77.1,
-  "players": 3870,
+  "target_confirmed_fotmob_teams": 176,
+  "teams_with_squad": 134,
+  "team_coverage_pct": 76.1,
+  "players": 4177,
   "position_coverage_pct": 100.0,
   "dob_coverage_pct": 99.3,
   "age_coverage_pct": 99.3,
   "nationality_coverage_pct": 100.0,
   "failure_classes": {
-    "PROVIDER_ROSTER_EMPTY": 38
+    "PROVIDER_ROSTER_EMPTY": 42
   },
   "residual_all_classified": true,
   "layer2_exit": true,
@@ -29,18 +29,6 @@
     {
       "hkjc_team_id": "50000361",
       "team": "Bangladesh",
-      "class": "PROVIDER_ROSTER_EMPTY",
-      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
-    },
-    {
-      "hkjc_team_id": "50000432",
-      "team": "Belarus U21",
-      "class": "PROVIDER_ROSTER_EMPTY",
-      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
-    },
-    {
-      "hkjc_team_id": "50000439",
-      "team": "Belgium U21",
       "class": "PROVIDER_ROSTER_EMPTY",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
@@ -87,6 +75,18 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
     {
+      "hkjc_team_id": "50001355",
+      "team": "Georgia U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50001453",
+      "team": "Greece U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
       "hkjc_team_id": "50001550",
       "team": "Hokkaido Consadole Sapporo",
       "class": "PROVIDER_ROSTER_EMPTY",
@@ -125,6 +125,12 @@
     {
       "hkjc_team_id": "50001973",
       "team": "Luxembourg U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50002059",
+      "team": "Martinique",
       "class": "PROVIDER_ROSTER_EMPTY",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
@@ -201,6 +207,18 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
     {
+      "hkjc_team_id": "50003144",
+      "team": "Turkiye U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50003187",
+      "team": "Ukraine U21",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
       "hkjc_team_id": "50003268",
       "team": "Vanraure Hachinohe",
       "class": "PROVIDER_ROSTER_EMPTY",
@@ -219,14 +237,14 @@
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
     {
-      "hkjc_team_id": "50267911",
-      "team": "Iwaki FC",
+      "hkjc_team_id": "50240645",
+      "team": "Colombia Women U20",
       "class": "PROVIDER_ROSTER_EMPTY",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
     {
-      "hkjc_team_id": "50288636",
-      "team": "Dominican Republic",
+      "hkjc_team_id": "50267911",
+      "team": "Iwaki FC",
       "class": "PROVIDER_ROSTER_EMPTY",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     },
@@ -241,8 +259,14 @@
       "team": "Piratas FC",
       "class": "PROVIDER_ROSTER_EMPTY",
       "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
+    },
+    {
+      "hkjc_team_id": "50621165",
+      "team": "Italy Women U20",
+      "class": "PROVIDER_ROSTER_EMPTY",
+      "detail": "{\"squad_keys\":[\"isNationalTeam\",\"squad\"],\"squad_value_type\":\"NoneType\",\"group_count\":0,\"member_count\":0}"
     }
   ],
   "workers": 8,
-  "fetched_at": "2026-09-24T14:30:55.152205+00:00"
+  "fetched_at": "2026-09-25T00:16:22.154160+00:00"
 }

@@ -1,11 +1,11 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 166,
-  "teams_with_explicit_manager": 120,
-  "team_coverage_pct": 72.3,
-  "manager_rows": 120,
+  "target_confirmed_fotmob_teams": 176,
+  "teams_with_explicit_manager": 127,
+  "team_coverage_pct": 72.2,
+  "manager_rows": 127,
   "failure_classes": {
-    "NO_EXPLICIT_CURRENT_MANAGER": 46
+    "NO_EXPLICIT_CURRENT_MANAGER": 49
   },
   "residual_all_classified": true,
   "failures": [
@@ -34,28 +34,10 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":18}"
     },
     {
-      "hkjc_team_id": "50000432",
-      "team": "Belarus U21",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":6}"
-    },
-    {
-      "hkjc_team_id": "50000439",
-      "team": "Belgium U21",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":9}"
-    },
-    {
       "hkjc_team_id": "50000474",
       "team": "Blaublitz Akita",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":2}"
-    },
-    {
-      "hkjc_team_id": "50000506",
-      "team": "Botswana",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":21}"
     },
     {
       "hkjc_team_id": "50000594",
@@ -92,6 +74,18 @@
       "team": "France U21",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":15}"
+    },
+    {
+      "hkjc_team_id": "50001355",
+      "team": "Georgia U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":10}"
+    },
+    {
+      "hkjc_team_id": "50001453",
+      "team": "Greece U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":5}"
     },
     {
       "hkjc_team_id": "50001501",
@@ -146,6 +140,12 @@
       "team": "Luxembourg U21",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":3}"
+    },
+    {
+      "hkjc_team_id": "50002059",
+      "team": "Martinique",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":10}"
     },
     {
       "hkjc_team_id": "50002123",
@@ -238,6 +238,18 @@
       "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":30}"
     },
     {
+      "hkjc_team_id": "50003144",
+      "team": "Turkiye U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":2}"
+    },
+    {
+      "hkjc_team_id": "50003187",
+      "team": "Ukraine U21",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":9}"
+    },
+    {
       "hkjc_team_id": "50003268",
       "team": "Vanraure Hachinohe",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
@@ -262,16 +274,16 @@
       "detail": "{\"squad_group_titles\":[\"coach\",\"keepers\",\"defenders\",\"midfielders\",\"attackers\"],\"coach_history_type\":\"list\",\"coach_history_count\":34}"
     },
     {
-      "hkjc_team_id": "50267911",
-      "team": "Iwaki FC",
+      "hkjc_team_id": "50240645",
+      "team": "Colombia Women U20",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
     },
     {
-      "hkjc_team_id": "50288636",
-      "team": "Dominican Republic",
+      "hkjc_team_id": "50267911",
+      "team": "Iwaki FC",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":11}"
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
     },
     {
       "hkjc_team_id": "50319129",
@@ -284,8 +296,14 @@
       "team": "Piratas FC",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":1}"
+    },
+    {
+      "hkjc_team_id": "50621165",
+      "team": "Italy Women U20",
+      "class": "NO_EXPLICIT_CURRENT_MANAGER",
+      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"NoneType\",\"coach_history_count\":null}"
     }
   ],
   "layer3_exit": true,
-  "fetched_at": "2026-09-24T14:31:11.690502+00:00"
+  "fetched_at": "2026-09-25T00:16:34.197028+00:00"
 }
