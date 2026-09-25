@@ -1,13 +1,13 @@
 {
   "status": "OK",
-  "matches": 102,
-  "unique_teams": 204,
+  "matches": 101,
+  "unique_teams": 202,
   "confirmed": 179,
-  "unresolved": 25,
+  "unresolved": 23,
   "conflicts": 0,
-  "coverage_pct": 87.7,
+  "coverage_pct": 88.6,
   "snapshot_age_hours": 0.0,
-  "residual_evidenced": 25,
+  "residual_evidenced": 23,
   "residual_all_evidenced": true,
   "exit_reason": "ALL_RESIDUALS_EVIDENCED",
   "layer1_exit": true

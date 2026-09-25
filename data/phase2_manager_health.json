@@ -1,11 +1,11 @@
 {
   "status": "OK",
-  "target_confirmed_fotmob_teams": 174,
+  "target_confirmed_fotmob_teams": 172,
   "teams_with_explicit_manager": 127,
-  "team_coverage_pct": 73.0,
+  "team_coverage_pct": 73.8,
   "manager_rows": 127,
   "failure_classes": {
-    "NO_EXPLICIT_CURRENT_MANAGER": 47
+    "NO_EXPLICIT_CURRENT_MANAGER": 45
   },
   "residual_all_classified": true,
   "failures": [
@@ -142,12 +142,6 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":10}"
     },
     {
-      "hkjc_team_id": "50002123",
-      "team": "Mineros Zacatecas",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":7}"
-    },
-    {
       "hkjc_team_id": "50002148",
       "team": "Montedio Yamagata",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
@@ -280,12 +274,6 @@
       "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":1}"
     },
     {
-      "hkjc_team_id": "50601674",
-      "team": "Piratas FC",
-      "class": "NO_EXPLICIT_CURRENT_MANAGER",
-      "detail": "{\"squad_group_titles\":[],\"coach_history_type\":\"list\",\"coach_history_count\":1}"
-    },
-    {
       "hkjc_team_id": "50621165",
       "team": "Italy Women U20",
       "class": "NO_EXPLICIT_CURRENT_MANAGER",
@@ -293,5 +281,5 @@
     }
   ],
   "layer3_exit": true,
-  "fetched_at": "2026-09-25T00:21:44.655657+00:00"
+  "fetched_at": "2026-09-25T03:59:23.692749+00:00"
 }

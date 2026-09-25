@@ -1,10 +1,4 @@
 ﻿hkjc_event_id,kickoff_hkt,hkjc_team_id,hkjc_team_name,side,verified_history_matches,previous_verified_kickoff,rest_hours,starter_overlap,starters_changed,verified_squad_size,goalkeepers,defenders,midfielders,attackers,future_fixtures_7d,future_fixtures_14d,rotation_evidence_class,depth_evidence_class,congestion_evidence_class,source
-FB5673,2026-09-25T09:00:00+08:00,50002123,Mineros Zacatecas,HOME,0,,,,,0,0,0,0,0,0,0,INSUFFICIENT_HISTORY,NO_VERIFIED_SQUAD,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
-FB5673,2026-09-25T09:00:00+08:00,50601674,Piratas FC,AWAY,0,,,,,0,0,0,0,0,0,0,INSUFFICIENT_HISTORY,NO_VERIFIED_SQUAD,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
-FB5674,2026-09-25T09:00:00+08:00,50002315,Oaxaca,HOME,0,,,,,0,0,0,0,0,0,0,INSUFFICIENT_HISTORY,NO_VERIFIED_SQUAD,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
-FB5674,2026-09-25T09:00:00+08:00,50334216,Atletico La Paz,AWAY,0,,,,,0,0,0,0,0,0,0,INSUFFICIENT_HISTORY,NO_VERIFIED_SQUAD,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
-FB5688,2026-09-25T10:00:00+08:00,50000847,Costa Rica,HOME,0,,,,,36,0,12,11,7,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
-FB5688,2026-09-25T10:00:00+08:00,50000912,Curacao,AWAY,0,,,,,27,0,8,7,8,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
 FB5702,2026-09-25T13:00:00+08:00,50003246,Uzbekistan AM,HOME,0,,,,,20,0,6,6,4,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
 FB5702,2026-09-25T13:00:00+08:00,50002755,Saudi Arabia AM,AWAY,0,,,,,24,0,8,7,5,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
 FB5666,2026-09-25T14:00:00+08:00,50001806,Korea DPR Women,HOME,0,,,,,0,0,0,0,0,0,0,INSUFFICIENT_HISTORY,NO_VERIFIED_SQUAD,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
@@ -203,3 +197,7 @@ FB5752,2026-09-27T02:45:00+08:00,50002287,North Macedonia,HOME,0,,,,,29,0,10,9,6
 FB5752,2026-09-27T02:45:00+08:00,50003019,Switzerland,AWAY,0,,,,,27,0,7,9,7,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
 FB5755,2026-09-27T02:45:00+08:00,50002857,Slovakia,HOME,0,,,,,40,0,11,11,12,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
 FB5755,2026-09-27T02:45:00+08:00,50002138,Moldova,AWAY,0,,,,,29,0,10,8,7,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
+FB5783,2026-09-27T10:00:00+08:00,50283457,Oakland Roots,HOME,0,,,,,0,0,0,0,0,0,0,INSUFFICIENT_HISTORY,NO_VERIFIED_SQUAD,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
+FB5783,2026-09-27T10:00:00+08:00,50000231,Phoenix Rising,AWAY,0,,,,,0,0,0,0,0,0,0,INSUFFICIENT_HISTORY,NO_VERIFIED_SQUAD,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
+FB5789,2026-09-27T10:00:00+08:00,50002348,Orange County SC,HOME,0,,,,,32,0,10,7,11,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
+FB5789,2026-09-27T10:00:00+08:00,50002461,Pittsburgh Riverhounds,AWAY,0,,,,,25,0,7,11,3,0,0,INSUFFICIENT_HISTORY,FACT,FACT_CURRENT_HKJC_UNIVERSE,phase2_hkjc_current+phase2_player_master
