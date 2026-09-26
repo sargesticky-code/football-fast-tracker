@@ -16,5 +16,6 @@ def summarize_request_trace(trace):
         "total_upstream_requests": len(trace),
         "request_failures": failures,
         "sources": per_source,
+        "successful_upstream_requests": len(trace) - failures,
         "production_primary_changed": False,
     }
