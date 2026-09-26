@@ -1,13 +1,120 @@
 DATE,TIME,LEAGUE,HOME TEAM,AWAY TEAM,HOME PER,DRAW PER,AWAY PER,1X PER,12 PER,X2 PER,OVER 1.5,UNDER 2.5,OVER 2.5,BTS,OTS,NAME,SOURCE_URL,SOURCE_DATE,SOURCE_TIME,TIMEZONE,HOME_AWAY_EXPLICIT
-25/09/2026,16:00,UNL,Armenia,Latvia,37,34,29,71,66,63,,50,50,,,FRB,https://www.forebet.com/en/football/matches/armenia-latvia-2552241,2026-09-25,18:00,UTC(normalized from HKJC HKT),1
-25/09/2026,16:00,UNL,Georgia,N. Ireland,30,39,31,69,61,70,,51,49,,,FRB,https://www.forebet.com/en/football/matches/georgia-n-ireland-2552240,2026-09-25,18:00,UTC(normalized from HKJC HKT),1
-25/09/2026,18:45,UNL,Hungary,Ukraine,23,45,32,68,55,77,,55,45,,,FRB,https://www.forebet.com/en/football/matches/hungary-ukraine-2552246,2026-09-25,20:45,UTC(normalized from HKJC HKT),1
-25/09/2026,18:45,UNL,Italy,Belgium,38,40,22,78,60,62,,44,56,,,FRB,https://www.forebet.com/en/football/matches/italy-belgium-2552243,2026-09-25,20:45,UTC(normalized from HKJC HKT),1
-25/09/2026,18:45,UNL,Montenegro,Cyprus,42,30,28,72,70,58,,45,55,,,FRB,https://www.forebet.com/en/football/matches/montenegro-cyprus-2552247,2026-09-25,20:45,UTC(normalized from HKJC HKT),1
-25/09/2026,18:45,UNL,Poland,Bosnia and Herzegovina,44,36,20,80,64,56,,27,73,,,FRB,https://www.forebet.com/en/football/matches/poland-bosnia-and-herzegovina-2552245,2026-09-25,20:45,UTC(normalized from HKJC HKT),1
-25/09/2026,18:45,UNL,Sweden,Romania,42,33,25,75,67,58,,42,58,,,FRB,https://www.forebet.com/en/football/matches/sweden-romania-2552244,2026-09-25,20:45,UTC(normalized from HKJC HKT),1
-25/09/2026,18:45,UNL,Türkiye,France,37,31,32,68,69,63,,48,52,,,FRB,https://www.forebet.com/en/football/matches/türkiye-france-2552242,2026-09-25,20:45,UTC(normalized from HKJC HKT),1
-25/09/2026,22:28,Br2,Novorizontino SP,São Bernardo SP,45,27,28,72,73,55,,,,,,FRB,https://www.forebet.com/en/football/matches/novorizontino-sp-são-bernardo-sp-2442951,2026-09-26,00:30,UTC(normalized from HKJC HKT),1
-25/09/2026,23:28,Br2,Vila Nova FC,Londrina,60,17,24,77,84,41,,,,,,FRB,https://www.forebet.com/en/football/matches/vila-nova-fc-londrina-2442954,2026-09-26,01:30,UTC(normalized from HKJC HKT),1
+26/09/2026,00:00,CNL,Jamaica,Guatemala,39,34,27,73,66,61,,,,,,FRB,https://www.forebet.com/en/football/matches/jamaica-guatemala-2554143,2026-09-26,02:00,UTC(normalized from HKJC HKT),1
 26/09/2026,01:00,Mx1,Atlante FC,CF Monterrey,25,35,40,60,65,75,,53,47,,,FRB,https://www.forebet.com/en/football/matches/atlante-fc-cf-monterrey-2468143,2026-09-26,03:00,UTC(normalized from HKJC HKT),1
+26/09/2026,01:00,Us2,El Paso Locomotive,FC Tulsa,36,37,27,73,63,64,,,,,,FRB,https://www.forebet.com/en/football/matches/el-paso-locomotive-fc-tulsa-2436465,2026-09-26,03:00,UTC(normalized from HKJC HKT),1
+26/09/2026,01:00,CNL,Honduras,Surinam,39,33,28,72,67,61,,,,,,FRB,https://www.forebet.com/en/football/matches/honduras-surinam-2554146,2026-09-26,03:00,UTC(normalized from HKJC HKT),1
 26/09/2026,03:00,Mx1,Club Tijuana,Club Atlas,39,37,24,76,63,61,,42,58,,,FRB,https://www.forebet.com/en/football/matches/club-tijuana-club-atlas-2468144,2026-09-26,05:00,UTC(normalized from HKJC HKT),1
+26/09/2026,03:00,CNL,El Salvador,Martinique,54,20,26,74,80,46,,,,,,FRB,https://www.forebet.com/en/football/matches/el-salvador-martinique-2554147,2026-09-26,05:00,UTC(normalized from HKJC HKT),1
+26/09/2026,08:00,Jp2,Blaublitz Akita,Albirex Niigata,33,18,49,51,82,67,,,,,,FRB,https://www.forebet.com/en/football/matches/blaublitz-akita-albirex-niigata-2493947,2026-09-26,10:00,UTC(normalized from HKJC HKT),1
+26/09/2026,08:00,JD2,FC Imabari,Shonan Bellmare,26,34,40,60,66,74,,,,,,FRB,https://www.forebet.com/en/football/matches/fc-imabari-shonan-bellmare-2493940,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,08:00,Jp2,Iwaki FC,Vegalta Sendai,23,20,57,43,80,77,,,,,,FRB,https://www.forebet.com/en/football/matches/iwaki-fc-vegalta-sendai-2493945,2026-09-26,10:00,UTC(normalized from HKJC HKT),1
+26/09/2026,08:00,Jp2,Jubilo Iwata,Vanraure Hachinohe,61,25,14,86,75,39,,,,,,FRB,https://www.forebet.com/en/football/matches/jubilo-iwata-vanraure-hachinohe-2493942,2026-09-26,10:00,UTC(normalized from HKJC HKT),1
+26/09/2026,08:00,JD2,Kataller Toyama,Yokohama FC,37,31,32,68,69,63,,,,,,FRB,https://www.forebet.com/en/football/matches/kataller-toyama-yokohama-fc-2493943,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,08:00,Jp2,Montedio Yamagata,Sagan Tosu,43,32,25,75,68,57,,,,,,FRB,https://www.forebet.com/en/football/matches/montedio-yamagata-sagan-tosu-2493946,2026-09-26,10:00,UTC(normalized from HKJC HKT),1
+26/09/2026,08:00,Jp2,Oita Trinita,Fujieda MYFC,42,31,27,73,69,58,,,,,,FRB,https://www.forebet.com/en/football/matches/oita-trinita-fujieda-myfc-2493939,2026-09-26,10:00,UTC(normalized from HKJC HKT),1
+26/09/2026,08:00,JD2,Omiya Ardija,Ventforet Kofu,53,22,25,75,78,47,,,,,,FRB,https://www.forebet.com/en/football/matches/omiya-ardija-ventforet-kofu-2493944,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,08:00,JD2,Tegevajaro Miyazaki,Consadole Sapporo,39,36,25,75,64,61,,,,,,FRB,https://www.forebet.com/en/football/matches/tegevajaro-miyazaki-consadole-sapporo-2493938,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,08:00,Jp2,Tokushima Vortis,Tochigi Uva,33,36,31,69,64,67,,,,,,FRB,https://www.forebet.com/en/football/matches/tokushima-vortis-tochigi-uva-2493941,2026-09-26,10:00,UTC(normalized from HKJC HKT),1
+26/09/2026,10:00,SFLW,Levante Las Planas W,Granada W,45,24,31,69,76,55,,,,,,FRB,,2026-09-26,18:00,UTC(normalized from HKJC HKT),1
+26/09/2026,10:00,EsW,Real Sociedad W,Real Madrid W,18,16,66,34,84,82,,,,,,FRB,https://www.forebet.com/en/football/matches/real-sociedad-w-real-madrid-w-2529385,2026-09-26,12:00,UTC(normalized from HKJC HKT),1
+26/09/2026,10:30,ISAW,Juventus W,Napoli W,56,22,21,78,77,43,,,,,,FRB,,2026-09-26,18:30,UTC(normalized from HKJC HKT),1
+26/09/2026,11:00,NoW,Haugesund W,LSK Kvinner W,32,28,41,60,73,69,,,,,,FRB,https://www.forebet.com/en/football/matches/haugesund-w-lsk-kvinner-w-2442159,2026-09-26,13:00,UTC(normalized from HKJC HKT),1
+26/09/2026,11:00,SeW,Kristianstads W,Vittsjo W,39,40,21,79,60,61,,,,,,FRB,https://www.forebet.com/en/football/matches/kristianstads-w-vittsjo-w-2446206,2026-09-26,13:00,UTC(normalized from HKJC HKT),1
+26/09/2026,11:00,NTLW,Lyn W,Hønefoss W,41,35,24,76,65,59,,,,,,FRB,,2026-09-26,19:00,UTC(normalized from HKJC HKT),1
+26/09/2026,11:00,NTLW,Molde W,Vålerenga W,32,20,48,52,80,68,,,,,,FRB,,2026-09-26,19:00,UTC(normalized from HKJC HKT),1
+26/09/2026,12:00,Es2,AD Ceuta,Real Sociedad B,21,37,42,58,63,79,,50,50,,,FRB,https://www.forebet.com/en/football/matches/ad-ceuta-real-sociedad-b-2509363,2026-09-26,14:00,UTC(normalized from HKJC HKT),1
+26/09/2026,12:30,EPLW,Charlton Athletic W,Man City W,24,22,54,46,78,76,,,,,,FRB,,2026-09-26,20:30,UTC(normalized from HKJC HKT),1
+26/09/2026,13:00,SALW,AIK W,Växjö W,60,25,15,85,75,40,,,,,,FRB,,2026-09-26,21:00,UTC(normalized from HKJC HKT),1
+26/09/2026,13:00,SALW,Hammarby W,Eskilstuna United W,51,22,27,73,78,49,,,,,,FRB,,2026-09-26,21:00,UTC(normalized from HKJC HKT),1
+26/09/2026,13:00,ISAW,Lazio W,Parma W,55,30,15,85,70,45,,,,,,FRB,,2026-09-26,21:00,UTC(normalized from HKJC HKT),1
+26/09/2026,13:00,UNL,Slovenia,Scotland,21,52,27,73,48,79,,,,,,FRB,https://www.forebet.com/en/football/matches/slovenia-scotland-2552248,2026-09-26,15:00,UTC(normalized from HKJC HKT),1
+26/09/2026,13:00,NCQ,South Africa,Guinea,38,40,22,78,60,62,,,,,,FRB,https://www.forebet.com/en/football/matches/south-africa-guinea-2554600,2026-09-26,15:00,UTC(normalized from HKJC HKT),1
+26/09/2026,13:00,NTLW,Steinkjer W,Rana W,41,21,38,62,79,59,,,,,,FRB,,2026-09-26,21:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,ED3,Bristol Rovers,Exeter City,56,29,15,85,71,44,,,,,,FRB,,2026-09-26,22:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,ED2,Cambridge Utd,AFC Wimbledon,37,32,31,69,68,63,,,,,,FRB,,2026-09-26,22:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,ED3,Cheltenham,Chesterfield,26,36,37,62,63,73,,,,,,FRB,,2026-09-26,22:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,L2,Fleetwood Town,Rochdale,39,42,19,81,58,61,,,,,,FRB,https://www.forebet.com/en/football/matches/fleetwood-town-rochdale-2508209,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,L2,Newport County,Grimsby Town,18,46,36,64,54,82,,,,,,FRB,https://www.forebet.com/en/football/matches/newport-county-grimsby-town-2508208,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,ED2,Plymouth Argyle,Burton Albion,47,30,23,77,70,53,,,,,,FRB,,2026-09-26,22:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,L2,Rotherham,Crewe Alexandra,20,62,18,82,38,80,,,,,,FRB,https://www.forebet.com/en/football/matches/rotherham-crewe-alexandra-2508206,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,L2,Shrewsbury,Colchester Utd,37,39,24,76,61,63,,,,,,FRB,https://www.forebet.com/en/football/matches/shrewsbury-colchester-utd-2508205,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,ED2,Stockport County,Peterborough,54,26,20,80,74,46,,,,,,FRB,,2026-09-26,22:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,L2,Swindon Town,Accrington Stanley,53,30,16,83,69,46,,,,,,FRB,https://www.forebet.com/en/football/matches/swindon-town-accrington-stanley-2508204,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,L2,Tranmere Rovers,Walsall FC,21,45,35,66,56,80,,,,,,FRB,https://www.forebet.com/en/football/matches/tranmere-rovers-walsall-fc-2508203,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,L1,Wycombe,Reading,21,42,37,63,58,79,,,,,,FRB,https://www.forebet.com/en/football/matches/wycombe-reading-2507649,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:00,L2,York City,Gillingham,19,55,26,74,45,81,,,,,,FRB,https://www.forebet.com/en/football/matches/york-city-gillingham-2508202,2026-09-26,16:00,UTC(normalized from HKJC HKT),1
+26/09/2026,14:15,Es2,Granada,FC Andorra,57,31,12,88,69,43,,72,28,,,FRB,https://www.forebet.com/en/football/matches/granada-fc-andorra-2509360,2026-09-26,16:15,UTC(normalized from HKJC HKT),1
+26/09/2026,14:30,Nl2,Heracles,Vitesse,39,23,38,62,77,61,,31,69,,,FRB,https://www.forebet.com/en/football/matches/heracles-vitesse-2492382,2026-09-26,16:30,UTC(normalized from HKJC HKT),1
+26/09/2026,14:30,EsW,Logroño W,Barcelona W,8,16,76,24,84,92,,,,,,FRB,https://www.forebet.com/en/football/matches/logroño-w-barcelona-w-2529388,2026-09-26,16:30,UTC(normalized from HKJC HKT),1
+26/09/2026,15:00,E21,Croatia U21,Hungary U21,66,20,14,86,80,34,,48,52,,,FRB,https://www.forebet.com/en/football/matches/croatia-u21-hungary-u21-2444689,2026-09-26,17:00,UTC(normalized from HKJC HKT),1
+26/09/2026,15:00,E21,Georgia U21,Greece U21,22,37,41,59,63,78,,,,,,FRB,https://www.forebet.com/en/football/matches/georgia-u21-greece-u21-2444690,2026-09-26,17:00,UTC(normalized from HKJC HKT),1
+26/09/2026,15:55,GCN,Kuwait,Iraq,27,38,35,65,62,73,,63,37,,,FRB,https://www.forebet.com/en/football/matches/kuwait-iraq-2552224,2026-09-26,17:00,UTC(normalized from HKJC HKT),1
+26/09/2026,16:00,UNL,Bulgaria,Luxembourg,27,49,24,76,51,73,,,,,,FRB,https://www.forebet.com/en/football/matches/bulgaria-luxembourg-2552251,2026-09-26,18:00,UTC(normalized from HKJC HKT),1
+26/09/2026,16:00,UNL,Faroe Islands,Kazakhstan,33,53,14,86,47,67,,,,,,FRB,https://www.forebet.com/en/football/matches/faroe-islands-kazakhstan-2552252,2026-09-26,18:00,UTC(normalized from HKJC HKT),1
+26/09/2026,16:00,UNL,Iceland,Estonia,41,33,26,74,67,59,,,,,,FRB,https://www.forebet.com/en/football/matches/iceland-estonia-2552250,2026-09-26,18:00,UTC(normalized from HKJC HKT),1
+26/09/2026,16:00,UNL,San Marino,Finland,27,25,48,52,75,73,,,,,,FRB,https://www.forebet.com/en/football/matches/san-marino-finland-2552249,2026-09-26,18:00,UTC(normalized from HKJC HKT),1
+26/09/2026,16:00,E21,Ukraine U21,Türkiye U21,30,38,32,68,62,70,,,,,,FRB,https://www.forebet.com/en/football/matches/ukraine-u21-türkiye-u21-2444687,2026-09-26,18:00,UTC(normalized from HKJC HKT),1
+26/09/2026,16:30,ED3,Oldham Athletic,Salford City,35,28,37,63,72,65,,,,,,FRB,,2026-09-26,00:30,UTC(normalized from HKJC HKT),1
+26/09/2026,16:30,Es2,Tenerife,Cadiz,51,34,15,85,66,49,,51,49,,,FRB,https://www.forebet.com/en/football/matches/tenerife-cadiz-2509356,2026-09-26,18:30,UTC(normalized from HKJC HKT),1
+26/09/2026,18:00,Nl2,Emmen,TOP Oss,59,19,22,78,81,41,,18,82,,,FRB,https://www.forebet.com/en/football/matches/emmen-top-oss-2492387,2026-09-26,20:00,UTC(normalized from HKJC HKT),1
+26/09/2026,18:00,Nl2,MVV Maastricht,Helmond Sport,44,29,27,73,71,56,,33,67,,,FRB,https://www.forebet.com/en/football/matches/mvv-maastricht-helmond-sport-2492385,2026-09-26,20:00,UTC(normalized from HKJC HKT),1
+26/09/2026,18:00,Nl2,NAC Breda,FC Eindhoven,31,36,33,67,64,69,,42,58,,,FRB,https://www.forebet.com/en/football/matches/nac-breda-fc-eindhoven-2492384,2026-09-26,20:00,UTC(normalized from HKJC HKT),1
+26/09/2026,18:00,Nl2,Roda Kerkrade,Waalwijk,21,43,36,64,57,79,,54,46,,,FRB,https://www.forebet.com/en/football/matches/roda-kerkrade-waalwijk-2492383,2026-09-26,20:00,UTC(normalized from HKJC HKT),1
+26/09/2026,18:00,Nl2,Volendam,VVV Venlo,37,16,47,53,84,63,,23,77,,,FRB,https://www.forebet.com/en/football/matches/volendam-vvv-venlo-2492386,2026-09-26,20:00,UTC(normalized from HKJC HKT),1
+26/09/2026,18:45,UNL,Albania,Belarus,24,48,28,72,52,76,,,,,,FRB,https://www.forebet.com/en/football/matches/albania-belarus-2552257,2026-09-26,20:45,UTC(normalized from HKJC HKT),1
+26/09/2026,18:45,UNL,Czech Republic,Croatia,32,45,23,77,55,68,,,,,,FRB,https://www.forebet.com/en/football/matches/czech-republic-croatia-2552254,2026-09-26,20:45,UTC(normalized from HKJC HKT),1
+26/09/2026,18:45,UNL,England,Spain,27,41,32,68,59,73,,,,,,FRB,https://www.forebet.com/en/football/matches/england-spain-2552253,2026-09-26,20:45,UTC(normalized from HKJC HKT),1
+26/09/2026,18:45,UNL,North Macedonia,Switzerland,53,28,19,81,72,47,,,,,,FRB,https://www.forebet.com/en/football/matches/north-macedonia-switzerland-2552255,2026-09-26,20:45,UTC(normalized from HKJC HKT),1
+26/09/2026,18:45,UNL,Slovakia,Moldova,42,32,26,74,68,58,,,,,,FRB,https://www.forebet.com/en/football/matches/slovakia-moldova-2552256,2026-09-26,20:45,UTC(normalized from HKJC HKT),1
+26/09/2026,19:28,Br2,Nautico,Sport Recife,33,31,36,64,69,67,,,,,,FRB,https://www.forebet.com/en/football/matches/nautico-sport-recife-2442949,2026-09-26,21:30,UTC(normalized from HKJC HKT),1
+26/09/2026,19:28,BD2,Operário PR,Ceará SC,44,31,24,75,68,55,,,,,,FRB,,2026-09-26,03:28,UTC(normalized from HKJC HKT),1
+26/09/2026,19:30,BrW,Corinthians W,São Paulo W,32,33,35,65,67,68,,,,,,FRB,https://www.forebet.com/en/football/matches/corinthians-w-são-paulo-w-2557097,2026-09-26,21:30,UTC(normalized from HKJC HKT),1
+26/09/2026,20:27,ClC,Ñublense,Puerto Montt,37,39,24,76,61,63,,,,,,FRB,https://www.forebet.com/en/football/matches/Ñublense-puerto-montt-2553967,2026-09-26,22:30,UTC(normalized from HKJC HKT),1
+26/09/2026,21:27,UD1,Peñarol,Boston River,62,22,16,84,78,38,,,,,,FRB,,2026-09-26,05:27,UTC(normalized from HKJC HKT),1
+26/09/2026,21:28,Br2,Goiás,Atlético GO,28,37,35,65,63,72,,,,,,FRB,https://www.forebet.com/en/football/matches/goiás-atlético-go-2442953,2026-09-26,23:30,UTC(normalized from HKJC HKT),1
+26/09/2026,22:00,Mx2,Tlaxcala,Cancun,31,26,43,57,74,69,,,,,,FRB,https://www.forebet.com/en/football/matches/tlaxcala-cancun-2475155,2026-09-27,00:00,UTC(normalized from HKJC HKT),1
+26/09/2026,22:50,Mx1,Cruz Azul,Deportivo Toluca,27,28,45,55,72,73,,46,54,,,FRB,https://www.forebet.com/en/football/matches/cruz-azul-deportivo-toluca-2468148,2026-09-27,00:50,UTC(normalized from HKJC HKT),1
+26/09/2026,22:57,ClC,Universidad Católica,Unión La Calera,58,18,24,76,82,42,,,,,,FRB,https://www.forebet.com/en/football/matches/universidad-católica-unión-la-calera-2553968,2026-09-27,01:00,UTC(normalized from HKJC HKT),1
+26/09/2026,23:07,Mx1,Guadalajara Chivas,Querétaro FC,32,36,33,68,65,69,,52,48,,,FRB,https://www.forebet.com/en/football/matches/guadalajara-chivas-querétaro-fc-2468145,2026-09-27,01:07,UTC(normalized from HKJC HKT),1
+26/09/2026,23:30,Us1,Atlanta United,New York City FC,28,39,33,67,61,72,,32,68,,,FRB,https://www.forebet.com/en/football/matches/atlanta-united-new-york-city-fc-2426904,2026-09-27,01:30,UTC(normalized from HKJC HKT),1
+26/09/2026,23:30,Us1,Charlotte FC,Chicago Fire,39,41,20,80,59,61,,23,77,,,FRB,https://www.forebet.com/en/football/matches/charlotte-fc-chicago-fire-2426905,2026-09-27,01:30,UTC(normalized from HKJC HKT),1
+26/09/2026,23:30,Us1,Montreal Impact,FC Cincinnati,31,36,32,67,63,68,,24,76,,,FRB,https://www.forebet.com/en/football/matches/montreal-impact-fc-cincinnati-2426901,2026-09-27,01:30,UTC(normalized from HKJC HKT),1
+26/09/2026,23:30,Us1,New York Red Bulls,Saint Louis City,30,33,38,63,68,71,,60,40,,,FRB,https://www.forebet.com/en/football/matches/new-york-red-bulls-saint-louis-city-2426902,2026-09-27,01:30,UTC(normalized from HKJC HKT),1
+26/09/2026,23:30,Us1,Philadelphia Union,Orlando City SC,33,35,31,68,64,66,,22,78,,,FRB,https://www.forebet.com/en/football/matches/philadelphia-union-orlando-city-sc-2426903,2026-09-27,01:30,UTC(normalized from HKJC HKT),1
+27/09/2026,00:30,Us1,Austin FC,San Diego,43,24,33,67,76,57,,44,56,,,FRB,https://www.forebet.com/en/football/matches/austin-fc-san-diego-2426909,2026-09-27,02:30,UTC(normalized from HKJC HKT),1
+27/09/2026,00:30,Us1,FC Dallas,Los Angeles FC,31,36,32,67,63,68,,38,62,,,FRB,https://www.forebet.com/en/football/matches/fc-dallas-los-angeles-fc-2426907,2026-09-27,02:30,UTC(normalized from HKJC HKT),1
+27/09/2026,00:30,Us1,Houston Dynamo,Sporting Kansas City,55,19,25,74,80,44,,26,74,,,FRB,https://www.forebet.com/en/football/matches/houston-dynamo-sporting-kansas-city-2426910,2026-09-27,02:30,UTC(normalized from HKJC HKT),1
+27/09/2026,00:30,Us1,Nashville SC,Toronto FC,59,26,14,85,73,40,,41,59,,,FRB,https://www.forebet.com/en/football/matches/nashville-sc-toronto-fc-2426906,2026-09-27,02:30,UTC(normalized from HKJC HKT),1
+27/09/2026,00:30,Us1,Seattle Sounders,Minnesota United,49,24,27,73,76,51,,21,79,,,FRB,https://www.forebet.com/en/football/matches/seattle-sounders-minnesota-united-2426908,2026-09-27,02:30,UTC(normalized from HKJC HKT),1
+27/09/2026,01:00,Mx2,Dorados Sinaloa,Alacranes Durango,28,42,30,70,58,72,,,,,,FRB,https://www.forebet.com/en/football/matches/dorados-sinaloa-alacranes-durango-2475157,2026-09-27,03:00,UTC(normalized from HKJC HKT),1
+27/09/2026,01:30,Us1,Real Salt Lake,New England Revolution,40,19,41,59,81,60,,39,61,,,FRB,https://www.forebet.com/en/football/matches/real-salt-lake-new-england-revolution-2426911,2026-09-27,03:30,UTC(normalized from HKJC HKT),1
+27/09/2026,02:00,Us2,Orange County SC,Pittsburgh Riverhounds,40,31,29,71,69,60,,,,,,FRB,https://www.forebet.com/en/football/matches/orange-county-sc-pittsburgh-riverhounds-2436472,2026-09-27,04:00,UTC(normalized from HKJC HKT),1
+27/09/2026,02:30,Us1,Los Angeles Galaxy,Colorado Rapids,38,29,34,67,72,63,,47,53,,,FRB,https://www.forebet.com/en/football/matches/los-angeles-galaxy-colorado-rapids-2426912,2026-09-27,04:30,UTC(normalized from HKJC HKT),1
+27/09/2026,02:30,Us1,San Jose Earthquakes,Portland Timbers,43,24,33,67,76,57,,46,54,,,FRB,https://www.forebet.com/en/football/matches/san-jose-earthquakes-portland-timbers-2426914,2026-09-27,04:30,UTC(normalized from HKJC HKT),1
+27/09/2026,02:30,Us1,Vancouver Whitecaps,DC United,38,32,30,70,68,62,,44,56,,,FRB,https://www.forebet.com/en/football/matches/vancouver-whitecaps-dc-united-2426913,2026-09-27,04:30,UTC(normalized from HKJC HKT),1
+27/09/2026,03:05,Mx1,Santos Laguna,Pachuca CF,17,41,42,58,59,83,,53,47,,,FRB,https://www.forebet.com/en/football/matches/santos-laguna-pachuca-cf-2468147,2026-09-27,05:05,UTC(normalized from HKJC HKT),1
+27/09/2026,03:10,Mx1,Tigres UANL,Puebla FC,36,30,34,66,70,64,,59,41,,,FRB,https://www.forebet.com/en/football/matches/tigres-uanl-puebla-fc-2468146,2026-09-27,05:15,UTC(normalized from HKJC HKT),1
+27/09/2026,10:00,Kr1,Gangwon FC,Incheon United,38,35,26,73,64,61,,57,43,,,FRB,https://www.forebet.com/en/football/matches/gangwon-fc-incheon-united-2430964,2026-09-27,12:00,UTC(normalized from HKJC HKT),1
+27/09/2026,11:00,SeW,Rosengard W,Pitea W,34,37,29,71,63,66,,,,,,FRB,https://www.forebet.com/en/football/matches/rosengard-w-pitea-w-2446201,2026-09-27,13:00,UTC(normalized from HKJC HKT),1
+27/09/2026,12:00,Es2,Real Valladolid,Córdoba,42,25,33,67,75,58,,44,56,,,FRB,https://www.forebet.com/en/football/matches/real-valladolid-córdoba-2509355,2026-09-27,14:00,UTC(normalized from HKJC HKT),1
+27/09/2026,12:30,Nl2,De Graafschap,FC Den Bosch,42,24,34,66,76,58,,35,65,,,FRB,https://www.forebet.com/en/football/matches/de-graafschap-fc-den-bosch-2492388,2026-09-27,14:30,UTC(normalized from HKJC HKT),1
+27/09/2026,13:00,UNL,Lithuania,Azerbaijan,36,35,29,71,65,64,,50,50,,,FRB,https://www.forebet.com/en/football/matches/lithuania-azerbaijan-2552258,2026-09-27,15:00,UTC(normalized from HKJC HKT),1
+27/09/2026,14:15,Es2,Real Mallorca,UD Almería,46,28,26,74,72,54,,54,46,,,FRB,https://www.forebet.com/en/football/matches/real-mallorca-ud-almería-2509358,2026-09-27,16:15,UTC(normalized from HKJC HKT),1
+27/09/2026,15:27,ClC,Antofagasta,Deportes Iquique,46,32,22,78,68,54,,,,,,FRB,https://www.forebet.com/en/football/matches/antofagasta-deportes-iquique-2553969,2026-09-27,17:30,UTC(normalized from HKJC HKT),1
+27/09/2026,16:00,UNL,Austria,Kosovo,40,33,27,73,67,60,,49,51,,,FRB,https://www.forebet.com/en/football/matches/austria-kosovo-2552261,2026-09-27,18:00,UTC(normalized from HKJC HKT),1
+27/09/2026,16:00,UNL,Denmark,Wales,38,42,20,80,58,62,,58,42,,,FRB,https://www.forebet.com/en/football/matches/denmark-wales-2552259,2026-09-27,18:00,UTC(normalized from HKJC HKT),1
+27/09/2026,16:00,UNL,Gibraltar,Andorra,29,46,25,75,54,71,,73,27,,,FRB,https://www.forebet.com/en/football/matches/gibraltar-andorra-2552262,2026-09-27,18:00,UTC(normalized from HKJC HKT),1
+27/09/2026,16:00,UNL,Serbia,Netherlands,19,46,35,65,54,81,,67,33,,,FRB,https://www.forebet.com/en/football/matches/serbia-netherlands-2552260,2026-09-27,18:00,UTC(normalized from HKJC HKT),1
+27/09/2026,16:30,Es2,Burgos CF,Eldense,49,27,24,76,73,51,,61,39,,,FRB,https://www.forebet.com/en/football/matches/burgos-cf-eldense-2509365,2026-09-27,18:30,UTC(normalized from HKJC HKT),1
+27/09/2026,16:30,Es2,Eibar,Las Palmas,42,24,33,66,75,57,,41,59,,,FRB,https://www.forebet.com/en/football/matches/eibar-las-palmas-2509362,2026-09-27,18:30,UTC(normalized from HKJC HKT),1
+27/09/2026,17:57,ClC,Deportes Concepción,Curicó Unido,44,35,21,79,65,56,,,,,,FRB,https://www.forebet.com/en/football/matches/deportes-concepción-curicó-unido-2553970,2026-09-27,20:00,UTC(normalized from HKJC HKT),1
+27/09/2026,18:00,Mx1,UNAM Pumas,Atlético San Luis,38,35,27,73,65,62,,35,65,,,FRB,https://www.forebet.com/en/football/matches/unam-pumas-atlético-san-luis-2468149,2026-09-27,20:00,UTC(normalized from HKJC HKT),1
+27/09/2026,18:45,UNL,Germany,Greece,44,27,29,71,73,56,,19,81,,,FRB,https://www.forebet.com/en/football/matches/germany-greece-2552264,2026-09-27,20:45,UTC(normalized from HKJC HKT),1
+27/09/2026,18:45,UNL,Israel,Ireland,28,33,39,61,67,72,,51,49,,,FRB,https://www.forebet.com/en/football/matches/israel-ireland-2552265,2026-09-27,20:45,UTC(normalized from HKJC HKT),1
+27/09/2026,18:45,UNL,Norway,Portugal,38,29,33,67,71,62,,58,42,,,FRB,https://www.forebet.com/en/football/matches/norway-portugal-2552263,2026-09-27,20:45,UTC(normalized from HKJC HKT),1
+27/09/2026,18:58,Br2,CRB AL,Cuiabá,26,38,37,64,63,75,,,,,,FRB,https://www.forebet.com/en/football/matches/crb-al-cuiabá-2442956,2026-09-27,21:00,UTC(normalized from HKJC HKT),1
+27/09/2026,19:00,Es2,Real Oviedo,Sporting Gijón,23,35,41,58,64,76,,68,32,,,FRB,https://www.forebet.com/en/football/matches/real-oviedo-sporting-gijón-2509357,2026-09-27,21:00,UTC(normalized from HKJC HKT),1
+27/09/2026,19:58,ArC,Racing Club,Boca Juniors,33,32,35,65,68,67,,57,43,,,FRB,https://www.forebet.com/en/football/matches/racing-club-boca-juniors-2550574,2026-09-27,22:00,UTC(normalized from HKJC HKT),1
+27/09/2026,20:57,Uy1,Defensor Sporting,Danubio FC,34,48,18,82,52,66,,,,,,FRB,https://www.forebet.com/en/football/matches/defensor-sporting-danubio-fc-2557047,2026-09-27,23:00,UTC(normalized from HKJC HKT),1
+27/09/2026,22:57,ClC,Deportes Santa Cruz,O Higgins,30,39,31,69,61,70,,,,,,FRB,https://www.forebet.com/en/football/matches/deportes-santa-cruz-o-higgins-2553972,2026-09-28,01:00,UTC(normalized from HKJC HKT),1
+27/09/2026,23:00,Us1,Columbus Crew,Inter Miami CF,18,32,50,50,68,82,,47,53,,,FRB,https://www.forebet.com/en/football/matches/columbus-crew-inter-miami-cf-2426915,2026-09-28,01:00,UTC(normalized from HKJC HKT),1
