@@ -1,105 +1,100 @@
 ﻿checked_at_hkt,match_date,kickoff_hkt,hkjc_event_id,league_zh,home_en,away_en,state,reason,source_home_team,source_away_team,source_competition,fixture_match_score,identity_status,identity_source
-2026-09-27T02:42:14+08:00,2026-09-26,2026-09-27 02:00,FB5732,DF2,Emmen,Oss,MODEL,usable_forebet_prediction_model_after_reconcile,FC Emmen,Oss,Netherlands: Eerste Divisie,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:42:14+08:00,2026-09-26,2026-09-27 02:00,FB5733,DF2,Maastricht,Helmond,MODEL,usable_forebet_prediction_model_after_reconcile,Maastricht,Helmond,Netherlands: Eerste Divisie,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:42:14+08:00,2026-09-26,2026-09-27 02:00,FB5734,DF2,Volendam,Venlo,MODEL,usable_forebet_prediction_model_after_reconcile,FC Volendam,Venlo,Netherlands: Eerste Divisie,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:42:14+08:00,2026-09-26,2026-09-27 02:00,FB5735,DF2,Roda,RKC Waalwijk,MODEL,usable_forebet_prediction_model_after_reconcile,Roda,Waalwijk,Netherlands: Eerste Divisie,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 02:00,FB5736,DF2,NAC,FC Eindhoven,MODEL,usable_forebet_prediction_model,NAC Breda,Eindhoven FC,Netherlands: Eerste Divisie,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 02:00,FB5854,MD1,Cruz Azul Hidalgo,Universidad Guadalajara,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Cruz Azul,Guadalajara Chivas,Mexico: Liga Mx - Apertura,0.980,VERIFIED,FOREBET_LIVESCORE
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 02:00,FB5864,GUC,Saudi Arabia,Oman,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 02:45,FB5748,ENL,England,Spain,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 02:45,FB5749,ENL,Czechia,Croatia,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 02:45,FB5750,ENL,Albania,Belarus,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 02:45,FB5752,ENL,North Macedonia,Switzerland,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 02:45,FB5755,ENL,Slovakia,Moldova,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 02:58,FB5879,AUC,Estudiantes,Rosario Central,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Estudiantes L.P.,Rosario Central,Argentina: International Super Cup,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 03:28,FB5842,BD2,Operario Ferroviario,Ceara,MODEL,usable_forebet_prediction_model,Operario-PR,Ceara,Brazil: Serie B,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 03:28,FB5855,BD2,Nautico Recife,Sport Recife,MODEL,usable_forebet_prediction_model,Nautico,Sport Recife,Brazil: Serie B,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 03:30,FB5876,BD1W,Corinthians Women,Sao Paulo Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 04:27,FB5840,CHC,Deportivo Nublense,Puerto Montt,MODEL,usable_forebet_prediction_model,Nublense,D. Puerto Montt,Chile: Copa Chile - Play Offs,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 04:30,FB5874,INT,USA,Peru,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,USA,Peru,World: Friendly International,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 05:27,FB5817,UD1,Penarol,Boston River,MODEL,usable_forebet_prediction_model,Penarol,Boston River,Uruguay: Liga Auf Uruguaya - Clausura,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 05:28,FB5843,BD2,Goias,Atletico Goianiense,MODEL,usable_forebet_prediction_model,Goias,Atletico GO,Brazil: Serie B,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 06:00,FB5853,MD1,Tlaxcala,Cancun FC,MODEL,usable_forebet_prediction_model,Tlaxcala,Cancun,Mexico: Liga De Expansion Mx - Apertura,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 06:30,FB5905,MLSW,Washington Spirit Women,Angel City Women,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Washington Spirit W,Angel City W,USA: Nwsl Women,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 06:50,FB5863,MXL,Cruz Azul,Toluca,MODEL,usable_forebet_prediction_model,Cruz Azul,Toluca,Mexico: Liga Mx - Apertura,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 06:57,FB5839,CHC,Universidad Catolica,Union La Calera,MODEL,usable_forebet_prediction_model,U. Catolica,Union La Calera,Chile: Copa Chile - Play Offs,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 07:00,FB5875,INT,Canada,Chile,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Canada,Chile,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 07:07,FB5862,MXL,Guadalajara,Queretaro,MODEL,usable_forebet_prediction_model,Guadalajara Chivas,Queretaro,23:7,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 07:30,FB5820,MLS,Atlanta Utd,New York City,MODEL,usable_forebet_prediction_model,Atlanta Utd,New York City,USA: Mls,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 07:30,FB5822,MLS,Philadelphia Union,Orlando City,MODEL,usable_forebet_prediction_model,Philadelphia Union,Orlando City,USA: Mls,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 07:30,FB5824,MLS,CF Montreal,FC Cincinnati,MODEL,usable_forebet_prediction_model,CF Montreal,FC Cincinnati,USA: Mls,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:39:31+08:00,2026-09-26,2026-09-27 07:30,FB5831,MLS,Charlotte FC,Chicago Fire,MODEL,usable_forebet_prediction_model,Charlotte,Chicago Fire,USA: Mls,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 08:30,FB5819,MLS,Nashville SC,Toronto FC,MODEL,usable_forebet_prediction_model,Nashville SC,Toronto FC,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 08:30,FB5821,MLS,FC Dallas,Los Angeles FC,MODEL,usable_forebet_prediction_model,FC Dallas,Los Angeles FC,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 08:30,FB5823,MLS,Austin FC,San Diego FC,MODEL,usable_forebet_prediction_model,Austin FC,San Diego FC,USA: Mls,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 08:30,FB5826,MLS,Houston Dynamo,Sporting Kansas City,MODEL,usable_forebet_prediction_model,Houston Dynamo,Sporting Kansas City,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 08:30,FB5830,MLS,Seattle Sounders,Minnesota Utd,MODEL,usable_forebet_prediction_model,Seattle Sounders,Minnesota United,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 09:00,FB5860,MD1,Dorados,Alacranes de Durango,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 09:00,FB5873,INT,Mexico,Colombia,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 09:30,FB5827,MLS,Real Salt Lake,New England Revolution,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 10:00,FB5783,USL,Oakland Roots,Phoenix Rising,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 10:00,FB5789,USL,Orange County SC,Pittsburgh Riverhounds,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 10:30,FB5825,MLS,San Jose Earthquakes,Portland Timbers,MODEL,usable_forebet_prediction_model,5San Jose Earthquakes4226 12 6 8 8,9Portland Timbers3226 9 5 12-1,,0.960,VERIFIED,FOREBET_LIVESCORE
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 10:30,FB5829,MLS,Vancouver Whitecaps,DC United,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 10:30,FB5832,MLS,LA Galaxy,Colorado Rapids,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 11:05,FB5837,MXL,Santos Laguna,Pachuca,MODEL,usable_forebet_prediction_model,Santos Laguna U21,Pachuca U21,Mexico: Liga Mx U21 - Apertura,0.960,VERIFIED,FOREBET_LIVESCORE
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 11:10,FB5836,MXL,Tigres UANL,Puebla,MODEL,usable_forebet_prediction_model,Tigres UANL U21,Puebla U21,Mexico: Liga Mx U21 - Apertura,0.960,VERIFIED,FOREBET_LIVESCORE
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 12:00,FB5900,JLCW,Albirex Niigata Women,Urawa Reds Women,UNRESOLVED,forebet_alias_near_miss_review,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 13:00,FB5895,JLCW,Mynavi Sendai Women,Elfen Saitama Women,UNRESOLVED,forebet_alias_near_miss_review,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 15:00,FB5896,JLCW,RB Omiya Ardija Women,JEF United Chiba Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 16:00,FB5899,JLCW,Kobe Leonessa Women,Sanfrecce Hiroshima Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 17:00,FB5897,JLCW,Nagano Parceiro Women,Nojima Stella Sagamihara Women,UNRESOLVED,forebet_alias_near_miss_review,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 17:00,FB5898,JLCW,Cerezo Osaka Women,Tokyo Verdy Women,UNRESOLVED,forebet_alias_near_miss_review,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 18:00,FB5687,KD1,Gangwon FC,Incheon Utd,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 18:00,FB5910,SFLW,Valencia Women,Tenerife Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 18:00,FB5920,SFLW,Bilbao Women,Atletico Madrid Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 18:30,FB5909,ISAW,Ternana Women,FC Como Women,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Trencin W,Komarno W,Slovakia: Orange Liga Women,0.776,CANDIDATE,FOREBET_LIVESCORE
-2026-09-27T02:42:14+08:00,2026-09-27,2026-09-27 19:00,FB5844,SALW,Rosengard Women,Pitea Women,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 19:00,FB5848,SALW,Brommapojkarna Women,Malmo Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 19:00,FB5911,ISAW,Inter Milan Women,Fiorentina Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 19:35,FB5894,INT,China,New Zealand,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:42:14+08:00,2026-09-27,2026-09-27 20:00,FB5797,SF2,Valladolid,Cordoba,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 20:00,FB5912,EPLW,Manchester Utd Women,West Ham Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:42:14+08:00,2026-09-27,2026-09-27 20:30,FB5737,DF2,De Graafschap,Den Bosch,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 21:00,FB5884,ENL,Lithuania,Azerbaijan,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 21:00,FB5913,EPLW,Tottenham Women,Aston Villa Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 21:00,FB5914,ISAW,Sassuolo Women,Roma Women,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Napoli W,Parma W,Italy: Serie A Women,0.775,CANDIDATE,FOREBET_LIVESCORE
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 21:00,FB5915,EPLW,Birmingham Women,Crystal Palace Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 21:00,FB5916,EPLW,Liverpool Women,Everton Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 21:57,FB5816,UD1,Central Espanol,Montevideo Liverpool,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 21:58,FB5845,BD2,Criciuma,Avai,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 21:58,FB5904,APLW,River Plate Women,Racing Club Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 22:00,FB5917,SFLW,Sevilla Women,Eibar Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:42:14+08:00,2026-09-27,2026-09-27 22:15,FB5798,SF2,Mallorca,Almeria,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 23:27,FB5861,CHC,Antofagasta,Iquique,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 23:30,FB5918,EPLW,Chelsea Women,Arsenal Women,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-27 23:55,FB5902,GUC,Yemen,Qatar,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 00:00,FB5808,UWW,Spain Women U20,Korea DPR Women U20,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 00:00,FB5885,ENL,Austria,Kosovo,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 00:00,FB5886,ENL,Denmark,Wales,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 00:00,FB5887,ENL,Gibraltar,Andorra,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 00:00,FB5888,ENL,Serbia,Netherlands,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:42:14+08:00,2026-09-27,2026-09-28 00:30,FB5799,SF2,Eibar,Las Palmas,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-27T02:42:14+08:00,2026-09-27,2026-09-28 00:30,FB5800,SF2,Burgos,CD Eldense,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 01:00,FB5919,INT,Jordan,Syria,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 01:57,FB5814,UD1,Juventud Las Piedras,CA Cerro,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 01:57,FB5850,CHC,Deportes Concepcion,Curico Unido,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 02:00,FB5835,MXL,Pumas UNAM,Atletico San Luis,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 02:00,FB5901,GUC,Bahrain,United Arab Emirates,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 02:45,FB5889,ENL,Germany,Greece,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 02:45,FB5890,ENL,Israel,Republic of Ireland,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 02:45,FB5891,ENL,Norway,Portugal,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 02:58,FB5846,BD2,CRB,Cuiaba,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:42:14+08:00,2026-09-27,2026-09-28 03:00,FB5801,SF2,Oviedo,Gijon,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 03:58,FB5793,AGC,Racing Club,Boca Juniors,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 04:30,FB5906,INT,Bolivia,Paraguay,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 04:57,FB5813,UD1,Defensor Sporting,Danubio,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 05:28,FB5847,BD2,Fortaleza,Athletic Club MG,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 06:57,FB5838,CHC,Deportes Santa Cruz,O'Higgins,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:01+08:00,2026-09-27,2026-09-28 07:00,FB5828,MLS,Columbus Crew,Inter Miami CF,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:51+08:00,2026-09-28,2026-09-28 09:00,FB5834,MXL,Club Leon,Juarez,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:51+08:00,2026-09-28,2026-09-28 11:00,FB5833,MXL,Necaxa,CF America,MODEL,usable_forebet_prediction_model,,,,,,
-2026-09-27T02:41:51+08:00,2026-09-28,2026-09-28 18:25,FB5907,INT,Japan,Venezuela,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:51+08:00,2026-09-28,2026-09-28 19:00,FB5908,INT,Korea Republic,Uruguay,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:51+08:00,2026-09-28,2026-09-29 00:30,FB5903,E2Q,Denmark U21,Belarus U21,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
-2026-09-27T02:41:51+08:00,2026-09-28,2026-09-29 02:30,FB5802,SF2,Leganes,Castellon,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:57:43+08:00,2026-09-26,2026-09-27 06:00,FB5853,MD1,Tlaxcala,Cancun FC,MODEL,usable_forebet_prediction_model,Tlaxcala,Cancun,Mexico: Liga De Expansion Mx - Apertura,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
+2026-09-27T07:57:43+08:00,2026-09-26,2026-09-27 06:30,FB5905,MLSW,Washington Spirit Women,Angel City Women,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Washington Spirit W,Angel City W,USA: Nwsl Women,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-27T07:57:43+08:00,2026-09-26,2026-09-27 06:50,FB5863,MXL,Cruz Azul,Toluca,MODEL,usable_forebet_prediction_model,Cruz Azul,Toluca,Mexico: Liga Mx - Apertura,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
+2026-09-27T07:57:43+08:00,2026-09-26,2026-09-27 06:57,FB5839,CHC,Universidad Catolica,Union La Calera,MODEL,usable_forebet_prediction_model,U. Catolica,Union La Calera,Chile: Copa Chile - Play Offs,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-27T07:57:43+08:00,2026-09-26,2026-09-27 07:00,FB5875,INT,Canada,Chile,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Canada,Chile,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-27T07:57:43+08:00,2026-09-26,2026-09-27 07:07,FB5862,MXL,Guadalajara,Queretaro,MODEL,usable_forebet_prediction_model,Guadalajara Chivas,Queretaro,23:7,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
+2026-09-27T07:57:43+08:00,2026-09-26,2026-09-27 07:30,FB5820,MLS,Atlanta Utd,New York City,MODEL,usable_forebet_prediction_model,Atlanta Utd,New York City,USA: Mls,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
+2026-09-27T07:57:43+08:00,2026-09-26,2026-09-27 07:30,FB5822,MLS,Philadelphia Union,Orlando City,MODEL,usable_forebet_prediction_model,Philadelphia Union,Orlando City,USA: Mls,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
+2026-09-27T07:57:43+08:00,2026-09-26,2026-09-27 07:30,FB5824,MLS,CF Montreal,FC Cincinnati,MODEL,usable_forebet_prediction_model,CF Montreal,FC Cincinnati,USA: Mls,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
+2026-09-27T07:57:43+08:00,2026-09-26,2026-09-27 07:30,FB5831,MLS,Charlotte FC,Chicago Fire,MODEL,usable_forebet_prediction_model,Charlotte,Chicago Fire,USA: Mls,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 08:30,FB5819,MLS,Nashville SC,Toronto FC,MODEL,usable_forebet_prediction_model,Nashville SC,Toronto FC,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 08:30,FB5821,MLS,FC Dallas,Los Angeles FC,MODEL,usable_forebet_prediction_model,FC Dallas,Los Angeles FC,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 08:30,FB5823,MLS,Austin FC,San Diego FC,MODEL,usable_forebet_prediction_model,Austin FC,San Diego FC,USA: Mls,0.995,VERIFIED,FOREBET_STATIC_TEAM_MASTER
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 08:30,FB5826,MLS,Houston Dynamo,Sporting Kansas City,MODEL,usable_forebet_prediction_model,Houston Dynamo,Sporting Kansas City,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 08:30,FB5830,MLS,Seattle Sounders,Minnesota Utd,MODEL,usable_forebet_prediction_model,Seattle Sounders,Minnesota United,,1.000,CONTEXT_VERIFIED,FOREBET_STATIC_CONTEXT_MASTER
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 09:00,FB5860,MD1,Dorados,Alacranes de Durango,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 09:00,FB5873,INT,Mexico,Colombia,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 09:30,FB5827,MLS,Real Salt Lake,New England Revolution,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 10:00,FB5783,USL,Oakland Roots,Phoenix Rising,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 10:00,FB5789,USL,Orange County SC,Pittsburgh Riverhounds,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 10:30,FB5825,MLS,San Jose Earthquakes,Portland Timbers,MODEL,usable_forebet_prediction_model,5San Jose Earthquakes4226 12 6 8 8,9Portland Timbers3226 9 5 12-1,,0.960,VERIFIED,FOREBET_LIVESCORE
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 10:30,FB5829,MLS,Vancouver Whitecaps,DC United,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 10:30,FB5832,MLS,LA Galaxy,Colorado Rapids,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 11:05,FB5837,MXL,Santos Laguna,Pachuca,MODEL,usable_forebet_prediction_model,Santos Laguna U21,Pachuca U21,Mexico: Liga Mx U21 - Apertura,0.960,VERIFIED,FOREBET_LIVESCORE
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 11:10,FB5836,MXL,Tigres UANL,Puebla,MODEL,usable_forebet_prediction_model,Tigres UANL U21,Puebla U21,Mexico: Liga Mx U21 - Apertura,0.960,VERIFIED,FOREBET_LIVESCORE
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 12:00,FB5900,JLCW,Albirex Niigata Women,Urawa Reds Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 13:00,FB5895,JLCW,Mynavi Sendai Women,Elfen Saitama Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 15:00,FB5896,JLCW,RB Omiya Ardija Women,JEF United Chiba Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 16:00,FB5899,JLCW,Kobe Leonessa Women,Sanfrecce Hiroshima Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 17:00,FB5897,JLCW,Nagano Parceiro Women,Nojima Stella Sagamihara Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 17:00,FB5898,JLCW,Cerezo Osaka Women,Tokyo Verdy Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 18:00,FB5687,KD1,Gangwon FC,Incheon Utd,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 18:00,FB5910,SFLW,Valencia Women,Tenerife Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 18:00,FB5920,SFLW,Bilbao Women,Atletico Madrid Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 18:30,FB5909,ISAW,Ternana Women,FC Como Women,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Trencin W,Komarno W,Slovakia: Orange Liga Women,0.776,CANDIDATE,FOREBET_LIVESCORE
+2026-09-27T08:00:31+08:00,2026-09-27,2026-09-27 19:00,FB5844,SALW,Rosengard Women,Pitea Women,MODEL,usable_forebet_prediction_model_after_reconcile,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 19:00,FB5848,SALW,Brommapojkarna Women,Malmo Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 19:00,FB5911,ISAW,Inter Milan Women,Fiorentina Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 19:00,FB5934,SPLW,Rangers Women,Celtic Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 19:35,FB5894,INT,China,New Zealand,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 20:00,FB5797,SF2,Valladolid,Cordoba,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 20:00,FB5912,EPLW,Manchester Utd Women,West Ham Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 20:30,FB5737,DF2,De Graafschap,Den Bosch,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 21:00,FB5884,ENL,Lithuania,Azerbaijan,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 21:00,FB5913,EPLW,Tottenham Women,Aston Villa Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 21:00,FB5914,ISAW,Sassuolo Women,Roma Women,FIXTURE_ONLY,forebet_livescore_fixture_without_usable_prediction_model,Napoli W,Parma W,Italy: Serie A Women,0.775,CANDIDATE,FOREBET_LIVESCORE
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 21:00,FB5915,EPLW,Birmingham Women,Crystal Palace Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 21:00,FB5916,EPLW,Liverpool Women,Everton Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 21:57,FB5816,UD1,Central Espanol,Montevideo Liverpool,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 21:58,FB5845,BD2,Criciuma,Avai,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 21:58,FB5904,APLW,River Plate Women,Racing Club Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 22:00,FB5917,SFLW,Sevilla Women,Eibar Women,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 22:15,FB5798,SF2,Mallorca,Almeria,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 23:10,FB5935,SPLW,Hearts Women,Glasgow City Women,UNRESOLVED,forebet_alias_near_miss_review,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 23:27,FB5861,CHC,Antofagasta,Iquique,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 23:30,FB5918,EPLW,Chelsea Women,Arsenal Women,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-27 23:55,FB5902,GUC,Yemen,Qatar,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 00:00,FB5808,UWW,Spain Women U20,Korea DPR Women U20,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 00:00,FB5885,ENL,Austria,Kosovo,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 00:00,FB5886,ENL,Denmark,Wales,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 00:00,FB5887,ENL,Gibraltar,Andorra,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 00:00,FB5888,ENL,Serbia,Netherlands,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 00:30,FB5799,SF2,Eibar,Las Palmas,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 00:30,FB5800,SF2,Burgos,CD Eldense,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 01:00,FB5919,INT,Jordan,Syria,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 01:57,FB5814,UD1,Juventud Las Piedras,CA Cerro,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 01:57,FB5850,CHC,Deportes Concepcion,Curico Unido,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 02:00,FB5835,MXL,Pumas UNAM,Atletico San Luis,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 02:00,FB5901,GUC,Bahrain,United Arab Emirates,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 02:45,FB5889,ENL,Germany,Greece,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 02:45,FB5890,ENL,Israel,Republic of Ireland,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 02:45,FB5891,ENL,Norway,Portugal,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 02:58,FB5846,BD2,CRB,Cuiaba,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 03:00,FB5801,SF2,Oviedo,Gijon,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 03:58,FB5793,AGC,Racing Club,Boca Juniors,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 04:30,FB5906,INT,Bolivia,Paraguay,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 04:57,FB5813,UD1,Defensor Sporting,Danubio,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 05:28,FB5847,BD2,Fortaleza,Athletic Club MG,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 06:57,FB5838,CHC,Deportes Santa Cruz,O'Higgins,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 07:00,FB5828,MLS,Columbus Crew,Inter Miami CF,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T07:59:08+08:00,2026-09-27,2026-09-28 07:00,FB5932,CNL,Haiti,Costa Rica,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-28 08:00,FB5931,CNL,Curacao,Nicaragua,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-28 09:00,FB5834,MXL,Club Leon,Juarez,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-28 09:00,FB5933,CNL,Trinidad and Tobago,Dominican Republic,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-28 11:00,FB5833,MXL,Necaxa,CF America,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-28 18:25,FB5907,INT,Japan,Venezuela,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-28 19:00,FB5908,INT,Korea Republic,Uruguay,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 00:00,FB5923,ENL,Armenia,Montenegro,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 00:00,FB5924,ENL,Georgia,Ukraine,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 00:00,FB5925,ENL,Latvia,Cyprus,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 00:30,FB5903,E2Q,Denmark U21,Belarus U21,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 02:30,FB5802,SF2,Leganes,Castellon,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 02:45,FB5926,ENL,Belgium,France,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 02:45,FB5927,ENL,Northern Ireland,Hungary,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 02:45,FB5928,ENL,Sweden,Poland,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 02:45,FB5929,ENL,Romania,Bosnia-Herzegovina,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 02:45,FB5930,ENL,Turkiye,Italy,UNRESOLVED,forebet_fixture_absent_from_fetched_model_surfaces,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 06:28,FB5851,BD2,America Mineiro,Juventude,MODEL,usable_forebet_prediction_model,,,,,,
+2026-09-27T08:00:09+08:00,2026-09-28,2026-09-29 06:57,FB5812,UD1,Montevideo Wanderers,Albion FC,MODEL,usable_forebet_prediction_model,,,,,,
