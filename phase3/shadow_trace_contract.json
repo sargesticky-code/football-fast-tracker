@@ -1,0 +1,16 @@
+{
+  "phase": 3,
+  "lane": "fast-shadow",
+  "transport_trace_required_fields": [
+    "sequence",
+    "source",
+    "observed_at",
+    "network_latency_ms",
+    "success",
+    "error"
+  ],
+  "one_upstream_call_per_slot": true,
+  "exception_isolation_per_slot": true,
+  "heavy_lane_polled_by_executor": false,
+  "production_primary_changed": false
+}
