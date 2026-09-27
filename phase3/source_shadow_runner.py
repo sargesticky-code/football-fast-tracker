@@ -1,3 +1,6 @@
+from datetime import datetime, timezone
+from time import perf_counter
+
 from phase3.source_latency_benchmark import Candidate
 
 
@@ -19,3 +22,30 @@ def interleaved_request_plan(candidates, rounds=3):
         {"sequence": sequence, "source": name, "candidate": by_name[name]}
         for sequence, name in enumerate(order, start=1)
     ]
+
+
+def execute_transport_slot(slot):
+    """Execute one shadow slot exactly once and return transport-only evidence."""
+    observed_at = datetime.now(timezone.utc).isoformat()
+    started = perf_counter()
+    try:
+        payload = slot["candidate"].fetch()
+    except Exception as exc:
+        return {
+            "sequence": slot["sequence"],
+            "source": slot["source"],
+            "observed_at": observed_at,
+            "network_latency_ms": round((perf_counter() - started) * 1000, 3),
+            "success": False,
+            "error": f"{type(exc).__name__}: {exc}",
+            "payload": None,
+        }
+    return {
+        "sequence": slot["sequence"],
+        "source": slot["source"],
+        "observed_at": observed_at,
+        "network_latency_ms": round((perf_counter() - started) * 1000, 3),
+        "success": True,
+        "error": None,
+        "payload": payload,
+    }
