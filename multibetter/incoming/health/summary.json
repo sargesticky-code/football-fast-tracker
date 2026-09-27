@@ -1,14 +1,14 @@
 {
-  "built_at_hkt": "2026-09-27T09:25:47.118170+08:00",
+  "built_at_hkt": "2026-09-27T23:38:27.395317+08:00",
   "sources": {
     "FRB": {
       "source": "FRB",
       "status": "OK",
-      "rows": 61,
+      "rows": 36,
       "requests": 0,
       "errors": 0,
-      "started_at": "2026-09-27T09:24:47.650829+08:00",
-      "finished_at": "2026-09-27T09:24:47.657211+08:00",
+      "started_at": "2026-09-27T23:37:37.967048+08:00",
+      "finished_at": "2026-09-27T23:37:37.970332+08:00",
       "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
       "target_start": "2026-09-27",
       "target_end": "2026-09-28"
@@ -17,10 +17,10 @@
       "source": "ACC",
       "status": "OK",
       "rows": 262,
-      "requests": 108,
+      "requests": 102,
       "errors": 0,
-      "started_at": "2026-09-27T09:24:47.833577+08:00",
-      "finished_at": "2026-09-27T09:25:14.402117+08:00",
+      "started_at": "2026-09-27T23:37:38.115950+08:00",
+      "finished_at": "2026-09-27T23:38:05.912314+08:00",
       "note": "",
       "target_start": "2026-09-27",
       "target_end": "2026-09-28"
@@ -28,11 +28,11 @@
     "BCL": {
       "source": "BCL",
       "status": "OK",
-      "rows": 63,
-      "requests": 65,
+      "rows": 45,
+      "requests": 47,
       "errors": 0,
-      "started_at": "2026-09-27T09:25:14.600444+08:00",
-      "finished_at": "2026-09-27T09:25:38.288663+08:00",
+      "started_at": "2026-09-27T23:38:06.060341+08:00",
+      "finished_at": "2026-09-27T23:38:19.771518+08:00",
       "note": "",
       "target_start": "2026-09-27",
       "target_end": "2026-09-28"
@@ -43,8 +43,8 @@
       "rows": 158,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-27T09:25:38.478046+08:00",
-      "finished_at": "2026-09-27T09:25:40.441810+08:00",
+      "started_at": "2026-09-27T23:38:19.922852+08:00",
+      "finished_at": "2026-09-27T23:38:21.909045+08:00",
       "note": "",
       "target_start": "2026-09-27",
       "target_end": "2026-09-28"
@@ -52,11 +52,11 @@
     "PRE": {
       "source": "PRE",
       "status": "OK",
-      "rows": 192,
+      "rows": 209,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-27T09:25:40.649620+08:00",
-      "finished_at": "2026-09-27T09:25:42.045232+08:00",
+      "started_at": "2026-09-27T23:38:22.082536+08:00",
+      "finished_at": "2026-09-27T23:38:23.347328+08:00",
       "note": "",
       "target_start": "2026-09-27",
       "target_end": "2026-09-28"
@@ -64,12 +64,12 @@
     "STA": {
       "source": "STA",
       "status": "OK",
-      "rows": 213,
+      "rows": 228,
       "requests": 3,
       "errors": 0,
-      "started_at": "2026-09-27T09:25:42.303393+08:00",
-      "finished_at": "2026-09-27T09:25:46.954973+08:00",
-      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-26\", \"calibration_rows\": 508, \"dominance\": 1.0, \"dominant_cluster\": [-240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -238, -238, -238, -237, -237, -237], \"dominant_samples\": 78, \"inferred_source_minus_utc_minutes\": -240, \"offset_distribution\": {\"-240\": 72, \"-238\": 3, \"-237\": 3}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 78, \"target_rows\": 213}",
+      "started_at": "2026-09-27T23:38:23.559248+08:00",
+      "finished_at": "2026-09-27T23:38:27.250992+08:00",
+      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-26\", \"calibration_rows\": 523, \"dominance\": 0.8519, \"dominant_cluster\": [-240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -238, -238, -237, -237], \"dominant_samples\": 69, \"inferred_source_minus_utc_minutes\": -240, \"offset_distribution\": {\"-300\": 12, \"-240\": 65, \"-238\": 2, \"-237\": 2}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 81, \"target_rows\": 228}",
       "target_start": "2026-09-27",
       "target_end": "2026-09-28"
     }
