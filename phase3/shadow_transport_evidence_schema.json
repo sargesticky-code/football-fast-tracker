@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "lane": "FAST_SHADOW",
+  "required_per_request": [
+    "sequence",
+    "source",
+    "observed_at",
+    "network_latency_ms",
+    "success"
+  ],
+  "optional_per_request": [
+    "source_updated_at",
+    "snapshot_age_seconds",
+    "mapped_rows",
+    "unmapped_rows",
+    "collision_rows",
+    "error"
+  ],
+  "invariants": {
+    "one_upstream_call_per_slot_max": true,
+    "persistent_verified_identity_only": true,
+    "fuzzy_rematch_in_fast_loop": false,
+    "heavy_lane_polled_by_fast_loop": false,
+    "production_primary_changed": false
+  }
+}
