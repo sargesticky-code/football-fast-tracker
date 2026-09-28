@@ -1,0 +1,40 @@
+name: Graph Sandwich Phase 1 Shadow
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: graph-sandwich-phase1-shadow
+  cancel-in-progress: true
+
+jobs:
+  build-shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build lightweight relationship graph
+        run: python scripts/build_graph_sandwich_shadow.py --output /tmp/graph_sandwich_shadow.json
+      - name: Validate graph contract
+        run: |
+          python - <<'PY'
+          import json
+          g=json.load(open('/tmp/graph_sandwich_shadow.json'))
+          assert g['schema']=='GS_SHADOW_V1'
+          assert g['stats']['matches'] > 0
+          assert g['stats']['edges'] >= g['stats']['matches']
+          print(g['stats'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: graph-sandwich-shadow
+          path: /tmp/graph_sandwich_shadow.json
+          retention-days: 3
