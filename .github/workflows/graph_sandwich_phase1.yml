@@ -1,4 +1,4 @@
-name: Graph Sandwich Phase 1 Shadow
+name: Graph Sandwich Phase 1 Shadow Validation
 
 on:
   pull_request:
