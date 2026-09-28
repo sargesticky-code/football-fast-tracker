@@ -49,3 +49,15 @@ def execute_transport_slot(slot):
         "error": None,
         "payload": payload,
     }
+
+
+def execute_transport_plan(plan):
+    """Execute a bounded shadow plan sequentially and account for upstream calls."""
+    traces = []
+    for slot in plan:
+        traces.append(execute_transport_slot(slot))
+    return {
+        "traces": traces,
+        "upstream_request_count": len(traces),
+        "request_failures": sum(not trace["success"] for trace in traces),
+    }
