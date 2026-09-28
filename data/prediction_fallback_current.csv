@@ -1,55 +1,28 @@
 ﻿fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,source,source_competition,source_url,recommendation,market,match_score,status,notes
-2026-09-27T23:13:20+08:00,FB5816,2026-09-27T21:57+08:00,UD1,Central Espanol,Montevideo Liverpool,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5845,2026-09-27T21:58+08:00,BD2,Criciuma,Avai,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5904,2026-09-27T21:58+08:00,APLW,River Plate Women,Racing Club Women,APWIN,Campeonato de Fútbol Femenino,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5917,2026-09-27T22:00+08:00,SFLW,Sevilla Women,Eibar Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5798,2026-09-27T22:15+08:00,SF2,Mallorca,Almeria,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5936,2026-09-27T22:30+08:00,RFCW,Lokomotiv Moscow Women,CSKA Moscow Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5935,2026-09-27T23:10+08:00,SPLW,Hearts Women,Glasgow City Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5861,2026-09-27T23:27+08:00,CHC,Antofagasta,Iquique,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5918,2026-09-27T23:30+08:00,EPLW,Chelsea Women,Arsenal Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5902,2026-09-27T23:55+08:00,GUC,Yemen,Qatar,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5808,2026-09-28T00:00+08:00,UWW,Spain Women U20,Korea DPR Women U20,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5885,2026-09-28T00:00+08:00,ENL,Austria,Kosovo,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5886,2026-09-28T00:00+08:00,ENL,Denmark,Wales,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5887,2026-09-28T00:00+08:00,ENL,Gibraltar,Andorra,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5888,2026-09-28T00:00+08:00,ENL,Serbia,Netherlands,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5799,2026-09-28T00:30+08:00,SF2,Eibar,Las Palmas,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5800,2026-09-28T00:30+08:00,SF2,Burgos,CD Eldense,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5919,2026-09-28T01:00+08:00,INT,Jordan,Syria,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5814,2026-09-28T01:57+08:00,UD1,Juventud Las Piedras,CA Cerro,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5850,2026-09-28T01:57+08:00,CHC,Deportes Concepcion,Curico Unido,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5835,2026-09-28T02:00+08:00,MXL,Pumas UNAM,Atletico San Luis,APWIN,,https://www.apwin.com/predictions/pumas-unam-vs-atletico-san-luis-prediction-liga-mx-27-09-2026/,,,1.000,NO_APWIN_RECOMMENDATION,
-2026-09-27T23:13:20+08:00,FB5901,2026-09-28T02:00+08:00,GUC,Bahrain,United Arab Emirates,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5889,2026-09-28T02:45+08:00,ENL,Germany,Greece,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5890,2026-09-28T02:45+08:00,ENL,Israel,Republic of Ireland,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5891,2026-09-28T02:45+08:00,ENL,Norway,Portugal,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5846,2026-09-28T02:58+08:00,BD2,CRB,Cuiaba,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5801,2026-09-28T03:00+08:00,SF2,Oviedo,Gijon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5793,2026-09-28T03:58+08:00,AGC,Racing Club,Boca Juniors,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5906,2026-09-28T04:30+08:00,INT,Bolivia,Paraguay,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5813,2026-09-28T04:57+08:00,UD1,Defensor Sporting,Danubio,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5847,2026-09-28T05:28+08:00,BD2,Fortaleza,Athletic Club MG,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5838,2026-09-28T06:57+08:00,CHC,Deportes Santa Cruz,O'Higgins,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5828,2026-09-28T07:00+08:00,MLS,Columbus Crew,Inter Miami CF,APWIN,,https://www.apwin.com/predictions/columbus-crew-vs-inter-miami-prediction-mls-28-09-2026/,,,1.000,NO_APWIN_RECOMMENDATION,
-2026-09-27T23:13:20+08:00,FB5932,2026-09-28T07:00+08:00,CNL,Haiti,Costa Rica,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5931,2026-09-28T08:00+08:00,CNL,Curacao,Nicaragua,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5834,2026-09-28T09:00+08:00,MXL,Club Leon,Juarez,APWIN,,https://www.apwin.com/predictions/leon-vs-juarez-prediction-liga-mx-28-09-2026/,,,1.000,NO_APWIN_RECOMMENDATION,
-2026-09-27T23:13:20+08:00,FB5933,2026-09-28T09:00+08:00,CNL,Trinidad and Tobago,Dominican Republic,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5833,2026-09-28T11:00+08:00,MXL,Necaxa,CF America,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5907,2026-09-28T18:25+08:00,INT,Japan,Venezuela,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5908,2026-09-28T19:00+08:00,INT,Korea Republic,Uruguay,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5923,2026-09-29T00:00+08:00,ENL,Armenia,Montenegro,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5924,2026-09-29T00:00+08:00,ENL,Georgia,Ukraine,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5925,2026-09-29T00:00+08:00,ENL,Latvia,Cyprus,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5903,2026-09-29T00:30+08:00,E2Q,Denmark U21,Belarus U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5802,2026-09-29T02:30+08:00,SF2,Leganes,Castellon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5926,2026-09-29T02:45+08:00,ENL,Belgium,France,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5927,2026-09-29T02:45+08:00,ENL,Northern Ireland,Hungary,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5928,2026-09-29T02:45+08:00,ENL,Sweden,Poland,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5929,2026-09-29T02:45+08:00,ENL,Romania,Bosnia-Herzegovina,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5930,2026-09-29T02:45+08:00,ENL,Turkiye,Italy,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5851,2026-09-29T06:28+08:00,BD2,America Mineiro,Juventude,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5812,2026-09-29T06:57+08:00,UD1,Montevideo Wanderers,Albion FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5922,2026-09-29T14:00+08:00,AWF,Korea DPR Women,China Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-27T23:13:20+08:00,FB5921,2026-09-29T18:30+08:00,AWF,Japan Women,Korea Republic Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5931,2026-09-28T08:00+08:00,CNL,Curacao,Nicaragua,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5942,2026-09-28T08:06+08:00,MXLW,Tigres UANL Women,Atletico San Luis Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5834,2026-09-28T09:00+08:00,MXL,Club Leon,Juarez,APWIN,,https://www.apwin.com/predictions/leon-vs-juarez-prediction-liga-mx-28-09-2026/,,,1.000,NO_APWIN_RECOMMENDATION,
+2026-09-28T09:00:53+08:00,FB5933,2026-09-28T09:00+08:00,CNL,Trinidad and Tobago,Dominican Republic,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5833,2026-09-28T11:00+08:00,MXL,Necaxa,CF America,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5943,2026-09-28T17:00+08:00,AEC,Singapore,Bangladesh,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5907,2026-09-28T18:25+08:00,INT,Japan,Venezuela,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5908,2026-09-28T19:00+08:00,INT,Korea Republic,Uruguay,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5945,2026-09-28T19:58+08:00,APLW,SAT Women,Gimnasia LP Women,APWIN,Campeonato de Fútbol Femenino,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5946,2026-09-28T20:30+08:00,AEC,Indonesia,Malaysia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5923,2026-09-29T00:00+08:00,ENL,Armenia,Montenegro,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5924,2026-09-29T00:00+08:00,ENL,Georgia,Ukraine,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5925,2026-09-29T00:00+08:00,ENL,Latvia,Cyprus,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5939,2026-09-29T00:00+08:00,ANQ,Central African Republic,Burkina Faso,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5944,2026-09-29T00:00+08:00,ANQ,Zimbabwe,D R Congo,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5903,2026-09-29T00:30+08:00,E2Q,Denmark U21,Belarus U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5802,2026-09-29T02:30+08:00,SF2,Leganes,Castellon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5926,2026-09-29T02:45+08:00,ENL,Belgium,France,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5927,2026-09-29T02:45+08:00,ENL,Northern Ireland,Hungary,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5928,2026-09-29T02:45+08:00,ENL,Sweden,Poland,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5929,2026-09-29T02:45+08:00,ENL,Romania,Bosnia-Herzegovina,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5930,2026-09-29T02:45+08:00,ENL,Turkiye,Italy,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5947,2026-09-29T03:00+08:00,ANQ,Tunisia,Botswana,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5851,2026-09-29T06:28+08:00,BD2,America Mineiro,Juventude,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5812,2026-09-29T06:57+08:00,UD1,Montevideo Wanderers,Albion FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5922,2026-09-29T14:00+08:00,AWF,Korea DPR Women,China Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-28T09:00:53+08:00,FB5921,2026-09-29T18:30+08:00,AWF,Japan Women,Korea Republic Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
