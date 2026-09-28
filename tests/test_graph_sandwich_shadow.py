@@ -18,3 +18,10 @@ def test_shadow_graph_relationships():
     assert any(e["relation"]=="PLAYS_IN" and e["side"]=="HOME" for e in g["edges"])
 \n    assert g["why_chains"][0]["confidence"]=="EVIDENCE_RICH"\n    assert "recent_form_available" in g["why_chains"][0]["why_chain"]\n
     assert "model_signals:2" in g["why_chains"][0]["why_chain"]
+
+def test_directional_evidence_keeps_conflict():
+    fr={"home_form6":"WWWWWW","away_form6":"LLLLLL","home_gf_avg":"2.0","home_ga_avg":"0.8","away_gf_avg":"0.8","away_ga_avg":"2.0"}
+    pr={"home_rating":"80","away_rating":"88"}
+    ev=gs.directional_evidence(fr,pr,[])
+    assert any(x["side"]=="HOME" for x in ev)
+    assert any(x["side"]=="AWAY" for x in ev)
