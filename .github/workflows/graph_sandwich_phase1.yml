@@ -1,6 +1,16 @@
 name: Graph Sandwich Phase 1 Shadow Validation
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build_graph_sandwich_shadow.py'
+      - 'tests/test_graph_sandwich_shadow.py'
+      - 'data/hkjc_current.csv'
+      - 'data/team_form_summary.csv'
+      - 'data/hkjc_power_current.csv'
+      - 'data/prediction_fallback_current.csv'
+      - '.github/workflows/graph_sandwich_phase1.yml'
   pull_request:
     branches: [main]
     paths:
