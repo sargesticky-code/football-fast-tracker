@@ -1,159 +1,79 @@
 DATE,TIME,LEAGUE,HOME TEAM,AWAY TEAM,HOME PER,DRAW PER,AWAY PER,1X PER,12 PER,X2 PER,OVER 1.5,UNDER 2.5,OVER 2.5,BTS,OTS,NAME,SOURCE_URL,SOURCE_DATE,SOURCE_TIME,TIMEZONE,HOME_AWAY_EXPLICIT
-26/09/2026,23:00,,Antigua and Barbuda,Anguilla,89,8,3,97,92,11,39,27,73,24,76,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:00,Europe/London,1
-26/09/2026,23:00,,CA Colegiales,Chacarita Juniors,59,20,21,79,80,41,40,78,22,25,75,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:00,Europe/London,1
-26/09/2026,23:00,,Canada,Chile,66,14,20,80,86,34,75,38,62,60,40,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:00,Europe/London,1
-26/09/2026,23:00,,Charleston Battery,Rhode Island,57,11,32,68,89,43,85,36,64,70,30,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:00,Europe/London,1
-26/09/2026,23:00,,Detroit City,Colorado Springs,53,31,16,84,69,47,71,39,61,56,44,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:00,Europe/London,1
-26/09/2026,23:00,,Indy Eleven,Miami FC,67,7,26,74,93,33,88,26,74,73,27,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:00,Europe/London,1
-26/09/2026,23:00,,Universidad Catolica,Union La Calera,69,7,24,76,93,31,46,63,37,31,69,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:00,Europe/London,1
-26/09/2026,23:00,,Vancouver FC,Forge,32,5,63,37,95,68,78,37,63,63,37,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:00,Europe/London,1
-26/09/2026,23:00,,Venados FC,Monarcas,32,48,20,80,52,68,73,31,69,58,42,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:00,Europe/London,1
-26/09/2026,23:07,,Chivas Guadalajara,Queretaro,75,11,14,86,89,25,76,32,68,61,39,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:07,Europe/London,1
-26/09/2026,23:15,,Cucuta Deportivo,Llaneros,50,31,19,81,69,50,76,32,68,61,39,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:15,Europe/London,1
-26/09/2026,23:30,,Atlanta Utd,New York City,52,33,15,85,67,48,90,35,65,75,25,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:30,Europe/London,1
-26/09/2026,23:30,,CF Montreal,FC Cincinnati,31,48,21,79,52,69,90,26,74,75,25,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:30,Europe/London,1
-26/09/2026,23:30,,Charlotte FC,Chicago Fire,53,31,16,84,69,47,95,28,72,80,20,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:30,Europe/London,1
-26/09/2026,23:30,,NY Red Bulls,St. Louis City SC,39,4,57,43,96,61,89,27,73,74,26,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:30,Europe/London,1
-26/09/2026,23:30,,Philadelphia,Orlando City,77,7,16,84,93,23,95,16,84,80,20,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,00:30,Europe/London,1
-27/09/2026,00:30,,Austin FC,San Diego FC,33,49,18,82,51,67,90,30,70,75,25,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,01:30,Europe/London,1
-27/09/2026,00:30,,FC Dallas,LAFC,31,50,19,81,50,69,86,32,68,71,29,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,01:30,Europe/London,1
-27/09/2026,00:30,,Houston Dynamo,Kansas City,72,11,17,83,89,28,76,34,66,61,39,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,01:30,Europe/London,1
-27/09/2026,00:30,,Montevideo City Torque,Deportivo Maldonado,57,13,30,70,87,43,78,39,61,63,37,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,01:30,Europe/London,1
-27/09/2026,00:30,,Nashville SC,Toronto FC,76,8,16,84,92,24,88,28,72,73,27,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,01:30,Europe/London,1
-27/09/2026,00:30,,San Antonio,Tampa Bay Rowdies,35,7,58,42,93,65,84,37,63,69,31,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,01:30,Europe/London,1
-27/09/2026,00:30,,Seattle Sounders,Minnesota Utd,49,33,18,82,67,51,91,31,69,76,24,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,01:30,Europe/London,1
-27/09/2026,01:00,,Mexico,Colombia,34,47,19,81,53,66,82,66,34,67,33,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,02:00,Europe/London,1
-27/09/2026,01:00,,New Mexico United,Sacramento Republic,7,40,53,47,60,93,80,37,63,65,35,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,02:00,Europe/London,1
-27/09/2026,01:20,,Junior,Independiente Medellin,50,29,21,79,71,50,80,41,59,65,35,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,02:20,Europe/London,1
-27/09/2026,01:30,,Real Salt Lake,New England,18,48,34,66,52,82,91,29,71,76,24,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,02:30,Europe/London,1
-27/09/2026,02:00,,Monterey Bay,Lexington,8,37,55,45,63,92,88,33,67,73,27,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,03:00,Europe/London,1
-27/09/2026,02:00,,Oakland Roots,Phoenix Rising,31,48,21,79,52,69,89,38,62,74,26,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,03:00,Europe/London,1
-27/09/2026,02:00,,Orange County SC,Pittsburgh Riverhounds,30,48,22,78,52,70,48,65,35,33,67,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,03:00,Europe/London,1
-27/09/2026,02:00,,Sint Maarten,Belize,8,36,56,44,64,92,87,33,67,72,28,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,03:00,Europe/London,1
-27/09/2026,02:30,,LA Galaxy,Colorado Rapids,53,35,12,88,65,47,86,28,72,71,29,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,03:30,Europe/London,1
-27/09/2026,02:30,,San Jose,Portland Timbers,57,15,28,72,85,43,98,26,74,83,17,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,03:30,Europe/London,1
-27/09/2026,02:30,,Vancouver Whitecaps,DC United,88,3,9,91,97,12,82,22,78,67,33,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,03:30,Europe/London,1
-27/09/2026,03:05,,Santos Laguna,Pachuca,6,41,53,47,59,94,86,32,68,71,29,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,04:05,Europe/London,1
-27/09/2026,03:10,,Tigres UANL,Puebla,73,10,17,83,90,27,86,33,67,71,29,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,04:10,Europe/London,1
-27/09/2026,07:00,,Fiji,Papua New Guinea,62,10,28,72,90,38,90,34,66,75,25,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,08:00,Europe/London,1
-27/09/2026,08:30,,Malženice,Liptovský Mikuláš,19,53,28,72,47,81,52,66,34,37,63,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,09:30,Europe/London,1
-27/09/2026,08:30,,Slovan Bratislava II,Tatran Prešov,31,45,24,76,55,69,48,58,42,33,67,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,09:30,Europe/London,1
-27/09/2026,10:00,,Barakaldo,Real Aviles CF,61,12,27,73,88,39,81,40,60,66,34,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,11:00,Europe/London,1
-27/09/2026,10:00,,Dong Thap,Thai Nguyen,36,5,59,41,95,64,53,63,37,38,62,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,11:00,Europe/London,1
-27/09/2026,10:00,,Gangwon FC,Incheon Utd,50,33,17,83,67,50,47,74,26,32,68,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,11:00,Europe/London,1
-27/09/2026,10:00,,UD Ourense,Cacereno,30,47,23,77,53,70,79,60,40,64,36,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,11:00,Europe/London,1
-27/09/2026,11:00,,Shaanxi Union,Dalian Huayi,58,13,29,71,87,42,76,39,61,61,39,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,12:00,Europe/London,1
-27/09/2026,11:00,,Vihren,Nesebar,82,4,14,86,96,18,53,31,69,38,62,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,12:00,Europe/London,1
-27/09/2026,11:35,,China PR,New Zealand,19,49,32,68,51,81,75,65,35,60,40,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,12:35,Europe/London,1
-27/09/2026,12:00,,Valladolid,Cordoba,49,35,16,84,65,51,78,41,59,63,37,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,13:00,Europe/London,1
-27/09/2026,12:30,,De Graafschap,FC Den Bosch,55,13,32,68,87,45,90,19,81,75,25,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,13:30,Europe/London,1
-27/09/2026,12:30,,HNK Segesta,Karlovac,65,13,22,78,87,35,73,41,59,58,42,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,13:30,Europe/London,1
-27/09/2026,12:30,,Nyva Ternopil,Ahrobiznes Volochysk,32,47,21,79,53,68,75,70,30,60,40,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,13:30,Europe/London,1
-27/09/2026,13:00,,Apollon Pontou,Anagennisi Karditsas,5,44,51,49,56,95,77,27,73,62,38,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,14:00,Europe/London,1
-27/09/2026,13:00,,Deportivo Capiata,12 de Junio VH,36,6,58,42,94,64,52,62,38,37,63,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,14:00,Europe/London,1
-27/09/2026,13:00,,Larisa,PAOK II,79,8,13,87,92,21,78,39,61,63,37,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,14:00,Europe/London,1
-27/09/2026,13:00,,Lithuania,Azerbaijan,31,46,23,77,54,69,43,71,29,28,72,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,14:00,Europe/London,1
-27/09/2026,13:00,,Niki Volos,Nestos Chrisoupolis,79,10,11,89,90,21,47,71,29,32,68,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,14:00,Europe/London,1
-27/09/2026,13:00,,Panionios,Zakynthos,83,7,10,90,93,17,48,65,35,33,67,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,14:00,Europe/London,1
-27/09/2026,13:00,,Resistencia,Deportivo Santani,36,5,59,41,95,64,50,63,37,35,65,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,14:00,Europe/London,1
-27/09/2026,13:30,,Beroe,Yantra 2019,62,13,25,75,87,38,78,34,66,63,37,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,14:30,Europe/London,1
-27/09/2026,13:30,,TOŠK Tešanj,Stupčanica Olovo,34,8,58,42,92,66,78,37,63,63,37,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,14:30,Europe/London,1
-27/09/2026,14:00,,AD Camacha,Florgrade FC,58,12,30,70,88,42,38,74,26,23,77,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:00,Europe/London,1
-27/09/2026,14:00,,CE Europa,Rayo Majadahonda,54,32,14,86,68,46,50,70,30,35,65,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:00,Europe/London,1
-27/09/2026,14:00,,CSKA Sofia II,Sportist Svoge,86,4,10,90,96,14,79,34,66,64,36,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:00,Europe/London,1
-27/09/2026,14:00,,Central Espanol,Liverpool Montevideo,30,8,62,38,92,70,45,68,32,30,70,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:00,Europe/London,1
-27/09/2026,14:00,,Chernomorets 1919 Burgas,Montana,63,13,24,76,87,37,79,39,61,64,36,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:00,Europe/London,1
-27/09/2026,14:00,,Criciuma,Avai,69,13,18,82,87,31,48,64,36,33,67,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:00,Europe/London,1
-27/09/2026,14:00,,Ellas Syros,Pyrgos 1968,66,14,20,80,86,34,55,65,35,40,60,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:00,Europe/London,1
-27/09/2026,14:00,,Mirandes,Unionistas de Salamanca CF,74,9,17,83,91,26,49,61,39,34,66,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:00,Europe/London,1
-27/09/2026,14:00,,NK Croatia Zmijavci,NK Sesvete,55,30,15,85,70,45,48,71,29,33,67,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:00,Europe/London,1
-27/09/2026,14:00,,Opatija,Vukovar 1991,16,54,30,70,46,84,72,65,35,57,43,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:00,Europe/London,1
-27/09/2026,14:15,,Mallorca,Almeria,56,28,16,84,72,44,81,40,60,66,34,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,15:15,Europe/London,1
-27/09/2026,15:00,,Abia Warriors,Bendel Insurance,68,16,16,84,84,32,52,73,27,37,63,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,16:00,Europe/London,1
-27/09/2026,15:00,,Ikorodu City,Enugu Rangers,66,15,19,81,85,34,47,68,32,32,68,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,16:00,Europe/London,1
-27/09/2026,15:00,,Nasarawa United,Niger Tornadoes,71,13,16,84,87,29,82,29,71,67,33,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,16:00,Europe/London,1
-27/09/2026,15:15,,Panserraikos,Olympiakos Piraeus II,76,11,13,87,89,24,73,39,61,58,42,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,16:15,Europe/London,1
-27/09/2026,15:30,,CD Antofagasta,Deportes Iquique,50,33,17,83,67,50,48,69,31,33,67,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,16:30,Europe/London,1
-27/09/2026,16:00,,Austria,Kosovo,67,15,18,82,85,33,72,41,59,57,43,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:00,Europe/London,1
-27/09/2026,16:00,,Denmark,Wales,72,12,16,84,88,28,55,62,38,40,60,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:00,Europe/London,1
-27/09/2026,16:00,,Fratria,Spartak Pleven,86,5,9,91,95,14,59,30,70,44,56,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:00,Europe/London,1
-27/09/2026,16:00,,GOŠK Gabela,Sloboda Tuzla,65,10,25,75,90,35,84,36,64,69,31,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:00,Europe/London,1
-27/09/2026,16:00,,Gibraltar,Andorra,6,45,49,51,55,94,30,81,19,15,85,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:00,Europe/London,1
-27/09/2026,16:00,,Hebar 1918,Dobrudzha,81,7,12,88,93,19,72,32,68,57,43,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:00,Europe/London,1
-27/09/2026,16:00,,Ludogorets II,Etar Veliko Tarnovo,51,34,15,85,66,49,80,38,62,65,35,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:00,Europe/London,1
-27/09/2026,16:00,,MAT Tetouan,RSB Berkane,15,5,80,20,95,85,42,57,43,27,73,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:00,Europe/London,1
-27/09/2026,16:00,,Serbia,Netherlands,16,7,77,23,93,84,80,32,68,65,35,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:00,Europe/London,1
-27/09/2026,16:00,,USM Oujda,Mouloudia Oujda,52,28,20,80,72,48,83,23,77,68,32,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:00,Europe/London,1
-27/09/2026,16:15,,Antequera,Real Jaen,47,34,19,81,66,53,53,64,36,38,62,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:15,Europe/London,1
-27/09/2026,16:15,,Merida,UD Logrones,16,53,31,69,47,84,46,70,30,31,69,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:15,Europe/London,1
-27/09/2026,16:15,,Pontevedra,Ponferradina,55,17,28,72,83,45,54,65,35,39,61,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:15,Europe/London,1
-27/09/2026,16:30,,Burgos,Eldense,57,19,24,76,81,43,72,40,60,57,43,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:30,Europe/London,1
-27/09/2026,16:30,,Eibar,Las Palmas,60,15,25,75,85,40,81,38,62,66,34,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:30,Europe/London,1
-27/09/2026,16:30,,HNK Cibalia,NK Dugopolje,55,16,29,71,84,45,55,65,35,40,60,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:30,Europe/London,1
-27/09/2026,16:30,,Malta,Liechtenstein,88,3,9,91,97,12,28,66,34,13,87,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,17:30,Europe/London,1
-27/09/2026,17:00,,Jordan,Syria,72,11,17,83,89,28,41,65,35,26,74,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,18:00,Europe/London,1
-27/09/2026,17:00,,Teruel,Huesca,39,5,56,44,95,61,43,72,28,28,72,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,18:00,Europe/London,1
-27/09/2026,18:00,,Alianza Universidad,Bentín Tacna Heroica,53,32,15,85,68,47,51,70,30,36,64,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:00,Europe/London,1
-27/09/2026,18:00,,Deportes Concepcion,Curico Unido,84,3,13,87,97,16,40,62,38,25,75,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:00,Europe/London,1
-27/09/2026,18:00,,Juventud De Las Piedras,Cerro,64,16,20,80,84,36,44,68,32,29,71,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:00,Europe/London,1
-27/09/2026,18:00,,MAS Fes,Renaissance Zemamra,63,16,21,79,84,37,43,72,28,28,72,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:00,Europe/London,1
-27/09/2026,18:00,,Quepos Cambute,Municipal Grecia,69,8,23,77,92,31,86,35,65,71,29,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:00,Europe/London,1
-27/09/2026,18:00,,Unam Pumas,Atletico San Luis,60,15,25,75,85,40,92,35,65,77,23,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:00,Europe/London,1
-27/09/2026,18:00,,York United,Pacific FC,53,31,16,84,69,47,89,32,68,74,26,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:00,Europe/London,1
-27/09/2026,18:30,,Almagro,Nueva Chicago,51,28,21,79,72,49,44,80,20,29,71,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:30,Europe/London,1
-27/09/2026,18:30,,CA Atlanta,Agropecuario,59,17,24,76,83,41,41,77,23,26,74,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:30,Europe/London,1
-27/09/2026,18:30,,Defensores de Belgrano,Ferro Carril Oeste,15,56,29,71,44,85,38,84,16,23,77,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:30,Europe/London,1
-27/09/2026,18:30,,Los Andes,CD Moron,34,45,21,79,55,66,39,82,18,24,76,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:30,Europe/London,1
-27/09/2026,18:30,,Real Madrid Castilla,Alcorcon,59,14,27,73,86,41,73,41,59,58,42,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:30,Europe/London,1
-27/09/2026,18:45,,Germany,Greece,75,12,13,87,88,25,80,30,70,65,35,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:45,Europe/London,1
-27/09/2026,18:45,,Israel,Rep of Ireland,5,48,47,53,52,95,82,41,59,67,33,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:45,Europe/London,1
-27/09/2026,18:45,,Norway,Portugal,33,46,21,79,54,67,95,28,72,80,20,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,19:45,Europe/London,1
-27/09/2026,19:00,,AD Sarchí,ADR Jicaral,7,38,55,45,62,93,80,37,63,65,35,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:00,Europe/London,1
-27/09/2026,19:00,,CRB,Cuiaba,60,16,24,76,84,40,51,68,32,36,64,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:00,Europe/London,1
-27/09/2026,19:00,,Club Atletico Mitre,CA San Telmo,62,17,21,79,83,38,44,72,28,29,71,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:00,Europe/London,1
-27/09/2026,19:00,,Envigado,Depor FC,76,11,13,87,89,24,58,59,41,43,57,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:00,Europe/London,1
-27/09/2026,19:00,,Guadalupe FC,Pitbulls Santa Barbara FC,56,33,11,89,67,44,48,63,37,33,67,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:00,Europe/London,1
-27/09/2026,19:00,,Guyana,Cayman Islands,89,8,3,97,92,11,37,20,80,22,78,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:00,Europe/London,1
-27/09/2026,19:00,,Kawkab Marrakech,HUSA Agadir,32,46,22,78,54,68,45,75,25,30,70,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:00,Europe/London,1
-27/09/2026,19:00,,Patronato Parana,San Martin SJ,34,48,18,82,52,66,41,80,20,26,74,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:00,Europe/London,1
-27/09/2026,19:00,,Real Oviedo,Sporting Gijon,57,25,18,82,75,43,52,72,28,37,63,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:00,Europe/London,1
-27/09/2026,19:30,,Deportivo Maipu,Temperley,58,18,24,76,82,42,41,75,25,26,74,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:30,Europe/London,1
-27/09/2026,19:30,,Ferrocarril Midland,Tristan Suarez,55,26,19,81,74,45,39,82,18,24,76,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,20:30,Europe/London,1
-27/09/2026,20:00,,Racing Club,Boca Juniors,8,36,56,44,64,92,45,72,28,30,70,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,21:00,Europe/London,1
-27/09/2026,20:00,,Racing de Cordoba,Godoy Cruz,14,56,30,70,44,86,38,78,22,23,77,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,21:00,Europe/London,1
-27/09/2026,20:00,,Universidad O&M,Salcedo,42,4,54,46,96,58,82,42,58,67,33,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,21:00,Europe/London,1
-27/09/2026,20:15,,Union Comercio,Molinos El Pirata,83,4,13,87,96,17,83,37,63,68,32,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,21:15,Europe/London,1
-27/09/2026,20:30,,Bolivia,Paraguay,19,7,74,26,93,81,75,36,64,60,40,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,21:30,Europe/London,1
-27/09/2026,20:30,,Universidad de Chile,Everton de Vina,58,16,26,74,84,42,72,40,60,57,43,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,21:30,Europe/London,1
-27/09/2026,21:00,,AD Cofutpa,Santa Cruz FC,32,49,19,81,51,68,49,61,39,34,66,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,22:00,Europe/London,1
-27/09/2026,21:00,,Defensor Sporting,Danubio,52,31,17,83,69,48,75,34,66,60,40,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,22:00,Europe/London,1
-27/09/2026,21:00,,Gimnasia y Tiro,Atletico Rafaela,60,18,22,78,82,40,43,79,21,28,72,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,22:00,Europe/London,1
-27/09/2026,21:00,,Jaguares de Cordoba,Alianza,51,28,21,79,72,49,74,32,68,59,41,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,22:00,Europe/London,1
-27/09/2026,21:30,,Brusque,Ferroviária,32,47,21,79,53,68,72,66,34,57,43,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,22:30,Europe/London,1
-27/09/2026,21:30,,Fortaleza,Athletic Club MG,66,15,19,81,85,34,50,68,32,35,65,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,22:30,Europe/London,1
-27/09/2026,22:00,,Barranquilla,Real Cundinamarca,7,40,53,47,60,93,55,65,35,40,60,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,23:00,Europe/London,1
-27/09/2026,22:00,,Cibao,Jarabacoa,88,3,9,91,97,12,51,35,65,36,64,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,27/09/26,23:00,Europe/London,1
-27/09/2026,23:00,,Club Deportes Santa Cruz,OHiggins,36,6,58,42,94,64,78,42,58,63,37,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,00:00,Europe/London,1
-27/09/2026,23:00,,Columbus Crew,Inter Miami,8,37,55,45,63,92,94,17,83,79,21,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,00:00,Europe/London,1
-27/09/2026,23:05,,Fortaleza CEIF,Deportes Tolima,4,48,48,52,52,96,72,36,64,57,43,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,00:05,Europe/London,1
-28/09/2026,00:00,,Gimnasia Jujuy,San Martin de Tucuman,52,27,21,79,73,48,71,34,66,56,44,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,01:00,Europe/London,1
-28/09/2026,01:00,,Leon,Juarez FC,70,14,16,84,86,30,80,35,65,65,35,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,02:00,Europe/London,1
-28/09/2026,01:10,,Deportivo Cali,Aguilas Doradas,60,18,22,78,82,40,52,68,32,37,63,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,02:10,Europe/London,1
-28/09/2026,03:10,,Necaxa,Club America,39,4,57,43,96,61,88,38,62,73,27,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,04:10,Europe/London,1
-28/09/2026,10:25,,Japan,Venezuela,84,5,11,89,95,16,42,61,39,27,73,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,11:25,Europe/London,1
-28/09/2026,11:00,,South Korea,Uruguay,54,32,14,86,68,46,52,70,30,37,63,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,12:00,Europe/London,1
-28/09/2026,13:00,,Kallithea,Asteras Tripolis II,63,19,18,82,81,37,52,70,30,37,63,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,14:00,Europe/London,1
-28/09/2026,13:00,,Marko,Panthrakikos,72,14,14,86,86,28,81,42,58,66,34,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,14:00,Europe/London,1
-28/09/2026,15:00,,Žilina II,Humenné,69,9,22,78,91,31,82,32,68,67,33,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,16:00,Europe/London,1
-28/09/2026,16:00,,Armenia,Montenegro,29,49,22,78,51,71,52,65,35,37,63,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,17:00,Europe/London,1
-28/09/2026,16:00,,Georgia,Ukraine,15,56,29,71,44,85,80,66,34,65,35,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,17:00,Europe/London,1
-28/09/2026,16:00,,Latvia,Cyprus,18,56,26,74,44,82,52,66,34,37,63,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,17:00,Europe/London,1
-28/09/2026,18:30,,Leganes,CD Castellon,7,42,51,49,58,93,81,41,59,66,34,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,19:30,Europe/London,1
-28/09/2026,18:45,,Belgium,France,36,6,58,42,94,64,90,28,72,75,25,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,19:45,Europe/London,1
-28/09/2026,18:45,,Northern Ireland,Hungary,15,57,28,72,43,85,53,74,26,38,62,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,19:45,Europe/London,1
-28/09/2026,18:45,,Romania,Bosnia-Herzegovina,52,29,19,81,71,48,81,36,64,66,34,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,19:45,Europe/London,1
-28/09/2026,18:45,,Sweden,Poland,60,15,25,75,85,40,91,34,66,76,24,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,19:45,Europe/London,1
-28/09/2026,18:45,,Türkiye,Italy,16,58,26,74,42,84,89,38,62,74,26,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,19:45,Europe/London,1
-28/09/2026,19:30,,Sportivo San Lorenzo,Deportivo Recoleta,4,47,49,51,53,96,81,42,58,66,34,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,20:30,Europe/London,1
-28/09/2026,22:00,,Libertad Asuncion,Olimpia Asuncion,32,47,21,79,53,68,77,62,38,62,38,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,23:00,Europe/London,1
-28/09/2026,22:30,,America MG,Juventude,8,36,56,44,64,92,44,69,31,29,71,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,28/09/26,23:30,Europe/London,1
+27/09/2026,23:00,,Club Deportes Santa Cruz,OHiggins,36,6,58,42,94,64,78,42,58,63,37,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,00:00,Europe/London,1
+27/09/2026,23:00,,Columbus Crew,Inter Miami,8,37,55,45,63,92,94,17,83,79,21,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,00:00,Europe/London,1
+27/09/2026,23:00,,Haiti,Costa Rica,32,51,17,83,49,68,86,40,60,71,29,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,00:00,Europe/London,1
+27/09/2026,23:05,,Fortaleza CEIF,Deportes Tolima,4,48,48,52,52,96,72,36,64,57,43,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,00:05,Europe/London,1
+28/09/2026,00:00,,Curacao,Nicaragua,78,6,16,84,94,22,47,35,65,32,68,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,01:00,Europe/London,1
+28/09/2026,00:00,,Dominica,Puerto Rico,25,7,68,32,93,75,47,61,39,32,68,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,01:00,Europe/London,1
+28/09/2026,00:00,,Gimnasia Jujuy,San Martin de Tucuman,52,27,21,79,73,48,71,34,66,56,44,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,01:00,Europe/London,1
+28/09/2026,01:00,,Leon,Juarez FC,70,14,16,84,86,30,80,35,65,65,35,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,02:00,Europe/London,1
+28/09/2026,01:00,,Trinidad & Tobago,Dominican Republic,31,48,21,79,52,69,80,38,62,65,35,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,02:00,Europe/London,1
+28/09/2026,01:10,,Deportivo Cali,Aguilas Doradas,60,18,22,78,82,40,52,68,32,37,63,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,02:10,Europe/London,1
+28/09/2026,03:10,,Necaxa,Club America,39,4,57,43,96,61,88,38,62,73,27,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,04:10,Europe/London,1
+28/09/2026,10:25,,Japan,Venezuela,84,5,11,89,95,16,42,61,39,27,73,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,11:25,Europe/London,1
+28/09/2026,11:00,,South Korea,Uruguay,54,32,14,86,68,46,52,70,30,37,63,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,12:00,Europe/London,1
+28/09/2026,13:00,,Grafičar,Teleoptik,62,9,29,71,91,38,51,65,35,36,64,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,14:00,Europe/London,1
+28/09/2026,13:00,,Kallithea,Asteras Tripolis II,63,19,18,82,81,37,52,70,30,37,63,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,14:00,Europe/London,1
+28/09/2026,13:00,,Marko,Panthrakikos,72,14,14,86,86,28,81,42,58,66,34,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,14:00,Europe/London,1
+28/09/2026,14:40,,Al Arabi,Al Thaid,52,37,11,89,63,48,88,34,66,73,27,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,15:40,Europe/London,1
+28/09/2026,15:00,,Žilina II,Humenné,69,9,22,78,91,31,82,32,68,67,33,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,16:00,Europe/London,1
+28/09/2026,16:00,,Armenia,Montenegro,29,49,22,78,51,71,52,65,35,37,63,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,Central African Republic,Burkina Faso,19,4,77,23,96,81,41,65,35,26,74,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,Dubočica,Javor,33,5,62,38,95,67,83,32,68,68,32,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,Equatorial Guinea,Sierra Leone,54,19,27,73,81,46,42,68,32,27,73,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,Georgia,Ukraine,15,56,29,71,44,85,80,66,34,65,35,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,Hapoel Kfar Saba,Bnei Yehuda,21,6,73,27,94,79,80,31,69,65,35,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,Hapoel Kfar Shalem,Maccabi Kabilio Jaffa,65,8,27,73,92,35,87,28,72,72,28,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,Latvia,Cyprus,18,56,26,74,44,82,52,66,34,37,63,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,Maccabi Kiryat Gat,Kafr Qasim,30,50,20,80,50,70,83,63,37,68,32,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,Naftagas,Jedinstvo Ub,62,11,27,73,89,38,78,34,66,63,37,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,OFK Bor 1919,Metalac GM,31,52,17,83,48,69,52,63,37,37,63,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:00,,Zimbabwe,Congo DR,28,7,65,35,93,72,42,74,26,27,73,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:00,Europe/London,1
+28/09/2026,16:45,,Maccabi Bnei Raina,Hapoel Raanana,32,52,16,84,48,68,89,34,66,74,26,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,17:45,Europe/London,1
+28/09/2026,18:00,,Loznica,FK Spartak Zdrepceva KRV,18,57,25,75,43,82,53,62,38,38,62,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,19:00,Europe/London,1
+28/09/2026,18:30,,Leganes,CD Castellon,7,42,51,49,58,93,81,41,59,66,34,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,19:30,Europe/London,1
+28/09/2026,18:45,,Belgium,France,36,6,58,42,94,64,90,28,72,75,25,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,19:45,Europe/London,1
+28/09/2026,18:45,,Northern Ireland,Hungary,15,57,28,72,43,85,53,74,26,38,62,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,19:45,Europe/London,1
+28/09/2026,18:45,,Romania,Bosnia-Herzegovina,52,29,19,81,71,48,81,36,64,66,34,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,19:45,Europe/London,1
+28/09/2026,18:45,,Sweden,Poland,60,15,25,75,85,40,91,34,66,76,24,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,19:45,Europe/London,1
+28/09/2026,18:45,,Türkiye,Italy,16,58,26,74,42,84,89,38,62,74,26,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,19:45,Europe/London,1
+28/09/2026,19:00,,Guadeloupe,Barbados,60,14,26,74,86,40,71,40,60,56,44,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,20:00,Europe/London,1
+28/09/2026,19:30,,Atlético Tembetary,Paraguari AC,36,7,57,43,93,64,53,61,39,38,62,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,20:30,Europe/London,1
+28/09/2026,19:30,,Sportivo San Lorenzo,Deportivo Recoleta,4,47,49,51,53,96,81,42,58,66,34,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,20:30,Europe/London,1
+28/09/2026,21:00,,Cuba,Bonaire,89,6,5,95,94,11,42,23,77,27,73,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,22:00,Europe/London,1
+28/09/2026,22:00,,Guairena FC,Fernando De La Mora,5,42,53,47,58,95,81,39,61,66,34,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,23:00,Europe/London,1
+28/09/2026,22:00,,Libertad Asuncion,Olimpia Asuncion,32,47,21,79,53,68,77,62,38,62,38,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,23:00,Europe/London,1
+28/09/2026,22:00,,Suriname,Martinique,68,14,18,82,86,32,53,60,40,38,62,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,23:00,Europe/London,1
+28/09/2026,22:30,,America MG,Juventude,8,36,56,44,64,92,44,69,31,29,71,FST,https://www.footballsuper.tips/todays-free-football-super-tips/,28/09/26,23:30,Europe/London,1
+28/09/2026,23:00,,Montevideo Wanderers,Albion FC,32,49,19,81,51,68,79,63,37,64,36,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,00:00,Europe/London,1
+29/09/2026,00:00,,Jamaica,Honduras,53,33,14,86,67,47,74,36,64,59,41,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,01:00,Europe/London,1
+29/09/2026,00:00,,St Lucia,Bermuda,16,52,32,68,48,84,88,33,67,73,27,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,01:00,Europe/London,1
+29/09/2026,01:00,,Cariari Pococi,CS Uruguay,66,11,23,77,89,34,77,37,63,62,38,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,02:00,Europe/London,1
+29/09/2026,02:00,,Guatemala,El Salvador,59,11,30,70,89,41,76,39,61,61,39,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,03:00,Europe/London,1
+29/09/2026,10:00,,Australia,Brazil,15,5,80,20,95,85,72,30,70,57,43,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,11:00,Europe/London,1
+29/09/2026,10:00,,FC Osaka,Avispa Fukuoka,17,7,76,24,93,83,77,33,67,62,38,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,11:00,Europe/London,1
+29/09/2026,13:00,,Ethiopia,Senegal,20,4,76,24,96,80,46,56,44,31,69,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,14:00,Europe/London,1
+29/09/2026,13:00,,South Sudan,Egypt,3,8,89,11,92,97,32,63,37,17,83,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,14:00,Europe/London,1
+29/09/2026,16:00,,FK Vozdovac,Napredak,55,17,28,72,83,45,78,36,64,63,37,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,17:00,Europe/London,1
+29/09/2026,16:00,,Finland,Belarus,66,15,19,81,85,34,42,73,27,27,73,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,17:00,Europe/London,1
+29/09/2026,16:00,,Moldova,Faroe Islands,16,61,23,77,39,84,51,71,29,36,64,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,17:00,Europe/London,1
+29/09/2026,18:00,,Boreham Wood,Kidderminster,75,8,17,83,92,25,78,29,71,63,37,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:00,Europe/London,1
+29/09/2026,18:45,,AFC Fylde,Carlisle,17,53,30,70,47,83,100,24,76,86,14,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Barrow,Scunthorpe,59,11,30,70,89,41,90,34,66,75,25,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Brackley,South Shields,35,4,61,39,96,65,87,35,65,72,28,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Bulgaria,Estonia,67,17,16,84,83,33,44,71,29,29,71,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Czechia,England,14,7,79,21,93,86,49,65,35,34,66,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Forest Green,Wealdstone,63,12,25,75,88,37,84,26,74,69,31,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Gateshead,Altrincham,33,5,62,38,95,67,86,34,66,71,29,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Halifax,Boston Utd,50,34,16,84,66,50,87,39,61,72,28,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Hartlepool,Harrogate Town,34,6,60,40,94,66,76,37,63,61,39,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Hornchurch FC,Aldershot,54,32,14,86,68,46,89,34,66,74,26,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Luxembourg,Iceland,5,47,48,52,53,95,74,36,64,59,41,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Scotland,Switzerland,38,5,57,43,95,62,50,65,35,35,65,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Slovakia,Kazakhstan,82,8,10,90,92,18,36,57,43,21,79,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Slovenia,North Macedonia,65,18,17,83,82,35,51,66,34,36,64,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Spain,Croatia,89,3,8,92,97,11,45,27,73,30,70,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Woking,Solihull Moors,62,11,27,73,89,38,91,29,71,76,24,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,18:45,,Yeovil,Worthing,56,34,10,90,66,44,97,26,74,82,18,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,19:45,Europe/London,1
+29/09/2026,20:30,,Deportivo Pereira,Independiente Santa Fe,32,7,61,39,93,68,75,35,65,60,40,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,21:30,Europe/London,1
+29/09/2026,22:30,,Botafogo SP,Ponte Preta,89,3,8,92,97,11,45,33,67,30,70,FST,https://www.footballsuper.tips/tomorrows-free-football-super-tips/,29/09/26,23:30,Europe/London,1

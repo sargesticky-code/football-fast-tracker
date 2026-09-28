@@ -1,77 +1,77 @@
 {
-  "built_at_hkt": "2026-09-27T23:38:27.395317+08:00",
+  "built_at_hkt": "2026-09-28T09:38:41.261449+08:00",
   "sources": {
     "FRB": {
       "source": "FRB",
       "status": "OK",
-      "rows": 36,
+      "rows": 8,
       "requests": 0,
       "errors": 0,
-      "started_at": "2026-09-27T23:37:37.967048+08:00",
-      "finished_at": "2026-09-27T23:37:37.970332+08:00",
+      "started_at": "2026-09-28T09:38:15.076519+08:00",
+      "finished_at": "2026-09-28T09:38:15.078581+08:00",
       "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
-      "target_start": "2026-09-27",
-      "target_end": "2026-09-28"
+      "target_start": "2026-09-28",
+      "target_end": "2026-09-29"
     },
     "ACC": {
       "source": "ACC",
       "status": "OK",
-      "rows": 262,
-      "requests": 102,
+      "rows": 81,
+      "requests": 48,
       "errors": 0,
-      "started_at": "2026-09-27T23:37:38.115950+08:00",
-      "finished_at": "2026-09-27T23:38:05.912314+08:00",
+      "started_at": "2026-09-28T09:38:15.228920+08:00",
+      "finished_at": "2026-09-28T09:38:28.152821+08:00",
       "note": "",
-      "target_start": "2026-09-27",
-      "target_end": "2026-09-28"
+      "target_start": "2026-09-28",
+      "target_end": "2026-09-29"
     },
     "BCL": {
       "source": "BCL",
       "status": "OK",
-      "rows": 45,
-      "requests": 47,
+      "rows": 18,
+      "requests": 20,
       "errors": 0,
-      "started_at": "2026-09-27T23:38:06.060341+08:00",
-      "finished_at": "2026-09-27T23:38:19.771518+08:00",
+      "started_at": "2026-09-28T09:38:28.331004+08:00",
+      "finished_at": "2026-09-28T09:38:34.318620+08:00",
       "note": "",
-      "target_start": "2026-09-27",
-      "target_end": "2026-09-28"
+      "target_start": "2026-09-28",
+      "target_end": "2026-09-29"
     },
     "FST": {
       "source": "FST",
       "status": "OK",
-      "rows": 158,
+      "rows": 78,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-27T23:38:19.922852+08:00",
-      "finished_at": "2026-09-27T23:38:21.909045+08:00",
+      "started_at": "2026-09-28T09:38:34.505494+08:00",
+      "finished_at": "2026-09-28T09:38:36.481800+08:00",
       "note": "",
-      "target_start": "2026-09-27",
-      "target_end": "2026-09-28"
+      "target_start": "2026-09-28",
+      "target_end": "2026-09-29"
     },
     "PRE": {
       "source": "PRE",
       "status": "OK",
-      "rows": 209,
+      "rows": 87,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-27T23:38:22.082536+08:00",
-      "finished_at": "2026-09-27T23:38:23.347328+08:00",
+      "started_at": "2026-09-28T09:38:36.640146+08:00",
+      "finished_at": "2026-09-28T09:38:37.966481+08:00",
       "note": "",
-      "target_start": "2026-09-27",
-      "target_end": "2026-09-28"
+      "target_start": "2026-09-28",
+      "target_end": "2026-09-29"
     },
     "STA": {
       "source": "STA",
       "status": "OK",
-      "rows": 228,
+      "rows": 49,
       "requests": 3,
       "errors": 0,
-      "started_at": "2026-09-27T23:38:23.559248+08:00",
-      "finished_at": "2026-09-27T23:38:27.250992+08:00",
-      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-26\", \"calibration_rows\": 523, \"dominance\": 0.8519, \"dominant_cluster\": [-240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -240, -238, -238, -237, -237], \"dominant_samples\": 69, \"inferred_source_minus_utc_minutes\": -240, \"offset_distribution\": {\"-300\": 12, \"-240\": 65, \"-238\": 2, \"-237\": 2}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 81, \"target_rows\": 228}",
-      "target_start": "2026-09-27",
-      "target_end": "2026-09-28"
+      "started_at": "2026-09-28T09:38:38.172756+08:00",
+      "finished_at": "2026-09-28T09:38:41.140726+08:00",
+      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-27\", \"calibration_rows\": 263, \"dominance\": 1.0, \"dominant_cluster\": [-300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -298], \"dominant_samples\": 34, \"inferred_source_minus_utc_minutes\": -300, \"offset_distribution\": {\"-300\": 33, \"-298\": 1}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 34, \"target_rows\": 49}",
+      "target_start": "2026-09-28",
+      "target_end": "2026-09-29"
     }
   },
   "fresh_optional_sources": [

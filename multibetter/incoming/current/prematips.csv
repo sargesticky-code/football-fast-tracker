@@ -1,171 +1,4 @@
 DATE,TIME,LEAGUE,HOME TEAM,AWAY TEAM,HOME PER,DRAW PER,AWAY PER,1X PER,12 PER,X2 PER,OVER 1.5,UNDER 2.5,OVER 2.5,BTS,OTS,NAME,SOURCE_URL,SOURCE_DATE,SOURCE_TIME,TIMEZONE,HOME_AWAY_EXPLICIT
-26/09/2026,23:00,,Antigua&Barbuda,Anguilla,48,37,15,85,63,52,47,35,65,32,68,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:00,Europe/London,1
-26/09/2026,23:00,,Atl. Colegiales,Chacarita Jrs,43,25,32,68,75,57,48,71,29,33,67,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:00,Europe/London,1
-26/09/2026,23:00,,Canada,Chile,41,33,26,74,67,59,64,52,48,49,51,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:00,Europe/London,1
-26/09/2026,23:00,,Inter Santa Tecla,Atletico Balboa,42,38,20,80,62,58,55,58,42,40,60,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:00,Europe/London,1
-26/09/2026,23:00,,U. Catolica,Union La Calera,42,33,25,75,67,58,61,54,46,46,54,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:00,Europe/London,1
-26/09/2026,23:00,,Vancouver FC,Forge,30,31,39,61,69,70,71,47,53,56,44,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:00,Europe/London,1
-26/09/2026,23:00,,Venados,Atletico Morelia,40,5,55,45,95,60,77,32,68,62,38,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:00,Europe/London,1
-26/09/2026,23:07,,Guadalajara,Queretaro,46,19,35,65,81,54,69,51,49,54,46,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:07,Europe/London,1
-26/09/2026,23:15,,Cucuta Dep.,Llaneros FC,23,40,37,63,60,77,74,54,46,59,41,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:15,Europe/London,1
-26/09/2026,23:30,,Atlanta Utd,New York City,37,23,40,60,77,63,78,44,56,63,37,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:30,Europe/London,1
-26/09/2026,23:30,,CF Montreal,FC Cincinnati,32,39,29,71,61,68,77,35,65,62,38,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:30,Europe/London,1
-26/09/2026,23:30,,Charlotte FC,Chicago Fire,36,32,32,68,68,64,83,31,69,68,32,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:30,Europe/London,1
-26/09/2026,23:30,,NY Red Bulls,St. Louis City,34,31,35,65,69,66,80,44,56,65,35,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:30,Europe/London,1
-26/09/2026,23:30,,Napier City Rov.,Miramar Rangers,38,29,33,67,71,62,31,95,5,16,84,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:30,Europe/London,1
-26/09/2026,23:30,,Philadelphia Un,Orlando City,44,24,32,68,76,56,79,34,66,64,36,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,00:30,Europe/London,1
-27/09/2026,00:00,,Luis Angel Firpo,Aguila,42,35,23,77,65,58,65,50,50,50,50,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,01:00,Europe/London,1
-27/09/2026,00:00,,Marquense,Malacateco,46,25,29,71,75,54,61,50,50,46,54,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,01:00,Europe/London,1
-27/09/2026,00:00,,U. de Vinto,Oriente Petrolero,35,30,35,65,70,65,78,39,61,63,37,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,01:00,Europe/London,1
-27/09/2026,00:30,,Austin FC,San Diego FC,36,30,34,66,70,64,75,36,64,60,40,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,01:30,Europe/London,1
-27/09/2026,00:30,,Dallas,Los Angeles FC,36,31,33,67,69,64,72,39,61,57,43,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,01:30,Europe/London,1
-27/09/2026,00:30,,Houston Dynamo,Sporting Kansas,65,15,20,80,85,35,70,40,60,55,45,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,01:30,Europe/London,1
-27/09/2026,00:30,,Mont. City Torque,Dep. Maldonado,63,7,30,70,93,37,63,55,45,48,52,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,01:30,Europe/London,1
-27/09/2026,00:30,,Nashville SC,Toronto,52,22,26,74,78,48,78,36,64,63,37,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,01:30,Europe/London,1
-27/09/2026,00:30,,Seattle Sounders,Minnesota Utd,44,24,32,68,76,56,77,46,54,62,38,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,01:30,Europe/London,1
-27/09/2026,01:00,,Auckland FC B,Wellington Ol.,30,29,41,59,71,70,31,95,5,16,84,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,02:00,Europe/London,1
-27/09/2026,01:00,,Dorados Sinaloa,Alacranes Durango,38,37,25,75,63,62,66,55,45,51,49,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,02:00,Europe/London,1
-27/09/2026,01:00,,Mexico,Colombia,34,32,34,66,68,66,67,55,45,52,48,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,02:00,Europe/London,1
-27/09/2026,01:20,,J. Barranquilla,Ind. Medellin,10,44,46,54,56,90,81,41,59,66,34,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,02:20,Europe/London,1
-27/09/2026,01:30,,Real Salt Lake,New England Rev,26,18,56,44,82,74,80,35,65,65,35,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,02:30,Europe/London,1
-27/09/2026,02:00,,Birkenhead Utd,Cashmere Tech.,33,29,38,62,71,67,31,95,5,16,84,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,03:00,Europe/London,1
-27/09/2026,02:00,,Isidro Metapan,Cacahuatique,43,45,12,88,55,57,64,55,45,49,51,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,03:00,Europe/London,1
-27/09/2026,02:00,,Sint Maarten,Belize,32,31,37,63,69,68,70,49,51,55,45,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,03:00,Europe/London,1
-27/09/2026,02:10,,Xelaju MC,Comunicaciones,45,38,17,83,62,55,64,47,53,49,51,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,03:10,Europe/London,1
-27/09/2026,02:30,,LA Galaxy,Colorado Rapids,38,27,35,65,73,62,74,43,57,59,41,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,03:30,Europe/London,1
-27/09/2026,02:30,,SJ Earthquakes,Portland Timbers,50,22,28,72,78,50,82,36,64,67,33,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,03:30,Europe/London,1
-27/09/2026,02:30,,V. Whitecaps,DC United,44,31,25,75,69,56,70,41,59,55,45,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,03:30,Europe/London,1
-27/09/2026,03:05,,Santos Laguna,Pachuca,32,30,38,62,70,68,67,46,54,52,48,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,04:05,Europe/London,1
-27/09/2026,03:10,,Tigres UANL,Puebla,22,33,45,55,67,78,71,57,43,56,44,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,04:10,Europe/London,1
-27/09/2026,04:00,,Cook Islands,Tahiti,17,35,48,52,65,83,65,24,76,50,50,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,05:00,Europe/London,1
-27/09/2026,04:00,,Perth Glory,Adelaide Utd,36,28,36,64,72,64,84,32,68,69,31,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,05:00,Europe/London,1
-27/09/2026,04:00,,Vanuatu,New Caledonia,33,30,37,63,70,67,74,45,55,59,41,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,05:00,Europe/London,1
-27/09/2026,07:00,,Fiji,Papua New Guinea,40,31,29,71,69,60,70,45,55,55,45,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,08:00,Europe/London,1
-27/09/2026,07:00,,Hong Kong,Laos,45,35,20,80,65,55,61,41,59,46,54,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,08:00,Europe/London,1
-27/09/2026,08:30,,OFK Malzenice,Tatran LM,43,16,41,59,84,57,66,52,48,51,49,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,09:30,Europe/London,1
-27/09/2026,08:30,,Slovan Brat. B,Tatran Presov,29,13,58,42,87,71,69,48,52,54,46,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,09:30,Europe/London,1
-27/09/2026,09:00,,Metalist Kharkov,FC Chernihiv,45,36,19,81,64,55,72,57,43,57,43,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,10:00,Europe/London,1
-27/09/2026,09:30,,Ufa,Torpedo Moscow,37,28,35,65,72,63,71,47,53,56,44,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,10:30,Europe/London,1
-27/09/2026,10:00,,Barakaldo,Real Aviles,32,43,25,75,57,68,66,59,41,51,49,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,11:00,Europe/London,1
-27/09/2026,10:00,,Cambodia,Myanmar,36,30,34,66,70,64,73,46,54,58,42,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,11:00,Europe/London,1
-27/09/2026,10:00,,Gangwon,Incheon Utd,35,39,26,74,61,65,67,56,44,52,48,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,11:00,Europe/London,1
-27/09/2026,10:00,,UD Ourense,Cacereno,34,32,34,66,68,66,49,59,41,34,66,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,11:00,Europe/London,1
-27/09/2026,10:00,,Umea,FBK Karlstad,29,26,45,55,74,71,69,44,56,54,46,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,11:00,Europe/London,1
-27/09/2026,10:30,,Barletta,Potenza,25,41,34,66,59,75,78,38,62,63,37,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,11:30,Europe/London,1
-27/09/2026,10:30,,Casertana,Catania,42,34,24,76,66,58,72,38,62,57,43,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,11:30,Europe/London,1
-27/09/2026,11:00,,Arendal,Brattvag,27,25,48,52,75,73,69,42,58,54,46,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,12:00,Europe/London,1
-27/09/2026,11:00,,Arlanda,Enkopings SK,48,22,30,70,78,52,74,41,59,59,41,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,12:00,Europe/London,1
-27/09/2026,11:00,,Eskilsminne IF,AFC Malmo,26,35,39,61,65,74,75,34,66,60,40,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,12:00,Europe/London,1
-27/09/2026,11:00,,Oleksandriya,FSC Mariupol,48,18,34,66,82,52,57,58,42,42,58,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,12:00,Europe/London,1
-27/09/2026,11:00,,Traeff,Kvik Halden,34,29,37,63,71,66,71,45,55,56,44,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,12:00,Europe/London,1
-27/09/2026,11:00,,Trelleborg,Angelholms,54,32,14,86,68,46,78,38,62,63,37,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,12:00,Europe/London,1
-27/09/2026,11:00,,Vihren Sandanski,Nesebar,36,37,27,73,63,64,73,51,49,58,42,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,12:00,Europe/London,1
-27/09/2026,11:35,,China,New Zealand,33,32,35,65,68,67,67,54,46,52,48,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,12:35,Europe/London,1
-27/09/2026,12:00,,Eidsvold TF,Trygg/Lade,77,16,7,93,84,23,82,29,71,67,33,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:00,Europe/London,1
-27/09/2026,12:00,,Lorenskog,Skeid,63,12,25,75,88,37,69,42,58,54,46,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:00,Europe/London,1
-27/09/2026,12:00,,Seychelles,Sri Lanka,34,32,34,66,68,66,64,57,43,49,51,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:00,Europe/London,1
-27/09/2026,12:00,,Shanghai Shenhua,Zenit,23,32,45,55,68,77,74,30,70,59,41,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:00,Europe/London,1
-27/09/2026,12:00,,Valladolid,Cordoba,49,8,43,57,92,51,69,52,48,54,46,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:00,Europe/London,1
-27/09/2026,12:30,,De Graafschap,Den Bosch,38,29,33,67,71,62,96,25,75,81,19,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:30,Europe/London,1
-27/09/2026,12:30,,Eik Tonsberg,Bjarg,11,11,78,22,89,89,69,40,60,54,46,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:30,Europe/London,1
-27/09/2026,12:30,,Nyva Ternopil,Ahrobiznes,36,9,55,45,91,64,69,50,50,54,46,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:30,Europe/London,1
-27/09/2026,12:30,,Ostia Mare Lido,Forli,36,31,33,67,69,64,78,51,49,63,37,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:30,Europe/London,1
-27/09/2026,12:30,,Ravenna,Gubbio,53,21,26,74,79,47,67,51,49,52,48,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:30,Europe/London,1
-27/09/2026,12:30,,Union Brescia,Dolomiti Bellunesi,45,36,19,81,64,55,58,52,48,43,57,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,13:30,Europe/London,1
-27/09/2026,13:00,,AEL Larissa,PAOK B,43,34,23,77,66,57,63,64,36,48,52,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,14:00,Europe/London,1
-27/09/2026,13:00,,Apollon Kalamaria,Anag. Karditsas,30,33,37,63,67,70,52,64,36,37,63,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,14:00,Europe/London,1
-27/09/2026,13:00,,Lithuania,Azerbaijan,35,34,31,69,66,65,60,63,37,45,55,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,14:00,Europe/London,1
-27/09/2026,13:00,,Niki Volos,Nestos Chrysoupoli,46,40,14,86,60,54,74,53,47,59,41,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,14:00,Europe/London,1
-27/09/2026,13:00,,Panionios,Zakynthos FC,62,28,10,90,72,38,52,75,25,37,63,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,14:00,Europe/London,1
-27/09/2026,13:30,,Beroe,Yantra Gabrovo,39,23,38,62,77,61,53,58,42,38,62,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,14:30,Europe/London,1
-27/09/2026,14:00,,Assyriska FF,Pitea IF,55,24,21,79,76,45,72,40,60,57,43,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,CE Europa,Majadahonda,36,33,31,69,67,64,72,42,58,57,43,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,CSKA Sofia II,Sportist Svoge,60,27,13,87,73,40,57,58,42,42,58,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,Central Espanol,Liverpool M.,18,30,52,48,70,82,55,58,42,40,60,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,Chernom. Burgas,Montana,57,22,21,79,78,43,60,45,55,45,55,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,Criciuma SC,Avai SC,51,22,27,73,78,49,60,64,36,45,55,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,Gefle,Vasalund,46,26,28,72,74,54,74,36,64,59,41,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,Hellas Syros,Pyrgos 1968,50,44,6,94,56,50,52,42,58,37,63,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,Karlstad Fotboll,Karlbergs BK,52,20,28,72,80,48,65,44,56,50,50,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,Levanger,Grorud,50,14,36,64,86,50,69,34,66,54,46,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,Mirandes,Unionistas,43,34,23,77,66,57,82,34,66,67,33,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:00,,Shinnik Yaroslavl,SKA-Khabarovsk,47,43,10,90,57,53,68,50,50,53,47,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:00,Europe/London,1
-27/09/2026,14:15,,Mallorca,Almeria,56,5,39,61,95,44,36,69,31,21,79,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,15:15,Europe/London,1
-27/09/2026,15:00,,Abia Warriors,Bendel Insurance,42,35,23,77,65,58,65,44,56,50,50,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:00,Europe/London,1
-27/09/2026,15:00,,Ikorodu City,Enugu Rangers,41,34,25,75,66,59,82,42,58,67,33,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:00,Europe/London,1
-27/09/2026,15:00,,Kano Pillars,Enyimba,88,8,3,96,91,11,,42,58,,,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:00,Europe/London,1
-27/09/2026,15:00,,Katsina United,Doma United,40,33,27,73,67,60,,62,38,,,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:00,Europe/London,1
-27/09/2026,15:00,,Kun Khalifat,Kwara United,40,35,25,75,65,60,59,44,56,44,56,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:00,Europe/London,1
-27/09/2026,15:00,,Nasarawa United,Niger Tornadoes,43,37,20,80,63,57,79,50,50,64,36,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:00,Europe/London,1
-27/09/2026,15:00,,Plateau United,Inter Lagos,45,38,17,83,62,55,65,57,43,50,50,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:00,Europe/London,1
-27/09/2026,15:00,,Yemen,Qatar,20,34,46,54,66,80,61,40,60,46,54,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:00,Europe/London,1
-27/09/2026,15:15,,Panserraikos,Olympiacos B,39,24,37,63,76,61,74,53,47,59,41,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:15,Europe/London,1
-27/09/2026,15:30,,Antofagasta,Dep. Iquique,38,33,29,71,67,62,65,55,45,50,50,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:30,Europe/London,1
-27/09/2026,15:30,,Carpi,ArzignanoChiampo,20,46,34,66,54,80,81,35,65,66,34,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:30,Europe/London,1
-27/09/2026,15:30,,Honefoss,Tromsdalen,55,15,30,70,85,45,80,29,71,65,35,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:30,Europe/London,1
-27/09/2026,15:30,,Perugia,Reggiana 1919,26,21,53,47,79,74,72,45,55,57,43,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:30,Europe/London,1
-27/09/2026,15:30,,Renate,Treviso,36,32,32,68,68,64,75,46,54,60,40,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:30,Europe/London,1
-27/09/2026,15:30,,Scafatese,Team Altamura,40,33,27,73,67,60,67,55,45,52,48,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:30,Europe/London,1
-27/09/2026,15:30,,Vis Pesaro 1898,Guidonia,9,40,51,49,60,91,83,45,55,68,32,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,16:30,Europe/London,1
-27/09/2026,16:00,,Austria,Kosovo,43,33,24,76,67,57,65,48,52,50,50,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:00,Europe/London,1
-27/09/2026,16:00,,Denmark,Wales,44,33,23,77,67,56,63,47,53,48,52,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:00,Europe/London,1
-27/09/2026,16:00,,Fratria Varna,Spartak Pleven,49,23,28,72,77,51,60,55,45,45,55,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:00,Europe/London,1
-27/09/2026,16:00,,Gibraltar,Andorra,29,35,36,64,65,71,52,71,29,37,63,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:00,Europe/London,1
-27/09/2026,16:00,,Hebar,Dobrudzha,67,18,15,85,82,33,70,48,52,55,45,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:00,Europe/London,1
-27/09/2026,16:00,,Ludogorets II,Etar V. Tarnovo,39,25,36,64,75,61,70,55,45,55,45,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:00,Europe/London,1
-27/09/2026,16:00,,Moghreb Tetouan,Berkane,18,36,46,54,64,82,48,67,33,33,67,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:00,Europe/London,1
-27/09/2026,16:00,,Serbia,Netherlands,22,34,44,56,66,78,66,42,58,51,49,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:00,Europe/London,1
-27/09/2026,16:15,,Antequera,Real Jaen,37,33,30,70,67,63,72,42,58,57,43,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:15,Europe/London,1
-27/09/2026,16:15,,Merida AD,UD Logrones,26,6,68,32,94,74,66,51,49,51,49,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:15,Europe/London,1
-27/09/2026,16:15,,Pontevedra,Ponferradina,38,33,29,71,67,62,66,59,41,51,49,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:15,Europe/London,1
-27/09/2026,16:30,,Burgos,Eldense,59,23,18,82,77,41,63,47,53,48,52,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:30,Europe/London,1
-27/09/2026,16:30,,Eibar,Las Palmas,66,5,29,71,95,34,58,47,53,43,57,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:30,Europe/London,1
-27/09/2026,16:30,,Malta,Liechtenstein,46,37,17,83,63,54,48,54,46,33,67,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,17:30,Europe/London,1
-27/09/2026,17:00,,Jordan,Syria,43,34,23,77,66,57,58,55,45,43,57,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,18:00,Europe/London,1
-27/09/2026,17:00,,Teruel,Huesca,27,34,39,61,66,73,39,58,42,24,76,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,18:00,Europe/London,1
-27/09/2026,17:45,,Everton VM,U. de Chile,33,30,37,63,70,67,73,45,55,58,42,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,18:45,Europe/London,1
-27/09/2026,18:00,,Bahrain,UAE,24,34,42,58,66,76,60,54,46,45,55,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:00,Europe/London,1
-27/09/2026,18:00,,Dep. Concepcion,Curico Unido,45,34,21,79,66,55,57,50,50,42,58,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:00,Europe/London,1
-27/09/2026,18:00,,Inter Toronto,Pacific,38,30,32,68,70,62,78,38,62,63,37,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:00,Europe/London,1
-27/09/2026,18:00,,Juventud de LP,CA Cerro,35,30,35,65,70,65,69,58,42,54,46,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:00,Europe/London,1
-27/09/2026,18:00,,Maghreb Fez,RCA Zemamra,39,34,27,73,66,61,48,67,33,33,67,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:00,Europe/London,1
-27/09/2026,18:00,,Pumas UNAM,Atl. San Luis,34,36,30,70,64,66,71,42,58,56,44,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:00,Europe/London,1
-27/09/2026,18:00,,SO de l'Armee,Stella Club,34,34,32,68,66,66,20,95,5,5,95,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:00,Europe/London,1
-27/09/2026,18:00,,Sport Boys,Alianza Atl.,40,33,27,73,67,60,65,52,48,50,50,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:00,Europe/London,1
-27/09/2026,18:30,,Albinoleffe,Alcione Milano,26,48,26,74,52,74,75,46,54,60,40,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:30,Europe/London,1
-27/09/2026,18:30,,CA Atlanta,Agropecuario,39,35,26,74,65,61,52,67,33,37,63,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:30,Europe/London,1
-27/09/2026,18:30,,Casarano,Monopoli 1966,36,32,32,68,68,64,61,61,39,46,54,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:30,Europe/London,1
-27/09/2026,18:30,,Club Almagro,Nueva Chicago,36,35,29,71,65,64,51,72,28,36,64,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:30,Europe/London,1
-27/09/2026,18:30,,Def. de Belgrano,Ferro C. Oeste,23,40,37,63,60,77,53,69,31,38,62,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:30,Europe/London,1
-27/09/2026,18:30,,Foggia,Sorrento,16,30,54,46,70,84,61,61,39,46,54,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:30,Europe/London,1
-27/09/2026,18:30,,Los Andes,Dep. Moron,27,39,34,66,61,73,53,65,35,38,62,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:30,Europe/London,1
-27/09/2026,18:30,,Pescara,Spezia,19,43,38,62,57,81,67,57,43,52,48,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:30,Europe/London,1
-27/09/2026,18:30,,Real Madrid B,Alcorcon,39,32,29,71,68,61,56,67,33,41,59,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:30,Europe/London,1
-27/09/2026,18:45,,Germany,Greece,44,32,24,76,68,56,71,37,63,56,44,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:45,Europe/London,1
-27/09/2026,18:45,,Israel,Ireland,34,32,34,66,68,66,68,54,46,53,47,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:45,Europe/London,1
-27/09/2026,18:45,,Norway,Portugal,36,30,34,66,70,64,81,37,63,66,34,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,19:45,Europe/London,1
-27/09/2026,19:00,,Atletico Mitre,San Telmo,32,40,28,72,60,68,54,64,36,39,61,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,20:00,Europe/London,1
-27/09/2026,19:00,,CRB AL,Cuiaba MT,34,33,33,67,67,66,62,59,41,47,53,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,20:00,Europe/London,1
-27/09/2026,19:00,,Coban Imperial,Aurora Guatemala,39,16,45,55,84,61,74,47,53,59,41,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,20:00,Europe/London,1
-27/09/2026,19:00,,GV San Jose,Ind. Petrolero,38,30,32,68,70,62,80,37,63,65,35,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,20:00,Europe/London,1
-27/09/2026,19:00,,Guyana,Cayman Islands,48,37,15,85,63,52,47,31,69,32,68,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,20:00,Europe/London,1
-27/09/2026,19:00,,Patronato Parana,San Martin SJ,26,39,35,65,61,74,58,71,29,43,57,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,20:00,Europe/London,1
-27/09/2026,19:00,,Real Oviedo,Sporting Gijon,29,32,39,61,68,71,41,69,31,26,74,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,20:00,Europe/London,1
-27/09/2026,19:30,,Deportivo Maipu,Temperley,29,38,33,67,62,71,58,63,37,43,57,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,20:30,Europe/London,1
-27/09/2026,19:30,,Ferroc. Midland,Tristan Suarez,37,34,29,71,66,63,51,72,28,36,64,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,20:30,Europe/London,1
-27/09/2026,20:00,,KACM Marrakech,Hassania Agadir,35,34,31,69,66,65,48,67,33,33,67,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,21:00,Europe/London,1
-27/09/2026,20:00,,Racing Club,Boca Juniors,27,34,39,61,66,73,58,63,37,43,57,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,21:00,Europe/London,1
-27/09/2026,20:00,,Racing Cordoba,Godoy Cruz,32,25,43,57,75,68,57,62,38,42,58,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,21:00,Europe/London,1
-27/09/2026,20:15,,ADT Tarma,Sp. Cristal,31,32,37,63,68,69,68,52,48,53,47,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,21:15,Europe/London,1
-27/09/2026,20:30,,Bolivia,Paraguay,24,33,43,57,67,76,63,48,52,48,52,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,21:30,Europe/London,1
-27/09/2026,21:00,,Alianza Salvador,INCA-Aruba,51,28,21,79,72,49,64,52,48,49,51,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,22:00,Europe/London,1
-27/09/2026,21:00,,Defensor Sp.,Danubio,41,35,24,76,65,59,59,68,32,44,56,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,22:00,Europe/London,1
-27/09/2026,21:00,,Dep. Mixco,Antigua GFC,39,11,50,50,89,61,62,52,48,47,53,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,22:00,Europe/London,1
-27/09/2026,21:00,,Gimnasia y Tiro,Atl. Rafaela,37,35,28,72,65,63,54,71,29,39,61,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,22:00,Europe/London,1
-27/09/2026,21:00,,Jaguares Cordoba,Alianza Valledupar,36,31,33,67,69,64,72,46,54,57,43,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,22:00,Europe/London,1
-27/09/2026,21:00,,Platense Zac.,Fuerte SF,52,29,19,81,71,48,67,52,48,52,48,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,22:00,Europe/London,1
-27/09/2026,21:30,,Brusque SC,Ferroviaria SP,34,33,33,67,67,66,65,57,43,50,50,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,22:30,Europe/London,1
-27/09/2026,21:30,,Fortaleza CE,Athletic Club MG,38,35,27,73,65,62,63,63,37,48,52,PRE,https://primatips.com/tips/2026-09-27,2026-09-27,22:30,Europe/London,1
 27/09/2026,23:00,,Columbus Crew,Inter Miami,32,24,44,56,76,68,85,31,69,70,30,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,00:00,Europe/London,1
 27/09/2026,23:00,,Haiti,Costa Rica,35,31,34,66,69,65,69,51,49,54,46,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,00:00,Europe/London,1
 27/09/2026,23:00,,Mun. Limeno,FAS Santa Ana,35,27,38,62,73,65,62,57,43,47,53,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,00:00,Europe/London,1
@@ -177,34 +10,79 @@ DATE,TIME,LEAGUE,HOME TEAM,AWAY TEAM,HOME PER,DRAW PER,AWAY PER,1X PER,12 PER,X2
 28/09/2026,01:00,,Trinidad&Tobago,Dominican Rep.,36,31,33,67,69,64,72,48,52,57,43,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,02:00,Europe/London,1
 28/09/2026,01:10,,Deportivo Cali,Aguilas Doradas,42,39,19,81,61,58,76,52,48,61,39,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,02:10,Europe/London,1
 28/09/2026,03:10,,Necaxa,Club America,21,17,62,38,83,79,80,40,60,65,35,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,04:10,Europe/London,1
-28/09/2026,08:00,,Singapore,Bangladesh,40,32,28,72,68,60,66,50,50,51,49,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,09:00,Europe/London,1
-28/09/2026,10:00,,Polissya,2 - Kolos-2,36,32,32,68,68,64,73,42,58,58,42,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,11:00,Europe/London,1
-28/09/2026,10:25,,Japan,Venezuela,45,35,20,80,65,55,56,47,53,41,59,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,11:25,Europe/London,1
+28/09/2026,08:00,,Singapore,Bangladesh,42,33,25,75,67,58,65,48,52,50,50,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,09:00,Europe/London,1
+28/09/2026,10:00,,Polissya,2 - Kolos-2,38,31,31,69,69,62,73,42,58,58,42,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,11:00,Europe/London,1
+28/09/2026,10:25,,Japan,Venezuela,45,36,19,81,64,55,56,47,53,41,59,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,11:25,Europe/London,1
 28/09/2026,11:00,,South Korea,Uruguay,36,32,32,68,68,64,62,59,41,47,53,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,12:00,Europe/London,1
-28/09/2026,11:30,,Indonesia,Malaysia,43,33,24,76,67,57,69,42,58,54,46,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,12:30,Europe/London,1
-28/09/2026,13:00,,Athens Kallithea,Ast. Tripolis B,75,3,22,78,97,25,61,55,45,46,54,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,14:00,Europe/London,1
-28/09/2026,13:00,,Marko 1927,Panthrakikos,43,34,23,77,66,57,50,66,34,35,65,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,14:00,Europe/London,1
-28/09/2026,14:00,,Kyrgyzstan,Maldives,48,38,14,86,62,52,49,28,72,34,66,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,15:00,Europe/London,1
+28/09/2026,11:30,,Indonesia,Malaysia,43,31,26,74,69,57,68,43,57,53,47,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,12:30,Europe/London,1
+28/09/2026,12:00,,Tajikistan,Palestine,32,32,36,64,68,68,65,55,45,50,50,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,13:00,Europe/London,1
+28/09/2026,13:00,,Athens Kallithea,Ast. Tripolis B,75,4,21,79,96,25,61,55,45,46,54,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,14:00,Europe/London,1
+28/09/2026,13:00,,Marko 1927,Panthrakikos,43,33,24,76,67,57,50,66,34,35,65,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,14:00,Europe/London,1
+28/09/2026,14:00,,Kyrgyzstan,Maldives,48,37,15,85,63,52,53,29,71,38,62,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,15:00,Europe/London,1
 28/09/2026,15:00,,Zilina B,Humenne,76,6,18,82,94,24,62,51,49,47,53,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,16:00,Europe/London,1
-28/09/2026,16:00,,Armenia,Montenegro,32,33,35,65,67,68,64,58,42,49,51,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
-28/09/2026,16:00,,Cen. African Rep.,Burkina Faso,18,36,46,54,64,82,53,49,51,38,62,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
-28/09/2026,16:00,,Equat. Guinea,Sierra Leone,40,33,27,73,67,60,59,59,41,44,56,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
+28/09/2026,16:00,,Armenia,Montenegro,33,32,35,65,68,67,64,58,42,49,51,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
+28/09/2026,16:00,,Cen. African Rep.,Burkina Faso,19,36,45,55,64,81,52,55,45,37,63,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
+28/09/2026,16:00,,Equat. Guinea,Sierra Leone,38,34,28,72,66,62,59,62,38,44,56,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
 28/09/2026,16:00,,Georgia,Ukraine,34,32,34,66,68,66,66,55,45,51,49,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
 28/09/2026,16:00,,H. Kfar Saba,Bnei Yehuda,28,6,66,34,94,72,71,42,58,56,44,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
-28/09/2026,16:00,,H. Kfar Shalem,Maccabi Jaffa,39,29,32,68,71,61,71,37,63,56,44,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
+28/09/2026,16:00,,H. Kfar Shalem,Maccabi Jaffa,40,31,29,71,69,60,71,37,63,56,44,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
 28/09/2026,16:00,,Latvia,Cyprus,34,33,33,67,67,66,63,59,41,48,52,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
 28/09/2026,16:00,,M. Kiryat Gat,Kafr Qasim,47,24,29,71,76,53,60,59,41,45,55,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
+28/09/2026,16:00,,Zimbabwe,Congo DR,24,35,41,59,65,76,56,62,38,41,59,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:00,Europe/London,1
 28/09/2026,16:45,,M. Bnei Reineh,Hapoel Raanana,47,5,46,52,93,51,76,37,63,61,39,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,17:45,Europe/London,1
 28/09/2026,18:30,,Leganes,Castellon,32,32,36,64,68,68,52,63,37,37,63,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,19:30,Europe/London,1
-28/09/2026,18:45,,Belgium,France,30,31,39,61,69,70,77,39,61,62,38,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,19:45,Europe/London,1
+28/09/2026,18:45,,Belgium,France,30,31,39,61,69,70,78,38,62,63,37,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,19:45,Europe/London,1
 28/09/2026,18:45,,North. Ireland,Hungary,34,33,33,67,67,66,60,63,37,45,55,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,19:45,Europe/London,1
 28/09/2026,18:45,,Romania,Bosnia&Herz.,37,32,31,69,68,63,67,53,47,52,48,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,19:45,Europe/London,1
-28/09/2026,18:45,,Sweden,Poland,39,31,30,70,69,61,72,45,55,57,43,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,19:45,Europe/London,1
-28/09/2026,18:45,,Turkey,Italy,34,31,35,65,69,66,73,47,53,58,42,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,19:45,Europe/London,1
-28/09/2026,19:00,,Guadeloupe,Barbados,44,34,22,78,66,56,59,48,52,44,56,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,20:00,Europe/London,1
-28/09/2026,19:00,,Tunisia,Botswana,46,37,17,83,63,54,42,55,45,27,73,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,20:00,Europe/London,1
+28/09/2026,18:45,,Sweden,Poland,38,31,31,69,69,62,73,45,55,58,42,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,19:45,Europe/London,1
+28/09/2026,18:45,,Turkey,Italy,35,31,34,66,69,65,74,46,54,59,41,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,19:45,Europe/London,1
+28/09/2026,19:00,,Guadeloupe,Barbados,39,32,29,71,68,61,66,52,48,51,49,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,20:00,Europe/London,1
+28/09/2026,19:00,,Tunisia,Botswana,47,38,15,85,62,53,47,49,51,32,68,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,20:00,Europe/London,1
 28/09/2026,19:30,,Sp. San Lorenzo,Recoleta,37,5,58,42,95,63,69,44,56,54,46,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,20:30,Europe/London,1
-28/09/2026,21:00,,Cuba,Bonaire,47,37,16,84,63,53,52,39,61,37,63,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,22:00,Europe/London,1
+28/09/2026,21:00,,Cuba,Bonaire,47,36,17,83,64,53,53,36,64,38,62,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,22:00,Europe/London,1
 28/09/2026,22:00,,Libertad,Olimpia As.,49,13,38,62,87,51,69,44,56,54,46,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,23:00,Europe/London,1
-28/09/2026,22:00,,Suriname,Martinique,43,35,22,78,65,57,56,56,44,41,59,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,23:00,Europe/London,1
-28/09/2026,22:30,,America MG,Juventude RS,16,25,59,41,75,84,55,59,41,40,60,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,23:30,Europe/London,1
+28/09/2026,22:00,,Suriname,Martinique,42,34,24,76,66,58,60,54,46,45,55,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,23:00,Europe/London,1
+28/09/2026,22:30,,America MG,Juventude RS,16,25,59,41,75,84,55,58,42,40,60,PRE,https://primatips.com/tips/2026-09-28,2026-09-28,23:30,Europe/London,1
+28/09/2026,23:00,,Mont. Wanderers,Albion,66,30,3,96,69,33,69,58,42,54,46,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,00:00,Europe/London,1
+29/09/2026,00:00,,Jamaica,Honduras,37,32,31,69,68,63,65,55,45,50,50,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,01:00,Europe/London,1
+29/09/2026,00:00,,Saint Lucia,Bermuda,33,31,36,64,69,67,74,45,55,59,41,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,01:00,Europe/London,1
+29/09/2026,00:00,,St Kitts&Nevis,Grenada,30,31,39,61,69,70,76,40,60,61,39,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,01:00,Europe/London,1
+29/09/2026,02:00,,Guatemala,El Salvador,38,32,30,70,68,62,67,52,48,52,48,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,03:00,Europe/London,1
+29/09/2026,10:00,,Australia,Brazil,21,34,45,55,66,79,65,38,62,50,50,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,11:00,Europe/London,1
+29/09/2026,10:00,,FC Osaka,Avispa Fukuoka,25,32,43,57,68,75,68,42,58,53,47,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,11:00,Europe/London,1
+29/09/2026,13:00,,Ethiopia,Senegal,22,35,43,57,65,78,62,49,51,47,53,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,14:00,Europe/London,1
+29/09/2026,13:00,,Lesotho,Morocco,14,38,48,52,62,86,45,25,75,30,70,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,14:00,Europe/London,1
+29/09/2026,13:00,,Mozambique,Sudan,39,34,27,73,66,61,53,67,33,38,62,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,14:00,Europe/London,1
+29/09/2026,13:00,,South Sudan,Egypt,16,38,46,54,62,84,50,47,53,35,65,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,14:00,Europe/London,1
+29/09/2026,16:00,,Cape Verde,Rwanda,45,37,18,82,63,55,49,58,42,34,66,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,17:00,Europe/London,1
+29/09/2026,16:00,,Finland,Belarus,41,35,24,76,65,59,56,61,39,41,59,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,17:00,Europe/London,1
+29/09/2026,16:00,,Ghana,Gambia,43,35,22,78,65,57,58,53,47,43,57,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,17:00,Europe/London,1
+29/09/2026,16:00,,Guinea,Bissau - Nigeria,18,37,45,55,63,82,50,58,42,35,65,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,17:00,Europe/London,1
+29/09/2026,16:00,,Moldova,Faroe Islands,33,34,33,67,66,67,60,64,36,45,55,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,17:00,Europe/London,1
+29/09/2026,16:00,,Zambia,Togo,39,33,28,72,67,61,57,62,38,42,58,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,17:00,Europe/London,1
+29/09/2026,16:30,,Russia,Iran,41,33,26,74,67,59,63,52,48,48,52,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,17:30,Europe/London,1
+29/09/2026,18:00,,Boreham Wood,Kidderminster,45,25,30,70,75,55,76,40,60,61,39,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:00,Europe/London,1
+29/09/2026,18:45,,Barrow,Scunthorpe Utd,38,30,32,68,70,62,76,43,57,61,39,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Bulgaria,Estonia,42,34,24,76,66,58,56,60,40,41,59,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Cardiff Met,Haverfordwest,48,29,23,77,71,52,56,46,54,41,59,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Czech Republic,England,22,34,44,56,66,78,63,45,55,48,52,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Forest Green R.,Wealdstone,51,14,35,65,86,49,76,36,64,61,39,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Fylde,Carlisle Utd,42,43,15,85,57,58,93,33,67,78,22,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Gateshead,Altrincham,15,13,72,28,87,85,73,33,67,58,42,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Halifax Town,Boston United,49,21,30,70,79,51,76,43,57,61,39,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Hartlepool Utd,Harrogate Town,23,4,73,27,96,77,80,36,64,65,35,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Hornchurch,Aldershot Town,38,20,42,58,80,62,66,50,50,51,49,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Luxembourg,Iceland,32,32,36,64,68,68,66,55,45,51,49,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,San Marino,Albania,14,38,48,52,62,86,43,30,70,28,72,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Scotland,Switzerland,28,33,39,61,67,72,63,56,44,48,52,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Slovakia,Kazakhstan,46,36,18,82,64,54,51,51,49,36,64,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Slovenia,North Macedonia,42,34,24,76,66,58,57,58,42,42,58,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Spain,Croatia,47,34,19,81,66,53,58,38,62,43,57,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Woking,Solihull Moors,39,31,30,70,69,61,76,43,57,61,39,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,18:45,,Yeovil Town,Worthing,37,30,33,67,70,63,90,33,67,75,25,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,19:45,Europe/London,1
+29/09/2026,19:00,,Congo,Cameroon,21,35,44,56,65,79,58,50,50,43,57,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,20:00,Europe/London,1
+29/09/2026,19:00,,Gabon,Niger,41,35,24,76,65,59,56,61,39,41,59,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,20:00,Europe/London,1
+29/09/2026,20:30,,Dep. Pereira,Santa Fe Bogota,15,43,42,58,57,85,68,53,47,53,47,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,21:30,Europe/London,1
+29/09/2026,21:30,,Aguila,Inter Santa Tecla,22,39,39,61,61,78,61,55,45,46,54,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,22:30,Europe/London,1
+29/09/2026,21:30,,Atletico Balboa,Cacahuatique,30,52,18,82,48,70,64,61,39,49,51,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,22:30,Europe/London,1
+29/09/2026,22:30,,Botafogo SP,Ponte Preta SP,64,16,20,80,84,36,63,56,44,48,52,PRE,https://primatips.com/tips/2026-09-29,2026-09-29,23:30,Europe/London,1

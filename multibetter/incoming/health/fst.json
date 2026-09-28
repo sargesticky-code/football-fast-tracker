@@ -1,12 +1,12 @@
 {
   "source": "FST",
   "status": "OK",
-  "rows": 158,
+  "rows": 78,
   "requests": 6,
   "errors": 0,
-  "started_at": "2026-09-27T23:38:19.922852+08:00",
-  "finished_at": "2026-09-27T23:38:21.909045+08:00",
+  "started_at": "2026-09-28T09:38:34.505494+08:00",
+  "finished_at": "2026-09-28T09:38:36.481800+08:00",
   "note": "",
-  "target_start": "2026-09-27",
-  "target_end": "2026-09-28"
+  "target_start": "2026-09-28",
+  "target_end": "2026-09-29"
 }
