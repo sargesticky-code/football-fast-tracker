@@ -13,6 +13,36 @@ from datetime import datetime, timezone
 MARKETS=(("HDA",("had_home","had_draw","had_away")),("GOALS",("hil_over","hil_under")),("CORNERS",("chl_over","chl_under")))
 
 def present(v): return bool((v or "").strip())
+def num(v):
+    try: return float(v)
+    except (TypeError,ValueError): return None
+def form_points(s):
+    vals={"W":3,"D":1,"L":0}
+    seq=[vals[x] for x in (s or "").upper() if x in vals]
+    return sum(seq)/len(seq) if seq else None
+def directional_evidence(fr,pr,preds):
+    ev=[]
+    if fr:
+        hp,ap=form_points(fr.get("home_form6")),form_points(fr.get("away_form6"))
+        if hp is not None and ap is not None and abs(hp-ap)>=0.5:
+            side="HOME" if hp>ap else "AWAY"
+            ev.append({"kind":"FORM","side":side,"strength":round(abs(hp-ap)/3,3),"text":"主隊近況較佳" if side=="HOME" else "客隊近況較佳"})
+        hgf,hga,agf,aga=map(num,(fr.get("home_gf_avg"),fr.get("home_ga_avg"),fr.get("away_gf_avg"),fr.get("away_ga_avg")))
+        if None not in (hgf,hga,agf,aga):
+            hd=hgf-aga; ad=agf-hga
+            if abs(hd-ad)>=0.6:
+                side="HOME" if hd>ad else "AWAY"
+                ev.append({"kind":"ATTACK_DEFENCE","side":side,"strength":round(min(abs(hd-ad)/3,1),3),"text":"主隊攻守數據較有利" if side=="HOME" else "客隊攻守數據較有利"})
+    if pr:
+        h,a=num(pr.get("home_rating")),num(pr.get("away_rating"))
+        if h is not None and a is not None and abs(h-a)>=3:
+            side="HOME" if h>a else "AWAY"
+            ev.append({"kind":"OPTA_POWER","side":side,"strength":round(min(abs(h-a)/20,1),3),"text":"Opta實力評分偏主隊" if side=="HOME" else "Opta實力評分偏客隊"})
+    for p in preds or []:
+        rec=(p.get("recommendation") or "").lower()
+        side="HOME" if any(x in rec for x in ("home","主"," h ","1")) else ("AWAY" if any(x in rec for x in ("away","客"," a ","2")) else "NEUTRAL")
+        if side!="NEUTRAL": ev.append({"kind":"EXTERNAL_PREDICTION","side":side,"strength":num(p.get("match_score")) or 0.5,"text":f"{p.get('source') or 'External'}方向支持{'主隊' if side=='HOME' else '客隊'}"})
+    return ev
 
 def build(rows, form_rows=None, power_rows=None, prediction_rows=None):
     form_by_id={r.get('hkjc_event_id'):r for r in (form_rows or []) if r.get('hkjc_event_id')}
@@ -59,17 +89,24 @@ def build(rows, form_rows=None, power_rows=None, prediction_rows=None):
         node(src,"SOURCE",source="HKJC",fetched_at=r.get("fetched_at_hkt"))
         edge(src,m,"OBSERVES")
     why=[]
+    match_rows={(r.get("hkjc_event_id") or r.get("match_id") or "").strip():r for r in rows}
     for n in nodes.values():
         if n["type"]!="MATCH": continue
         mid=n["id"]; rel=[e for e in edges if e["target"]==mid or e["source"]==mid]
         signals=[]
+        raw_mid=mid.split(":",1)[1]
+        evidence=directional_evidence(form_by_id.get(raw_mid),power_by_id.get(raw_mid),predictions_by_id.get(raw_mid,[]))
+        home_support=sum(e["strength"] for e in evidence if e["side"]=="HOME")
+        away_support=sum(e["strength"] for e in evidence if e["side"]=="AWAY")
+        direction="HOME" if home_support-away_support>=0.35 else ("AWAY" if away_support-home_support>=0.35 else "MIXED")
+        conflict=home_support>0 and away_support>0
         if any(e["relation"]=="EVIDENCE_FOR" for e in rel): signals.append("recent_form_available")
         model_count=sum(e["relation"]=="MODEL_EVIDENCE" for e in rel)
         if model_count: signals.append(f"model_signals:{model_count}")
         market_count=sum(e["relation"]=="HAS_MARKET" for e in rel)
         signals.append(f"market_groups:{market_count}")
         signals.append("hkjc_source_present" if any(e["relation"]=="OBSERVES" for e in rel) else "source_missing")
-        why.append({"match_id":mid.split(":",1)[1],"why_chain":signals,"confidence":"EVIDENCE_RICH" if market_count>=2 and "recent_form_available" in signals else "PARTIAL_EVIDENCE"})
+        why.append({"match_id":raw_mid,"why_chain":signals,"directional_evidence":evidence,"direction":direction,"conflict":conflict,"support":{"home":round(home_support,3),"away":round(away_support,3)},"confidence":"EVIDENCE_RICH" if market_count>=2 and len(evidence)>=2 else "PARTIAL_EVIDENCE"})
     return {"schema":"GS_SHADOW_V1","generated_at":datetime.now(timezone.utc).isoformat(),"nodes":list(nodes.values()),"edges":edges,"why_chains":why,
             "stats":{"matches":sum(n["type"]=="MATCH" for n in nodes.values()),"teams":sum(n["type"]=="TEAM" for n in nodes.values()),"markets":sum(n["type"]=="MARKET" for n in nodes.values()),"forms":sum(n["type"]=="FORM" for n in nodes.values()),"model_signals":sum(n["type"] in ("MODEL_SIGNAL","PREDICTION") for n in nodes.values()),"why_chains":len(why),"edges":len(edges)}}
 
