@@ -1,5 +1,8 @@
+from datetime import datetime, timezone
+
 from phase3.source_latency_benchmark import Candidate
 from phase3.source_shadow_runner import (
+    enrich_transport_trace,
     execute_transport_plan,
     execute_transport_slot,
     interleaved_request_plan,
@@ -43,3 +46,35 @@ def test_transport_plan_accounts_for_six_calls_and_mixed_failures():
     assert [trace["sequence"] for trace in result["traces"]] == list(range(1, 7))
     assert [trace["source"] for trace in result["traces"]] == ["fotmob", "sofascore"] * 3
     assert sum(trace["success"] for trace in result["traces"]) == 5
+
+
+def test_enrich_transport_trace_tracks_freshness_and_verified_identity_only():
+    trace = {
+        "sequence": 1,
+        "source": "fotmob",
+        "observed_at": "2026-09-29T07:00:10+00:00",
+        "network_latency_ms": 12.5,
+        "success": True,
+        "error": None,
+        "payload": {
+            "source_updated_at": "2026-09-29T07:00:00+00:00",
+            "rows": [
+                {"match_id": "A", "identity_status": "VERIFIED"},
+                {"match_id": "B", "identity_status": "FUZZY"},
+                {"match_id": "C", "identity_status": "VERIFIED"},
+            ],
+            "unmapped_rows": 1,
+            "collision_rows": 1,
+        },
+    }
+
+    enriched = enrich_transport_trace(
+        trace,
+        now=datetime(2026, 9, 29, 7, 0, 10, tzinfo=timezone.utc),
+    )
+
+    assert enriched["source_updated_at"] == "2026-09-29T07:00:00+00:00"
+    assert enriched["snapshot_age_seconds"] == 10.0
+    assert enriched["mapped_rows"] == 2
+    assert enriched["unmapped_rows"] == 1
+    assert enriched["collision_rows"] == 1
