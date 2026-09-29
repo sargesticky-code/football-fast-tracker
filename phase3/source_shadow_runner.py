@@ -51,11 +51,19 @@ def execute_transport_slot(slot):
     }
 
 
-def execute_transport_plan(plan):
-    """Execute a bounded shadow plan sequentially and account for upstream calls."""
+def execute_transport_plan(plan, *, enrich=False, now=None):
+    """Execute a bounded shadow plan sequentially and account for upstream calls.
+
+    When ``enrich`` is enabled, each trace also carries source freshness and
+    persistent VERIFIED identity evidence. This remains transport-only: it
+    never performs fuzzy rematching or extra upstream requests.
+    """
     traces = []
     for slot in plan:
-        traces.append(execute_transport_slot(slot))
+        trace = execute_transport_slot(slot)
+        if enrich:
+            trace = enrich_transport_trace(trace, now=now)
+        traces.append(trace)
     return {
         "traces": traces,
         "upstream_request_count": len(traces),
