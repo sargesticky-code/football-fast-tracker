@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from time import perf_counter
 
-from phase3.source_latency_benchmark import Candidate
+from phase3.source_latency_benchmark import Candidate, _age_seconds
 
 
 def interleaved_request_order(candidates, rounds=3):
@@ -61,3 +61,29 @@ def execute_transport_plan(plan):
         "upstream_request_count": len(traces),
         "request_failures": sum(not trace["success"] for trace in traces),
     }
+
+
+def enrich_transport_trace(trace, *, now=None):
+    """Add freshness and persistent-identity evidence without fuzzy rematching."""
+    enriched = dict(trace)
+    payload = enriched.get("payload") if enriched.get("success") else None
+    payload = payload if isinstance(payload, dict) else {}
+    clock = now or datetime.now(timezone.utc)
+    source_updated_at = payload.get("source_updated_at")
+    rows = payload.get("rows") or []
+
+    mapped = sum(
+        1 for row in rows
+        if isinstance(row, dict) and row.get("identity_status") == "VERIFIED"
+    )
+    unmapped = int(payload.get("unmapped_rows", 0) or 0)
+    collisions = int(payload.get("collision_rows", 0) or 0)
+
+    enriched.update({
+        "source_updated_at": source_updated_at,
+        "snapshot_age_seconds": _age_seconds(source_updated_at, clock),
+        "mapped_rows": mapped,
+        "unmapped_rows": unmapped,
+        "collision_rows": collisions,
+    })
+    return enriched
