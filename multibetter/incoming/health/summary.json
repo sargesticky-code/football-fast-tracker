@@ -1,77 +1,77 @@
 {
-  "built_at_hkt": "2026-09-28T09:38:41.261449+08:00",
+  "built_at_hkt": "2026-09-29T10:34:56.185510+08:00",
   "sources": {
     "FRB": {
       "source": "FRB",
       "status": "OK",
-      "rows": 8,
+      "rows": 42,
       "requests": 0,
       "errors": 0,
-      "started_at": "2026-09-28T09:38:15.076519+08:00",
-      "finished_at": "2026-09-28T09:38:15.078581+08:00",
+      "started_at": "2026-09-29T10:34:22.782261+08:00",
+      "finished_at": "2026-09-29T10:34:22.787129+08:00",
       "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
-      "target_start": "2026-09-28",
-      "target_end": "2026-09-29"
+      "target_start": "2026-09-29",
+      "target_end": "2026-09-30"
     },
     "ACC": {
       "source": "ACC",
       "status": "OK",
-      "rows": 81,
-      "requests": 48,
+      "rows": 92,
+      "requests": 46,
       "errors": 0,
-      "started_at": "2026-09-28T09:38:15.228920+08:00",
-      "finished_at": "2026-09-28T09:38:28.152821+08:00",
+      "started_at": "2026-09-29T10:34:22.971111+08:00",
+      "finished_at": "2026-09-29T10:34:35.124655+08:00",
       "note": "",
-      "target_start": "2026-09-28",
-      "target_end": "2026-09-29"
+      "target_start": "2026-09-29",
+      "target_end": "2026-09-30"
     },
     "BCL": {
       "source": "BCL",
       "status": "OK",
-      "rows": 18,
-      "requests": 20,
+      "rows": 46,
+      "requests": 48,
       "errors": 0,
-      "started_at": "2026-09-28T09:38:28.331004+08:00",
-      "finished_at": "2026-09-28T09:38:34.318620+08:00",
+      "started_at": "2026-09-29T10:34:35.337243+08:00",
+      "finished_at": "2026-09-29T10:34:50.573172+08:00",
       "note": "",
-      "target_start": "2026-09-28",
-      "target_end": "2026-09-29"
+      "target_start": "2026-09-29",
+      "target_end": "2026-09-30"
     },
     "FST": {
       "source": "FST",
       "status": "OK",
-      "rows": 78,
+      "rows": 75,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-28T09:38:34.505494+08:00",
-      "finished_at": "2026-09-28T09:38:36.481800+08:00",
+      "started_at": "2026-09-29T10:34:50.766977+08:00",
+      "finished_at": "2026-09-29T10:34:52.344710+08:00",
       "note": "",
-      "target_start": "2026-09-28",
-      "target_end": "2026-09-29"
+      "target_start": "2026-09-29",
+      "target_end": "2026-09-30"
     },
     "PRE": {
       "source": "PRE",
       "status": "OK",
-      "rows": 87,
+      "rows": 89,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-09-28T09:38:36.640146+08:00",
-      "finished_at": "2026-09-28T09:38:37.966481+08:00",
+      "started_at": "2026-09-29T10:34:52.546986+08:00",
+      "finished_at": "2026-09-29T10:34:53.622535+08:00",
       "note": "",
-      "target_start": "2026-09-28",
-      "target_end": "2026-09-29"
+      "target_start": "2026-09-29",
+      "target_end": "2026-09-30"
     },
     "STA": {
       "source": "STA",
       "status": "OK",
-      "rows": 49,
+      "rows": 37,
       "requests": 3,
       "errors": 0,
-      "started_at": "2026-09-28T09:38:38.172756+08:00",
-      "finished_at": "2026-09-28T09:38:41.140726+08:00",
-      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-27\", \"calibration_rows\": 263, \"dominance\": 1.0, \"dominant_cluster\": [-300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -298], \"dominant_samples\": 34, \"inferred_source_minus_utc_minutes\": -300, \"offset_distribution\": {\"-300\": 33, \"-298\": 1}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 34, \"target_rows\": 49}",
-      "target_start": "2026-09-28",
-      "target_end": "2026-09-29"
+      "started_at": "2026-09-29T10:34:53.873853+08:00",
+      "finished_at": "2026-09-29T10:34:56.080824+08:00",
+      "note": "calibration={\"calibration_only_previous_day\": \"2026-09-28\", \"calibration_rows\": 63, \"dominance\": 0.9545, \"dominant_cluster\": [60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60], \"dominant_samples\": 21, \"inferred_source_minus_utc_minutes\": 60, \"offset_distribution\": {\"30\": 1, \"60\": 21}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 22, \"target_rows\": 37}",
+      "target_start": "2026-09-29",
+      "target_end": "2026-09-30"
     }
   },
   "fresh_optional_sources": [
