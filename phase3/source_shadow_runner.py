@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
+from statistics import median
 from time import perf_counter
 
-from phase3.source_latency_benchmark import Candidate, _age_seconds
+from phase3.source_latency_benchmark import Candidate, _age_seconds, _p95
 
 
 def interleaved_request_order(candidates, rounds=3):
@@ -95,3 +96,51 @@ def enrich_transport_trace(trace, *, now=None):
         "collision_rows": collisions,
     })
     return enriched
+
+
+def summarize_transport_plan(result):
+    """Aggregate bounded shadow traces per source without changing source priority."""
+    summaries = {}
+    for trace in result.get("traces", []):
+        source = trace["source"]
+        summary = summaries.setdefault(source, {
+            "upstream_requests": 0,
+            "request_failures": 0,
+            "latencies_ms": [],
+            "snapshot_ages_seconds": [],
+            "mapped_rows": 0,
+            "unmapped_rows": 0,
+            "collision_rows": 0,
+        })
+        summary["upstream_requests"] += 1
+        summary["request_failures"] += int(not trace.get("success", False))
+        if trace.get("success") and trace.get("network_latency_ms") is not None:
+            summary["latencies_ms"].append(float(trace["network_latency_ms"]))
+        if trace.get("snapshot_age_seconds") is not None:
+            summary["snapshot_ages_seconds"].append(float(trace["snapshot_age_seconds"]))
+        summary["mapped_rows"] += int(trace.get("mapped_rows", 0) or 0)
+        summary["unmapped_rows"] += int(trace.get("unmapped_rows", 0) or 0)
+        summary["collision_rows"] += int(trace.get("collision_rows", 0) or 0)
+
+    output = {}
+    for source, summary in summaries.items():
+        requests = summary["upstream_requests"]
+        identities = summary["mapped_rows"] + summary["unmapped_rows"] + summary["collision_rows"]
+        latencies = summary.pop("latencies_ms")
+        ages = summary.pop("snapshot_ages_seconds")
+        output[source] = {
+            **summary,
+            "failure_rate": summary["request_failures"] / requests if requests else 0.0,
+            "median_latency_ms": median(latencies) if latencies else None,
+            "p95_latency_ms": _p95(latencies),
+            "median_snapshot_age_seconds": median(ages) if ages else None,
+            "p95_snapshot_age_seconds": _p95(ages),
+            "identity_match_rate": summary["mapped_rows"] / identities if identities else None,
+        }
+    return {
+        "mode": "SHADOW_ONLY",
+        "production_primary_changed": False,
+        "upstream_request_count": result.get("upstream_request_count", 0),
+        "request_failures": result.get("request_failures", 0),
+        "sources": output,
+    }
