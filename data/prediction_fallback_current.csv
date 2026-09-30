@@ -1,38 +1,43 @@
 ﻿fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,source,source_competition,source_url,recommendation,market,match_score,status,notes
-2026-09-30T00:35:22+08:00,FB6017,2026-09-29T22:40+08:00,UPP,FC Palm City,Dibba Al-Hisn,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5980,2026-09-29T23:00+08:00,E2Q,Iceland U21,Switzerland U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6015,2026-09-29T23:30+08:00,INT,Germany U20,Italy U20,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5956,2026-09-30T00:00+08:00,ENL,Moldova,Faroe Islands,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5960,2026-09-30T00:00+08:00,ENL,Finland,Belarus,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5990,2026-09-30T00:00+08:00,ANQ,Guinea Bissau,Nigeria,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5991,2026-09-30T00:00+08:00,ANQ,Cape Verde Islands,Rwanda,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5992,2026-09-30T00:00+08:00,ANQ,Ghana,Gambia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6002,2026-09-30T00:00+08:00,E2Q,Norway U21,Bosnia-Herzegovina U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6008,2026-09-30T00:00+08:00,INT,Russia,Iran,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6000,2026-09-30T01:30+08:00,GUC,Oman,Kuwait,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6001,2026-09-30T01:30+08:00,GUC,Saudi Arabia,Iraq,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5981,2026-09-30T02:00+08:00,E2Q,Belgium U21,Wales U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5952,2026-09-30T02:45+08:00,ENL,Spain,Croatia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5953,2026-09-30T02:45+08:00,ENL,Czechia,England,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5954,2026-09-30T02:45+08:00,ENL,San Marino,Albania,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5955,2026-09-30T02:45+08:00,ENL,Scotland,Switzerland,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5957,2026-09-30T02:45+08:00,ENL,Luxembourg,Iceland,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5958,2026-09-30T02:45+08:00,ENL,Slovenia,North Macedonia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5965,2026-09-30T02:45+08:00,ENL,Bulgaria,Estonia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5966,2026-09-30T02:45+08:00,ENL,Slovakia,Kazakhstan,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5988,2026-09-30T03:00+08:00,ANQ,Liberia,Mali,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5989,2026-09-30T03:00+08:00,ANQ,Gabon,Niger,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5999,2026-09-30T03:00+08:00,ANQ,Congo,Cameroon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6007,2026-09-30T03:00+08:00,ANQ,Benin,Mauritania,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6006,2026-09-30T04:57+08:00,CHC,Puerto Montt,Colo Colo,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6004,2026-09-30T08:00+08:00,INT,USA,Chile,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6003,2026-09-30T09:00+08:00,INT,Mexico,Peru,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5948,2026-09-30T14:00+08:00,AMF,Korea Republic AM,China AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5949,2026-09-30T18:30+08:00,AMF,Japan AM,Uzbekistan AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6009,2026-10-01T00:00+08:00,E2Q,Poland U21,Sweden U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6010,2026-10-01T00:00+08:00,E2Q,Czechia U21,Bulgaria U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6012,2026-10-01T00:00+08:00,E2Q,Romania U21,Finland U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6011,2026-10-01T02:30+08:00,E2Q,Scotland U21,Azerbaijan U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5986,2026-10-01T02:57+08:00,UDC,Defensor Sporting,Plaza Colonia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB5982,2026-10-01T06:57+08:00,UD1,Montevideo City Torque,Penarol,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-09-30T00:35:22+08:00,FB6005,2026-10-01T08:00+08:00,INT,Argentina,Bolivia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6004,2026-09-30T08:00+08:00,INT,USA,Chile,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6003,2026-09-30T09:00+08:00,INT,Mexico,Peru,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6022,2026-09-30T10:00+08:00,CNL,Belize,St. Vincent and Grenadines,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB5948,2026-09-30T14:00+08:00,AMF,Korea Republic AM,China AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB5949,2026-09-30T18:30+08:00,AMF,Japan AM,Uzbekistan AM,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6009,2026-10-01T00:00+08:00,E2Q,Poland U21,Sweden U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6010,2026-10-01T00:00+08:00,E2Q,Czechia U21,Bulgaria U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6012,2026-10-01T00:00+08:00,E2Q,Romania U21,Finland U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6051,2026-10-01T00:00+08:00,INT,Lithuania,Andorra,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6032,2026-10-01T00:45+08:00,UCLW,Hacken Women,Juventus Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6035,2026-10-01T00:45+08:00,UCLW,Paris FC Women,Arsenal Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6037,2026-10-01T01:30+08:00,GUC,United Arab Emirates,Qatar,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6038,2026-10-01T01:30+08:00,GUC,Bahrain,Yemen,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6053,2026-10-01T02:00+08:00,ELCW,Birmingham Women,Liverpool Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6011,2026-10-01T02:30+08:00,E2Q,Scotland U21,Azerbaijan U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB5986,2026-10-01T02:57+08:00,UDC,Defensor Sporting,Plaza Colonia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6036,2026-10-01T03:00+08:00,UCLW,Lyon Women,Chelsea Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6041,2026-10-01T03:00+08:00,UCLW,Benfica Women,Bayern Munich Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB5982,2026-10-01T06:57+08:00,UD1,Montevideo City Torque,Penarol,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6054,2026-10-01T06:57+08:00,CHC,Deportes Concepcion,O'Higgins,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6040,2026-10-01T07:00+08:00,USL,Brooklyn FC,Detroit City,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6043,2026-10-01T07:00+08:00,USL,Miami FC,Sporting Club Jacksonville,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6044,2026-10-01T07:30+08:00,USL,Rhode Island FC,Indy Eleven,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6052,2026-10-01T07:30+08:00,MLS,New York Red Bulls,St. Louis City SC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6005,2026-10-01T08:00+08:00,INT,Argentina,Bolivia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6039,2026-10-01T08:00+08:00,USL,FC Tulsa,New Mexico Utd,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6042,2026-10-01T10:00+08:00,USL,Sacramento Republic,Las Vegas Lights,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6046,2026-10-01T21:15+08:00,ULP,Sharjah FC,Al Dhafra,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6048,2026-10-01T21:15+08:00,ULP,Dubai United FC,Hatta Club,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6027,2026-10-01T23:00+08:00,E2Q,Greece U21,Latvia U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6047,2026-10-01T23:45+08:00,ULP,Baniyas,Al Wahda,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6034,2026-10-02T00:00+08:00,E2Q,North Macedonia U21,Montenegro U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6050,2026-10-02T00:00+08:00,ENL,Azerbaijan,Liechtenstein,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6049,2026-10-02T00:30+08:00,E2Q,Armenia U21,Italy U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6024,2026-10-02T01:00+08:00,E2Q,Hungary U21,Lithuania U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6025,2026-10-02T02:45+08:00,ENL,Republic of Ireland,Austria,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6028,2026-10-02T02:45+08:00,ENL,Greece,Netherlands,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6029,2026-10-02T02:45+08:00,ENL,Germany,Serbia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6030,2026-10-02T02:45+08:00,ENL,Israel,Kosovo,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6031,2026-10-02T02:45+08:00,ENL,Wales,Norway,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6045,2026-10-02T02:45+08:00,ENL,Denmark,Portugal,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-09-30T09:24:03+08:00,FB6033,2026-10-02T08:13+08:00,AGC,CA Platense,Estudiantes,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
