@@ -111,6 +111,7 @@ def summarize_transport_plan(result):
             "mapped_rows": 0,
             "unmapped_rows": 0,
             "collision_rows": 0,
+            "eligible_rows": 0,
         })
         summary["upstream_requests"] += 1
         summary["request_failures"] += int(not trace.get("success", False))
@@ -121,6 +122,7 @@ def summarize_transport_plan(result):
         summary["mapped_rows"] += int(trace.get("mapped_rows", 0) or 0)
         summary["unmapped_rows"] += int(trace.get("unmapped_rows", 0) or 0)
         summary["collision_rows"] += int(trace.get("collision_rows", 0) or 0)
+        summary["eligible_rows"] += int(trace.get("eligible_rows", 0) or 0)
 
     output = {}
     for source, summary in summaries.items():
@@ -136,6 +138,7 @@ def summarize_transport_plan(result):
             "median_snapshot_age_seconds": median(ages) if ages else None,
             "p95_snapshot_age_seconds": _p95(ages),
             "identity_match_rate": summary["mapped_rows"] / identities if identities else None,
+            "coverage_rate": summary["mapped_rows"] / summary["eligible_rows"] if summary["eligible_rows"] else None,
         }
     return {
         "mode": "SHADOW_ONLY",
