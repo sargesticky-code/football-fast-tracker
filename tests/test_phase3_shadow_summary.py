@@ -15,7 +15,7 @@ def test_summary_aggregates_sources_without_promoting_primary():
         ],
     }
 
-    summary = summarize_transport_plan(result)
+    summary = summarize_transport_plan(result, eligible_rows=5)
 
     assert summary["mode"] == "SHADOW_ONLY"
     assert summary["production_primary_changed"] is False
@@ -30,6 +30,8 @@ def test_summary_aggregates_sources_without_promoting_primary():
     assert fotmob["median_snapshot_age_seconds"] == 2
     assert fotmob["mapped_rows"] == 5
     assert fotmob["identity_match_rate"] == 1
+    assert fotmob["eligible_rows"] == 5
+    assert fotmob["coverage_rate"] == 1
 
     sofa = summary["sources"]["SofaScore"]
     assert sofa["upstream_requests"] == 3
@@ -41,3 +43,5 @@ def test_summary_aggregates_sources_without_promoting_primary():
     assert sofa["unmapped_rows"] == 1
     assert sofa["collision_rows"] == 1
     assert sofa["identity_match_rate"] == 0.5
+    assert sofa["eligible_rows"] == 5
+    assert sofa["coverage_rate"] == 0.4
