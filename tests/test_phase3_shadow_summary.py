@@ -31,7 +31,8 @@ def test_summary_aggregates_sources_without_promoting_primary():
     assert fotmob["mapped_rows"] == 5
     assert fotmob["identity_match_rate"] == 1
     assert fotmob["eligible_rows"] == 5
-    assert fotmob["coverage_rate"] == 1
+    assert fotmob["coverage_rate"] == 0.4
+    assert fotmob["p95_coverage_rate"] == 0.4
 
     sofa = summary["sources"]["SofaScore"]
     assert sofa["upstream_requests"] == 3
@@ -44,4 +45,5 @@ def test_summary_aggregates_sources_without_promoting_primary():
     assert sofa["collision_rows"] == 1
     assert sofa["identity_match_rate"] == 0.5
     assert sofa["eligible_rows"] == 5
-    assert sofa["coverage_rate"] == 0.4
+    assert sofa["coverage_rate"] == 0.2
+    assert sofa["p95_coverage_rate"] == 0.2
