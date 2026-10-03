@@ -2,7 +2,8 @@ from datetime import datetime, timezone
 from statistics import median
 from time import perf_counter
 
-from phase3.source_latency_benchmark import Candidate, _age_seconds, _p95
+from phase3.source_latency_benchmark import Candidate, _p95
+from phase3.freshness_metrics import freshness_evidence, summarize_freshness
 
 
 def interleaved_request_order(candidates, rounds=3):
@@ -78,7 +79,7 @@ def enrich_transport_trace(trace, *, now=None):
     payload = enriched.get("payload") if enriched.get("success") else None
     payload = payload if isinstance(payload, dict) else {}
     clock = now or datetime.now(timezone.utc)
-    source_updated_at = payload.get("source_updated_at")
+    freshness = freshness_evidence(payload, clock)
     rows = payload.get("rows") or []
 
     mapped = sum(
@@ -89,8 +90,7 @@ def enrich_transport_trace(trace, *, now=None):
     collisions = int(payload.get("collision_rows", 0) or 0)
 
     enriched.update({
-        "source_updated_at": source_updated_at,
-        "snapshot_age_seconds": _age_seconds(source_updated_at, clock),
+        **freshness,
         "mapped_rows": mapped,
         "unmapped_rows": unmapped,
         "collision_rows": collisions,
@@ -135,6 +135,8 @@ def summarize_transport_plan(result, *, eligible_rows=None):
         latencies = summary.pop("latencies_ms")
         ages = summary.pop("snapshot_ages_seconds")
         coverages = summary.pop("snapshot_coverages")
+        source_traces = [trace for trace in result.get("traces", []) if trace.get("source") == source]
+        freshness = summarize_freshness(source_traces)
         output[source] = {
             **summary,
             "failure_rate": summary["request_failures"] / requests if requests else 0.0,
@@ -145,6 +147,7 @@ def summarize_transport_plan(result, *, eligible_rows=None):
             "identity_match_rate": summary["mapped_rows"] / identities if identities else None,
             "coverage_rate": median(coverages) if coverages else None,
             "p95_coverage_rate": _p95(coverages),
+            **freshness,
         }
     return {
         "mode": "SHADOW_ONLY",
