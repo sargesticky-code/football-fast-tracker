@@ -146,7 +146,28 @@ def norm(value: str) -> str:
     return ALIASES.get(value, value)
 
 
+def variant_tags(value: str) -> frozenset[str]:
+    raw = unicodedata.normalize("NFKD", value or "").casefold()
+    tags: set[str] = set()
+    if re.search(r"\b(women|woman|ladies|femenino|feminine|femmes)\b", raw):
+        tags.add("WOMEN")
+    youth = re.search(r"\bu\s*[- ]?(17|18|19|20|21|23)\b", raw)
+    if youth:
+        tags.add("U" + youth.group(1))
+    if re.search(r"\bam\b", raw):
+        tags.add("AM")
+    return frozenset(tags)
+
+
+def variant_compatible(a: str, b: str) -> bool:
+    # A senior men's source team must never be used to model a women's,
+    # age-group or amateur target merely because the club/country stem matches.
+    return variant_tags(a) == variant_tags(b)
+
+
 def sim(a: str, b: str) -> float:
+    if not variant_compatible(a, b):
+        return 0.0
     a, b = norm(a), norm(b)
     if not a or not b:
         return 0.0
