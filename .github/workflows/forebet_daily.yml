@@ -153,6 +153,7 @@ jobs:
           print(f"FOREBET_FEED_STATE rows={len(rows)} has_models={int(has_models)}")
           PY
 
+      # Review branches execute validations only; generated artifacts may be committed only on main.
       - name: Checkpoint Forebet-owned core feeds
         if: github.ref == 'refs/heads/main'
         run: |
