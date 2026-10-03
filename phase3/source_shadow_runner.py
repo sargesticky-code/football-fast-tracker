@@ -54,12 +54,7 @@ def execute_transport_slot(slot):
 
 
 def execute_transport_plan(plan, *, enrich=False, now=None):
-    """Execute a bounded shadow plan sequentially and account for upstream calls.
-
-    When ``enrich`` is enabled, each trace also carries source freshness and
-    persistent VERIFIED identity evidence. This remains transport-only: it
-    never performs fuzzy rematching or extra upstream requests.
-    """
+    """Execute a bounded shadow plan sequentially and account for upstream calls."""
     traces = []
     for slot in plan:
         trace = execute_transport_slot(slot)
@@ -81,20 +76,10 @@ def enrich_transport_trace(trace, *, now=None):
     clock = now or datetime.now(timezone.utc)
     freshness = freshness_evidence(payload, clock)
     rows = payload.get("rows") or []
-
-    mapped = sum(
-        1 for row in rows
-        if isinstance(row, dict) and row.get("identity_status") == "VERIFIED"
-    )
+    mapped = sum(1 for row in rows if isinstance(row, dict) and row.get("identity_status") == "VERIFIED")
     unmapped = int(payload.get("unmapped_rows", 0) or 0)
     collisions = int(payload.get("collision_rows", 0) or 0)
-
-    enriched.update({
-        **freshness,
-        "mapped_rows": mapped,
-        "unmapped_rows": unmapped,
-        "collision_rows": collisions,
-    })
+    enriched.update({**freshness, "mapped_rows": mapped, "unmapped_rows": unmapped, "collision_rows": collisions})
     return enriched
 
 
@@ -104,15 +89,9 @@ def summarize_transport_plan(result, *, eligible_rows=None):
     for trace in result.get("traces", []):
         source = trace["source"]
         summary = summaries.setdefault(source, {
-            "upstream_requests": 0,
-            "request_failures": 0,
-            "latencies_ms": [],
-            "snapshot_ages_seconds": [],
-            "mapped_rows": 0,
-            "unmapped_rows": 0,
-            "collision_rows": 0,
-            "eligible_rows": eligible_rows,
-            "snapshot_coverages": [],
+            "upstream_requests": 0, "request_failures": 0, "latencies_ms": [],
+            "snapshot_ages_seconds": [], "mapped_rows": 0, "unmapped_rows": 0,
+            "collision_rows": 0, "eligible_rows": eligible_rows, "snapshot_coverages": [],
         })
         summary["upstream_requests"] += 1
         summary["request_failures"] += int(not trace.get("success", False))
@@ -124,9 +103,7 @@ def summarize_transport_plan(result, *, eligible_rows=None):
         summary["unmapped_rows"] += int(trace.get("unmapped_rows", 0) or 0)
         summary["collision_rows"] += int(trace.get("collision_rows", 0) or 0)
         if trace.get("success") and eligible_rows:
-            summary["snapshot_coverages"].append(
-                min(int(trace.get("mapped_rows", 0) or 0), eligible_rows) / eligible_rows
-            )
+            summary["snapshot_coverages"].append(min(int(trace.get("mapped_rows", 0) or 0), eligible_rows) / eligible_rows)
 
     output = {}
     for source, summary in summaries.items():
@@ -144,6 +121,8 @@ def summarize_transport_plan(result, *, eligible_rows=None):
             "p95_latency_ms": _p95(latencies),
             "median_snapshot_age_seconds": median(ages) if ages else None,
             "p95_snapshot_age_seconds": _p95(ages),
+            "median_source_age_seconds": median(ages) if ages else None,
+            "p95_source_age_seconds": _p95(ages),
             "identity_match_rate": summary["mapped_rows"] / identities if identities else None,
             "coverage_rate": median(coverages) if coverages else None,
             "p95_coverage_rate": _p95(coverages),
