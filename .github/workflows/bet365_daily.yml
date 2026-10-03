@@ -33,6 +33,49 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Report Bet365 admission coverage without scraping
+        run: python scripts/filter_bet365.py --census
+
+      - name: Validate Bet365 admission census
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+
+          targets_path = Path('data/hkjc_targets.csv')
+          census_path = Path('data/bet365_admission_census.csv')
+          if not census_path.exists():
+              raise SystemExit('missing data/bet365_admission_census.csv')
+
+          with targets_path.open(encoding='utf-8-sig', newline='') as fh:
+              targets = list(csv.DictReader(fh))
+          with census_path.open(encoding='utf-8-sig', newline='') as fh:
+              census = list(csv.DictReader(fh))
+
+          census_total = sum(int(r['target_fixture_count']) for r in census)
+          admitted_total = sum(int(r['admitted_fixture_count']) for r in census)
+          if census_total != len(targets):
+              raise SystemExit(f'admission census target mismatch: census={census_total} targets={len(targets)}')
+
+          allowed_keys = {'', 'spain', 'uel'}
+          reason_codes = {
+              'ADMITTED_SUPPORTED_COMPETITION',
+              'UNSUPPORTED_COMPETITION_NOT_CONFIGURED',
+              'MISSING_COMPETITION_LABEL',
+          }
+          for row in census:
+              if row['scraper_key'] not in allowed_keys:
+                  raise SystemExit(f'unreviewed scraper admission key: {row["scraper_key"]}')
+              if row['operational_reason_code'] not in reason_codes:
+                  raise SystemExit(f'unknown admission reason: {row["operational_reason_code"]}')
+
+          coverage = (admitted_total / len(targets) * 100) if targets else 0.0
+          print(
+              f'PASS bet365_admission targets={len(targets)} admitted={admitted_total} '
+              f'unsupported={len(targets)-admitted_total} coverage_pct={coverage:.2f}'
+          )
+          PY
+
       - name: Decide whether any supported Bet365 competition is currently HKJC-bettable
         id: detect
         shell: bash
@@ -108,11 +151,11 @@ jobs:
           print(f'PASS bet365_hkjc_rows={len(rows)}')
           PY
 
-      - name: Commit benchmark feed
+      - name: Commit benchmark feed and admission census
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/bet365_current.csv
+          git add data/bet365_current.csv data/bet365_admission_census.csv
           if git diff --cached --quiet; then
             echo 'No Bet365 feed changes to commit.'
           else
