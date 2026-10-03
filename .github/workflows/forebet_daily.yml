@@ -62,6 +62,9 @@ jobs:
       - name: Validate durable Forebet identity registry
         run: python scripts/check_forebet_match_policy.py
 
+      - name: Test Forebet outage reconciliation
+        run: python tests/test_reconcile_forebet_availability.py
+
       - name: Capture HKJC directly from official GraphQL
         run: |
           rm -rf /tmp/hkjc-direct
@@ -107,7 +110,7 @@ jobs:
               with path.open(encoding='utf-8-sig', newline='') as fh: return list(csv.DictReader(fh))
           targets, feed = read(targets_path), read(feed_path)
           availability, aliases = read(availability_path), read(aliases_path)
-          if not targets or not feed or not availability: raise SystemExit('zero core production rows')
+          if not targets or not availability: raise SystemExit('zero core target/availability rows')
           target_ids = {r.get('hkjc_event_id') for r in targets if r.get('hkjc_event_id')}
           availability_ids = {r.get('hkjc_event_id') for r in availability if r.get('hkjc_event_id')}
           feed_ids = {r.get('hkjc_event_id') for r in feed if r.get('hkjc_event_id')}
@@ -127,6 +130,10 @@ jobs:
           ratio = len(feed) / len(availability)
           states = {state: sum(r.get('state') == state for r in availability) for state in allowed}
           if ratio < 0.40: print(f'WARN Forebet source coverage low but explicitly classified: {len(feed)}/{len(availability)} ({ratio:.1%})')
+          if not feed:
+              if states.get('MODEL', 0):
+                  raise SystemExit('zero Forebet feed cannot coexist with MODEL availability state')
+              print('FOREBET_SOURCE_OUTAGE_EXPLICIT current_model_rows=0 availability_preserved=1')
           print(f"CORE_PASS targets={len(availability)} forebet={len(feed)} coverage={ratio:.1%} aliases={len(active_aliases)} states={states}")
           PY
 
@@ -195,7 +202,7 @@ jobs:
           current, targets, feed = read(paths['current']), read(paths['targets']), read(paths['feed'])
           availability = read(paths['availability'])
           archive, aliases, ratings = read(paths['archive']), read(paths['aliases']), read(paths['ratings'])
-          if not current or not targets or not feed or not availability: raise SystemExit('zero production rows')
+          if not current or not targets or not availability: raise SystemExit('zero production current/target/availability rows')
           availability_ids = {r['hkjc_event_id'] for r in availability if r.get('hkjc_event_id')}
           feed_ids = {r['hkjc_event_id'] for r in feed if r.get('hkjc_event_id')}
           if feed_ids - availability_ids: raise SystemExit('Forebet feed row missing from run availability universe')
@@ -219,8 +226,8 @@ jobs:
           corners = sum(bool(r.get('corner_prediction')) for r in feed)
           detail = sum(bool(r.get('forebet_detail_url')) for r in feed)
           model_ratio = len(feed) / len(availability)
-          ou_ratio = ou / len(feed)
-          corner_ratio = corners / len(feed)
+          ou_ratio = ou / len(feed) if feed else 0.0
+          corner_ratio = corners / len(feed) if feed else 0.0
           fixture_only = sum(r.get('state') == 'FIXTURE_ONLY' for r in availability)
           unresolved = sum(r.get('state') == 'UNRESOLVED' for r in availability)
           if model_ratio < 0.40:
@@ -231,6 +238,10 @@ jobs:
               print(f'WARN Forebet corner coverage low: {corners}/{len(feed)} ({corner_ratio:.1%})')
           if detail and not (ou or corners):
               print('WARN Forebet detail pages resolved but no O-U/corner signals parsed')
+          if not feed:
+              if any(r.get('state') == 'MODEL' for r in availability):
+                  raise SystemExit('zero Forebet feed cannot coexist with MODEL availability state')
+              print('FOREBET_SOURCE_OUTAGE_EXPLICIT final_model_rows=0 availability_preserved=1')
           print(
               f"PASS hkjc_current={len(current)} live_targets={len(targets)} run_targets={len(availability)} "
               f"forebet={len(feed)} fixture_only={fixture_only} unresolved={unresolved} "
