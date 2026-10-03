@@ -286,7 +286,7 @@ jobs:
           PY
 
       - name: Commit shadow feeds and incremental HKJC history
-        if: steps.model_gate.outputs.run_models == 'true'
+        if: steps.model_gate.outputs.run_models == 'true' && github.ref == 'refs/heads/main'
         run: |
           # Generated CSVs are atomic artifacts. Never rebase a generated-data
           # commit: concurrent bot commits make line-by-line CSV merges unsafe.
