@@ -154,6 +154,7 @@ jobs:
           PY
 
       - name: Checkpoint Forebet-owned core feeds
+        if: github.ref == 'refs/heads/main'
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
@@ -272,6 +273,7 @@ jobs:
           PY
 
       - name: Commit refreshed Forebet production feeds
+        if: github.ref == 'refs/heads/main'
         run: |
           git config user.name 'fast-tracker-bot'
           git config user.email 'actions@users.noreply.github.com'
