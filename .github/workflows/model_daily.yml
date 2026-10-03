@@ -12,6 +12,7 @@ on:
       - 'scripts/build_form_model.py'
       - 'scripts/update_hkjc_history.py'
       - 'scripts/quality_gate_shadow_models.py'
+      - 'tests/test_model_variant_identity.py'
       - 'scripts/build_team_form_summary.py'
       - 'scripts/build_h2h_summary.py'
       - 'requirements-model.txt'
@@ -49,6 +50,9 @@ jobs:
 
       - name: Install model dependencies
         run: pip install -r requirements-model.txt
+
+      - name: Test model identity variant guard
+        run: python tests/test_model_variant_identity.py
 
       - name: Clone pinned HKJC GraphQL client
         run: |
@@ -286,7 +290,7 @@ jobs:
           PY
 
       - name: Commit shadow feeds and incremental HKJC history
-        if: steps.model_gate.outputs.run_models == 'true'
+        if: steps.model_gate.outputs.run_models == 'true' && github.ref == 'refs/heads/main'
         run: |
           # Generated CSVs are atomic artifacts. Never rebase a generated-data
           # commit: concurrent bot commits make line-by-line CSV merges unsafe.
