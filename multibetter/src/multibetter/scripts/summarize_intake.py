@@ -58,8 +58,18 @@ def main():
     )
     print(json.dumps(summary, ensure_ascii=False))
 
+    optional_ok = summary["fresh_optional_sources"]
+    if len(optional_ok) < 2:
+        raise SystemExit(
+            "Fewer than two optional prediction sources are fresh; "
+            "do not publish a degraded Multibetter build."
+        )
     if sources["FRB"].get("status") != "OK":
-        raise SystemExit("Forebet anchor is not fresh")
+        print(
+            "WARN Forebet anchor unavailable; continuing with HKJC authority "
+            f"+ {len(optional_ok)} fresh optional sources: {','.join(optional_ok)}",
+            flush=True,
+        )
 
 
 if __name__ == "__main__":
