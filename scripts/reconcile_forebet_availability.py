@@ -38,8 +38,13 @@ def main() -> int:
     feed = read_csv(CURRENT)
     availability = read_csv(AVAILABILITY)
     targets = read_csv(TARGETS)
-    if not feed or not availability or not targets:
-        raise SystemExit("zero Forebet model, availability, or HKJC target rows")
+    if not availability or not targets:
+        raise SystemExit("zero Forebet availability or HKJC target rows")
+    # A Forebet source outage may legitimately yield zero current model rows.
+    # Availability is still valuable evidence and must be reconciled/published
+    # instead of aborting and leaving Supabase stuck on stale "pending refresh"
+    # states. Zero feed never becomes MODEL; it remains explicit UNRESOLVED.
+    source_outage = not feed
 
     target_ids = {
         str(row.get("hkjc_event_id") or "").strip()
@@ -157,7 +162,8 @@ def main() -> int:
 
     print(
         f"FOREBET_AVAILABILITY_RECONCILE feed={len(feed_ids)} "
-        f"models={len(model_ids)} inserted={len(inserted)} promoted={len(promoted)} "
+        f"models={len(model_ids)} source_outage={int(source_outage)} "
+        f"inserted={len(inserted)} promoted={len(promoted)} "
         f"demoted={len(demoted)} "
         f"inserted_ids={','.join(inserted) if inserted else '-'} "
         f"promoted_ids={','.join(promoted) if promoted else '-'} "
