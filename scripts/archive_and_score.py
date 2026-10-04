@@ -15,6 +15,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from hkjc.scraper import HKJCFootball
+from hkjc.client import HKJCError
 
 HKT = ZoneInfo("Asia/Hong_Kong")
 ROOT = Path(__file__).resolve().parent.parent
@@ -325,13 +326,44 @@ def build_evaluation(now: datetime) -> tuple[int, int]:
     return len(evaluated), scored_samples
 
 
+def transient_hkjc_error(exc: Exception) -> bool:
+    message = str(exc).lower()
+    transient_markers = (
+        "http error 429",
+        "http error 500",
+        "http error 502",
+        "http error 503",
+        "http error 504",
+        "service unavailable",
+        "temporarily unavailable",
+        "timed out",
+        "timeout",
+        "temporary failure",
+        "connection reset",
+    )
+    return any(marker in message for marker in transient_markers)
+
+
 def main() -> int:
     now = datetime.now(HKT)
     prediction_updates = update_prediction_archive(now)
-    result_updates = update_results_archive(now)
+    result_updates = 0
+    result_fetch_status = "OK"
+    try:
+        result_updates = update_results_archive(now)
+    except HKJCError as exc:
+        if not transient_hkjc_error(exc):
+            raise
+        result_fetch_status = "DEFERRED_TRANSIENT_HKJC"
+        print(
+            f"WARN HKJC_RESULT_FETCH_DEFERRED reason={exc}; "
+            "existing settled results retained and no result rows synthesized",
+            flush=True,
+        )
     evaluated, scored_samples = build_evaluation(now)
     print(
         f"EVALUATION prediction_updates={prediction_updates} result_updates={result_updates} "
+        f"result_fetch_status={result_fetch_status} "
         f"settled_prediction_rows={evaluated} scored_model_samples={scored_samples}"
     )
     return 0
