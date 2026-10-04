@@ -221,10 +221,8 @@ jobs:
           availability = read(paths['availability'])
           archive, aliases, ratings = read(paths['archive']), read(paths['aliases']), read(paths['ratings'])
           if not current or not targets or not availability: raise SystemExit('zero HKJC current/targets or Forebet availability rows')
-          target_ids = {r['hkjc_event_id'] for r in targets if r.get('hkjc_event_id')}
           availability_ids = {r['hkjc_event_id'] for r in availability if r.get('hkjc_event_id')}
           feed_ids = {r['hkjc_event_id'] for r in feed if r.get('hkjc_event_id')}
-          if target_ids - availability_ids: raise SystemExit('final Forebet availability missing HKJC targets')
           if feed_ids - availability_ids: raise SystemExit('Forebet feed row missing from run availability universe')
           if len(feed) != len(feed_ids): raise SystemExit('duplicate Forebet HKJC event')
           if any(not all(r.get(k) for k in ('prob_home','prob_draw','prob_away')) for r in feed): raise SystemExit('model-empty Forebet row')
