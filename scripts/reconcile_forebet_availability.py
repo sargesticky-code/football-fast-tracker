@@ -38,8 +38,8 @@ def main() -> int:
     feed = read_csv(CURRENT)
     availability = read_csv(AVAILABILITY)
     targets = read_csv(TARGETS)
-    if not feed or not availability or not targets:
-        raise SystemExit("zero Forebet model, availability, or HKJC target rows")
+    if not availability or not targets:
+        raise SystemExit("zero Forebet availability or HKJC target rows")
 
     target_ids = {
         str(row.get("hkjc_event_id") or "").strip()
@@ -137,7 +137,13 @@ def main() -> int:
     for event_id in stale_models:
         row = by_id[event_id]
         row["state"] = "UNRESOLVED"
-        row["reason"] = "current_model_missing_after_reconcile"
+        previous_reason = str(row.get("reason") or "").strip()
+        if previous_reason not in {
+            "forebet_source_surface_unavailable",
+            "no_forebet_source_rows_for_date",
+            "forebet_fixture_absent_from_fetched_model_surfaces",
+        }:
+            row["reason"] = "current_model_missing_after_reconcile"
         row["checked_at_hkt"] = now
         demoted.append(event_id)
 
@@ -154,6 +160,14 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(availability)
     tmp.replace(AVAILABILITY)
+
+    degraded = not feed_ids
+    if degraded:
+        print(
+            f"FOREBET_DEGRADED models=0 availability={len(availability)} "
+            "source_state=explicit_unavailable_or_unresolved",
+            flush=True,
+        )
 
     print(
         f"FOREBET_AVAILABILITY_RECONCILE feed={len(feed_ids)} "
