@@ -2,10 +2,15 @@ name: Supabase Static Data Push
 
 # Static/control-plane reconciliation only.
 # Live capture is owned by Supabase cron + Edge Functions.
-# Upstream workflow completions no longer fan out into extra ingest runs.
+# Static ingest normally runs on schedule. Forebet is the one targeted upstream
+# completion that also triggers an immediate reconciliation because its bot
+# checkpoint commits use [skip ci] and therefore cannot activate push workflows.
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Forebet Daily Feed"]
+    types: [completed]
   schedule:
     - cron: '7,37 * * * *'
   push:
@@ -23,6 +28,7 @@ concurrency:
 
 jobs:
   push-current-artifacts:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
