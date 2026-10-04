@@ -107,7 +107,7 @@ jobs:
               with path.open(encoding='utf-8-sig', newline='') as fh: return list(csv.DictReader(fh))
           targets, feed = read(targets_path), read(feed_path)
           availability, aliases = read(availability_path), read(aliases_path)
-          if not targets or not feed or not availability: raise SystemExit('zero core production rows')
+          if not targets or not availability: raise SystemExit('zero HKJC targets or Forebet availability rows')
           target_ids = {r.get('hkjc_event_id') for r in targets if r.get('hkjc_event_id')}
           availability_ids = {r.get('hkjc_event_id') for r in availability if r.get('hkjc_event_id')}
           feed_ids = {r.get('hkjc_event_id') for r in feed if r.get('hkjc_event_id')}
@@ -127,6 +127,8 @@ jobs:
           ratio = len(feed) / len(availability)
           states = {state: sum(r.get('state') == state for r in availability) for state in allowed}
           if ratio < 0.40: print(f'WARN Forebet source coverage low but explicitly classified: {len(feed)}/{len(availability)} ({ratio:.1%})')
+          if not feed:
+              print(f"FOREBET_DEGRADED models=0 availability={len(availability)} states={states}")
           print(f"CORE_PASS targets={len(availability)} forebet={len(feed)} coverage={ratio:.1%} aliases={len(active_aliases)} states={states}")
           PY
 
@@ -157,21 +159,44 @@ jobs:
             done
           fi
 
+      - name: Detect current Forebet model availability
+        id: forebet_state
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          path = Path('data/forebet_current.csv')
+          rows = []
+          if path.exists():
+              with path.open(encoding='utf-8-sig', newline='') as fh:
+                  rows = list(csv.DictReader(fh))
+          has_model = bool(rows)
+          with open(__import__('os').environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
+              out.write(f"has_model={'true' if has_model else 'false'}\\n")
+              out.write(f"model_count={len(rows)}\\n")
+          print(f"FOREBET_MODEL_STATE has_model={int(has_model)} rows={len(rows)}")
+          PY
+
       - name: Add independent Opta global power ratings
+        if: steps.forebet_state.outputs.has_model == 'true'
         continue-on-error: true
         run: python scripts/enrich_power_ratings.py
 
       - name: Add Forebet O-U and corner signals from free match pages
+        if: steps.forebet_state.outputs.has_model == 'true'
         run: python scripts/enrich_forebet_markets.py
 
       - name: Add recent Forebet team form from match-detail pages
+        if: steps.forebet_state.outputs.has_model == 'true'
         continue-on-error: true
         run: python scripts/enrich_forebet_form.py
 
       - name: Normalize Forebet scores for Google Sheets
+        if: steps.forebet_state.outputs.has_model == 'true'
         run: python scripts/normalize_forebet_text.py
 
       - name: Persist rolling Forebet event archive
+        if: steps.forebet_state.outputs.has_model == 'true'
         run: python scripts/archive_forebet.py --bootstrap-ref 3e91d22ef028fe4ec230e205e1a73efece76d568
 
       - name: Validate production feeds
@@ -195,9 +220,11 @@ jobs:
           current, targets, feed = read(paths['current']), read(paths['targets']), read(paths['feed'])
           availability = read(paths['availability'])
           archive, aliases, ratings = read(paths['archive']), read(paths['aliases']), read(paths['ratings'])
-          if not current or not targets or not feed or not availability: raise SystemExit('zero production rows')
+          if not current or not targets or not availability: raise SystemExit('zero HKJC current/targets or Forebet availability rows')
+          target_ids = {r['hkjc_event_id'] for r in targets if r.get('hkjc_event_id')}
           availability_ids = {r['hkjc_event_id'] for r in availability if r.get('hkjc_event_id')}
           feed_ids = {r['hkjc_event_id'] for r in feed if r.get('hkjc_event_id')}
+          if target_ids - availability_ids: raise SystemExit('final Forebet availability missing HKJC targets')
           if feed_ids - availability_ids: raise SystemExit('Forebet feed row missing from run availability universe')
           if len(feed) != len(feed_ids): raise SystemExit('duplicate Forebet HKJC event')
           if any(not all(r.get(k) for k in ('prob_home','prob_draw','prob_away')) for r in feed): raise SystemExit('model-empty Forebet row')
@@ -219,16 +246,18 @@ jobs:
           corners = sum(bool(r.get('corner_prediction')) for r in feed)
           detail = sum(bool(r.get('forebet_detail_url')) for r in feed)
           model_ratio = len(feed) / len(availability)
-          ou_ratio = ou / len(feed)
-          corner_ratio = corners / len(feed)
+          ou_ratio = ou / len(feed) if feed else 0.0
+          corner_ratio = corners / len(feed) if feed else 0.0
           fixture_only = sum(r.get('state') == 'FIXTURE_ONLY' for r in availability)
           unresolved = sum(r.get('state') == 'UNRESOLVED' for r in availability)
           if model_ratio < 0.40:
               print(f'WARN Forebet source coverage low but availability is explicit: {len(feed)}/{len(availability)} ({model_ratio:.1%})')
-          if ou_ratio < 0.25:
+          if feed and ou_ratio < 0.25:
               print(f'WARN Forebet O-U coverage low: {ou}/{len(feed)} ({ou_ratio:.1%})')
-          if corner_ratio < 0.25:
+          if feed and corner_ratio < 0.25:
               print(f'WARN Forebet corner coverage low: {corners}/{len(feed)} ({corner_ratio:.1%})')
+          if not feed:
+              print(f'FOREBET_DEGRADED models=0 availability={len(availability)} fixture_only={fixture_only} unresolved={unresolved}')
           if detail and not (ou or corners):
               print('WARN Forebet detail pages resolved but no O-U/corner signals parsed')
           print(
