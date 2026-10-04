@@ -1,86 +1,71 @@
 ﻿fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,source,source_competition,source_url,recommendation,market,match_score,status,notes
-2026-10-03T22:47:39+08:00,FB6140,2026-10-03T21:00+08:00,ENL,Finland,Albania,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6191,2026-10-03T21:00+08:00,SALW,Vaxjo Women,Kristianstads Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6220,2026-10-03T21:00+08:00,ISAW,Fiorentina Women,Sassuolo Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6156,2026-10-03T22:00+08:00,ED2,Reading,Bradford,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6157,2026-10-03T22:00+08:00,ED2,Burton Albion,Huddersfield,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6159,2026-10-03T22:00+08:00,ED2,Leyton Orient,Plymouth,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6160,2026-10-03T22:00+08:00,ED3,Accrington Stanley,Cheltenham,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6161,2026-10-03T22:00+08:00,ED3,Gillingham,Newport County,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6162,2026-10-03T22:00+08:00,ED3,Crewe,Bristol Rovers,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6163,2026-10-03T22:00+08:00,ED3,Rochdale,Swindon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6164,2026-10-03T22:00+08:00,ED3,Grimsby,Shrewsbury,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6165,2026-10-03T22:00+08:00,ED3,Exeter City,Rotherham,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6166,2026-10-03T22:00+08:00,ED3,Salford City,Fleetwood,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6209,2026-10-03T22:00+08:00,BD2,Avai,Ceara,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6223,2026-10-03T22:00+08:00,ELT,Colchester,Luton,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6231,2026-10-03T22:00+08:00,INT,India,Brazil,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6175,2026-10-03T22:15+08:00,SF2,Almeria,Burgos,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6152,2026-10-03T22:30+08:00,DF2,Vitesse,NAC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6154,2026-10-03T22:30+08:00,DF2,Oss,Maastricht,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6234,2026-10-03T23:00+08:00,INT,Russia,Namibia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6235,2026-10-03T23:30+08:00,INT,England U20,Germany U20,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6193,2026-10-03T23:55+08:00,GSLW,Frankfurt Women,Bayern Munich Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6243,2026-10-03T23:55+08:00,GUC,Saudi Arabia,Qatar,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6115,2026-10-04T00:00+08:00,ENL,Croatia,England,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6133,2026-10-04T00:00+08:00,ENL,Estonia,Luxembourg,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6134,2026-10-04T00:00+08:00,ENL,Iceland,Bulgaria,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6167,2026-10-04T00:00+08:00,ENL,Belarus,San Marino,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6222,2026-10-04T00:00+08:00,ISAW,Roma Women,Lazio Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6176,2026-10-04T00:30+08:00,SF2,Cadiz,Leganes,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6177,2026-10-04T00:30+08:00,SF2,Sabadell,FC Andorra,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6230,2026-10-04T01:00+08:00,E2Q,France U21,Luxembourg U21,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6205,2026-10-04T01:43+08:00,APL,Defensa y Justicia,San Lorenzo,APWIN,,https://www.apwin.com/predictions/defensa-y-justicia-vs-san-lorenzo-prediction-primera-division-03-10-2026/,,,1.000,NO_APWIN_RECOMMENDATION,
-2026-10-03T22:47:39+08:00,FB6148,2026-10-04T02:00+08:00,DF2,Almere City,Volendam,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6149,2026-10-04T02:00+08:00,DF2,RKC Waalwijk,Emmen,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6150,2026-10-04T02:00+08:00,DF2,FC Eindhoven,De Graafschap,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6151,2026-10-04T02:00+08:00,DF2,Den Bosch,Dordrecht,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6236,2026-10-04T02:00+08:00,INT,Canada,Peru,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6244,2026-10-04T02:30+08:00,GUC,United Arab Emirates,Oman,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6139,2026-10-04T02:45+08:00,ENL,Spain,Czechia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6141,2026-10-04T02:45+08:00,ENL,Switzerland,Slovenia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6147,2026-10-04T02:45+08:00,ENL,North Macedonia,Scotland,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6211,2026-10-04T02:58+08:00,BD2,Atletico Goianiense,America Mineiro,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6189,2026-10-04T03:00+08:00,INT,Cote d'Ivoire,Cameroon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6238,2026-10-04T03:30+08:00,BD1W,Sao Paulo Women,Corinthians Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6202,2026-10-04T03:58+08:00,APL,Atletico Tucuman,Barracas Central,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6203,2026-10-04T03:58+08:00,APL,Newell's Old Boys,Lanus,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6123,2026-10-04T04:57+08:00,UD1,Deportivo Maldonado,Central Espanol,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6210,2026-10-04T05:28+08:00,BD2,Botafogo SP,Vila Nova,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6208,2026-10-04T05:30+08:00,BD1,Atletico Mineiro,RB Bragantino,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6216,2026-10-04T06:00+08:00,USL,Loudoun Utd,Indy Eleven,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6214,2026-10-04T07:00+08:00,USL,Brooklyn FC,Rhode Island FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6215,2026-10-04T07:00+08:00,USL,Detroit City,Birmingham Legion,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6218,2026-10-04T07:00+08:00,USL,Lexington SC,El Paso Locomotive,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6219,2026-10-04T07:30+08:00,USL,Tampa Bay Rowdies,Miami FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6217,2026-10-04T08:00+08:00,USL,FC Tulsa,Sacramento Republic,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6237,2026-10-04T08:00+08:00,INT,Argentina,Burkina Faso,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6224,2026-10-04T09:00+08:00,MD1,Cancun FC,Tapatio,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6225,2026-10-04T09:00+08:00,MD1,Alacranes de Durango,Mineros Zacatecas,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6226,2026-10-04T09:00+08:00,MD1,Piratas FC,Oaxaca,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6239,2026-10-04T09:00+08:00,USL,Colorado Springs Switchbacks,Oakland Roots,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6232,2026-10-04T10:00+08:00,INT,USA,Mexico,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6240,2026-10-04T10:00+08:00,USL,Orange County SC,Monterey Bay,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6227,2026-10-04T10:30+08:00,USL,Las Vegas Lights,San Antonio FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6142,2026-10-04T12:00+08:00,JD2,Hokkaido Consadole Sapporo,Iwaki FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6143,2026-10-04T12:00+08:00,JD2,Vanraure Hachinohe,FC Yokohama,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6135,2026-10-04T13:00+08:00,JD2,Blaublitz Akita,Sagan Tosu,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6136,2026-10-04T14:00+08:00,JD2,Vegalta Sendai,Jubilo Iwata,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6144,2026-10-04T18:00+08:00,JD2,Tegevajaro Miyazaki,RB Omiya Ardija,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6188,2026-10-04T19:00+08:00,NTLW,Molde Women,Stabaek Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6183,2026-10-04T20:00+08:00,SF2,Real Sociedad B,CF Granada,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6195,2026-10-04T20:00+08:00,SALW,Djurgardens Women,AIK Solna Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6153,2026-10-04T20:30+08:00,DF2,Venlo,Roda,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6178,2026-10-04T22:15+08:00,SF2,Gijon,Celta Fortuna,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6126,2026-10-04T23:57+08:00,UD1,Boston River,Juventud Las Piedras,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6179,2026-10-05T00:30+08:00,SF2,Las Palmas,Valladolid,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6180,2026-10-05T00:30+08:00,SF2,Castellon,Ceuta,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6197,2026-10-05T01:43+08:00,APL,Huracan,Aldosivi,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6242,2026-10-05T02:00+08:00,MD1,Universidad Guadalajara,Dorados,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6125,2026-10-05T02:57+08:00,UD1,CA Cerro,Montevideo Wanderers,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6181,2026-10-05T03:00+08:00,SF2,Girona,Mallorca,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6196,2026-10-05T03:58+08:00,APL,Talleres,Belgrano,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6228,2026-10-05T06:00+08:00,USL,New Mexico Utd,Phoenix Rising,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6204,2026-10-05T06:13+08:00,APL,Argentinos Juniors,Tigre,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6124,2026-10-05T06:27+08:00,UD1,Racing Club Montevideo,Penarol,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-03T22:47:39+08:00,FB6200,2026-10-05T08:28+08:00,APL,Estudiantes Rio Cuarto,Racing Club,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6217,2026-10-04T08:00+08:00,USL,FC Tulsa,Sacramento Republic,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6237,2026-10-04T08:00+08:00,INT,Argentina,Burkina Faso,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6224,2026-10-04T09:00+08:00,MD1,Cancun FC,Tapatio,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6225,2026-10-04T09:00+08:00,MD1,Alacranes de Durango,Mineros Zacatecas,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6226,2026-10-04T09:00+08:00,MD1,Piratas FC,Oaxaca,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6239,2026-10-04T09:00+08:00,USL,Colorado Springs Switchbacks,Oakland Roots,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6232,2026-10-04T10:00+08:00,INT,USA,Mexico,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6240,2026-10-04T10:00+08:00,USL,Orange County SC,Monterey Bay,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6227,2026-10-04T10:30+08:00,USL,Las Vegas Lights,San Antonio FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6285,2026-10-04T11:10+08:00,MXLW,Necaxa Women,Cruz Azul Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6142,2026-10-04T12:00+08:00,JD2,Hokkaido Consadole Sapporo,Iwaki FC,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6143,2026-10-04T12:00+08:00,JD2,Vanraure Hachinohe,FC Yokohama,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6259,2026-10-04T12:00+08:00,JLCW,Albirex Niigata Women,Cerezo Osaka Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6260,2026-10-04T12:00+08:00,JLCW,Elfen Saitama Women,JEF United Chiba Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6135,2026-10-04T13:00+08:00,JD2,Blaublitz Akita,Sagan Tosu,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6263,2026-10-04T13:00+08:00,JLCW,Nojima Stella Sagamihara Women,RB Omiya Ardija Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6136,2026-10-04T14:00+08:00,JD2,Vegalta Sendai,Jubilo Iwata,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6144,2026-10-04T18:00+08:00,JD2,Tegevajaro Miyazaki,RB Omiya Ardija,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6272,2026-10-04T18:00+08:00,SFLW,Tenerife Women,DUX Logrono Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6273,2026-10-04T18:00+08:00,SFLW,CF Granada Women,Eibar Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6267,2026-10-04T18:30+08:00,ISAW,Napoli Women,Como 1907 Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6188,2026-10-04T19:00+08:00,NTLW,Molde Women,Stabaek Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6269,2026-10-04T19:00+08:00,NTLW,Lyn Women,Haugesund Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6271,2026-10-04T19:00+08:00,NTLW,Roa Women,LSK Kvinner Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6265,2026-10-04T19:45+08:00,GSLW,Wolfsburg Women,Hamburg Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6183,2026-10-04T20:00+08:00,SF2,Real Sociedad B,CF Granada,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6195,2026-10-04T20:00+08:00,SALW,Djurgardens Women,AIK Solna Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6153,2026-10-04T20:30+08:00,DF2,Venlo,Roda,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6256,2026-10-04T21:00+08:00,ENL,Azerbaijan,Lithuania,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6268,2026-10-04T21:00+08:00,ISAW,AC Milan Women,Juventus Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6274,2026-10-04T21:00+08:00,EPLW,Tottenham Women,London City Lionesses Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6275,2026-10-04T21:00+08:00,EPLW,West Ham Women,Chelsea Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6264,2026-10-04T22:00+08:00,GSLW,Stuttgart Women,Union Berlin Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6278,2026-10-04T22:00+08:00,INT,Kyrgyzstan,Lebanon,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6178,2026-10-04T22:15+08:00,SF2,Gijon,Celta Fortuna,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6261,2026-10-04T23:00+08:00,SFLW,Barcelona Women,Real Madrid Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6266,2026-10-04T23:00+08:00,NTLW,Valerenga Women,Rosenborg Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6276,2026-10-04T23:30+08:00,EPLW,Manchester City Women,Arsenal Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6126,2026-10-04T23:57+08:00,UD1,Boston River,Juventud Las Piedras,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6253,2026-10-05T00:00+08:00,ENL,Kosovo,Austria,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6270,2026-10-05T00:00+08:00,ISAW,FC Como Women,Inter Milan Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6179,2026-10-05T00:30+08:00,SF2,Las Palmas,Valladolid,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6180,2026-10-05T00:30+08:00,SF2,Castellon,Ceuta,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6262,2026-10-05T00:30+08:00,GSLW,Nurnberg Women,Hoffenheim Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6277,2026-10-05T01:30+08:00,SFLW,Valencia Women,Real Sociedad Women,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6197,2026-10-05T01:43+08:00,APL,Huracan,Aldosivi,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6242,2026-10-05T02:00+08:00,MD1,Universidad Guadalajara,Dorados,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6250,2026-10-05T02:45+08:00,ENL,Greece,Germany,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6251,2026-10-05T02:45+08:00,ENL,Netherlands,Serbia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6252,2026-10-05T02:45+08:00,ENL,Wales,Denmark,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6254,2026-10-05T02:45+08:00,ENL,Portugal,Norway,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6255,2026-10-05T02:45+08:00,ENL,Republic of Ireland,Israel,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6125,2026-10-05T02:57+08:00,UD1,CA Cerro,Montevideo Wanderers,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6181,2026-10-05T03:00+08:00,SF2,Girona,Mallorca,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6196,2026-10-05T03:58+08:00,APL,Talleres,Belgrano,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6228,2026-10-05T06:00+08:00,USL,New Mexico Utd,Phoenix Rising,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6204,2026-10-05T06:13+08:00,APL,Argentinos Juniors,Tigre,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6124,2026-10-05T06:27+08:00,UD1,Racing Club Montevideo,Penarol,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6200,2026-10-05T08:28+08:00,APL,Estudiantes Rio Cuarto,Racing Club,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6284,2026-10-05T08:30+08:00,CLB,Guadalajara,CF America,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6279,2026-10-05T14:30+08:00,INT,Ecuador,Panama,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6282,2026-10-05T17:00+08:00,AEC,Malaysia,Vietnam,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6280,2026-10-05T18:30+08:00,INT,Japan,New Zealand,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6281,2026-10-05T21:00+08:00,AEC,Indonesia,Thailand,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6182,2026-10-06T02:30+08:00,SF2,Cordoba,Tenerife,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6201,2026-10-06T03:43+08:00,APL,Deportivo Riestra,CA Central Cordoba,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6199,2026-10-06T05:58+08:00,APL,Velez Sarsfield,CA Platense,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6241,2026-10-06T05:58+08:00,APL,Estudiantes,Gimnasia Mendoza,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6127,2026-10-06T06:57+08:00,UD1,Montevideo Nacional,Montevideo City Torque,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-04T09:47:47+08:00,FB6198,2026-10-06T08:13+08:00,APL,Banfield,Rosario Central,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
