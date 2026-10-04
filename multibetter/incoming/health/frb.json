@@ -1,12 +1,12 @@
 {
   "source": "FRB",
-  "status": "OK",
-  "rows": 42,
+  "status": "KEEP_LAST_GOOD",
+  "rows": 0,
   "requests": 0,
   "errors": 0,
-  "started_at": "2026-09-29T10:34:22.782261+08:00",
-  "finished_at": "2026-09-29T10:34:22.787129+08:00",
+  "started_at": "2026-10-04T23:46:07.945832+08:00",
+  "finished_at": "2026-10-04T23:46:07.946424+08:00",
   "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
-  "target_start": "2026-09-29",
-  "target_end": "2026-09-30"
+  "target_start": "2026-10-04",
+  "target_end": "2026-10-05"
 }
