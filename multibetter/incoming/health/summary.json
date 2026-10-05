@@ -1,5 +1,5 @@
 {
-  "built_at_hkt": "2026-10-04T23:47:06.299919+08:00",
+  "built_at_hkt": "2026-10-05T09:58:22.796059+08:00",
   "sources": {
     "FRB": {
       "source": "FRB",
@@ -7,71 +7,71 @@
       "rows": 0,
       "requests": 0,
       "errors": 0,
-      "started_at": "2026-10-04T23:46:07.945832+08:00",
-      "finished_at": "2026-10-04T23:46:07.946424+08:00",
+      "started_at": "2026-10-05T09:57:52.329302+08:00",
+      "finished_at": "2026-10-05T09:57:52.329707+08:00",
       "note": "Reused OUR Forebet production feed; kickoff normalized from HKJC HKT to UTC.",
-      "target_start": "2026-10-04",
-      "target_end": "2026-10-05"
+      "target_start": "2026-10-05",
+      "target_end": "2026-10-06"
     },
     "ACC": {
       "source": "ACC",
       "status": "OK",
-      "rows": 221,
-      "requests": 92,
+      "rows": 78,
+      "requests": 46,
       "errors": 0,
-      "started_at": "2026-10-04T23:46:08.127279+08:00",
-      "finished_at": "2026-10-04T23:46:33.753151+08:00",
+      "started_at": "2026-10-05T09:57:52.449052+08:00",
+      "finished_at": "2026-10-05T09:58:07.463291+08:00",
       "note": "",
-      "target_start": "2026-10-04",
-      "target_end": "2026-10-05"
+      "target_start": "2026-10-05",
+      "target_end": "2026-10-06"
     },
     "BCL": {
       "source": "BCL",
       "status": "OK",
-      "rows": 40,
-      "requests": 42,
+      "rows": 25,
+      "requests": 27,
       "errors": 0,
-      "started_at": "2026-10-04T23:46:33.963205+08:00",
-      "finished_at": "2026-10-04T23:46:48.139615+08:00",
+      "started_at": "2026-10-05T09:58:07.603842+08:00",
+      "finished_at": "2026-10-05T09:58:16.617453+08:00",
       "note": "",
-      "target_start": "2026-10-04",
-      "target_end": "2026-10-05"
+      "target_start": "2026-10-05",
+      "target_end": "2026-10-06"
     },
     "FST": {
       "source": "FST",
       "status": "OK",
-      "rows": 132,
+      "rows": 82,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-10-04T23:46:48.343499+08:00",
-      "finished_at": "2026-10-04T23:46:49.977871+08:00",
+      "started_at": "2026-10-05T09:58:16.761406+08:00",
+      "finished_at": "2026-10-05T09:58:18.813165+08:00",
       "note": "",
-      "target_start": "2026-10-04",
-      "target_end": "2026-10-05"
+      "target_start": "2026-10-05",
+      "target_end": "2026-10-06"
     },
     "PRE": {
       "source": "PRE",
       "status": "OK",
-      "rows": 161,
+      "rows": 77,
       "requests": 6,
       "errors": 0,
-      "started_at": "2026-10-04T23:46:50.182311+08:00",
-      "finished_at": "2026-10-04T23:46:51.462727+08:00",
+      "started_at": "2026-10-05T09:58:18.938928+08:00",
+      "finished_at": "2026-10-05T09:58:20.165827+08:00",
       "note": "",
-      "target_start": "2026-10-04",
-      "target_end": "2026-10-05"
+      "target_start": "2026-10-05",
+      "target_end": "2026-10-06"
     },
     "STA": {
       "source": "STA",
       "status": "OK",
-      "rows": 205,
+      "rows": 36,
       "requests": 3,
       "errors": 0,
-      "started_at": "2026-10-04T23:46:51.722991+08:00",
-      "finished_at": "2026-10-04T23:47:06.101380+08:00",
-      "note": "calibration={\"calibration_only_previous_day\": \"2026-10-03\", \"calibration_rows\": 506, \"dominance\": 0.9844, \"dominant_cluster\": [60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60], \"dominant_samples\": 63, \"inferred_source_minus_utc_minutes\": 60, \"offset_distribution\": {\"60\": 63, \"90\": 1}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 64, \"target_rows\": 205}",
-      "target_start": "2026-10-04",
-      "target_end": "2026-10-05"
+      "started_at": "2026-10-05T09:58:20.351326+08:00",
+      "finished_at": "2026-10-05T09:58:22.701208+08:00",
+      "note": "calibration={\"calibration_only_previous_day\": \"2026-10-04\", \"calibration_rows\": 199, \"dominance\": 0.84, \"dominant_cluster\": [-420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -420, -418], \"dominant_samples\": 21, \"inferred_source_minus_utc_minutes\": -420, \"offset_distribution\": {\"-480\": 1, \"-420\": 20, \"-418\": 1, \"-405\": 1, \"-390\": 2}, \"offset_tolerance_minutes\": 5, \"reason\": \"DOMINANT_TOLERANT_CLOCK_OFFSET\", \"samples\": 25, \"target_rows\": 36}",
+      "target_start": "2026-10-05",
+      "target_end": "2026-10-06"
     }
   },
   "fresh_optional_sources": [
