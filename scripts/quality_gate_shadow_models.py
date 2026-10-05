@@ -9,10 +9,29 @@ blank HKJC-network DC/Pi values and mark them explicitly as rejected.
 from __future__ import annotations
 
 import csv
+import re
+import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PATH = ROOT / "data" / "model_current.csv"
+
+def variant_tags(value: str) -> frozenset[str]:
+    raw = unicodedata.normalize("NFKD", value or "").casefold()
+    tags: set[str] = set()
+    if re.search(r"\b(women|woman|ladies|femenino|feminine|femmes)\b", raw):
+        tags.add("WOMEN")
+    youth = re.search(r"\bu\s*[- ]?(17|18|19|20|21|23)\b", raw)
+    if youth:
+        tags.add("U" + youth.group(1))
+    if re.search(r"\bam\b", raw):
+        tags.add("AM")
+    return frozenset(tags)
+
+
+def variant_compatible(target: str, model_name: str) -> bool:
+    return variant_tags(target) == variant_tags(model_name)
+
 
 MODEL_FIELDS = [
     "dc_prob_home", "dc_prob_draw", "dc_prob_away",
@@ -33,10 +52,29 @@ def main() -> int:
         raise SystemExit("model_current.csv has no header")
 
     rejected = 0
+    rejected_variant = 0
     retained = 0
     for row in rows:
         source = str(row.get("model_source") or "")
-        if source.startswith("HKJC matchResult"):
+        target_home = str(row.get("home") or "")
+        target_away = str(row.get("away") or "")
+        model_home = str(row.get("model_home_name") or "")
+        model_away = str(row.get("model_away_name") or "")
+        variant_mismatch = (
+            row.get("quality") == "MODELED"
+            and (
+                not variant_compatible(target_home, model_home)
+                or not variant_compatible(target_away, model_away)
+            )
+        )
+        if variant_mismatch:
+            for field in MODEL_FIELDS:
+                if field in row:
+                    row[field] = ""
+            row["quality"] = "IDENTITY_VARIANT_REJECTED"
+            row["model_source"] = f"{source} · rejected cross-variant identity"
+            rejected_variant += 1
+        elif source.startswith("HKJC matchResult"):
             for field in MODEL_FIELDS:
                 if field in row:
                     row[field] = ""
@@ -52,7 +90,10 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(rows)
     tmp.replace(PATH)
-    print(f"SHADOW_QUALITY_GATE retained_full_league={retained} rejected_sparse_hkjc={rejected}")
+    print(
+        f"SHADOW_QUALITY_GATE retained_full_league={retained} "
+        f"rejected_sparse_hkjc={rejected} rejected_identity_variant={rejected_variant}"
+    )
     return 0
 
 
