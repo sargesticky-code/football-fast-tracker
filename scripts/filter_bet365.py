@@ -19,6 +19,7 @@ HKT = ZoneInfo("Asia/Hong_Kong")
 ROOT = Path(__file__).resolve().parent.parent
 TARGETS = ROOT / "data" / "hkjc_targets.csv"
 OUT = ROOT / "data" / "bet365_current.csv"
+CENSUS_OUT = ROOT / "data" / "bet365_admission_census.csv"
 COLUMNS = [
     "fetched_at_hkt", "hkjc_event_id", "match_date", "kickoff_hkt", "league",
     "home", "away", "bet365_home", "bet365_draw", "bet365_away",
@@ -65,16 +66,78 @@ def load_targets() -> list[dict[str, str]]:
         return list(csv.DictReader(fh))
 
 
+def admission_key(row: dict[str, str]) -> str | None:
+    """Return a validated upstream scraper key without expanding admission."""
+    label = (row.get("league_zh") or "").casefold()
+    compact = re.sub(r"\s+", "", label)
+    if any(x in compact for x in ("西班牙甲", "laliga", "la liga", "西甲")):
+        return "spain"
+    if any(x in compact for x in ("歐霸", "europaleague", "europa league", "uel")):
+        return "uel"
+    return None
+
+
 def detect_supported(targets: list[dict[str, str]]) -> list[str]:
-    found: set[str] = set()
+    return sorted({key for row in targets if (key := admission_key(row))})
+
+
+def write_admission_census(targets: list[dict[str, str]]) -> dict[str, float | int]:
+    """Write a read-only admission census; this never starts or broadens scraping."""
+    grouped: dict[tuple[str, str | None], int] = {}
+    admitted_targets = 0
     for row in targets:
-        label = (row.get("league_zh") or "").casefold()
-        compact = re.sub(r"\s+", "", label)
-        if any(x in compact for x in ("西班牙甲", "laliga", "la liga", "西甲")):
-            found.add("spain")
-        if any(x in compact for x in ("歐霸", "europaleague", "europa league", "uel")):
-            found.add("uel")
-    return sorted(found)
+        label = (row.get("league_zh") or "").strip()
+        key = admission_key(row)
+        if key:
+            admitted_targets += 1
+        grouped[(label, key)] = grouped.get((label, key), 0) + 1
+
+    total_targets = len(targets)
+    unsupported_targets = total_targets - admitted_targets
+    coverage_pct = round((admitted_targets / total_targets * 100) if total_targets else 0.0, 2)
+    fetched_values = sorted({(row.get("fetched_at_hkt") or "").strip() for row in targets if row.get("fetched_at_hkt")})
+    observed_at = fetched_values[-1] if fetched_values else datetime.now(HKT).replace(microsecond=0).isoformat()
+
+    rows: list[dict[str, str | int | float]] = []
+    for (label, key), count in sorted(grouped.items(), key=lambda item: (-item[1], item[0][0])):
+        if not label:
+            reason = "MISSING_COMPETITION_LABEL"
+        elif key:
+            reason = "ADMITTED_SUPPORTED_COMPETITION"
+        else:
+            reason = "UNSUPPORTED_COMPETITION_NOT_CONFIGURED"
+        rows.append({
+            "observed_at_hkt": observed_at,
+            "competition_label": label or "(missing)",
+            "target_fixture_count": count,
+            "admitted_fixture_count": count if key else 0,
+            "admission_coverage_pct": 100.0 if key else 0.0,
+            "admitted": "true" if key else "false",
+            "scraper_key": key or "",
+            "operational_reason_code": reason,
+        })
+
+    CENSUS_OUT.parent.mkdir(parents=True, exist_ok=True)
+    tmp = CENSUS_OUT.with_suffix(".tmp")
+    fields = [
+        "observed_at_hkt", "competition_label", "target_fixture_count",
+        "admitted_fixture_count", "admission_coverage_pct", "admitted",
+        "scraper_key", "operational_reason_code",
+    ]
+    with tmp.open("w", encoding="utf-8-sig", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
+    tmp.replace(CENSUS_OUT)
+
+    return {
+        "total_targets": total_targets,
+        "admitted_targets": admitted_targets,
+        "unsupported_targets": unsupported_targets,
+        "coverage_pct": coverage_pct,
+        "competition_count": len(grouped),
+        "supported_competition_count": len({key for _, key in grouped if key}),
+    }
 
 
 def write(rows: list[dict]) -> None:
@@ -164,11 +227,24 @@ def normalize(raw_paths: list[Path], targets: list[dict[str, str]]) -> list[dict
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--detect", action="store_true")
+    ap.add_argument("--census", action="store_true")
     ap.add_argument("--empty", action="store_true")
     ap.add_argument("--raw", action="append", default=[])
     args = ap.parse_args()
 
     targets = load_targets()
+    if args.census:
+        summary = write_admission_census(targets)
+        print(
+            "BET365_ADMISSION_CENSUS "
+            f"total_targets={summary['total_targets']} "
+            f"admitted_targets={summary['admitted_targets']} "
+            f"unsupported_targets={summary['unsupported_targets']} "
+            f"coverage_pct={summary['coverage_pct']:.2f} "
+            f"competitions={summary['competition_count']} "
+            f"supported_competitions={summary['supported_competition_count']}"
+        )
+        return 0
     if args.detect:
         print(",".join(detect_supported(targets)))
         return 0
