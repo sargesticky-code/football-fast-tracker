@@ -1,103 +1,88 @@
 ﻿fetched_at_hkt,hkjc_event_id,home,away,form_prob_home,form_prob_draw,form_prob_away,form_xg_home,form_xg_away,home_games,away_games,home_venue_games,away_venue_games,quality,model_source,history_source,external_home_games,external_away_games,external_latest_date
-2026-10-06T00:12:40+08:00,FB6127,Montevideo Nacional,Montevideo City Torque,0.257328,0.248146,0.494526,1.08976,1.61025,9,16,5,7,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6182,Cordoba,Tenerife,,,,,,6,5,3,1,FORM_INSUFFICIENT:6/5,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6198,Banfield,Rosario Central,0.327278,0.292104,0.380618,1.03883,1.14450,10,17,3,9,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6199,Velez Sarsfield,CA Platense,0.455233,0.296390,0.248377,1.22095,0.81961,37,21,21,9,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6201,Deportivo Riestra,CA Central Cordoba,0.356194,0.327338,0.316468,0.94193,0.86906,13,35,7,16,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6241,Estudiantes,Gimnasia Mendoza,0.499916,0.264763,0.235321,1.46646,0.91537,53,8,26,3,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6292,Cyprus,Latvia,0.547590,0.267035,0.185375,1.45975,0.72406,21,19,10,9,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,16,2026-08-26
-2026-10-06T00:12:40+08:00,FB6293,Italy,Turkiye,,,,,,3,3,1,1,FORM_INSUFFICIENT:3/3,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6294,Ukraine,Hungary,0.298098,0.304639,0.397263,0.91527,1.10575,21,21,1,8,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6295,Northern Ireland,Georgia,0.457157,0.340197,0.202646,1.02246,0.57332,21,21,8,7,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6298,France,Belgium,0.279617,0.240769,0.479614,1.22488,1.67652,29,27,8,9,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,26,24,2026-08-26
-2026-10-06T00:12:40+08:00,FB6300,Romania,Sweden,0.435122,0.219906,0.344971,1.88373,1.66226,21,25,10,9,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,22,2026-08-26
-2026-10-06T00:12:40+08:00,FB6301,Montenegro,Armenia,0.650513,0.190172,0.159316,2.24994,1.02293,21,20,11,9,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,17,2026-08-26
-2026-10-06T00:12:40+08:00,FB6302,Bosnia-Herzegovina,Poland,,,,,,3,3,1,1,FORM_INSUFFICIENT:3/3,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6310,Sweden U21,North Macedonia U21,,,,,,1,1,0,0,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6312,Montenegro U21,Armenia U21,,,,,,1,1,0,0,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6313,Italy U21,Poland U21,,,,,,1,1,0,0,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6317,Korea Republic,Uzbekistan,,,,,,3,2,3,0,FORM_INSUFFICIENT:3/2,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6318,China,Tajikistan,0.214092,0.250572,0.535336,0.90878,1.59753,16,14,8,4,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,13,13,2026-08-26
-2026-10-06T00:12:40+08:00,FB6319,Saudi Arabia,United Arab Emirates,0.323485,0.297496,0.379020,1.00433,1.11295,40,26,14,7,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,36,22,2026-08-26
-2026-10-06T00:12:40+08:00,FB6320,Serbia U21,Russia U21,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6323,Sejong FC Women,Incheon Steel Women,,,,,,3,5,2,1,FORM_INSUFFICIENT:3/5,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6324,Seoul City Women,Mungyeong Sangmu Women,,,,,,6,4,3,4,FORM_INSUFFICIENT:6/4,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6325,Estonia,Iceland,0.362522,0.298215,0.339263,1.08001,1.03457,21,22,10,11,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,19,2026-08-26
-2026-10-06T00:12:40+08:00,FB6326,Albania,San Marino,0.747573,0.177455,0.074972,2.07252,0.48697,21,21,10,10,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6327,England,Czechia,,,,,,3,3,1,1,FORM_INSUFFICIENT:3/3,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6328,Scotland,Slovenia,0.411834,0.258230,0.329936,1.42755,1.25026,23,21,10,12,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,21,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6329,Luxembourg,Bulgaria,0.241689,0.307311,0.451000,0.76266,1.15889,19,21,10,10,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,16,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6330,Switzerland,North Macedonia,0.755194,0.161602,0.083204,2.31861,0.62574,27,20,9,11,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,24,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6331,Martinique,El Salvador,0.519945,0.236286,0.243770,1.74339,1.11882,11,23,2,8,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,8,20,2026-08-26
-2026-10-06T00:12:40+08:00,FB6332,Croatia,Spain,0.138352,0.157033,0.704615,1.18902,2.77098,25,29,10,6,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,22,26,2026-08-26
-2026-10-06T00:12:40+08:00,FB6333,Belarus,Finland,0.459317,0.218431,0.322252,1.93841,1.60120,21,21,5,10,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6334,Moldova,Slovakia,0.318505,0.253830,0.427665,1.25107,1.49007,21,21,9,8,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6335,Kazakhstan,Faroe Islands,0.351431,0.301727,0.346842,1.04195,1.03305,22,20,9,11,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,19,17,2026-08-26
-2026-10-06T00:12:40+08:00,FB6336,Guatemala,Suriname,0.515943,0.208122,0.275935,2.13501,1.52993,25,21,6,7,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,22,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6337,Honduras,Jamaica,0.258941,0.263848,0.477211,1.00043,1.45940,25,30,7,9,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,22,27,2026-08-26
-2026-10-06T00:12:40+08:00,FB6338,Liverpool,Manchester City,,,,,,10,7,6,3,FORM_INSUFFICIENT:10/7,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6339,Sunderland,Brighton,,,,,,7,9,3,4,FORM_INSUFFICIENT:7/9,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6340,Ipswich,Fulham,,,,,,6,7,3,3,FORM_INSUFFICIENT:6/7,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6341,Crystal Palace,Nottingham Forest,0.594497,0.218581,0.186922,1.92047,0.97541,8,8,5,4,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6342,Arsenal,Leeds,0.560431,0.212451,0.227118,2.04532,1.23705,12,9,5,4,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6343,Aston Villa,Brentford,0.362912,0.238496,0.398592,1.50660,1.58890,61,45,26,25,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6344,Manchester Utd,Tottenham,0.574648,0.230262,0.195090,1.79473,0.94119,8,10,5,5,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6345,Hull City,Everton,,,,,,4,6,2,3,FORM_INSUFFICIENT:4/6,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6346,Chelsea,Bournemouth,,,,,,7,9,4,4,FORM_INSUFFICIENT:7/9,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6347,Coventry,Newcastle,,,,,,6,7,3,3,FORM_INSUFFICIENT:6/7,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6349,Athletico Paranaense,Atletico Mineiro,0.507066,0.279313,0.213621,1.36355,0.77777,11,61,5,30,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6350,Palmeiras,Bahia,0.517794,0.250553,0.231654,1.59585,0.97788,25,17,12,9,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6351,Santos,Flamengo,0.288460,0.280661,0.430880,1.00025,1.28907,68,21,35,11,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6352,Fluminense,Coritiba,0.438341,0.276833,0.284825,1.32395,1.00986,21,13,11,7,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6353,Vitoria,Chapecoense,0.435618,0.287687,0.276694,1.25057,0.93431,18,15,12,7,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6354,Internacional,Corinthians,0.381408,0.290442,0.328150,1.15509,1.04915,48,70,24,35,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6355,Botafogo,Vasco da Gama,0.490782,0.244825,0.264393,1.64135,1.13861,55,17,28,9,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6356,RB Bragantino,Mirassol,0.405587,0.267987,0.326426,1.34064,1.17394,23,20,13,10,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6357,Cruzeiro,Sao Paulo,0.408696,0.287934,0.303370,1.21325,1.00294,20,62,9,33,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6358,Clube do Remo,Gremio,0.337006,0.279472,0.383522,1.12898,1.22410,15,55,7,28,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6359,Chicago Fire,Vancouver Whitecaps,0.323110,0.241481,0.435408,1.36550,1.62096,16,18,6,8,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6360,Portugal U21,Czechia U21,,,,,,1,1,0,1,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6361,Netherlands U21,Bosnia-Herzegovina U21,,,,,,1,0,1,0,FORM_INSUFFICIENT:1/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6362,Sport Recife,Sao Bernardo,0.368181,0.264145,0.367674,1.29859,1.29751,12,9,4,5,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6363,Goias,Athletic Club MG,0.377386,0.279016,0.343598,1.21574,1.14655,8,10,4,5,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6364,CRB,Atletico Goianiense,0.427241,0.294714,0.278045,1.19925,0.90704,8,8,4,5,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6365,Vila Nova,Cuiaba,,,,,,7,7,3,3,FORM_INSUFFICIENT:7/7,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6366,America Mineiro,Fortaleza,,,,,,7,16,2,6,FORM_INSUFFICIENT:7/16,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6367,Spain U21,Romania U21,,,,,,1,0,0,0,FORM_INSUFFICIENT:1/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6368,Republic of Ireland U21,England U21,,,,,,1,0,0,0,FORM_INSUFFICIENT:1/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6369,Northern Ireland U21,Greece U21,,,,,,0,1,0,1,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6370,Shimizu S-Pulse,V-Varen Nagasaki,0.424373,0.291033,0.284595,1.21667,0.94030,10,11,6,5,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6371,Cerezo Osaka,Kagoshima United FC,,,,,,12,3,6,2,FORM_INSUFFICIENT:12/3,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6372,Angola,Malawi,0.437028,0.324261,0.238711,1.06616,0.70332,18,16,7,5,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,17,15,2026-08-26
-2026-10-06T00:12:40+08:00,FB6373,Colo Colo,Puerto Montt,,,,,,10,2,5,1,FORM_INSUFFICIENT:10/2,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6374,Accrington Stanley,Salford City,,,,,,1,4,0,1,FORM_INSUFFICIENT:1/4,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6375,Grimsby,Burton Albion,,,,,,5,5,2,2,FORM_INSUFFICIENT:5/5,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6376,Huddersfield,Rochdale,,,,,,5,4,3,3,FORM_INSUFFICIENT:5/4,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6377,Newport County,Plymouth,,,,,,4,8,2,3,FORM_INSUFFICIENT:4/8,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6378,Shrewsbury,Stockport,,,,,,4,9,1,4,FORM_INSUFFICIENT:4/9,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6379,Wycombe,Bristol Rovers,,,,,,9,3,5,1,FORM_INSUFFICIENT:9/3,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6380,Turkiye U21,Hungary U21,,,,,,1,1,0,1,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6381,Rotherham,Bradford,,,,,,4,8,3,5,FORM_INSUFFICIENT:4/8,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6382,France U21,Switzerland U21,,,,,,1,2,0,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6383,Azerbaijan U21,Gibraltar U21,,,,,,1,0,1,0,FORM_INSUFFICIENT:1/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6384,Moldova U21,Kazakhstan U21,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6385,Germany U21,Georgia U21,,,,,,0,1,0,0,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6386,Lithuania U21,Croatia U21,,,,,,0,1,0,0,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6387,Denmark U21,Belgium U21,,,,,,1,1,1,0,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6388,Wales U21,Austria U21,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6389,Nautico Recife,Novorizontino,,,,,,7,10,5,4,FORM_INSUFFICIENT:7/10,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6390,RB Omiya Ardija,Urawa Reds,0.580001,0.211353,0.208647,2.04207,1.14787,10,12,6,6,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6391,FC Yokohama,Avispa Fukuoka,0.586809,0.210706,0.202485,2.04323,1.11937,11,10,5,4,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6392,Iwaki FC,Sanfrecce Hiroshima,0.250004,0.247219,0.502777,1.06846,1.62324,10,14,5,9,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6393,JEF United Chiba,Fagiano Okayama,0.253831,0.242736,0.503433,1.11329,1.66906,14,12,5,7,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6394,Shonan Bellmare,FC Tokyo,0.261070,0.254795,0.484136,1.06063,1.54157,12,13,5,6,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6395,Tokyo Verdy,Gainare Tottori,,,,,,14,2,8,1,FORM_INSUFFICIENT:14/2,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6396,Tegevajaro Miyazaki,Kawasaki Frontale,0.344231,0.261053,0.394716,1.26631,1.37486,10,14,5,7,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6397,Norway U21,Israel U21,,,,,,1,1,0,1,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
-2026-10-06T00:12:40+08:00,FB6398,India,Uruguay,0.330114,0.267311,0.402575,1.18773,1.34066,14,21,5,10,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,13,19,2026-08-26
-2026-10-06T00:12:40+08:00,FB6399,Russia,Nigeria,0.559028,0.255558,0.185413,1.55003,0.76977,18,28,15,6,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,17,27,2026-08-26
-2026-10-06T00:12:40+08:00,FB6400,Algeria,Niger,0.554108,0.234820,0.211072,1.75468,0.98697,33,19,9,6,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,32,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6401,Argentina,Benin,0.753590,0.164164,0.082246,2.27645,0.60349,26,20,8,6,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,25,20,2026-08-26
-2026-10-06T00:12:40+08:00,FB6402,Mexico,Chile,0.651465,0.204354,0.144181,2.01234,0.82214,34,20,15,10,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,32,18,2026-08-26
-2026-10-06T00:12:40+08:00,FB6403,Colombia,Peru,0.611646,0.227046,0.161307,1.79307,0.79267,24,19,6,9,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,23,17,2026-08-26
-2026-10-06T00:12:40+08:00,FB6404,USA,Canada,,,,,,2,1,2,0,FORM_INSUFFICIENT:2/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6127,Montevideo Nacional,Montevideo City Torque,0.257328,0.248146,0.494526,1.08976,1.61025,9,16,5,7,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6198,Banfield,Rosario Central,0.327278,0.292104,0.380618,1.03883,1.14450,10,17,3,9,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6317,Korea Republic,Uzbekistan,,,,,,3,2,3,0,FORM_INSUFFICIENT:3/2,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6318,China,Tajikistan,0.214092,0.250572,0.535336,0.90878,1.59753,16,14,8,4,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,13,13,2026-08-26
+2026-10-06T06:47:41+08:00,FB6319,Saudi Arabia,United Arab Emirates,0.323485,0.297496,0.379020,1.00433,1.11295,40,26,14,7,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,36,22,2026-08-26
+2026-10-06T06:47:41+08:00,FB6323,Sejong FC Women,Incheon Steel Women,,,,,,3,5,2,1,FORM_INSUFFICIENT:3/5,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6324,Seoul City Women,Mungyeong Sangmu Women,,,,,,6,4,3,4,FORM_INSUFFICIENT:6/4,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6325,Estonia,Iceland,0.362522,0.298215,0.339263,1.08001,1.03457,21,22,10,11,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,19,2026-08-26
+2026-10-06T06:47:41+08:00,FB6326,Albania,San Marino,0.747573,0.177455,0.074972,2.07252,0.48697,21,21,10,10,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,18,2026-08-26
+2026-10-06T06:47:41+08:00,FB6327,England,Czechia,,,,,,3,3,1,1,FORM_INSUFFICIENT:3/3,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6328,Scotland,Slovenia,0.411834,0.258230,0.329936,1.42755,1.25026,23,21,10,12,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,21,18,2026-08-26
+2026-10-06T06:47:41+08:00,FB6329,Luxembourg,Bulgaria,0.241689,0.307311,0.451000,0.76266,1.15889,19,21,10,10,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,16,18,2026-08-26
+2026-10-06T06:47:41+08:00,FB6330,Switzerland,North Macedonia,0.755194,0.161602,0.083204,2.31861,0.62574,27,20,9,11,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,24,18,2026-08-26
+2026-10-06T06:47:41+08:00,FB6331,Martinique,El Salvador,0.519945,0.236286,0.243770,1.74339,1.11882,11,23,2,8,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,8,20,2026-08-26
+2026-10-06T06:47:41+08:00,FB6332,Croatia,Spain,0.138352,0.157033,0.704615,1.18902,2.77098,25,29,10,6,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,22,26,2026-08-26
+2026-10-06T06:47:41+08:00,FB6333,Belarus,Finland,0.459317,0.218431,0.322252,1.93841,1.60120,21,21,5,10,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,18,2026-08-26
+2026-10-06T06:47:41+08:00,FB6334,Moldova,Slovakia,0.318505,0.253830,0.427665,1.25107,1.49007,21,21,9,8,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,18,18,2026-08-26
+2026-10-06T06:47:41+08:00,FB6335,Kazakhstan,Faroe Islands,0.351431,0.301727,0.346842,1.04195,1.03305,22,20,9,11,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,19,17,2026-08-26
+2026-10-06T06:47:41+08:00,FB6336,Guatemala,Suriname,0.515943,0.208122,0.275935,2.13501,1.52993,25,21,6,7,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,22,18,2026-08-26
+2026-10-06T06:47:41+08:00,FB6337,Honduras,Jamaica,0.258941,0.263848,0.477211,1.00043,1.45940,25,30,7,9,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,22,27,2026-08-26
+2026-10-06T06:47:41+08:00,FB6338,Liverpool,Manchester City,,,,,,11,7,7,3,FORM_INSUFFICIENT:11/7,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6339,Sunderland,Brighton,,,,,,7,9,3,4,FORM_INSUFFICIENT:7/9,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6340,Ipswich,Fulham,,,,,,6,7,3,3,FORM_INSUFFICIENT:6/7,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6341,Crystal Palace,Nottingham Forest,0.594497,0.218581,0.186922,1.92047,0.97541,8,8,5,4,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6342,Arsenal,Leeds,0.560431,0.212451,0.227118,2.04532,1.23705,12,9,5,4,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6343,Aston Villa,Brentford,0.362912,0.238496,0.398592,1.50660,1.58890,61,45,26,25,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6344,Manchester Utd,Tottenham,0.574648,0.230262,0.195090,1.79473,0.94119,8,10,5,5,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6345,Hull City,Everton,,,,,,5,7,2,3,FORM_INSUFFICIENT:5/7,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6346,Chelsea,Bournemouth,,,,,,7,9,4,4,FORM_INSUFFICIENT:7/9,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6347,Coventry,Newcastle,,,,,,6,8,3,3,FORM_INSUFFICIENT:6/8,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6349,Athletico Paranaense,Atletico Mineiro,0.478754,0.270781,0.250465,1.40691,0.93643,14,61,6,30,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6350,Palmeiras,Bahia,0.531424,0.249407,0.219169,1.60839,0.93533,27,18,13,10,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6351,Santos,Flamengo,0.270732,0.281899,0.447368,0.94445,1.30042,68,23,35,12,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6352,Fluminense,Coritiba,0.549494,0.245515,0.204991,1.64405,0.89835,22,15,12,8,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6353,Vitoria,Chapecoense,0.435618,0.287687,0.276694,1.25057,0.93431,18,15,12,7,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6354,Internacional,Corinthians,0.381408,0.290442,0.328150,1.15509,1.04915,48,70,24,35,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6355,Botafogo,Vasco da Gama,0.460790,0.263029,0.276181,1.45168,1.06093,55,21,28,11,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6356,RB Bragantino,Mirassol,0.405587,0.267987,0.326426,1.34064,1.17394,23,20,13,10,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6357,Cruzeiro,Sao Paulo,0.451311,0.274445,0.274244,1.35533,0.99164,21,62,10,33,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6358,Clube do Remo,Gremio,0.337006,0.279472,0.383522,1.12898,1.22410,15,55,7,28,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6359,Chicago Fire,Vancouver Whitecaps,0.323110,0.241481,0.435408,1.36550,1.62096,16,18,6,8,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6360,Portugal U21,Czechia U21,,,,,,1,2,0,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6361,Netherlands U21,Bosnia-Herzegovina U21,,,,,,1,1,1,1,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6362,Sport Recife,Sao Bernardo,0.377179,0.264615,0.358206,1.31377,1.27337,13,9,4,5,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6363,Goias,Athletic Club MG,0.354282,0.277457,0.368260,1.17926,1.20801,9,11,4,5,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6364,CRB,Atletico Goianiense,0.427241,0.294714,0.278045,1.19925,0.90704,8,8,4,5,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6365,Vila Nova,Cuiaba,,,,,,7,7,3,3,FORM_INSUFFICIENT:7/7,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6366,America Mineiro,Fortaleza,,,,,,7,16,2,6,FORM_INSUFFICIENT:7/16,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6367,Spain U21,Romania U21,,,,,,1,1,0,0,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6368,Republic of Ireland U21,England U21,,,,,,1,0,0,0,FORM_INSUFFICIENT:1/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6369,Northern Ireland U21,Greece U21,,,,,,0,1,0,1,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6370,Shimizu S-Pulse,V-Varen Nagasaki,0.424373,0.291033,0.284595,1.21667,0.94030,10,11,6,5,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6371,Cerezo Osaka,Kagoshima United FC,,,,,,12,3,6,2,FORM_INSUFFICIENT:12/3,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6372,Angola,Malawi,0.437028,0.324261,0.238711,1.06616,0.70332,18,16,7,5,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,17,15,2026-08-26
+2026-10-06T06:47:41+08:00,FB6373,Colo Colo,Puerto Montt,,,,,,11,3,5,1,FORM_INSUFFICIENT:11/3,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6374,Accrington Stanley,Salford City,,,,,,1,4,0,1,FORM_INSUFFICIENT:1/4,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6375,Grimsby,Burton Albion,,,,,,5,5,2,2,FORM_INSUFFICIENT:5/5,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6376,Huddersfield,Rochdale,,,,,,5,4,3,3,FORM_INSUFFICIENT:5/4,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6377,Newport County,Plymouth,,,,,,4,8,2,3,FORM_INSUFFICIENT:4/8,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6378,Shrewsbury,Stockport,,,,,,4,9,1,4,FORM_INSUFFICIENT:4/9,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6379,Wycombe,Bristol Rovers,,,,,,9,3,5,1,FORM_INSUFFICIENT:9/3,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6380,Turkiye U21,Hungary U21,,,,,,1,2,0,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6381,Rotherham,Bradford,,,,,,4,8,3,5,FORM_INSUFFICIENT:4/8,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6382,France U21,Switzerland U21,,,,,,1,2,0,1,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6383,Azerbaijan U21,Gibraltar U21,,,,,,2,0,1,0,FORM_INSUFFICIENT:2/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6384,Moldova U21,Kazakhstan U21,,,,,,0,0,0,0,FORM_INSUFFICIENT:0/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6385,Germany U21,Georgia U21,,,,,,0,1,0,0,FORM_INSUFFICIENT:0/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6386,Lithuania U21,Croatia U21,,,,,,1,1,0,0,FORM_INSUFFICIENT:1/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6387,Denmark U21,Belgium U21,,,,,,1,2,1,0,FORM_INSUFFICIENT:1/2,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6388,Wales U21,Austria U21,,,,,,1,0,0,0,FORM_INSUFFICIENT:1/0,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6389,Nautico Recife,Novorizontino,,,,,,7,11,5,4,FORM_INSUFFICIENT:7/11,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6390,RB Omiya Ardija,Urawa Reds,0.580001,0.211353,0.208647,2.04207,1.14787,10,12,6,6,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6391,FC Yokohama,Avispa Fukuoka,0.586809,0.210706,0.202485,2.04323,1.11937,11,10,5,4,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6392,Iwaki FC,Sanfrecce Hiroshima,0.250004,0.247219,0.502777,1.06846,1.62324,10,14,5,9,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6393,JEF United Chiba,Fagiano Okayama,0.253831,0.242736,0.503433,1.11329,1.66906,14,12,5,7,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6394,Shonan Bellmare,FC Tokyo,0.237561,0.254545,0.507894,0.97748,1.55627,12,14,5,7,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6395,Tokyo Verdy,Gainare Tottori,,,,,,14,2,8,1,FORM_INSUFFICIENT:14/2,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6396,Tegevajaro Miyazaki,Kawasaki Frontale,0.344231,0.261053,0.394716,1.26631,1.37486,10,14,5,7,FORM_MODELED,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6397,Norway U21,Israel U21,,,,,,2,1,1,1,FORM_INSUFFICIENT:2/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6398,India,Uruguay,0.330114,0.267311,0.402575,1.18773,1.34066,14,21,5,10,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,13,19,2026-08-26
+2026-10-06T06:47:41+08:00,FB6399,Russia,Nigeria,0.642167,0.222230,0.135604,1.80055,0.68186,18,29,15,7,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,17,27,2026-08-26
+2026-10-06T06:47:41+08:00,FB6400,Algeria,Niger,0.687578,0.193128,0.119294,2.07478,0.72646,34,20,9,7,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,32,18,2026-08-26
+2026-10-06T06:47:41+08:00,FB6401,Argentina,Benin,0.728671,0.175017,0.096311,2.20866,0.65938,26,21,8,6,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,25,20,2026-08-26
+2026-10-06T06:47:41+08:00,FB6402,Mexico,Chile,0.651465,0.204354,0.144181,2.01234,0.82214,34,20,15,10,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,32,18,2026-08-26
+2026-10-06T06:47:41+08:00,FB6403,Colombia,Peru,0.611646,0.227046,0.161307,1.79307,0.79267,24,19,6,9,FORM_MODELED,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,23,17,2026-08-26
+2026-10-06T06:47:41+08:00,FB6404,USA,Canada,,,,,,2,1,2,0,FORM_INSUFFICIENT:2/1,HKJC matchResult · recency-weighted Team-Form Poisson,HKJC,0,0,
+2026-10-06T06:47:41+08:00,FB6405,Belize,French Guiana,,,,,,13,5,6,2,FORM_INSUFFICIENT:13/5,martj42/international_results + HKJC recent · recency-weighted Team-Form Poisson,MENS_INTL_RESULTS+HKJC_RECENT,12,4,2026-08-26
