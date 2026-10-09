@@ -52,6 +52,7 @@ BEGIN
       OR trim(lower(coalesce(r->>'canonical_home',''))) IS DISTINCT FROM trim(lower(f.home_en))
       OR trim(lower(coalesce(r->>'canonical_away',''))) IS DISTINCT FROM trim(lower(f.away_en))
       OR NOT EXISTS (SELECT 1 FROM public.matches m WHERE m.hkjc_event_id=id)
+      OR NOT EXISTS (SELECT 1 FROM public.forebet_availability av WHERE av.match_id=id)
       OR ko < now()-interval '12 hours' OR ko > now()+interval '15 days' THEN
       RAISE EXCEPTION 'FOREBET_FIXTURE_IDENTITY_MISMATCH %',id;
     END IF;
@@ -99,6 +100,9 @@ BEGIN
         confidence=excluded.confidence,raw=excluded.raw,updated_at=now()
       WHERE private.prediction_evidence_current.source_updated_at IS NULL
          OR private.prediction_evidence_current.source_updated_at < excluded.source_updated_at;
+      UPDATE public.forebet_availability
+        SET state='MODEL',checked_at=ts,reason='FOREBET_VERIFIED_CAPTURE',updated_at=now()
+        WHERE match_id=id AND (state IS DISTINCT FROM 'MODEL' OR checked_at IS NULL OR checked_at < ts);
     ELSE
       skipped:=skipped+1;
     END IF;
