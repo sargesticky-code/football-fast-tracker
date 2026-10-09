@@ -1,11 +1,6 @@
 name: Supabase Static Data Push
 
-# Static/control-plane reconciliation only.
-# Live capture is owned by Supabase cron + Edge Functions.
-# Static ingest normally runs on schedule. Forebet is the one targeted upstream
-# completion that also triggers an immediate reconciliation because its bot
-# checkpoint commits use [skip ci] and therefore cannot activate push workflows.
-
+# FT016: only Forebet canonical publication. Legacy CSV ingestion is retired.
 on:
   workflow_dispatch:
   workflow_run:
@@ -23,11 +18,11 @@ permissions:
   id-token: write
 
 concurrency:
-  group: supabase-private-data-push
-  cancel-in-progress: true
+  group: forebet-canonical-publication
+  cancel-in-progress: false
 
 jobs:
-  push-current-artifacts:
+  publish-forebet:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -38,121 +33,54 @@ jobs:
           ref: main
           fetch-depth: 1
 
-      - name: Build current H2H summary from verified HKJC history
-        run: python scripts/build_h2h_summary.py
+      - name: Test Forebet publisher contract
+        run: python -m unittest discover -s tests -p 'test_forebet_canonical_batch.py' -v
 
-      - name: Request GitHub OIDC token
+      - name: Validate current Forebet model feed without scraping
+        id: batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/forebet_canonical_batch.py
+          python - <<'PY'
+          import json,os
+          b=json.load(open('/tmp/forebet-canonical-payload.json'))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as output:
+              output.write('has_models=' + ('true' if b['rows'] else 'false') + '\n')
+              output.write('count=' + str(len(b['rows'])) + '\n')
+          PY
+
+      - name: Request existing GitHub OIDC identity
+        if: steps.batch.outputs.has_models == 'true'
         id: oidc
         shell: bash
         run: |
           set -euo pipefail
-          response="$(curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 --connect-timeout 10 --max-time 60 \
+          response="$(curl -fsSL --retry 2 --retry-all-errors --retry-delay 2 --connect-timeout 10 --max-time 30 \
             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=fast-tracker-supabase")"
           token="$(python -c 'import json,sys; print(json.load(sys.stdin)["value"])' <<<"$response")"
           echo "::add-mask::$token"
           echo "token=$token" >> "$GITHUB_OUTPUT"
 
-      - name: Build one static ingest batch
+      - name: Publish only verified Forebet models to canonical storage
+        if: steps.batch.outputs.has_models == 'true'
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
         shell: bash
         run: |
           set -euo pipefail
+          curl -fsSL --retry 2 --retry-all-errors --retry-delay 2 \
+            --connect-timeout 10 --max-time 30 \
+            -X POST -H "Authorization: Bearer $OIDC_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data-binary @/tmp/forebet-canonical-payload.json \
+            "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/forebet-canonical-publish" \
+            -o /tmp/forebet-publish-result.json
           python - <<'PY'
           import json
-          from pathlib import Path
-
-          names = [
-              "hkjc_current.csv",
-              "forebet_current.csv",
-              "model_current.csv",
-              "team_alias_registry.csv",
-              "form_current.csv",
-              "odds_movement.csv",
-              "prediction_fallback_current.csv",
-              "bet365_current.csv",
-              "forebet_supplement_current.csv",
-              "forebet_availability.csv",
-              "forebet_archive.csv",
-              "evaluation_summary.csv",
-              "hkjc_live_odds.csv",
-              "hkjc_power_current.csv",
-              "team_form_summary.csv",
-              "h2h_summary.csv",
-              "match_scenario_current.csv",
-          ]
-
-          files = []
-          for name in names:
-              p = Path("data") / name
-              if not p.exists():
-                  continue
-              files.append({
-                  "path": f"data/{name}",
-                  "content": p.read_text(encoding="utf-8-sig"),
-              })
-
-          Path("/tmp/fast-tracker-ingest-batch.json").write_text(
-              json.dumps({"files": files}, ensure_ascii=False),
-              encoding="utf-8",
-          )
-          print(f"BATCH files={len(files)} bytes={Path('/tmp/fast-tracker-ingest-batch.json').stat().st_size}")
+          result=json.load(open('/tmp/forebet-publish-result.json'))
+          if result.get('source')!='FOREBET' or not isinstance(result.get('accepted'),int):
+              raise SystemExit('Publisher contract response invalid')
+          print('FOREBET_CANONICAL_PUBLICATION',json.dumps(result,sort_keys=True))
           PY
-
-      - name: Push static batch to Supabase private storage
-        id: ingest
-        env:
-          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 --connect-timeout 10 --max-time 120 \
-            -X POST \
-            -H "Authorization: Bearer $OIDC_TOKEN" \
-            -H "Content-Type: application/json" \
-            --data-binary @/tmp/fast-tracker-ingest-batch.json \
-            "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/github-data-ingest" \
-            -o /tmp/fast-tracker-ingest-response.json
-
-          cat /tmp/fast-tracker-ingest-response.json
-          read -r changed sync_needed <<EOF
-          $(python - <<'PY'
-          import json
-          payload=json.load(open("/tmp/fast-tracker-ingest-response.json", encoding="utf-8"))
-          changed=int(payload.get("changed",0))
-          core={
-              "data/hkjc_current.csv",
-              "data/forebet_current.csv",
-              "data/model_current.csv",
-              "data/team_alias_registry.csv",
-              "data/form_current.csv",
-              "data/prediction_fallback_current.csv",
-              "data/forebet_availability.csv",
-              "data/h2h_summary.csv",
-          }
-          core_changed=any(bool(x.get("changed")) and x.get("path") in core for x in payload.get("results",[]))
-          recovery_needed=bool(payload.get("needsSync")) or any(
-              bool(x.get("needsSync")) and x.get("path") in core
-              for x in payload.get("results",[])
-          )
-          sync_needed=core_changed or recovery_needed
-          print(changed, "true" if sync_needed else "false")
-          PY
-          )
-          EOF
-          echo "changed=$changed" >> "$GITHUB_OUTPUT"
-          echo "sync_needed=$sync_needed" >> "$GITHUB_OUTPUT"
-
-      - name: Refresh canonical core only when canonical inputs changed
-        if: steps.ingest.outputs.sync_needed == 'true'
-        env:
-          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 --connect-timeout 10 --max-time 120 \
-            -X POST \
-            -H "Authorization: Bearer $OIDC_TOKEN" \
-            -H "Content-Type: application/json" \
-            --data '{"mode":"current"}' \
-            "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/sync-fast-tracker"
-          echo
