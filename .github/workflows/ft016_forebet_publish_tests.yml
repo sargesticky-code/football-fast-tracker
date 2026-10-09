@@ -1,0 +1,42 @@
+name: FT016 Forebet publication contract tests
+on:
+  push:
+    branches: [fix/ft016-forebet-canonical-publication]
+    paths:
+      - 'scripts/forebet_canonical_batch.py'
+      - 'tests/test_forebet_canonical_batch.py'
+      - 'supabase/functions/forebet-canonical-publish/**'
+      - 'supabase/migrations/20261009_ft016_forebet_canonical_publisher.sql'
+      - '.github/workflows/supabase_private_ingest.yml'
+      - '.github/workflows/ft016_forebet_publish_tests.yml'
+permissions:
+  contents: read
+jobs:
+  validate-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run positive and failure-path unit tests
+        run: python -m unittest discover -s tests -p 'test_forebet_canonical_batch.py' -v
+      - name: Compile isolated Deno Edge endpoint
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Check Edge source type safety
+        run: deno check supabase/functions/forebet-canonical-publish/index.ts
+      - name: Assert retired endpoints not reintroduced
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          content=Path('.github/workflows/supabase_private_ingest.yml').read_text()
+          assert 'github-data-ingest' not in content
+          assert 'sync-fast-tracker' not in content
+          assert 'forebet-canonical-publish' in content
+          assert 'has_models' in content
+          migration=Path('supabase/migrations/20261009_ft016_forebet_canonical_publisher.sql').read_text()
+          assert 'SECURITY INVOKER' in migration
+          assert 'REVOKE ALL' in migration
+          assert 'ON CONFLICT' in migration
+          assert "captured_at" in migration
+          PY
