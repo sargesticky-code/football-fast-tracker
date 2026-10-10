@@ -1,0 +1,16 @@
+name: Forebet source recovery diagnostic (one shot)
+on:
+  push:
+    branches: [probe/ft-forebet-github-recovery-20261010]
+    paths:
+      - scripts/forebet_github_official_diagnostic.py
+      - .github/workflows/forebet-source-recovery-probe.yml
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - run: python scripts/forebet_github_official_diagnostic.py
