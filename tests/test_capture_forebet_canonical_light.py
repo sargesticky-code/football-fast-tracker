@@ -86,6 +86,44 @@ class StrictCaptureTests(unittest.TestCase):
                 self.assertFalse(league_ok(code, "Serie AITALY: Standings"))
                 self.assertFalse(league_ok("unverified", competition))
 
+    def test_registry_alias_preserves_original_forebet_names(self):
+        rows,fx=examples()
+        fx[0]["home"]="Manchester Utd"
+        rows[0]["home_team"]="Manchester United"
+        fx[2]["away"]="AC Milan"
+        rows[2]["away_team"]="Milan"
+        result,info=verified_rows(rows,fx,NOW)
+        self.assertEqual(len(result),12)
+        self.assertEqual(info["verified_alias_matches"],2)
+        mapped={r["match_id"]:r for r in result}
+        self.assertEqual(mapped["FS:example0"]["source_home"],"Manchester United")
+        self.assertEqual(mapped["FS:example0"]["canonical_home"],"Manchester Utd")
+        self.assertEqual(mapped["FS:example2"]["source_away"],"Milan")
+        self.assertEqual(mapped["FS:example2"]["canonical_away"],"AC Milan")
+        self.assertEqual(mapped["FS:example0"]["match_score"],0.985)
+        self.assertEqual(mapped["FS:example0"]["identity_method"],
+                         "VERIFIED_ALIAS_LEAGUE_AND_CORROBORATED_TIME")
+    def test_unverified_fake_synonym_is_not_alias(self):
+        rows,fx=examples()
+        fx[0]["home"]="Manchester Utd"
+        rows[0]["home_team"]="Manchester City"
+        result,_=verified_rows(rows,fx,NOW)
+        self.assertEqual(len(result),11)
+    def test_known_alias_wrong_league_rejected(self):
+        rows,fx=examples()
+        fx[0]["home"]="Manchester Utd"
+        rows[0]["home_team"]="Manchester United"
+        rows[0]["league_short"]="It1"
+        result,_=verified_rows(rows,fx,NOW)
+        self.assertEqual(len(result),11)
+    def test_known_alias_wrong_kickoff_rejected(self):
+        rows,fx=examples()
+        fx[0]["home"]="Manchester Utd"
+        rows[0]["home_team"]="Manchester United"
+        rows[0]["kickoff_text"]="10/11/2026 10:10 PM"
+        result,_=verified_rows(rows,fx,NOW)
+        self.assertEqual(len(result),11)
+
     def test_source_league_allowlist(self):
         self.assertTrue(league_ok("EPL","EPL"))
         self.assertTrue(league_ok("Es1","LaLigaSPAIN: Standings"))
