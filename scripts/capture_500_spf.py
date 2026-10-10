@@ -64,7 +64,7 @@ def norm(s):
 
 def to_utc_china(s):
     try:
-        return datetime.strptime(s,"%Y-%m-%d %H:%M").replace(tzinfo=HKT).astimezone(timezone.utc)
+        return datetime.fromisoformat(s).replace(tzinfo=HKT).astimezone(timezone.utc)
     except ValueError:
         return None
 
