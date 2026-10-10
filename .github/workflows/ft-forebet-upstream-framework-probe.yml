@@ -28,6 +28,7 @@ jobs:
       - name: Probe one public 1X2 page with upstream browser-helper pattern
         env:
           LOCAL_BROWSER_HELPER: http://127.0.0.1:8191/v1
+          FOREBET_DAY_OFFSET: '1'
         run: python scripts/probe_forebet_upstream_framework.py
       - name: Retain bounded JSON proof (no HTML or credentials)
         if: always()
