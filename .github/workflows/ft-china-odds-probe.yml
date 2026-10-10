@@ -68,3 +68,35 @@ jobs:
           if not any(v.get("usable") for v in all_results.values()):
               raise SystemExit("ALL_CHINA_ODDS_SOURCES_UNAVAILABLE")
           PY
+      - name: Official 500 match kickoff probe (no writes)
+        shell: bash
+        run: |
+          python - <<'PY'
+          from html.parser import HTMLParser
+          import urllib.request, xml.etree.ElementTree as ET,json
+          class Rows(HTMLParser):
+              def __init__(self): super().__init__();self.rows={}
+              def handle_starttag(self,tag,attrs):
+                  if tag!='tr': return
+                  d=dict(attrs);mid=d.get('data-processname')
+                  if mid and d.get('data-matchdate') and d.get('data-matchtime'):
+                      self.rows[mid]={"date":d['data-matchdate'],"time":d['data-matchtime'],"html_id":d.get('data-id')}
+          hdr={"User-Agent":"Mozilla/5.0"}
+          def get(url):
+              with urllib.request.urlopen(urllib.request.Request(url,headers=hdr),timeout=15) as r:
+                  return r.read()
+          try:
+              x=ET.fromstring(get("https://trade.500.com/static/public/jczq/newxml/pl/pl_spf_2.xml"))
+              p=Rows();p.feed(get("https://trade.500.com/jczq/?playid=269&g=2").decode("utf-8","replace"))
+              matched=[]
+              for m in x.findall('m'):
+                  r=p.rows.get(m.get('matchnum'))
+                  if r:
+                      first=m.find('row')
+                      if first is not None:matched.append({"id":m.get('id'),"matchnum":m.get('matchnum'),"home":m.get('home'),"away":m.get('away'),"kickoff":r["date"]+" "+r["time"],"prices":[first.get(k) for k in ("win","draw","lost")]})
+              print("OFFICIAL_500_KICKOFF_JOIN "+json.dumps({"xml_total":len(x.findall('m')),"html_matchnums":len(p.rows),"exact_id_join":len(matched),"sample":matched[:3]},ensure_ascii=False))
+              if len(matched)<10:raise SystemExit("INSUFFICIENT_OFFICIAL_MATCH_KICKOFF_JOIN")
+          except Exception as e:
+              print("OFFICIAL_500_KICKOFF_JOIN_ERROR "+repr(e))
+              raise
+          PY
