@@ -6,8 +6,7 @@ on:
   workflow_run:
     workflows: ["Forebet Daily Feed"]
     types: [completed]
-  schedule:
-    - cron: '7,37 * * * *'
+  # Scheduled legacy Forebet refresh paused; retained manual/verified workflow triggers.
   push:
     branches: [main]
     paths:
