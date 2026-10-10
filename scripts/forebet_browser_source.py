@@ -8,6 +8,7 @@ import json
 import requests
 from playwright.sync_api import sync_playwright
 from scrape_forebet import parse_forebet_rows
+from forebet_verified_aliases import source_forms
 
 def load_canonical_candidates(url: str, date: str, targets: list[dict],
                               helper="http://127.0.0.1:8191/v1"):
@@ -29,7 +30,18 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
         if dom.lstrip(".") in ("forebet.com","www.forebet.com") and c.get("name") and c.get("value"):
             cookies.append({"name":str(c["name"]),"value":str(c["value"]),
                             "domain":dom,"path":str(c.get("path") or "/")})
-    pairs=[{"home":t["home"],"away":t["away"]} for t in targets][:350]
+    # Source-only, already verified alternative names. Build compact full pairs
+    # before entering the browser; no alias queries and no extra network calls.
+    allowed=set()
+    for t in targets[:350]:
+        home=source_forms(t["home"])
+        away=source_forms(t["away"])
+        for h in home:
+            for a in away:
+                allowed.add(h+"|"+a)
+    if len(allowed)>15000:
+        raise ValueError("FOREBET_ALIAS_ALLOWLIST_TOO_LARGE")
+    pairs=sorted(allowed)
     with sync_playwright() as pw:
         browser=pw.chromium.launch(headless=True)
         context=browser.new_context(user_agent=str(ua),locale="en-GB")
@@ -49,9 +61,9 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
                                        timeout=10000)
             except Exception:
                 pass
-        result=page.evaluate("""targets=>{
+        result=page.evaluate("""allowedPairs=>{
            const norm=s=>String(s||'').normalize('NFKD').toLowerCase().replace(/[^a-z0-9]/g,'');
-           const allowed=new Set(targets.map(t=>norm(t.home)+'|'+norm(t.away)));
+           const allowed=new Set(allowedPairs);
            let total=0,size=0;
            const fragments=[];
            const all=document.querySelectorAll('div.rcnt');
