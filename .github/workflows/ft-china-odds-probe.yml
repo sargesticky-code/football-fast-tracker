@@ -5,6 +5,8 @@ on:
       - probe/ft-china-odds-20261010
     paths:
       - .github/workflows/ft-china-odds-probe.yml
+      - scripts/capture_500_spf.py
+      - tests/test_capture_500_spf.py
   workflow_dispatch:
 permissions:
   contents: read
