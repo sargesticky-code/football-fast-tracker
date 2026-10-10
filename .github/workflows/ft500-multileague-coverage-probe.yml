@@ -1,0 +1,17 @@
+name: FT500 one-shot multi-league coverage audit
+on:
+  push:
+    branches: [probe/ft500-multileague-coverage-20261010]
+    paths:
+      - scripts/probe_500_multileague_coverage.py
+      - .github/workflows/ft500-multileague-coverage-probe.yml
+permissions:
+  contents: read
+jobs:
+  read-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe official 500 + canonical match schedule once, no publication
+        run: python scripts/probe_500_multileague_coverage.py
