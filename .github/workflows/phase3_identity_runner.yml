@@ -2,8 +2,7 @@ name: Phase 3 Identity Runner
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '15 * * * *'
+  # Retired schedule: legacy HKJC-dependent pipeline is not a dashboard source.
 
 permissions:
   contents: read
@@ -14,6 +13,7 @@ concurrency:
 
 jobs:
   phase3-identity:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
