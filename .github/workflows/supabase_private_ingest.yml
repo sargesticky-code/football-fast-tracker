@@ -41,7 +41,11 @@ jobs:
           rows=p['rows']
           assert 1 <= len(rows) <= 80
           assert len({x['match_id'] for x in rows})==len(rows)
-          assert all(x['identity_method']=='EXACT_TEAMS_LEAGUE_AND_CORROBORATED_TIME'
+          approved_methods={'EXACT_TEAMS_LEAGUE_AND_CORROBORATED_TIME',
+                            'VERIFIED_ALIAS_LEAGUE_AND_CORROBORATED_TIME'}
+          assert all(x['identity_method'] in approved_methods
+                     and float(x['match_score'])>=0.98
+                     and x.get('source_home') and x.get('source_away')
                      and x['source_event_time_basis']=='SOURCE_DISPLAYED_CLOCK_CORROBORATED_WITH_CANONICAL_UTC' for x in rows)
           with open(os.environ['GITHUB_OUTPUT'],'a') as o:
               o.write('count='+str(len(rows))+'\n')

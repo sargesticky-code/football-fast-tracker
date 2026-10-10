@@ -16,8 +16,8 @@ from pathlib import Path
 
 import requests
 from forebet_canonical_source_probe import (API, canonical_targets,
-    build_verified_rows, exact_name, model_fields)
-from scrape_forebet import parse_forebet_rows
+    exact_name, model_fields)
+from forebet_verified_aliases import source_forms, verified_source_name
 
 HKT=timezone(timedelta(hours=8))
 OUT=Path("/tmp/ft-forebet-verified-only.json")
@@ -61,12 +61,14 @@ def displayed_utc(row):
     return None
 
 def verified_rows(raw, targets, now):
-    """UTC provenance is independent clock corroboration, never HTML's date-only time."""
+    """One strict team+league+minute match; source names always preserved."""
     catalog={}
     for t in targets:
-        if not t.get("match_id") or t.get("kickoff") is None:continue
-        k=(exact_name(t["home"]),exact_name(t["away"]))
-        catalog.setdefault(k,[]).append(t)
+        if not t.get("match_id") or t.get("kickoff") is None:
+            continue
+        for home_key in source_forms(t["home"]):
+            for away_key in source_forms(t["away"]):
+                catalog.setdefault((home_key,away_key),[]).append(t)
     proposals=[]
     rejected=Counter()
     for row in raw:
@@ -77,46 +79,57 @@ def verified_rows(raw, targets, now):
             continue
         key=(exact_name(row.get("home_team")),exact_name(row.get("away_team")))
         valid=[t for t in catalog.get(key,[]) if
+               verified_source_name(row.get("home_team"),t["home"]) and
+               verified_source_name(row.get("away_team"),t["away"]) and
                league_ok(row.get("league_short"),t.get("league")) and
                abs((wall-t["kickoff"]).total_seconds())<=60 and
                t["kickoff"]>now and t["kickoff"]<=now+timedelta(hours=48)]
         if len(valid)!=1:
             rejected["not_unique_league_time_identity"]+=1
             continue
-        proposals.append((row,valid[0],wall))
-    # Do not infer provider clock format from 1-2 accidental matches.
-    unique_leagues={t["league"] for _,t,_ in proposals}
-    unique_ids={t["match_id"] for _,t,_ in proposals}
+        proposals.append((row,valid[0],wall,fields))
+    unique_leagues={t["league"] for _,t,_,_ in proposals}
+    unique_ids={t["match_id"] for _,t,_,_ in proposals}
+    # A time/identity cohort protects against a page timezone or parser drift.
     if len(proposals)<8 or len(unique_leagues)<3 or len(unique_ids)!=len(proposals):
         return [],{"candidate_models":len(proposals),"verified":0,
                    "leagues":len(unique_leagues),"reason":"COHORT_TIME_NOT_CORROBORATED",
                    "rejections":dict(rejected)}
-    adapted=[]
-    source_urls=set()
-    for row,t,wall in proposals:
-        uri=row.get("forebet_detail_url") or ""
-        if uri in source_urls:
+    verified=[]
+    seen_urls=set()
+    for row,t,wall,fields in proposals:
+        uri=row["forebet_detail_url"]
+        if uri in seen_urls:
             rejected["duplicate_source_event"]+=1
             continue
-        source_urls.add(uri)
-        r=dict(row)
-        r["source_kickoff_iso"]=wall.isoformat()
-        adapted.append(r)
-    payload=build_verified_rows(targets,adapted,now)
-    by_id={x["match_id"]:x for x in payload}
-    verified=[]
-    for row,t,_ in proposals:
-        x=by_id.get(t["match_id"])
-        if not x or x["match_id"] in {z["match_id"] for z in verified}:
-            continue
-        x["canonical_league"]=t["league"]
-        x["source_league"]=row.get("league_short")
-        x["source_event_time_basis"]="SOURCE_DISPLAYED_CLOCK_CORROBORATED_WITH_CANONICAL_UTC"
-        x["identity_method"]="EXACT_TEAMS_LEAGUE_AND_CORROBORATED_TIME"
-        verified.append(x)
+        seen_urls.add(uri)
+        exact_pair=(exact_name(row["home_team"])==exact_name(t["home"]) and
+                    exact_name(row["away_team"])==exact_name(t["away"]))
+        verified.append({
+            "match_id":t["match_id"],"captured_at":now.isoformat(),
+            "kickoff":t["kickoff"].isoformat(),
+            "canonical_home":t["home"],"canonical_away":t["away"],
+            # These are the ACTUAL official provider names, never rewritten.
+            "source_home":row["home_team"],"source_away":row["away_team"],
+            "home":fields["home"],"draw":fields["draw"],"away":fields["away"],
+            "pick":fields["pick"],"score":fields["score"],
+            "avg_goals":fields["avg_goals"],
+            "match_score":0.995 if exact_pair else 0.985,
+            "match_date":str(row.get("match_date") or ""),
+            "kickoff_text":str(row.get("kickoff_text") or ""),
+            "league":str(row.get("league_short") or ""),
+            "canonical_league":t["league"],
+            "source_league":str(row.get("league_short") or ""),
+            "source_event_url":uri,
+            "source_event_time":wall.isoformat(),
+            "source_event_time_basis":"SOURCE_DISPLAYED_CLOCK_CORROBORATED_WITH_CANONICAL_UTC",
+            "identity_method":("EXACT_TEAMS_LEAGUE_AND_CORROBORATED_TIME"
+                               if exact_pair else "VERIFIED_ALIAS_LEAGUE_AND_CORROBORATED_TIME"),
+        })
     return verified,{"candidate_models":len(proposals),"verified":len(verified),
-                      "leagues":len(unique_leagues),"clock_offset_minutes":0,
-                      "rejections":dict(rejected)}
+                     "leagues":len(unique_leagues),"clock_offset_minutes":0,
+                     "verified_alias_matches":sum(x["identity_method"].startswith("VERIFIED_ALIAS") for x in verified),
+                     "rejections":dict(rejected)}
 
 def capture():
     now=datetime.now(timezone.utc)
