@@ -102,3 +102,5 @@ jobs:
               print("OFFICIAL_500_KICKOFF_JOIN_ERROR "+repr(e))
               raise
           PY
+      - name: Run verified 500 canonical match contract
+        run: python -m unittest discover -s tests -p test_capture_500_spf.py -v
