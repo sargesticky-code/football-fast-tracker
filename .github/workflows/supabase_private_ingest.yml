@@ -1,85 +1,114 @@
-name: Supabase Static Data Push
-
-# FT016: only Forebet canonical publication. Legacy CSV ingestion is retired.
+name: Forebet Canonical Daily — Single Capture
 on:
+  schedule:
+    - cron: '15 0 * * *'
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Forebet Daily Feed"]
-    types: [completed]
-  # Scheduled legacy Forebet refresh paused; retained manual/verified workflow triggers.
   push:
     branches: [main]
     paths:
       - '.github/workflows/supabase_private_ingest.yml'
-
+      - 'scripts/capture_forebet_canonical_light.py'
+      - 'scripts/forebet_browser_source.py'
+      - 'scripts/forebet_canonical_source_probe.py'
 permissions:
   contents: read
   id-token: write
-
 concurrency:
-  group: forebet-canonical-publication
+  group: forebet-canonical-single-capture
   cancel-in-progress: false
-
 jobs:
-  publish-forebet:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+  capture-and-publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
+    services:
+      browser-helper:
+        image: ghcr.io/flaresolverr/flaresolverr:latest
+        ports: [8191:8191]
     steps:
-      - name: Checkout latest main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 1
-
-      - name: Test Forebet publisher contract
-        run: python -m unittest discover -s tests -p 'test_forebet_canonical_batch.py' -v
-
-      - name: Validate current Forebet model feed without scraping
+      - uses: actions/checkout@v4
+      - name: Install bounded source dependencies
+        run: |
+          python -m pip install --disable-pip-version-check requests==2.32.5 beautifulsoup4==4.12.3 lxml==5.4.0 playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Test strict canonical identity and timestamps
+        run: python -m unittest discover -s tests -p test_capture_forebet_canonical_light.py -v
+      - name: Capture only tomorrow's public Forebet 1X2 and verify canonical rows
         id: batch
+        env:
+          LOCAL_BROWSER_HELPER: http://127.0.0.1:8191/v1
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/forebet_canonical_batch.py
+          python scripts/capture_forebet_canonical_light.py
           python - <<'PY'
           import json,os
-          b=json.load(open('/tmp/forebet-canonical-payload.json'))
-          with open(os.environ['GITHUB_OUTPUT'],'a') as output:
-              output.write('has_models=' + ('true' if b['rows'] else 'false') + '\n')
-              output.write('count=' + str(len(b['rows'])) + '\n')
+          p=json.load(open('/tmp/ft-forebet-verified-only.json'))
+          assert p['source']=='FOREBET'
+          rows=p['rows']
+          assert 1 <= len(rows) <= 80
+          assert len({x['match_id'] for x in rows})==len(rows)
+          assert all(x['identity_method']=='EXACT_TEAMS_LEAGUE_AND_CORROBORATED_TIME'
+                     and x['source_event_time_basis']=='SOURCE_DISPLAYED_CLOCK_CORROBORATED_WITH_CANONICAL_UTC' for x in rows)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as o:
+              o.write('count='+str(len(rows))+'\n')
+          print('FOREBET_APPROVED_CANONICAL_MODELS',len(rows))
           PY
-
-      - name: Request existing GitHub OIDC identity
-        if: steps.batch.outputs.has_models == 'true'
+      - name: Obtain scoped GitHub OIDC identity
         id: oidc
         shell: bash
         run: |
           set -euo pipefail
-          response="$(curl -fsSL --retry 2 --retry-all-errors --retry-delay 2 --connect-timeout 10 --max-time 30 \
+          response="$(curl -fsSL --connect-timeout 10 --max-time 20 \
             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=fast-tracker-supabase")"
-          token="$(python -c 'import json,sys; print(json.load(sys.stdin)["value"])' <<<"$response")"
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=fast-tracker-supabase")"
+          token="$(python -c 'import json,sys;print(json.load(sys.stdin)["value"])' <<<"$response")"
           echo "::add-mask::$token"
           echo "token=$token" >> "$GITHUB_OUTPUT"
-
-      - name: Publish only verified Forebet models to canonical storage
-        if: steps.batch.outputs.has_models == 'true'
+      - name: Publish once through existing Forebet OIDC endpoint
         env:
-          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+          FOREBET_OIDC: ${{ steps.oidc.outputs.token }}
+          EXPECTED: ${{ steps.batch.outputs.count }}
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsSL --retry 2 --retry-all-errors --retry-delay 2 \
-            --connect-timeout 10 --max-time 30 \
-            -X POST -H "Authorization: Bearer $OIDC_TOKEN" \
+          curl --fail-with-body -sS --connect-timeout 10 --max-time 30 \
+            -X POST -H "Authorization: Bearer $FOREBET_OIDC" \
             -H "Content-Type: application/json" \
-            --data-binary @/tmp/forebet-canonical-payload.json \
-            "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/forebet-canonical-publish" \
-            -o /tmp/forebet-publish-result.json
+            --data-binary @/tmp/ft-forebet-verified-only.json \
+            'https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/forebet-canonical-publish' \
+            -o /tmp/ft-forebet-publish-result.json
+          python - <<'PY'
+          import json,os
+          r=json.load(open('/tmp/ft-forebet-publish-result.json'))
+          if r.get('source')!='FOREBET' or r.get('accepted')!=int(os.environ['EXPECTED']) or r.get('applied',0)<1:
+              raise SystemExit('FOREBET_PUBLICATION_NOT_CONFIRMED')
+          print('FOREBET_PUBLISHED',r['accepted'],'written',r['applied'])
+          PY
+      - name: Verify DB to live public summary keeps probabilities, score, avg goals
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail-with-body -sS --connect-timeout 10 --max-time 35 \
+            'https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/app-phase1-feed?view=summary&hours=48' \
+            -o /tmp/ft-forebet-public-smoke.json
           python - <<'PY'
           import json
-          result=json.load(open('/tmp/forebet-publish-result.json'))
-          if result.get('source')!='FOREBET' or not isinstance(result.get('accepted'),int):
-              raise SystemExit('Publisher contract response invalid')
-          print('FOREBET_CANONICAL_PUBLICATION',json.dumps(result,sort_keys=True))
+          d=json.load(open('/tmp/ft-forebet-public-smoke.json'))
+          if d.get('source')!='flashscore-single-rpc-canonical':
+              raise SystemExit('CANONICAL_PUBLIC_FEED_UNAVAILABLE')
+          models=[m for m in d.get('matches',[]) if isinstance(m.get('forebet'),dict)
+            and isinstance(m.get('forebetDetail'),dict)
+            and m['forebetDetail'].get('predictedScore')
+            and (m['forebetDetail'].get('ou25') or {}).get('avgGoals',0)>0]
+          print('FOREBET_PUBLIC_SUMMARY_MODELS',len(models),'out_of',len(d.get('matches',[])))
+          if len(models)<5:
+              raise SystemExit('FOREBET_PUBLIC_READ_PATH_HAS_NO_VERIFIED_MODELS')
           PY
+      - name: Preserve only summary, no full HTML, cookies or credentials
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forebet-one-shot-canonical-summary
+          path: /tmp/ft-forebet-verified-summary.json
+          if-no-files-found: ignore
+          retention-days: 3
