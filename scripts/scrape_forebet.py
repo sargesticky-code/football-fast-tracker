@@ -511,6 +511,8 @@ def parse_forebet_rows(html: str, requested_date: str) -> list[dict[str, Any]]:
 
         rows.append({
             "fetched_at_hkt": fetched_at,
+            # Source time is evidence for strict canonical matching; never assume a timezone.
+            "source_kickoff_iso": dt_attr,
             "match_date": match_date,
             "kickoff_text": text(row.select_one("span.date_bah")),
             "league_short": text(row.select_one("span.shortTag")),
