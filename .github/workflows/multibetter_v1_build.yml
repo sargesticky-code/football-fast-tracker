@@ -3,10 +3,7 @@ name: Multibetter V1 Current Intake + Build
 
 on:
   workflow_dispatch:
-  schedule:
-    # Two target-aware builds per day, after the 06:30 / 18:30 HKJC authority cycles.
-    - cron: '10 23 * * *' # 07:10 Asia/Hong_Kong
-    - cron: '10 11 * * *' # 19:10 Asia/Hong_Kong
+  # Legacy HKJC-dependent scheduling retired; no dashboard ingestion.
   push:
     branches:
       - main
@@ -24,6 +21,7 @@ concurrency:
 
 jobs:
   current:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
