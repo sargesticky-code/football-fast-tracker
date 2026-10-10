@@ -14,7 +14,9 @@ def main():
   for label,url in URLS:
    try:
     response=page.goto(url,wait_until="domcontentloaded",timeout=22000)
-    page.wait_for_timeout(1000)
+    # A normal browser sometimes completes JavaScript initialization after
+    # navigation; wait once, not a retry or challenge/CAPTCHA bypass.
+    page.wait_for_timeout(8500 if response and response.status==403 else 1000)
     data=page.evaluate("""() => ({
        title: document.title.slice(0,110),
        rows: document.querySelectorAll('div.rcnt').length,
