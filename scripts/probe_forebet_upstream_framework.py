@@ -59,6 +59,16 @@ def expand_with_normal_browser(url, solution, date):
         safe.append({"name":str(c["name"]),"value":str(c["value"]),
                      "domain":domain,"path":str(c.get("path") or "/")})
     outcome={"cookie_count_not_logged":True}
+    pairs=[]
+    try:
+        api="https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/app-phase1-feed?view=summary&hours=48"
+        canonical=requests.get(api,timeout=15).json()
+        if canonical.get("source")=="flashscore-single-rpc-canonical":
+            pairs=[{"home":m.get("home"),"away":m.get("away")} for m in canonical.get("matches",[])
+                   if isinstance(m,dict) and m.get("home") and m.get("away")][:350]
+        outcome["canonical_fixtures_available"]=len(pairs)
+    except (requests.RequestException,ValueError) as error:
+        outcome["canonical_error"]=type(error).__name__
     try:
         with sync_playwright() as playwright:
             browser=playwright.chromium.launch(headless=True)
@@ -98,8 +108,32 @@ def expand_with_normal_browser(url, solution, date):
                 new=page.locator("div.rcnt").count()
                 stagnant=stagnant+1 if new<=old else 0
                 if stagnant>=2 or new>=200: break
-            html=page.content()
+            # A real MORE click exposes >1000 rows and many MB. Extract only
+            # exact home/away pair candidates for existing canonical fixtures.
+            selected=page.evaluate("""targets=>{
+                 const norm=s=>String(s||'').normalize('NFKD').toLowerCase().replace(/[^a-z0-9]/g,'');
+                 const keys=new Set(targets.map(t=>norm(t.home)+'|'+norm(t.away)));
+                 const picked=[],counts={};let total=0,size=0;
+                 for(const r of document.querySelectorAll('div.rcnt')){
+                   const league=(r.querySelector('span.shortTag')?.textContent||'').trim();
+                   counts[league]=(counts[league]||0)+1;
+                   const home=(r.querySelector('span.homeTeam span[itemprop="name"]')||r.querySelector('span.homeTeam'))?.textContent?.trim();
+                   const away=(r.querySelector('span.awayTeam span[itemprop="name"]')||r.querySelector('span.awayTeam'))?.textContent?.trim();
+                   if(!keys.has(norm(home)+'|'+norm(away)))continue;
+                   total++;
+                   const part=r.outerHTML;
+                   if(picked.length<80 && size+part.length<1200000){
+                     picked.push(part);size+=part.length;
+                   }
+                 }
+                 return {total:total,picked:picked,
+                    leagues:Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,12)};
+            }""",pairs)
             outcome["expanded_rows"]=page.locator("div.rcnt").count()
+            outcome["source_league_counts_sample"]=selected["leagues"]
+            outcome["canonical_name_pair_candidates"]=selected["total"]
+            outcome["selected_canonical_candidate_rows"]=len(selected["picked"])
+            html="<html><body>"+"".join(selected["picked"])+"</body></html>"
             browser.close()
         if len(html.encode("utf-8"))>MAX_BODY:
             outcome["reason"]="expanded HTML exceeded 2MB"
@@ -143,8 +177,13 @@ def run():
     if os.environ.get("FOREBET_NORMAL_BROWSER","0")=="1" and rows:
         expanded,browser_info=expand_with_normal_browser(url,solution,date)
         print("FOREBET_BROWSER_EXPANSION "+json.dumps(browser_info,ensure_ascii=False),flush=True)
-        if len(expanded)>len(rows):
-            rows=expanded
+        if expanded:
+            print("FOREBET_CANONICAL_SOURCE_CANDIDATES "+json.dumps({
+                "source_models":sum(candidate_model(x) for x in expanded),
+                "source_rows":len(expanded),
+                "sample":[fmt(x) for x in expanded if candidate_model(x)][:5],
+                "canonical_id_verified":False,
+                "published":False},ensure_ascii=False),flush=True)
 
     valid=[fmt(x) for x in rows if candidate_model(x)]
     # Diagnostics for the actual rendered source clock, without guessing UTC.
