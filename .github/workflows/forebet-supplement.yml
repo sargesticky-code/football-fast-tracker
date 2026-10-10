@@ -7,8 +7,7 @@ on:
       - "scripts/update_forebet_supplement.py"
       - "scripts/merge_forebet_supplement.py"
       - ".github/workflows/forebet-supplement.yml"
-  schedule:
-    - cron: "30 22,10 * * *"
+  # Scheduled legacy Forebet refresh paused; retained manual/verified workflow triggers.
 
 permissions:
   contents: write
