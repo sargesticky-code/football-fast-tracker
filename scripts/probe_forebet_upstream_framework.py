@@ -45,7 +45,10 @@ def candidate_model(row):
 def run():
     hkt=datetime.now(HKT)
     # Precisely one official page per trial, no retries.
-    date=hkt.strftime("%Y-%m-%d")
+    day_offset=int(os.environ.get("FOREBET_DAY_OFFSET","0"))
+    if day_offset not in (0,1):
+        raise ValueError("only today/tomorrow one-shot capture permitted")
+    date=(hkt+timedelta(days=day_offset)).strftime("%Y-%m-%d")
     url="https://"+ALLOWED_HOST+"/en/football-predictions/predictions-1x2/"+date
     payload={"cmd":"request.get","url":url,"maxTimeout":55000}
     try:
@@ -86,6 +89,17 @@ def run():
                         "visible_date":tag_text[:90],
                         "league":(tag.select_one("span.shortTag").get_text(" ",strip=True)
                                   if tag.select_one("span.shortTag") else "")})
+    timezones=[]
+    for el in dom.select("select"):
+        name=(el.get("id") or "")+" "+(el.get("name") or "")+" "+(el.get("class") or [""])[0]
+        if any(x in name.lower() for x in ("time","zone","tz","offset")):
+            selected=el.select_one("option[selected]")
+            timezones.append({"select_name":name[:90],"selected":(selected.get_text(" ",strip=True)[:55]
+                              if selected else None),"value":(selected.get("value") if selected else None)})
+    print("FOREBET_TIMEZONE_CONTROL "+json.dumps({"selections":timezones,
+       "gmt_in_html":bool(re.search(r"\bGMT\b",html)),
+       "utc_in_html":bool(re.search(r"\bUTC\b",html)),
+       "site_timezone_option_count":len(dom.select("select option"))},ensure_ascii=False),flush=True)
     print("FOREBET_ACTUAL_TIME_SHAPE "+json.dumps({
        "time_node_count":len(dom.select("div.rcnt time")),
        "datetime_populated":sum(1 for n in dom.select("div.rcnt time") if n.get("datetime")),
