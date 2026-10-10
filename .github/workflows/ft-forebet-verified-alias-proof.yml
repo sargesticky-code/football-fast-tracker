@@ -1,0 +1,42 @@
+name: Forebet verified-alias read-only release proof
+on:
+  push:
+    branches: [feat/ft-forebet-verified-alias-reuse-20261010]
+    paths:
+      - scripts/forebet_verified_aliases.py
+      - scripts/forebet_browser_source.py
+      - scripts/capture_forebet_canonical_light.py
+      - tests/test_capture_forebet_canonical_light.py
+      - data/forebet_verified_aliases.json
+      - .github/workflows/ft-forebet-verified-alias-proof.yml
+permissions:
+  contents: read
+concurrency:
+  group: forebet-alias-proof-once
+  cancel-in-progress: true
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    services:
+      browser-helper:
+        image: ghcr.io/flaresolverr/flaresolverr:latest
+        ports: [8191:8191]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup only necessary Python/Chromium dependencies
+        run: |
+          python -m pip install --disable-pip-version-check requests==2.32.5 beautifulsoup4==4.12.3 lxml==5.4.0 playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Strict identity and alias negative-case regression tests
+        run: python -m unittest discover -s tests -p test_capture_forebet_canonical_light.py -v
+      - name: One read-only official source capture, no OIDC or publication
+        run: python scripts/capture_forebet_canonical_light.py
+      - name: Retain only redacted counts, not website HTML or cookies
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forebet-verified-alias-dry-run-summary
+          path: /tmp/ft-forebet-verified-summary.json
+          if-no-files-found: ignore
+          retention-days: 2
