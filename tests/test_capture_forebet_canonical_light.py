@@ -69,6 +69,23 @@ class StrictCaptureTests(unittest.TestCase):
         self.assertIsNone(displayed_utc(row))
         row["kickoff_text"]="10/11/2026 02:10 PM"
         self.assertEqual(displayed_utc(row).isoformat(),"2026-10-11T14:10:00+00:00")
+    def test_observed_corroborated_competition_codes(self):
+        proven = {
+            "Bg1": "efbet LeagueBULGARIA: Standings",
+            "Cz1": "Chance LigaCZECH REPUBLIC: Standings",
+            "Gr1": "Super LeagueGREECE: Standings",
+            "Hr1": "HNLCROATIA: Standings",
+            "Ar1": "Liga Profesional - ClausuraARGENTINA: Standings",
+            "Cl1": "Liga de PrimeraCHILE: Standings",
+            "Bo1": "Division ProfesionalBOLIVIA: Standings",
+        }
+        for code, competition in proven.items():
+            with self.subTest(code=code):
+                self.assertTrue(league_ok(code, competition))
+                self.assertFalse(league_ok(code, "EPL"))
+                self.assertFalse(league_ok(code, "Serie AITALY: Standings"))
+                self.assertFalse(league_ok("unverified", competition))
+
     def test_source_league_allowlist(self):
         self.assertTrue(league_ok("EPL","EPL"))
         self.assertTrue(league_ok("Es1","LaLigaSPAIN: Standings"))

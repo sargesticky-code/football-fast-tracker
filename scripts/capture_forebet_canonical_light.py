@@ -30,6 +30,15 @@ LEAGUE_PREFIX={
     "It1":"Serie AITALY:",
     "De1":"BundesligaGERMANY:",
     "Fr1":"Ligue 1FRANCE:",
+    # Recorded in the 2026-10-10 25-pair official-source clock cohort.
+    # Expansion uses the SAME page fetch; never fuzzy-learns new league names.
+    "Bg1":"efbet LeagueBULGARIA:",
+    "Cz1":"Chance LigaCZECH REPUBLIC:",
+    "Gr1":"Super LeagueGREECE:",
+    "Hr1":"HNLCROATIA:",
+    "Ar1":"Liga Profesional - ClausuraARGENTINA:",
+    "Cl1":"Liga de PrimeraCHILE:",
+    "Bo1":"Division ProfesionalBOLIVIA:",
 }
 # These are validated competition names, not a learned/automatically expanded alias.
 def league_ok(code,full):
