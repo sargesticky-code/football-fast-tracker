@@ -69,3 +69,13 @@ or restore prior `supabase_private_ingest.yml` (manual/OIDC only) without
 touching existing tables, Flashscore, 500.com and public app.
 Prior Forebet rows remain historically stored; the 72h read-time gate
 suppresses stale forecasts.
+
+## First production acceptance — 2026-10-10
+- [PR45 merged](https://github.com/sargesticky-code/football-fast-tracker/pull/45), squash `be84ea318c1634d4498ac76c459129be015722dd`.
+- First authenticated OIDC GH Action [38059751481](https://github.com/sargesticky-code/football-fast-tracker/actions/runs/38059751481) SUCCESS: one bounded official date page (1,115 expanded DOM rows), 13 strict verified models, **13/13 written to existing Supabase `forebet_predictions`**, and **13 actual public Phase1 models** with H/D/A probabilities, predicted score and average goals. No false value/odds claim.
+- Independently checked source row provenance: e.g. Liverpool–Man City (FB6338) Forebet H/D/A **16/34/50**, predicted score **1 - 2**, average goals **2.71**; source model snapshot captured 2026-10-10T14:29:25Z. The forecast is a forecast, not observed match result.
+- [PR46 merged](https://github.com/sargesticky-code/football-fast-tracker/pull/46), squash `2b27c81fa0e3c2f72b7090c0f6fac17a3d79061b`: retired redundant Forebet supplement capture workflow (removed push trigger, revoked write permission, job non-executable). Legacy Forebet Daily was already non-executable. Old `workflow_run` chaining in `supabase_private_ingest.yml` replaced with single canonical daily capture.
+- Active Supabase cron normalized-command audit showed **zero exactly duplicated active job SQL commands**; independently scoped Flashscore, lineup, live, and price jobs remain untouched.
+- No new table, migration, new service, extra Supabase cron or paid API. GitHub Forebet official capture scheduled **once daily 00:15 UTC**; bootstrap was a `push` run, so **natural scheduled execution is not yet proven**.
+- Limitations: other Forebet markets (O/U, corners, power, bookmaker price) are **still unknown**, not filled with guessed values. Only 1X2 + predicted score + average goals are source verified. The 12 non-approved name candidates remain rejected.
+- Related public UI fix: original site defaulted to a 24h summary and capped initial display at 30 rows, hiding tomorrow's later fixtures. Isolated app release `release/ft-forebet-horizon-20261010` changes only indexed summary horizon to 48h and adds user-triggered client-only +30 pagination; [QA 38060552423](https://github.com/sargesticky-code/fast-tracker-app/actions/runs/38060552423) green and Railway deployment `afa46960-c962-4eed-901d-efebd441aa49` SUCCESS. Responsive browser verification is a separate release gate.
