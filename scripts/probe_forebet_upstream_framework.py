@@ -69,6 +69,29 @@ def run():
     challenge=any(s in html.lower() for s in ("just a moment","cf-challenge","checking your browser","access denied"))
     rows=parse_forebet_rows(html,date) if html else []
     valid=[fmt(x) for x in rows if candidate_model(x)]
+    # Diagnostics for the actual rendered source clock, without guessing UTC.
+    from bs4 import BeautifulSoup
+    dom=BeautifulSoup(html,"lxml")
+    samples=[]
+    for tag in dom.select("div.rcnt")[:10]:
+        node=tag.select_one("time")
+        dt=(node.get("datetime") if node else None)
+        date_elem=tag.select_one("span.date_bah")
+        tag_text=date_elem.get_text(" ",strip=True) if date_elem else ""
+        team_h=tag.select_one("span.homeTeam")
+        team_a=tag.select_one("span.awayTeam")
+        samples.append({"home":team_h.get_text(" ",strip=True)[:55] if team_h else None,
+                        "away":team_a.get_text(" ",strip=True)[:55] if team_a else None,
+                        "datetime_attr":dt,"time_attrs":dict(node.attrs) if node else {},
+                        "visible_date":tag_text[:90],
+                        "league":(tag.select_one("span.shortTag").get_text(" ",strip=True)
+                                  if tag.select_one("span.shortTag") else "")})
+    print("FOREBET_ACTUAL_TIME_SHAPE "+json.dumps({
+       "time_node_count":len(dom.select("div.rcnt time")),
+       "datetime_populated":sum(1 for n in dom.select("div.rcnt time") if n.get("datetime")),
+       "date_text_nodes":len(dom.select("div.rcnt span.date_bah")),
+       "samples":samples},ensure_ascii=False),flush=True)
+
     proof={"source_url":url,"requested_at":hkt.isoformat(),"helper_status":browser_status,
            "http":status,"bytes":len(html.encode("utf-8")),
            "page_has_rows":"rcnt" in html,"challenge_html":challenge,
