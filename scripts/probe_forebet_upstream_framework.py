@@ -77,7 +77,8 @@ def expand_with_normal_browser(url, solution, date):
                 context.add_cookies(safe)
             page=context.new_page()
             response=page.goto(url,wait_until="domcontentloaded",timeout=25_000)
-            page.wait_for_timeout(750)
+            # Give the public page's own list-expansion JS time to initialize.
+            page.wait_for_timeout(1800)
             first=page.locator("div.rcnt").count()
             outcome.update({"http":response.status if response else None,"initial_rows":first})
             tz=page.locator("select.tzSel")
@@ -96,6 +97,8 @@ def expand_with_normal_browser(url, solution, date):
                 """()=>Object.fromEntries(
                    ['#btn_more','.schema-more','#mrows span','span[onclick*="ltodrows"]','.more_rows','button[id*="more"]']
                    .map(s=>[s,document.querySelectorAll(s).length]))""")
+            outcome["more_js_initialized"]=page.evaluate("typeof ltodrows === 'function'")
+            outcome["more_control_visible"]=page.locator("#mrows span").first.is_visible() if page.locator("#mrows span").count() else False
             stagnant=0
             for step in range(8):
                 old=page.locator("div.rcnt").count()
@@ -104,10 +107,10 @@ def expand_with_normal_browser(url, solution, date):
                     more.click(timeout=2000)
                 else:
                     page.mouse.wheel(0,1500)
-                page.wait_for_timeout(700)
+                page.wait_for_timeout(1800 if more.count() and more.is_visible() else 900)
                 new=page.locator("div.rcnt").count()
                 stagnant=stagnant+1 if new<=old else 0
-                if stagnant>=2 or new>=200: break
+                if stagnant>=3 or new>=200: break
             # A real MORE click exposes >1000 rows and many MB. Extract only
             # exact home/away pair candidates for existing canonical fixtures.
             selected=page.evaluate("""targets=>{
