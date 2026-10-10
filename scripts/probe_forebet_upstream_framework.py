@@ -76,6 +76,16 @@ def expand_with_normal_browser(url, solution, date):
                     """e=>({value:e.value,
                      selectedText:e.selectedOptions.length?e.selectedOptions[0].textContent.trim().slice(0,55):null,
                      options:[...e.options].slice(0,8).map(o=>({v:o.value,t:o.textContent.trim().slice(0,25)}))})""")
+            # Structural UI metadata only, no site cookies or auth values.
+            tzloc=page.locator(".tzSel, .timezoneSelected").first
+            if tzloc.count():
+                outcome["timezone_widget"]=tzloc.evaluate(
+                    """e=>({tag:e.tagName,text:(e.innerText||e.textContent||'').trim().slice(0,110),
+                       cls:e.className,attrs:[...e.attributes].filter(x=>!(/token|csrf|session/i).test(x.name)).map(x=>[x.name,x.value.slice(0,90)])})""")
+            outcome["load_more_controls"]=page.evaluate(
+                """()=>Object.fromEntries(
+                   ['#btn_more','.schema-more','#mrows span','span[onclick*="ltodrows"]','.more_rows','button[id*="more"]']
+                   .map(s=>[s,document.querySelectorAll(s).length]))""")
             stagnant=0
             for step in range(8):
                 old=page.locator("div.rcnt").count()
