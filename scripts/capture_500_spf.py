@@ -166,7 +166,7 @@ def capture():
         "source_rows":len(source),"canonical_targets":len(raw_json["matches"]),
         "verified":len(matched),"ids":[x["match_id"] for x in matched],
         "publication":False},sort_keys=True))
-    return 0 if matched else 3
+    return 0  # A match-free schedule is a valid no-op, never publish an empty batch.
 
 if __name__=="__main__":
     try:
