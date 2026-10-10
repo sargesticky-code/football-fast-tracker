@@ -25,7 +25,8 @@ ALLOWED_HOST = "www.forebet.com"
 MAX_BODY = 2_000_000
 
 def fmt(row):
-    fields = ("home_team","away_team","prob_home","prob_draw","prob_away",
+    fields = ("home_team","away_team","league_short","match_date","kickoff_text",
+              "prob_home","prob_draw","prob_away",
               "prediction_1x2","predicted_score","avg_goals",
               "source_kickoff_iso","forebet_detail_url")
     return {k:row.get(k) for k in fields}
@@ -64,7 +65,8 @@ def expand_with_normal_browser(url, solution, date):
         api="https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/app-phase1-feed?view=summary&hours=48"
         canonical=requests.get(api,timeout=15).json()
         if canonical.get("source")=="flashscore-single-rpc-canonical":
-            pairs=[{"home":m.get("home"),"away":m.get("away")} for m in canonical.get("matches",[])
+            pairs=[{"home":m.get("home"),"away":m.get("away"),"id":m.get("id"),
+                    "kickoff":m.get("kickoff"),"league":m.get("league")} for m in canonical.get("matches",[])
                    if isinstance(m,dict) and m.get("home") and m.get("away")][:350]
         outcome["canonical_fixtures_available"]=len(pairs)
     except (requests.RequestException,ValueError) as error:
@@ -141,7 +143,56 @@ def expand_with_normal_browser(url, solution, date):
         if len(html.encode("utf-8"))>MAX_BODY:
             outcome["reason"]="expanded HTML exceeded 2MB"
             return [],outcome
-        return parse_forebet_rows(html,date),outcome
+        parsed=parse_forebet_rows(html,date)
+        from unicodedata import normalize,combining
+        def strict_key(text):
+            decomposed=normalize("NFKD",str(text or ""))
+            return "".join(ch.casefold() for ch in decomposed
+                           if not combining(ch) and ch.isalnum())
+        canonical_index={}
+        for t in pairs:
+            canonical_index.setdefault((strict_key(t["home"]),strict_key(t["away"])),[]).append(t)
+        comparisons=[]
+        for row in parsed:
+            candidates=canonical_index.get((strict_key(row["home_team"]),
+                                             strict_key(row["away_team"])),[])
+            if len(candidates)!=1:
+                continue
+            t=candidates[0]
+            shown=str(row.get("kickoff_text") or "").strip()
+            date_only=str(row.get("match_date") or "")
+            parsed_wall=None
+            for format_ in ("%m/%d/%Y %I:%M %p","%m/%d/%Y %H:%M",
+                            "%d/%m/%Y %H:%M","%d/%m/%Y %I:%M %p"):
+                try:
+                    possible=datetime.strptime(shown,format_)
+                    if possible.date().isoformat()==date_only:
+                        parsed_wall=possible
+                        break
+                except ValueError:
+                    continue
+            try:
+                canonical_at=datetime.fromisoformat(str(t["kickoff"]).replace("Z","+00:00"))
+            except (ValueError,TypeError):
+                continue
+            delta=round((parsed_wall.replace(tzinfo=timezone.utc)-canonical_at).total_seconds()/60) if parsed_wall else None
+            comparisons.append({
+                "canonical":t["id"],"league":t["league"],
+                "source_league":row.get("league_short"),"home":row["home_team"],
+                "away":row["away_team"],"source_display":shown,
+                "source_date":date_only,"canonical_utc":t["kickoff"],
+                "display_minus_canonical_minutes_if_UTC":delta,
+                "verified_source_timezone":False})
+        from collections import Counter
+        distribution=dict(Counter(str(x["display_minus_canonical_minutes_if_UTC"])
+                                  for x in comparisons))
+        outcome["canonical_clock_comparison"]={
+            "unambiguous_team_pairs":len(comparisons),
+            "candidate_offset_minutes":distribution,
+            "examples":comparisons[:20],
+            "identity_status":"TIMEZONE_NOT_PROVEN",
+            "published":False}
+        return parsed,outcome
     except Exception as error:
         outcome["error"]=type(error).__name__
         outcome["detail"]=str(error)[:140]
