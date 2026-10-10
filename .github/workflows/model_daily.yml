@@ -2,8 +2,7 @@ name: Football Shadow Models
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '20 * * * *' # hourly freshness gate; expensive model fit runs only on target drift or 3 daily full refresh windows
+  # Retired schedule: legacy HKJC-dependent pipeline is not a dashboard source.
   push:
     paths:
       - 'scripts/team_name_master.py'
@@ -26,6 +25,7 @@ concurrency:
 
 jobs:
   model:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 18
     env:
