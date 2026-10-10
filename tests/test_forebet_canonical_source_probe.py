@@ -88,6 +88,11 @@ class StrictCanonicalForebetTests(unittest.TestCase):
         self.assertEqual(len(parsed), 1)
         self.assertEqual(parsed[0]["source_kickoff_iso"], "2026-10-10T19:30:00+00:00")
         self.assertEqual(len(build_verified_rows([fixture()], parsed, NOW)), 1)
+        naive_html = html.replace("2026-10-10T19:30:00+00:00", "2026-10-10T19:30:00")
+        naive = parse_forebet_rows(naive_html, "2026-10-10")
+        self.assertEqual(naive[0]["source_kickoff_iso"], "")
+        self.assertEqual(build_verified_rows([fixture()], naive, NOW), [])
+
 
 if __name__ == "__main__":
     unittest.main()
