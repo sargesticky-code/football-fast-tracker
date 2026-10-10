@@ -5,6 +5,8 @@ on:
       - probe/ft-china-odds-20261010
     paths:
       - .github/workflows/ft-china-odds-probe.yml
+      - supabase/functions/ft-500-spf-publish/index.ts
+      - .github/workflows/ft-500-spf.yml
       - scripts/capture_500_spf.py
       - tests/test_capture_500_spf.py
   workflow_dispatch:
@@ -106,3 +108,9 @@ jobs:
         run: python -m unittest discover -s tests -p test_capture_500_spf.py -v
       - name: Read-only canonical capture (not published)
         run: python scripts/capture_500_spf.py
+      - name: Type check OIDC service-only publisher
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify strict OIDC publisher runtime code
+        run: deno check supabase/functions/ft-500-spf-publish/index.ts
