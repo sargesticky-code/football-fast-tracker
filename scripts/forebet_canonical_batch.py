@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import re
 import sys
 from datetime import datetime, timedelta, timezone
@@ -17,7 +18,7 @@ SCORE_RE = re.compile(r"^[0-9]{1,2} *- *[0-9]{1,2}$")
 REQUIRED = ("hkjc_event_id", "hkjc_home_team", "hkjc_away_team",
             "hkjc_kickoff_hkt", "home_team", "away_team", "fetched_at_hkt",
             "prob_home", "prob_draw", "prob_away", "prediction_1x2",
-            "predicted_score", "match_score")
+            "predicted_score", "avg_goals", "match_score")
 
 
 def parse_hkt(raw: str) -> datetime:
@@ -56,6 +57,9 @@ def validated_rows(feed: list[dict], availability: list[dict],
         confidence = float(row["match_score"])
         if not 0.94 <= confidence <= 1.0:
             raise ValueError("match confidence not verified")
+        average_goals = float(row["avg_goals"])
+        if not math.isfinite(average_goals) or not 0 < average_goals <= 12:
+            raise ValueError("invalid Forebet average goals")
         out.append({
             "match_id": match_id, "captured_at": capture.isoformat(),
             "kickoff": kickoff.isoformat(), "canonical_home": row["hkjc_home_team"].strip(),
@@ -63,7 +67,7 @@ def validated_rows(feed: list[dict], availability: list[dict],
             "source_home": row["home_team"].strip(), "source_away": row["away_team"].strip(),
             "home": probs[0], "draw": probs[1], "away": probs[2],
             "pick": pick, "score": row["predicted_score"].strip(),
-            "match_score": confidence, "match_date": row.get("match_date", ""),
+            "avg_goals": average_goals, "match_score": confidence, "match_date": row.get("match_date", ""),
             "kickoff_text": row.get("kickoff_text", ""), "league": row.get("league_short", ""),
         })
     return out
