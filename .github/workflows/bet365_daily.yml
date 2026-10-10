@@ -2,8 +2,7 @@ name: Bet365 HKJC Benchmark
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '15 23 * * *' # 07:15 Hong Kong time
+  # Retired schedule: legacy HKJC-dependent pipeline is not a dashboard source.
   push:
     paths:
       - '.github/workflows/bet365_daily.yml'
@@ -18,6 +17,7 @@ concurrency:
 
 jobs:
   benchmark:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 18
     env:
