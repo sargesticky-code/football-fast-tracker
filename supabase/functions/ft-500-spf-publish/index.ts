@@ -26,7 +26,7 @@ Deno.serve(async (req: Request) => {
   if (claims.repository !== "sargesticky-code/football-fast-tracker"
     || claims.ref !== "refs/heads/main"
     || claims.workflow_ref !== workflow
-    || !["schedule", "workflow_dispatch"].includes(String(claims.event_name))
+    || !["schedule", "workflow_dispatch", "push"].includes(String(claims.event_name))
     || !/^[0-9]{6,20}$/.test(String(claims.run_id ?? ""))) {
     return error(403, "UNAUTHORIZED_WORKFLOW");
   }
