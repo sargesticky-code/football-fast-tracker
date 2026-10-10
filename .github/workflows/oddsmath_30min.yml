@@ -3,8 +3,7 @@ name: Odds Movement Snapshot
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/30 * * * *'
+  # Retired schedule: legacy HKJC-dependent pipeline is not a dashboard source.
   push:
     paths:
       - '.github/workflows/oddsmath_30min.yml'
@@ -19,6 +18,7 @@ concurrency:
 
 jobs:
   snapshot:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
