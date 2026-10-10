@@ -4,6 +4,8 @@ on:
     branches: [probe/ft500-multileague-coverage-20261010]
     paths:
       - scripts/probe_500_multileague_coverage.py
+      - scripts/capture_500_spf.py
+      - tests/test_capture_500_spf.py
       - .github/workflows/ft500-multileague-coverage-probe.yml
 permissions:
   contents: read
@@ -13,5 +15,7 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
-      - name: Probe official 500 + canonical match schedule once, no publication
-        run: python scripts/probe_500_multileague_coverage.py
+      - name: Validate exact source and league mappings
+        run: python -m unittest discover -s tests -p test_capture_500_spf.py -v
+      - name: Verify official live five-league matches (no publication)
+        run: python scripts/capture_500_spf.py
