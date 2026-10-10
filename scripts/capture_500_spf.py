@@ -33,6 +33,55 @@ EPL_NAMES = {
     "纽卡斯尔联":"Newcastle","桑德兰":"Sunderland","布莱顿":"Brighton"
 }
 
+# Pairs checked against the actual provider HTML/XML and current canonical
+# fixtures on 2026-10-10. No fuzzy translation or time-only join.
+VERIFIED_LEAGUES = {
+    "英格兰超级联赛": ("EPL", EPL_NAMES),
+    "西班牙甲级联赛": ("LaLigaSPAIN:", {
+        "巴列卡诺":"Rayo Vallecano","毕尔巴鄂竞技":"Ath. Bilbao",
+        "阿拉维斯":"Alaves","马德里竞技":"Atl. Madrid",
+        "巴塞罗那":"Barcelona","赫塔费":"Getafe",
+        "皇家马德里":"Real Madrid","比利亚雷亚尔":"Villarreal",
+        "埃尔切":"Elche","维戈塞尔塔":"Celta Vigo",
+        "皇家社会":"Real Sociedad","拉科鲁尼亚":"A Coruna",
+        "皇家贝蒂斯":"Betis","奥萨苏纳":"Osasuna",
+        "桑坦德竞技":"Racing Santander","巴伦西亚":"Valencia"
+    }),
+    "意大利甲级联赛": ("Serie AITALY:", {
+        "热那亚":"Genoa","佛罗伦萨":"Fiorentina",
+        "国际米兰":"Inter","帕尔马":"Parma",
+        "那不勒斯":"Napoli","弗洛西诺内":"Frosinone",
+        "科莫":"Como","罗马":"AS Roma",
+        "拉齐奥":"Lazio","蒙扎":"Monza",
+        "莱切":"Lecce","博洛尼亚":"Bologna",
+        "萨索洛":"Sassuolo","AC米兰":"AC Milan",
+        "卡利亚里":"Cagliari","尤文图斯":"Juventus"
+    }),
+    "德国甲级联赛": ("BundesligaGERMANY:", {
+        "柏林联合":"Union Berlin","埃尔沃斯堡":"Elversberg",
+        "奥格斯堡":"Augsburg","拜仁慕尼黑":"Bayern",
+        "美因茨":"Mainz","勒沃库森":"Leverkusen",
+        "帕德博恩":"Paderborn","斯图加特":"Stuttgart",
+        "霍芬海姆":"Hoffenheim","汉堡":"Hamburger SV",
+        "莱比锡红牛":"RB Leipzig","法兰克福":"Frankfurt",
+        "科隆":"FC Koln","门兴格拉德巴赫":"Monchengladbach",
+        "弗赖堡":"Freiburg","沙尔克04":"Schalke"
+    }),
+    "法国甲级联赛": ("Ligue 1FRANCE:", {
+        "里尔":"Lille","勒阿弗尔":"Le Havre",
+        "摩纳哥":"Monaco","图卢兹":"Toulouse",
+        "尼斯":"Nice","斯特拉斯堡":"Strasbourg",
+        "特鲁瓦":"Troyes","马赛":"Marseille"
+    })
+}
+
+def verified_canonical_league(source_league, canonical_league):
+    config=VERIFIED_LEAGUES.get(source_league)
+    if not config or not isinstance(canonical_league,str):
+        return False
+    prefix=config[0]
+    return canonical_league==prefix if prefix=="EPL" else canonical_league.startswith(prefix)
+
 class MatchIndex(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -122,15 +171,19 @@ def resolve_canonical(source,fixtures,now):
     matches=[]
     collision=set()
     for row in source:
-        if row["source_league"]!="英格兰超级联赛":
-            continue  # EPL-only verified MVP. Additional leagues need vetted aliases.
-        home=EPL_NAMES.get(row["source_home"])
-        away=EPL_NAMES.get(row["source_away"])
+        config=VERIFIED_LEAGUES.get(row["source_league"])
+        if not config:
+            continue
+        home=config[1].get(row["source_home"])
+        away=config[1].get(row["source_away"])
         if not home or not away or home==away:
             continue
         when=iso_time(row["kickoff"])
+        if not when:
+            continue
         good=[f for f,k in catalog.get((norm(home),norm(away)),[])
-              if abs((when-k).total_seconds())<=600 and str(f.get("league"))=="EPL"]
+              if abs((when-k).total_seconds())<=600 and
+                 verified_canonical_league(row["source_league"],f.get("league"))]
         if len(good)!=1:
             continue
         fid=str(good[0]["id"])
@@ -138,7 +191,8 @@ def resolve_canonical(source,fixtures,now):
             collision.add(fid)
             continue
         matches.append(dict(row,match_id=fid,canonical_home=good[0]["home"],
-                            canonical_away=good[0]["away"],identity_method="VERIFIED_TEAM_PAIR_AND_KICKOFF",
+                            canonical_away=good[0]["away"],canonical_league=good[0]["league"],
+                            identity_method="VERIFIED_TEAM_PAIR_AND_KICKOFF",
                             provider="CHINA_500_SPF",captured_at=now.isoformat()))
     return [row for row in matches if row["match_id"] not in collision]
 
