@@ -104,3 +104,5 @@ jobs:
           PY
       - name: Run verified 500 canonical match contract
         run: python -m unittest discover -s tests -p test_capture_500_spf.py -v
+      - name: Read-only canonical capture (not published)
+        run: python scripts/capture_500_spf.py
