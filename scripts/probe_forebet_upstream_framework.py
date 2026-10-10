@@ -89,7 +89,7 @@ def expand_with_normal_browser(url, solution, date):
             stagnant=0
             for step in range(8):
                 old=page.locator("div.rcnt").count()
-                more=page.locator("#btn_more, .schema-more").first
+                more=page.locator("#btn_more, .schema-more, #mrows span, span[onclick*=\'ltodrows\']").first
                 if more.count() and more.is_visible():
                     more.click(timeout=2000)
                 else:
