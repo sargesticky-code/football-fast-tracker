@@ -7,6 +7,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/ft-500-spf.yml'
+      - 'scripts/capture_500_spf.py'
+      - 'tests/test_capture_500_spf.py'
 permissions:
   contents: read
   id-token: write
