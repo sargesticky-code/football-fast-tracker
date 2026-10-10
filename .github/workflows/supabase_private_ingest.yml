@@ -84,6 +84,26 @@ jobs:
               raise SystemExit('FOREBET_PUBLICATION_NOT_CONFIRMED')
           print('FOREBET_PUBLISHED',r['accepted'],'written',r['applied'])
           PY
+      - name: Verify DB to live public summary keeps probabilities, score, avg goals
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail-with-body -sS --connect-timeout 10 --max-time 35 \
+            'https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/app-phase1-feed?view=summary&hours=48' \
+            -o /tmp/ft-forebet-public-smoke.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/ft-forebet-public-smoke.json'))
+          if d.get('source')!='flashscore-single-rpc-canonical':
+              raise SystemExit('CANONICAL_PUBLIC_FEED_UNAVAILABLE')
+          models=[m for m in d.get('matches',[]) if isinstance(m.get('forebet'),dict)
+            and isinstance(m.get('forebetDetail'),dict)
+            and m['forebetDetail'].get('predictedScore')
+            and (m['forebetDetail'].get('ou25') or {}).get('avgGoals',0)>0]
+          print('FOREBET_PUBLIC_SUMMARY_MODELS',len(models),'out_of',len(d.get('matches',[])))
+          if len(models)<5:
+              raise SystemExit('FOREBET_PUBLIC_READ_PATH_HAS_NO_VERIFIED_MODELS')
+          PY
       - name: Preserve only summary, no full HTML, cookies or credentials
         if: always()
         uses: actions/upload-artifact@v4
