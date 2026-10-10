@@ -4,6 +4,8 @@ on:
     branches: [probe/ft-forebet-upstream-framework-20261010]
     paths:
       - scripts/probe_forebet_upstream_framework.py
+      - scripts/capture_forebet_canonical_light.py
+      - tests/test_capture_forebet_canonical_light.py
       - .github/workflows/ft-forebet-upstream-framework-probe.yml
 permissions:
   contents: read
@@ -25,21 +27,21 @@ jobs:
         run: python -m pip install --disable-pip-version-check requests==2.32.5 beautifulsoup4==4.12.3 lxml==5.4.0
       - name: Existing parser safety tests
         run: python -m unittest discover -s tests -p test_forebet_canonical_source_probe.py -v
+      - name: Strict canonical and source-clock regression tests
+        run: python -m unittest discover -s tests -p test_capture_forebet_canonical_light.py -v
       - name: Install ordinary Chromium for bounded source-list expansion
         run: |
           python -m pip install --disable-pip-version-check playwright==1.55.0
           python -m playwright install --with-deps chromium
-      - name: Probe one public 1X2 page with upstream browser-helper pattern
+      - name: Capture one source page with canonical league and independent clock validation
         env:
           LOCAL_BROWSER_HELPER: http://127.0.0.1:8191/v1
-          FOREBET_DAY_OFFSET: '1'
-          FOREBET_NORMAL_BROWSER: '1'
-        run: python scripts/probe_forebet_upstream_framework.py
+        run: python scripts/capture_forebet_canonical_light.py
       - name: Retain bounded JSON proof (no HTML or credentials)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: forebet-upstream-framework-proof
-          path: /tmp/ft-forebet-upstream-proof.json
+          path: /tmp/ft-forebet-verified-summary.json
           if-no-files-found: ignore
           retention-days: 2
