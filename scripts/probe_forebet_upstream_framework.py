@@ -42,6 +42,65 @@ def candidate_model(row):
        and bool(re.fullmatch(r"\d{1,2}\s*-\s*\d{1,2}",
                              str(row.get("predicted_score") or "").strip())))
 
+def expand_with_normal_browser(url, solution, date):
+    """Reuse the valid source session in a regular Chromium, then bounded scroll."""
+    from playwright.sync_api import sync_playwright
+    ua=solution.get("userAgent")
+    cookies=solution.get("cookies") or []
+    if not ua or not isinstance(cookies,list):
+        return [], {"reason":"helper has no reusable browser session"}
+    safe=[]
+    for c in cookies[:20]:
+        domain=str(c.get("domain") or "")
+        if domain.lstrip(".") not in ("forebet.com","www.forebet.com"):
+            continue
+        if not c.get("name") or not c.get("value"):
+            continue
+        safe.append({"name":str(c["name"]),"value":str(c["value"]),
+                     "domain":domain,"path":str(c.get("path") or "/")})
+    outcome={"cookie_count_not_logged":True}
+    try:
+        with sync_playwright() as playwright:
+            browser=playwright.chromium.launch(headless=True)
+            context=browser.new_context(user_agent=str(ua),locale="en-GB")
+            if safe:
+                context.add_cookies(safe)
+            page=context.new_page()
+            response=page.goto(url,wait_until="domcontentloaded",timeout=25_000)
+            page.wait_for_timeout(750)
+            first=page.locator("div.rcnt").count()
+            outcome.update({"http":response.status if response else None,"initial_rows":first})
+            tz=page.locator("select.tzSel")
+            if tz.count():
+                outcome["timezone_control"]=tz.first.evaluate(
+                    """e=>({value:e.value,
+                     selectedText:e.selectedOptions.length?e.selectedOptions[0].textContent.trim().slice(0,55):null,
+                     options:[...e.options].slice(0,8).map(o=>({v:o.value,t:o.textContent.trim().slice(0,25)}))})""")
+            stagnant=0
+            for step in range(8):
+                old=page.locator("div.rcnt").count()
+                more=page.locator("#btn_more, .schema-more").first
+                if more.count() and more.is_visible():
+                    more.click(timeout=2000)
+                else:
+                    page.mouse.wheel(0,1500)
+                page.wait_for_timeout(700)
+                new=page.locator("div.rcnt").count()
+                stagnant=stagnant+1 if new<=old else 0
+                if stagnant>=2 or new>=200: break
+            html=page.content()
+            outcome["expanded_rows"]=page.locator("div.rcnt").count()
+            browser.close()
+        if len(html.encode("utf-8"))>MAX_BODY:
+            outcome["reason"]="expanded HTML exceeded 2MB"
+            return [],outcome
+        return parse_forebet_rows(html,date),outcome
+    except Exception as error:
+        outcome["error"]=type(error).__name__
+        outcome["detail"]=str(error)[:140]
+        return [],outcome
+
+
 def run():
     hkt=datetime.now(HKT)
     # Precisely one official page per trial, no retries.
@@ -71,6 +130,12 @@ def run():
     # Evidence belongs to this source. No browser session tokens/cookies logged.
     challenge=any(s in html.lower() for s in ("just a moment","cf-challenge","checking your browser","access denied"))
     rows=parse_forebet_rows(html,date) if html else []
+    if os.environ.get("FOREBET_NORMAL_BROWSER","0")=="1" and rows:
+        expanded,browser_info=expand_with_normal_browser(url,solution,date)
+        print("FOREBET_BROWSER_EXPANSION "+json.dumps(browser_info,ensure_ascii=False),flush=True)
+        if len(expanded)>len(rows):
+            rows=expanded
+
     valid=[fmt(x) for x in rows if candidate_model(x)]
     # Diagnostics for the actual rendered source clock, without guessing UTC.
     from bs4 import BeautifulSoup
