@@ -4,13 +4,17 @@ on:
     branches: [probe/ft-forebet-github-recovery-20261010]
     paths:
       - scripts/forebet_github_official_diagnostic.py
+      - scripts/forebet_github_chromium_probe.py
       - .github/workflows/forebet-source-recovery-probe.yml
 permissions:
   contents: read
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - run: python scripts/forebet_github_official_diagnostic.py
+      - run: python -m pip install playwright==1.55.0
+      - run: python -m playwright install --with-deps chromium
+      - run: python scripts/forebet_github_chromium_probe.py
