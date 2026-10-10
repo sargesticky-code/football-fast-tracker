@@ -1,11 +1,9 @@
-name: Feed Freshness Watchdog
+name: Legacy Feed Watchdog — diagnostics only
 
 on:
   workflow_dispatch:
-  schedule:
-    # Lightweight control-plane fallback every 30 minutes. Supabase health guards
-    # own the primary monitoring path; GitHub only recovers genuine drift.
-    - cron: '12,42 * * * *'
+  # Automatic legacy HKJC/CSV watchdog retired: no clock-based capture attempts.
+  # Run manually for historical diagnostics. Supabase source health remains primary.
   push:
     paths:
       - '.github/workflows/feed_watchdog.yml'
@@ -13,7 +11,6 @@ on:
 
 permissions:
   contents: read
-  actions: write
 
 concurrency:
   group: feed-freshness-watchdog
@@ -159,21 +156,21 @@ jobs:
               fh.write(f'missing_count={len(missing_ids)}\n')
           PY
 
-      - name: Recover Forebet/HKJC source layer when stale or uncovered
+      - name: Log retired source warnings (no dispatch)
         if: steps.freshness.outputs.source_stale == 'true' || steps.canonical.outputs.coverage_gap == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "Source recovery required: stale=${{ steps.freshness.outputs.source_stale }} missing=${{ steps.canonical.outputs.missing_count }}"
-          gh workflow run forebet_daily.yml --repo "$GITHUB_REPOSITORY" --ref main
+          echo "DIAGNOSTIC_ONLY: legacy source remains retired; no HKJC/Forebet capture launched."
 
-      - name: Recover DC/Pi/Form model layer when stale or target coverage drifts
+      - name: Log retired model warnings (no dispatch)
         if: steps.freshness.outputs.model_stale == 'true' || steps.canonical.outputs.coverage_gap == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "Model recovery required: stale=${{ steps.freshness.outputs.model_stale }} missing=${{ steps.canonical.outputs.missing_count }}"
-          gh workflow run model_daily.yml --repo "$GITHUB_REPOSITORY" --ref main
+          echo "DIAGNOSTIC_ONLY: legacy HKJC-dependent model workflow remains retired."
 
       - name: Healthy feeds
         if: steps.freshness.outputs.source_stale != 'true' && steps.freshness.outputs.model_stale != 'true' && steps.canonical.outputs.coverage_gap != 'true'
