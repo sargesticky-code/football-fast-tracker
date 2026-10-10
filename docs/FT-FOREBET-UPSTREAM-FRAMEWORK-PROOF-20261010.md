@@ -12,6 +12,38 @@ Branch: `probe/ft-forebet-upstream-framework-20261010` (based on existing unmerg
 - The page's real `time[itemprop=startDate][datetime]` gives **date only**, e.g. `2026-10-11`. Displayed clock is a separate `span.date_bah`, e.g. `10/11/2026 1:00 AM`. **This is not an offset-bearing source timestamp.** The strict canonical publisher must not call it UTC without verifying Forebet timezone setting / independent event-time cross-check.
 - Browser-assisted bounded scroll trial [38057371666](https://github.com/sargesticky-code/football-fast-tracker/actions/runs/38057371666): Chromium HTTP 200, initial 44 rows, expanded 44 after bounded eight scroll/click steps. Browser expansion did not yet yield more fixtures. No credentials, cookies, full HTML or DB writes were persisted.
 
+
+## Verified full-list and independent time-corroboration breakthrough
+
+- One normal DOM click of the site's observed \`#mrows span[onclick*=ltodrows]\`
+  exposes **1,115 fixtures** at once. Serializing the whole HTML exceeds
+  the intentional 2MB safety ceiling, so the revised collector reads the
+  page DOM locally and extracts only pairs corresponding to the existing
+  public Fast Tracker Canonical fixture summary.
+- [Live selective run 38058049501](https://github.com/sargesticky-code/football-fast-tracker/actions/runs/38058049501)
+  correctly loaded all 1,115 and selected **25 source matches** from 258
+  current Canonical fixtures, with **25 structurally valid 1X2 probabilities,
+  predicted scores and average goals**. Selected results are source-only
+  candidates: do not count name match as full identity.
+- [Independent clock cohort run 38058207762](https://github.com/sargesticky-code/football-fast-tracker/actions/runs/38058207762)
+  compared all 25 exact English team-pair candidates with published
+  Canonical UTC kickoffs: **23/23 independently parseable displayed clocks
+  agreed to the minute with UTC (0-minute difference), across multiple
+  competitions; two displayed times could not be safely parsed**.
+  The Forebet HTML \`datetime\` attribute itself is still **date-only**, so
+  timestamp provenance must say *source displayed time independently
+  corroborated by Canonical clock*, not *Forebet supplied ISO timezone*.
+- Example observed only: Liverpool–Manchester City, source
+  11 October 2026 15:30 displayed, Canonical UTC 15:30, and Hull–Everton
+  13:00 matching its original Canonical 13:00. These are evidence,
+  not a forecast of the eventual match results.
+- Public disclosure/republishing remains OFF. No OIDC publisher invoked,
+  no Supabase mutation, no fixture redirect write, no GitHub cron.
+- The source framework uses an upstream open-source **architecture** adapted
+  into new project-specific code. Alm77ar's scraper did not expose a
+  code license at the time checked; its implementation was not
+  copy/pasted. The browser helper dependency is separately MIT licensed.
+
 ## Live release restrictions
 - This is a one-shot **source-only proof**, not an activated live prediction feed.
 - Zero scheduled refreshes; zero database writes; zero modifications to Forebet/Flashscore/500.com production tables or public H/D/A model predictions.
