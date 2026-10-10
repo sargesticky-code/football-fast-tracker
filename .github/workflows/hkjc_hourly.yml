@@ -1,14 +1,9 @@
 name: HKJC Live Market Feed
 
+# Retired: HKJC is not an allowed input for the All-in-One dashboard.
+# Preserve legacy steps for audit only; no schedule/push or executable job.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '30 22 * * *' # 06:30 Hong Kong time
-    - cron: '30 10 * * *' # 18:30 Hong Kong time
-  push:
-    paths:
-      - '.github/workflows/hkjc_hourly.yml'
-      - 'scripts/normalize_hkjc.py'
 
 permissions:
   contents: write
@@ -19,6 +14,7 @@ concurrency:
 
 jobs:
   refresh:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
