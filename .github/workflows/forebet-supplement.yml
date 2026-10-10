@@ -1,16 +1,11 @@
-name: Forebet supplement refresh
+name: Legacy Forebet supplement (retired, non-executable)
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - "scripts/update_forebet_supplement.py"
-      - "scripts/merge_forebet_supplement.py"
-      - ".github/workflows/forebet-supplement.yml"
   # Scheduled legacy Forebet refresh paused; retained manual/verified workflow triggers.
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: forebet-supplement-refresh
@@ -18,6 +13,7 @@ concurrency:
 
 jobs:
   refresh:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
