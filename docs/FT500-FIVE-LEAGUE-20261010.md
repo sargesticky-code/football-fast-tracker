@@ -30,6 +30,14 @@ scraper, alias table, database cron, or rate increase.
   run 38053965869. Frontend source-label and value guards were tightened
   separately on release/ft500-spf-label-20261010.
 
+## Production acceptance — completed
+- [GitHub OIDC publisher run 38055671689](https://github.com/sargesticky-code/football-fast-tracker/actions/runs/38055671689): 13 tests green, official HTML+XML successfully fetched, 36 exact canonical fixtures from 54 eligible quotes, `FT500_PUBLISHED 36 written 36`.
+- Supabase project `hekqxhgjexzxnecwhyao` `ft_500_spf_current` has 36 stored rows across five canonical leagues: EPL 8 / LaLiga 8 / Serie A 8 / Bundesliga 8 / Ligue 1 4.
+- SQL independent join audit: 36 distinct event IDs, 36 distinct canonical match IDs, zero missing fixture ID, zero source/canonical league mismatch, zero kickoff drift over ten minutes.
+- Indexed summary RPC still returns 258 canonical fixture rows. At verification 21 rows contained dated source-backed China SPF references. 18 *upcoming* quotes had source-updated time within 24 hours. Counts differ by time/window definitions; the public UI further gates on prematch state.
+- The UI source label, source timestamp, and quote-derived implied H/D/A are displayed as references only. `valueEdge` on app release branch explicitly returns null for China SPF, even if a separate Forebet model is later available.
+- GitHub `schedule` (13,43 minutes hourly) remains defined but the first official test was triggered by a push; do not assert a completed natural schedule run until observed.
+
 ## Release gate
 Merge verified publisher changes after a passing 13-test live dry-run.
 The workflow will execute once on first main push; verify it publishes actual
