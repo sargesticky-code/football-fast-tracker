@@ -22,8 +22,7 @@ on:
       - 'data/prediction_fallback_current.csv'
       - '.github/workflows/graph_sandwich_phase1.yml'
   workflow_dispatch:
-  schedule:
-    - cron: '45 * * * *'
+  # Retired schedule: legacy HKJC-dependent pipeline is not a dashboard source.
 
 permissions:
   contents: read
@@ -34,6 +33,7 @@ concurrency:
 
 jobs:
   build-shadow:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
