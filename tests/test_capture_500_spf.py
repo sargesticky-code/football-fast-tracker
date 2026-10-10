@@ -20,6 +20,9 @@ class ProviderTests(unittest.TestCase):
   self.assertEqual(rows[0]["home"],2.02)
   self.assertEqual(rows[0]["kickoff"],"2026-10-10T11:30:00+00:00")
   self.assertEqual(resolve_canonical(rows,FIXTURES,NOW)[0]["match_id"],"FB6342")
+ def test_source_timestamp_with_seconds(self):
+  rows=read_official(XML.replace(b"2026-10-10 19:54",b"2026-10-10 19:54:12"),HTML,NOW)
+  self.assertEqual(len(rows),1)
  def test_wrong_provider_event_id(self):
   self.assertEqual(read_official(XML,HTML.replace("2041867","99999"),NOW),[])
  def test_reversed_fixture_never_matches(self):
