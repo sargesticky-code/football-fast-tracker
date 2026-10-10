@@ -3,13 +3,7 @@ on:
   schedule:
     - cron: '15 0 * * *'
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/supabase_private_ingest.yml'
-      - 'scripts/capture_forebet_canonical_light.py'
-      - 'scripts/forebet_browser_source.py'
-      - 'scripts/forebet_canonical_source_probe.py'
+  # Code changes do not automatically rescrape the source; manual or daily only.
 permissions:
   contents: read
   id-token: write
