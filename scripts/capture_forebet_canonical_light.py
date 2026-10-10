@@ -17,7 +17,6 @@ from pathlib import Path
 import requests
 from forebet_canonical_source_probe import (API, canonical_targets,
     build_verified_rows, exact_name, model_fields)
-from probe_forebet_upstream_framework import expand_with_normal_browser
 from scrape_forebet import parse_forebet_rows
 
 HKT=timezone(timedelta(hours=8))
@@ -124,22 +123,13 @@ def capture():
     # One official date page; no additional boards or brute-force pagination.
     date=(now.astimezone(HKT)+timedelta(days=1)).strftime("%Y-%m-%d")
     url="https://www.forebet.com/en/football-predictions/predictions-1x2/"+date
+    from forebet_browser_source import load_canonical_candidates
     helper=os.getenv("LOCAL_BROWSER_HELPER","http://127.0.0.1:8191/v1")
-    req=sess.post(helper,json={"cmd":"request.get","url":url,"maxTimeout":55000},
-                  timeout=65,headers={"Content-Type":"application/json"})
-    req.raise_for_status()
-    response=req.json()
-    solution=response.get("solution") or {}
-    html=solution.get("response") or ""
-    if response.get("status")!="ok" or solution.get("status")!=200 or not isinstance(html,str) or len(html)>2000000:
-        raise ValueError("source page unavailable or over bounded limit")
-    if "rcnt" not in html: raise ValueError("source page contains no fixtures")
-    # Page selection implemented in browser helper prototype; do not retain huge HTML.
-    rows,details=expand_with_normal_browser(url,solution,date)
+    rows,details=load_canonical_candidates(url,date,targets,helper=helper)
     output,info=verified_rows(rows,targets,now)
     proof={"provider":"FOREBET","captured_at":now.isoformat(),"date":date,
-           "canonical_targets":len(targets),"source_page_initial_rows":len(parse_forebet_rows(html,date)),
-           "source_page_expanded_rows":details.get("expanded_rows"),
+           "canonical_targets":len(targets),"source_page_initial_rows":details.get("initial"),
+           "source_page_expanded_rows":details.get("expanded"),
            "strict_matched_models":len(output),**info,
            "scheduled":False,"published":False}
     SUMMARY.write_text(json.dumps(proof,ensure_ascii=False,indent=2),encoding="utf-8")
