@@ -1,4 +1,4 @@
-name: HKJC Live Odds Fallback
+name: HKJC Live Odds Fallback (retired; do not run)
 # Manual/code-change fallback only. Production live capture is owned by Supabase direct cron jobs.
 
 on:
@@ -17,6 +17,7 @@ concurrency:
 
 jobs:
   refresh:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 6
     env:
