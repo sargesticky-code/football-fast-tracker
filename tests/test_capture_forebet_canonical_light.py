@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
-from capture_forebet_canonical_light import verified_rows,displayed_utc,league_ok
+from capture_forebet_canonical_light import verified_rows,displayed_utc,league_ok,source_coverage_counts
 
 NOW=datetime(2026,10,10,14,10,tzinfo=timezone.utc)
 GROUPS=[("EPL","EPL"),("Es1","LaLigaSPAIN: Standings"),("It1","Serie AITALY: Standings")]
@@ -26,6 +26,21 @@ def examples(n=12):
     return rows,fixtures
 
 class StrictCaptureTests(unittest.TestCase):
+    def test_global_dom_count_is_not_canonical_rejection_denominator(self):
+        rows, fixtures = examples()
+        accepted, _ = verified_rows(rows[:10], fixtures, NOW)
+        proof = source_coverage_counts(
+            {"expanded":1115,"matched":12,"parsed_candidates":12},
+            fixtures,"2026-10-11",rows,accepted
+        )
+        self.assertEqual(proof["source_dom_rows_expanded"],1115)
+        self.assertEqual(proof["normalized_candidate_rows"],12)
+        self.assertEqual(proof["strict_accepted_candidate_rows"],10)
+        self.assertEqual(proof["candidate_rows_not_accepted"],2)
+        self.assertEqual(proof["canonical_targets_on_captured_day"],12)
+        self.assertEqual(proof["canonical_targets_on_other_days"],0)
+        self.assertEqual(proof["accounting_semantics"],"DOM_GLOBAL_VS_PRE_FILTERED_CANDIDATES")
+
     def test_live_cohort_requires_multiple_distinct_leagues(self):
         rows,fx=examples()
         matched,info=verified_rows(rows,fx,NOW)
