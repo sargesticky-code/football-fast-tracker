@@ -1,0 +1,25 @@
+name: Forebet Coverage Accounting (offline only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/capture_forebet_canonical_light.py
+      - tests/test_capture_forebet_canonical_light.py
+      - .github/workflows/forebet-coverage-accounting-pr.yml
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install parser imports, no browser or source access
+        run: python -m pip install requests==2.32.5 beautifulsoup4==4.12.3
+      - name: Run offline canonical and accounting tests
+        run: |
+          python -m py_compile scripts/capture_forebet_canonical_light.py
+          python -m unittest discover -s tests -p test_capture_forebet_canonical_light.py -v
