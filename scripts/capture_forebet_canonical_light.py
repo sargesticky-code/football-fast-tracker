@@ -131,6 +131,27 @@ def verified_rows(raw, targets, now):
                      "verified_alias_matches":sum(x["identity_method"].startswith("VERIFIED_ALIAS") for x in verified),
                      "rejections":dict(rejected)}
 
+def source_coverage_counts(details, targets, source_date, candidate_rows, verified):
+    """Read-only accounting: expanded DOM != matched canonical candidate rows."""
+    target_day_count=sum(
+        t["kickoff"].astimezone(HKT).strftime("%Y-%m-%d")==source_date
+        for t in targets
+    )
+    parsed=details.get("parsed_candidates")
+    matched=details.get("matched")
+    return {
+        "canonical_targets_on_captured_day":target_day_count,
+        "canonical_targets_on_other_days":len(targets)-target_day_count,
+        "source_dom_rows_expanded":details.get("expanded"),
+        "source_pairs_matching_known_canonical_names":matched,
+        "source_rows_parsed_from_matched_pairs":parsed,
+        "normalized_candidate_rows":len(candidate_rows),
+        "strict_accepted_candidate_rows":len(verified),
+        "candidate_rows_not_accepted":max(0,len(candidate_rows)-len(verified)),
+        # A thousand expanded global fixtures are NOT a thousand rejected IDs.
+        "accounting_semantics":"DOM_GLOBAL_VS_PRE_FILTERED_CANDIDATES"
+    }
+
 def capture():
     now=datetime.now(timezone.utc)
     sess=requests.Session()
@@ -152,8 +173,9 @@ def capture():
     proof={"provider":"FOREBET","captured_at":now.isoformat(),"date":date,
            "canonical_targets":len(targets),"source_page_initial_rows":details.get("initial"),
            "source_page_expanded_rows":details.get("expanded"),
-           "strict_matched_models":len(output),**info,
-           "scheduled":False,"published":False}
+           "strict_matched_models":len(output),
+           **source_coverage_counts(details,targets,date,rows,output),
+           **info,"scheduled":False,"published":False}
     SUMMARY.write_text(json.dumps(proof,ensure_ascii=False,indent=2),encoding="utf-8")
     OUT.write_text(json.dumps({"source":"FOREBET","rows":output},ensure_ascii=False),encoding="utf-8")
     print("FOREBET_CANONICAL_STRICT_PROOF "+json.dumps(proof,ensure_ascii=False),flush=True)
