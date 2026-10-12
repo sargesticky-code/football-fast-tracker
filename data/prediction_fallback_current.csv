@@ -1,27 +1,15 @@
 ﻿fetched_at_hkt,hkjc_event_id,kickoff_hkt,hkjc_league,home_en,away_en,source,source_competition,source_url,recommendation,market,match_score,status,notes
-2026-10-12T09:32:05+08:00,FB6668,2026-10-12T08:28+08:00,APL,Talleres,Independiente,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6628,2026-10-12T09:15+08:00,MXL,Pumas UNAM,Cruz Azul,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6711,2026-10-12T20:00+08:00,SF2,Valladolid,Albacete,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6712,2026-10-12T22:15+08:00,SF2,Burgos,CF Granada,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6713,2026-10-12T23:00+08:00,FVL,VPS Vaasa,Gnistan,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6714,2026-10-13T00:00+08:00,FVL,AC Oulu,HJK Helsinki,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6591,2026-10-13T00:30+08:00,ISA,Atalanta,Venezia,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6715,2026-10-13T00:30+08:00,SF2,Oviedo,Eibar,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6546,2026-10-13T01:00+08:00,DK1,AGF Aarhus,Sonderjyske,APWIN,Danish Superliga,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6673,2026-10-13T01:00+08:00,NTL,KFUM Oslo,Valerenga,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6679,2026-10-13T01:00+08:00,SAL,Elfsborg,Halmstads,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6680,2026-10-13T01:00+08:00,SAL,Malmo,Kalmar,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6526,2026-10-13T02:45+08:00,ISA,AC Torino,Udinese,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6690,2026-10-13T02:45+08:00,FF2,Dijon,Metz,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6666,2026-10-13T02:58+08:00,APL,Lanus,Velez Sarsfield,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6717,2026-10-13T02:58+08:00,BD2,Fortaleza,CRB,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6347,2026-10-13T03:00+08:00,EPL,Coventry,Newcastle,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6544,2026-10-13T03:00+08:00,SFL,Levante,Sevilla,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6642,2026-10-13T03:00+08:00,BD1,Coritiba,Botafogo,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6716,2026-10-13T03:00+08:00,SF2,Tenerife,Girona,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6561,2026-10-13T03:15+08:00,PFL,Famalicao,Alverca,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6489,2026-10-13T03:57+08:00,CD1,Universidad Chile,Deportivo Nublense,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6669,2026-10-13T05:28+08:00,APL,Gimnasia Mendoza,Newell's Old Boys,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6644,2026-10-13T06:30+08:00,BD1,Chapecoense,Athletico Paranaense,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6718,2026-10-13T07:58+08:00,BD2,Botafogo SP,Ceara,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
-2026-10-12T09:32:05+08:00,FB6640,2026-10-13T08:00+08:00,BD1,RB Bragantino,Cruzeiro,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6526,2026-10-13T02:45+08:00,ISA,AC Torino,Udinese,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6690,2026-10-13T02:45+08:00,FF2,Dijon,Metz,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6666,2026-10-13T02:58+08:00,APL,Lanus,Velez Sarsfield,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6717,2026-10-13T02:58+08:00,BD2,Fortaleza,CRB,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6347,2026-10-13T03:00+08:00,EPL,Coventry,Newcastle,APWIN,,https://www.apwin.com/predictions/coventry-city-vs-newcastle-united-prediction-premier-league-12-10-2026/,,,1.000,NO_APWIN_RECOMMENDATION,
+2026-10-13T03:55:18+08:00,FB6544,2026-10-13T03:00+08:00,SFL,Levante,Sevilla,APWIN,,https://www.apwin.com/predictions/levante-vs-sevilla-prediction-la-liga-12-10-2026/,,,1.000,NO_APWIN_RECOMMENDATION,
+2026-10-13T03:55:18+08:00,FB6642,2026-10-13T03:00+08:00,BD1,Coritiba,Botafogo,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6716,2026-10-13T03:00+08:00,SF2,Tenerife,Girona,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6561,2026-10-13T03:15+08:00,PFL,Famalicao,Alverca,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6489,2026-10-13T03:57+08:00,CD1,Universidad Chile,Deportivo Nublense,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6669,2026-10-13T05:28+08:00,APL,Gimnasia Mendoza,Newell's Old Boys,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6644,2026-10-13T06:30+08:00,BD1,Chapecoense,Athletico Paranaense,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6718,2026-10-13T07:58+08:00,BD2,Botafogo SP,Ceara,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
+2026-10-13T03:55:18+08:00,FB6640,2026-10-13T08:00+08:00,BD1,RB Bragantino,Cruzeiro,APWIN,,,,,0.000,NO_APWIN_MATCH,No confident match link on global or mapped APWin pages
