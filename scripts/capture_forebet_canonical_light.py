@@ -56,7 +56,7 @@ def displayed_wall_clock(row):
     """
     stamp=str(row.get("kickoff_text") or "").strip()
     day=str(row.get("match_date") or "")
-    if not re.fullmatch(r"20\\d{2}-\\d{2}-\\d{2}",day):
+    if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}",day):
         return None
     for fmt in ("%m/%d/%Y %I:%M %p","%m/%d/%Y %H:%M",
                 "%d/%m/%Y %I:%M %p","%d/%m/%Y %H:%M"):
