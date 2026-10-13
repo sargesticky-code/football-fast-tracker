@@ -46,7 +46,10 @@ jobs:
           assert all(x['identity_method'] in approved_methods
                      and float(x['match_score'])>=0.98
                      and x.get('source_home') and x.get('source_away')
-                     and x['source_event_time_basis']=='SOURCE_DISPLAYED_CLOCK_CORROBORATED_WITH_CANONICAL_UTC' for x in rows)
+                     and x['source_event_time_basis']=='CROSS_LEAGUE_COHORT_CORROBORATED_DISPLAY_OFFSET'
+                     and isinstance(x.get('source_display_offset_minutes'),int)
+                     and -720 <= x['source_display_offset_minutes'] <= 840
+                     and x['source_display_offset_minutes']%15==0 for x in rows)
           with open(os.environ['GITHUB_OUTPUT'],'a') as o:
               o.write('count='+str(len(rows))+'\n')
           print('FOREBET_APPROVED_CANONICAL_MODELS',len(rows))
@@ -92,9 +95,15 @@ jobs:
           python - <<'PY'
           import json
           d=json.load(open('/tmp/ft-forebet-public-smoke.json'))
-          if d.get('source')!='flashscore-single-rpc-canonical':
+          allowed_sources={'flashscore-single-rpc-canonical','supabase-lightweight-enrichment-recovery'}
+          if d.get('source') not in allowed_sources:
               raise SystemExit('CANONICAL_PUBLIC_FEED_UNAVAILABLE')
-          models=[m for m in d.get('matches',[]) if isinstance(m.get('forebet'),dict)
+          # The recovery envelope can only prove the read path when each
+          # published model is attached to an independently verified FS ID.
+          def verified(m):
+              c=m.get('sourceContext') or {}
+              return str(m.get('id') or '').startswith('FS:') and c.get('identityStatus')=='EXACT_CANONICAL_PROVIDER_FIXTURE'
+          models=[m for m in d.get('matches',[]) if verified(m) and isinstance(m.get('forebet'),dict)
             and isinstance(m.get('forebetDetail'),dict)
             and m['forebetDetail'].get('predictedScore')
             and (m['forebetDetail'].get('ou25') or {}).get('avgGoals',0)>0]
