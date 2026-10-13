@@ -1,10 +1,10 @@
 import sys
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
-from capture_forebet_canonical_light import verified_rows,displayed_utc,league_ok,source_coverage_counts
+from capture_forebet_canonical_light import verified_rows,displayed_utc,league_ok,source_coverage_counts,canonical_feed_matches
 
 NOW=datetime(2026,10,10,14,10,tzinfo=timezone.utc)
 GROUPS=[("EPL","EPL"),("Es1","LaLigaSPAIN: Standings"),("It1","Serie AITALY: Standings")]
@@ -138,6 +138,63 @@ class StrictCaptureTests(unittest.TestCase):
         rows[0]["kickoff_text"]="10/11/2026 10:10 PM"
         result,_=verified_rows(rows,fx,NOW)
         self.assertEqual(len(result),11)
+
+    def test_source_displayed_clock_offset_requires_multileague_corroboration(self):
+        rows,fx=examples()
+        # Reconstruct a coherent Forebet +8 display clock; the original UTC
+        # parser rejected all 12. This is verified by independent fixture IDs.
+        for row,t in zip(rows,fx):
+            clock=t["kickoff"]+timedelta(hours=8)
+            row["kickoff_text"]=clock.strftime("%m/%d/%Y %I:%M %p")
+            row["match_date"]=clock.date().isoformat()
+        output,info=verified_rows(rows,fx,NOW)
+        self.assertEqual(len(output),12)
+        self.assertEqual(info["clock_offset_minutes"],480)
+        self.assertTrue(all(x["source_display_offset_minutes"]==480 for x in output))
+        self.assertTrue(all(x["source_event_time"]==t["kickoff"].isoformat()
+                            for x,t in zip(output,fx)))
+    def test_two_conflicting_clock_offsets_never_publish(self):
+        rows,fx=examples()
+        for i in range(6):
+            t=fx[i]["kickoff"]+timedelta(hours=1)
+            rows[i]["kickoff_text"]=t.strftime("%m/%d/%Y %I:%M %p")
+        models,info=verified_rows(rows,fx,NOW)
+        self.assertEqual(models,[])
+        self.assertEqual(info["reason"],"COHORT_TIME_NOT_CORROBORATED")
+
+    def test_api_recovery_requires_individual_exact_identity(self):
+        rows,fx=examples()
+        ms=[{"id":t["match_id"],"kickoff":t["kickoff"].isoformat(),
+             "home":t["home"],"away":t["away"],"league":t["league"],
+             "sourceContext":{"identityStatus":"EXACT_CANONICAL_PROVIDER_FIXTURE"}} for t in fx]
+        # Use FS IDs with an actual provider-event-shaped identifier.
+        for i,m in enumerate(ms):
+            m["id"]=f"FS:example{i:02d}"
+        d={"generatedAt":NOW.isoformat(),"matches":ms,
+           "source":"supabase-lightweight-enrichment-recovery",
+           "recoveryMode":"LIGHTWEIGHT_CANONICAL_EVIDENCE"}
+        self.assertEqual(len(canonical_feed_matches(d,NOW)),12)
+        d["matches"][0]["sourceContext"]["identityStatus"]="SOURCE_NAME_ONLY"
+        self.assertEqual(len(canonical_feed_matches(d,NOW)),11)
+        d["source"]="flashscore-direct"
+        with self.assertRaisesRegex(ValueError,"canonical authority"):
+            canonical_feed_matches(d,NOW)
+        d["source"]="supabase-lightweight-enrichment-recovery"
+        d["recoveryMode"]="UNVERIFIED"
+        with self.assertRaisesRegex(ValueError,"recovery mode"):
+            canonical_feed_matches(d,NOW)
+
+    def test_api_recovery_rejects_stale_generated_at_and_unverified_rows(self):
+        ms=[{"id":f"FS:example{i:02d}","sourceContext":{
+             "identityStatus":"EXACT_CANONICAL_PROVIDER_FIXTURE"}} for i in range(12)]
+        d={"source":"flashscore-single-rpc-canonical",
+           "generatedAt":(NOW-timedelta(hours=2)).isoformat(),"matches":ms}
+        with self.assertRaisesRegex(ValueError,"stale"):
+            canonical_feed_matches(d,NOW)
+        d["generatedAt"]=NOW.isoformat()
+        for m in ms: m["sourceContext"]["identityStatus"]="UNVERIFIED"
+        with self.assertRaisesRegex(ValueError,"insufficient individually verified"):
+            canonical_feed_matches(d,NOW)
 
     def test_source_league_allowlist(self):
         self.assertTrue(league_ok("EPL","EPL"))
