@@ -91,7 +91,7 @@ BEGIN
    OR r->>'source_league' IS NULL OR length(r->>'source_league') NOT BETWEEN 1 AND 25
    OR coalesce(r->>'source_home','') = '' OR coalesce(r->>'source_away','') = ''
    OR r ? 'match_score' OR r ? 'identity_verified'
-   OR EXISTS(SELECT 1 FROM jsonb_array_elements_text(p_verified_ids) v WHERE v=v_id)
+   OR EXISTS(SELECT 1 FROM jsonb_array_elements_text(p_verified_ids) v WHERE v.value=v_id)
   THEN RAISE EXCEPTION 'FOREBET_PROVISIONAL_IDENTITY_INVALID %',left(v_id,50); END IF;
   BEGIN
    IF (r->>'source_clock_utc') IS NULL OR (r->>'kickoff') IS NULL
