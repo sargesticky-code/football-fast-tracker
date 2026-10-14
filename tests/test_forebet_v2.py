@@ -48,6 +48,35 @@ class SourceIdentityTests(unittest.TestCase):
         self.assertFalse(verified_shared_source_name(false_name,flashscore))
         self.assertFalse(verified_source_name(false_name,flashscore))
 
+
+    def test_unknown_league_requires_both_independently_verified_provider_keys(self):
+        fs,fb,by_key=shared_verified_catalog()
+        couples=[]
+        for name,key in fs.items():
+            alternative=next((alias for alias in by_key.get(key,[])
+                              if alias != name and len(alias)<35),None)
+            if alternative:
+                couples.append((name,alternative,key))
+        (h,fh,hkey)=couples[0]
+        (a,fa,akey)=next(item for item in couples if item[2]!=hkey)
+        row,fixture=sample()
+        row.update(home_team=fh,away_team=fa,league_short="UNREGISTERED_SOURCE")
+        fixture.update(home=h,away=a)
+        accepted,rejected=verified_rows([row],[fixture],NOW)
+        self.assertEqual(len(accepted),1,rejected)
+        self.assertEqual(accepted[0]["league_verification"],
+                         "TWO_SHARED_PROVIDER_TEAM_KEYS_AND_UNIQUE_UTC_FIXTURE")
+        self.assertEqual(accepted[0]["identity_method"],
+                         "TWO_SHARED_PROVIDER_KEYS_UNKNOWN_LEAGUE_EXACT_UTC_TIME")
+        row["away_team"]="Unknown Fictional Club"
+        self.assertEqual(verified_rows([row],[fixture],NOW)[0],[])
+        row["away_team"]=fa
+        row["kickoff_text"]="10/15/2026 02:03 PM"
+        self.assertEqual(verified_rows([row],[fixture],NOW)[0],[])
+        row["kickoff_text"]="10/15/2026 02:00 PM"
+        row["league_short"]="It1"
+        self.assertEqual(verified_rows([row],[fixture],NOW)[0],[])
+
     def test_bridge_keeps_exact_name_working_when_missing_from_registry(self):
         self.assertTrue(verified_source_name("Never Seen Town","Never Seen Town"))
         self.assertIn(norm("Never Seen Town"),source_forms("Never Seen Town"))
