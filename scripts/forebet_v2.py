@@ -17,6 +17,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
+from playwright.sync_api import Error as BrowserError
 
 from forebet_browser_source import load_canonical_candidates
 from forebet_canonical_source_probe import canonical_targets, exact_name, model_fields, aware_time
@@ -132,7 +133,7 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
             "source_league":str(row.get("league_short") or ""),
             "source_event_url":link,
             "league_verification":"VERIFIED_SOURCE_CODE" if known_league else "EXACT_NAMES_AND_UTC_TIME_ONLY",
-            "source_event_time":t["kickoff"].isoformat(),
+            "source_event_time":wall.replace(tzinfo=timezone.utc).isoformat(),
             "source_event_time_basis":"CALIBRATED_PROVIDER_UTC_AND_EXACT_CANONICAL_KICKOFF",
             "source_display_offset_minutes":CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES,
             "identity_method":"EXACT_TEAMS_LEAGUE_AND_CALIBRATED_UTC_TIME" if exact
@@ -141,28 +142,131 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
     return [emitted[k] for k in sorted(emitted)], dict(rejected)
 
 
+MAX_SOURCE_DATES = 3
+MAX_PUBLICATION_ROWS = 300
+
+
+def source_dates(targets, now):
+    """Source's calibrated display clock is UTC, not HKT.
+    Cover the UTC calendar days of upcoming verified fixtures, max 3 dates.
+    """
+    dates = sorted({
+        t["kickoff"].astimezone(timezone.utc).date().isoformat()
+        for t in targets
+        if now < t["kickoff"] <= now + timedelta(hours=48)
+    })
+    if not 1 <= len(dates) <= MAX_SOURCE_DATES:
+        raise ValueError("SOURCE_DATE_WINDOW_OUT_OF_BOUNDS")
+    return dates
+
+
+def dedupe_repeated_source_rows(rows):
+    """Exact duplicates from overlapping pages are one source observation.
+    Conflicting versions remain duplicated and are fail-closed by verified_rows.
+    """
+    unique = []
+    seen = set()
+    for row in rows:
+        signature = (row.get("forebet_detail_url"),
+                     row.get("home_team"), row.get("away_team"),
+                     row.get("kickoff_text"), row.get("prob_home"),
+                     row.get("prob_draw"), row.get("prob_away"),
+                     row.get("predicted_score"), row.get("avg_goals"))
+        if signature in seen:
+            continue
+        seen.add(signature)
+        unique.append(row)
+    return unique
+
+
+
+def source_overlap_diagnostics(source_rows, targets, now):
+    """Account for source/global mismatch without guessing missing aliases.
+
+    Same kickoff alone is never evidence of matching identity; these are only
+    aggregate QA counters to prioritize verified alias work in later reviews.
+    """
+    counts = Counter()
+    end = now + timedelta(hours=48)
+    for row in source_rows:
+        wall = displayed_wall_clock(row)
+        if not model_fields(row) or wall is None:
+            counts["invalid_model_or_display_clock"] += 1
+            continue
+        when = wall.replace(tzinfo=timezone.utc)
+        if not now < when <= end:
+            counts["outside_48h_verified_fixture_window"] += 1
+            continue
+        possibilities = [t for t in targets if abs((t["kickoff"]-when).total_seconds()) <= 60]
+        if not possibilities:
+            counts["no_flashscore_fixture_with_same_kickoff"] += 1
+            continue
+        home = exact_name(row.get("home_team"))
+        away = exact_name(row.get("away_team"))
+        if any(home == exact_name(t["home"]) and away == exact_name(t["away"]) for t in possibilities):
+            counts["exact_team_pair_and_kickoff"] += 1
+        elif any(home == exact_name(t["home"]) or away == exact_name(t["away"]) for t in possibilities):
+            counts["one_exact_team_at_same_kickoff_needs_review"] += 1
+        else:
+            counts["no_exact_team_at_same_kickoff"] += 1
+    return dict(counts)
+
+
 def run(now=None, fixture_token=None, helper=None):
     now = now or datetime.now(timezone.utc)
     fixture_token = fixture_token or os.getenv("FOREBET_FIXTURES_OIDC", "")
     targets = canonical_from_oidc(fixture_token, now)
     if len(targets) < 8:
         raise ValueError("TOO_FEW_VERIFIED_FS_FIXTURES")
-    date = (now.astimezone(HKT) + timedelta(days=1)).strftime("%Y-%m-%d")
-    source_url = "https://www.forebet.com/en/football-predictions/predictions-1x2/" + date
-    candidates, details = load_canonical_candidates(
-        source_url, date, targets,
-        helper=helper or os.getenv("LOCAL_BROWSER_HELPER", "http://127.0.0.1:8191/v1"))
+    dates = source_dates(targets, now)
+    candidates, page_proofs, failures = [], [], []
+    for date in dates:
+        source_url = "https://www.forebet.com/en/football-predictions/predictions-1x2/" + date
+        try:
+            page_rows, details = load_canonical_candidates(
+                source_url, date, targets,
+                helper=helper or os.getenv("LOCAL_BROWSER_HELPER", "http://127.0.0.1:8191/v1"))
+            candidates.extend(page_rows)
+            page_proofs.append({
+                "date": date,
+                "dom_initial": details.get("initial"),
+                "dom_expanded": details.get("expanded"),
+                "expand_clicked": details.get("expand_clicked"),
+                "capture_mode": details.get("capture_mode"),
+                "known_pair_rows": details.get("matched"),
+                "parsed_rows": len(page_rows),
+                "rendered_html_bytes": details.get("rendered_html_bytes")
+            })
+        except (ValueError, requests.RequestException, BrowserError) as exc:
+            failures.append({"date":date,"error":type(exc).__name__})
+    candidates = dedupe_repeated_source_rows(candidates)
     rows, rejected = verified_rows(candidates, targets, now)
+    if len(rows) > MAX_PUBLICATION_ROWS:
+        raise ValueError("FOREBET_PUBLICATION_CAPACITY_EXCEEDED")
     summary = {
-        "provider":"FOREBET","version":2,"date":date,
-        "captured_at":now.isoformat(),"canonical_source":"VERIFIED_FLASHSCORE_DB",
+        "provider":"FOREBET","version":"2.1",
+        "dates":dates,"captured_at":now.isoformat(),
+        "canonical_source":"VERIFIED_FLASHSCORE_DB",
         "canonical_targets":len(targets),
-        "source_dom_rows":details.get("expanded"),
-        "known_team_pair_rows":details.get("matched"),
+        "pages_attempted":len(dates),"pages_successful":len(page_proofs),
+        "pages_failed":failures,"partial_source_coverage":bool(failures),
+        "page_details":page_proofs,
+        "source_dom_rows":sum(x["dom_expanded"] or 0 for x in page_proofs),
+        "known_team_pair_rows":sum(x["known_pair_rows"] or 0 for x in page_proofs),
         "source_rows_parsed":len(candidates),
         "strict_verified_models":len(rows),
         "calibrated_utc_offset_minutes":CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES,
-        "rejections":rejected,"published":False
+        "rejections":rejected,
+        "source_overlap_diagnostics":source_overlap_diagnostics(candidates,targets,now),
+        "verified_by_utc_date":{
+            date:sum(1 for row in rows if row["kickoff"][:10]==date)
+            for date in dates
+        },
+        "canonical_targets_by_utc_date":{
+            date:sum(1 for target in targets if target["kickoff"].date().isoformat()==date)
+            for date in dates
+        },
+        "published":False
     }
     OUT.write_text(json.dumps({"source":"FOREBET","rows":rows},
                               ensure_ascii=False), encoding="utf-8")

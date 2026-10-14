@@ -46,7 +46,7 @@ jobs:
           token="$(python -c 'import json,sys;print(json.load(sys.stdin)["value"])' <<<"$response")"
           echo "::add-mask::$token"
           echo "token=$token" >> "$GITHUB_OUTPUT"
-      - name: Capture one source page and match only verified DB Flashscore
+      - name: Capture bounded UTC date pages and match only verified DB Flashscore
         id: capture
         env:
           FOREBET_FIXTURES_OIDC: ${{ steps.oidc.outputs.token }}
@@ -61,14 +61,21 @@ jobs:
           proof=json.load(open("/tmp/ft-forebet-verified-summary.json"))
           rows=batch["rows"]
           assert batch["source"]=="FOREBET"
-          assert 1 <= len(rows) <= 80
+          assert 1 <= len(rows) <= 300
+          assert 1 <= proof['pages_attempted'] <= 3
+          assert proof['pages_successful'] >= 1
+          assert proof['pages_successful'] + len(proof['pages_failed']) == proof['pages_attempted']
           assert proof["canonical_source"]=="VERIFIED_FLASHSCORE_DB"
           assert all(r["match_id"].startswith("FS:") for r in rows)
           assert all(r["source_display_offset_minutes"]==0 for r in rows)
           assert len({r["match_id"] for r in rows})==len(rows)
           with open(os.environ["GITHUB_OUTPUT"],"a") as fd:
               fd.write("count="+str(len(rows))+"\n")
-          print("FOREBET_V2_MATCHES",len(rows),"SOURCE_ROWS",proof["source_rows_parsed"])
+          print("FOREBET_V2_MATCHES",len(rows),"SOURCE_ROWS",proof["source_rows_parsed"],"PAGES",proof["pages_successful"],"OF",proof["pages_attempted"])
+          if proof["partial_source_coverage"]:
+              print("::warning::Some Forebet dates unavailable; publishing verified subset only.")
+          if any(p["capture_mode"] != "full_page" for p in proof["page_details"]):
+              print("::warning::Some Forebet pages exceeded full-row HTML budget; allowlist fallback used.")
           PY
       - name: Publish only on main via unchanged OIDC service gate
         if: github.ref == 'refs/heads/main' && steps.capture.outputs.count != '0'

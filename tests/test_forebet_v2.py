@@ -3,9 +3,11 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
+from playwright.sync_api import Error as BrowserError
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
-from forebet_v2 import verified_rows, canonical_from_oidc
+from forebet_v2 import verified_rows, canonical_from_oidc, source_dates, dedupe_repeated_source_rows, source_overlap_diagnostics, run
 
 NOW=datetime(2026,10,14,3,0,tzinfo=timezone.utc)
 KO=datetime(2026,10,15,14,0,tzinfo=timezone.utc)
@@ -74,6 +76,71 @@ class SourceIdentityTests(unittest.TestCase):
         row,fixture=sample()
         out,_=verified_rows([row,dict(row),dict(row)],[fixture],NOW)
         self.assertEqual(out,[])
+
+    def test_source_dates_follow_utc_kickoffs_not_hkt_midnight(self):
+        fixtures = [
+            {"kickoff": NOW + timedelta(hours=2)},
+            {"kickoff": NOW + timedelta(hours=24)},
+            {"kickoff": NOW + timedelta(hours=47)},
+        ]
+        self.assertEqual(source_dates(fixtures,NOW),
+                         ["2026-10-14","2026-10-15","2026-10-16"])
+
+    def test_deduplicate_same_page_row_but_not_conflicting_model(self):
+        row, fixture = sample()
+        clone = dict(row)
+        changed = dict(row)
+        changed["prob_home"] = 31
+        result = dedupe_repeated_source_rows([row,clone,changed])
+        self.assertEqual(len(result),2)
+        accepted, errors = verified_rows(result,[fixture],NOW)
+        self.assertEqual(accepted,[])
+        self.assertEqual(errors["DUPLICATE_SOURCE_OR_CANONICAL_EVENT"],1)
+
+    def test_source_dates_fail_on_no_fixtures(self):
+        with self.assertRaisesRegex(ValueError,"SOURCE_DATE_WINDOW_OUT_OF_BOUNDS"):
+            source_dates([],NOW)
+
+    def test_source_qa_distinguishes_missing_event_from_possible_alias(self):
+        source, fixture = sample()
+        self.assertEqual(
+            source_overlap_diagnostics([source], [fixture], NOW)
+              ["exact_team_pair_and_kickoff"], 1)
+        other = dict(source, home_team="Different Town", away_team="Other United")
+        self.assertEqual(
+            source_overlap_diagnostics([other], [fixture], NOW)
+              ["no_exact_team_at_same_kickoff"], 1)
+        past = dict(source, kickoff_text="10/13/2026 02:00 PM",
+                    match_date="2026-10-13")
+        self.assertEqual(
+            source_overlap_diagnostics([past], [fixture], NOW)
+              ["outside_48h_verified_fixture_window"], 1)
+
+    def test_browser_failure_is_scoped_to_one_date_not_a_false_success(self):
+        row, fixture = sample()
+        # The real pipeline will only publish strictly verified rows from the
+        # second page when the first source date was unavailable.
+        targets = [
+            dict(fixture, match_id=f"FS:unique{i}", home=f"Home{i}",
+                 away=f"Away{i}",kickoff=NOW+timedelta(hours=i+1))
+            for i in range(8)
+        ] + [fixture]
+        def browser(url, date, target_rows, helper):
+            if date=="2026-10-14":
+                raise BrowserError("navigation timed out")
+            return [row], {
+                "initial":1, "expanded":1, "matched":1,
+                "parsed_candidates":1, "capture_mode":"full_page",
+                "rendered_html_bytes":500, "expand_clicked":False
+            }
+        with patch("forebet_v2.canonical_from_oidc",return_value=targets), \
+             patch("forebet_v2.load_canonical_candidates",side_effect=browser):
+            proof=run(now=NOW,fixture_token="t"*60)
+        self.assertEqual(proof["pages_attempted"],2)
+        self.assertEqual(proof["pages_successful"],1)
+        self.assertTrue(proof["partial_source_coverage"])
+        self.assertEqual(proof["strict_verified_models"],1)
+        self.assertEqual(proof["pages_failed"][0]["error"],"Error")
 
     def test_requires_verified_provider_not_plain_fixture_snapshot(self):
         class Session:
