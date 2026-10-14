@@ -161,8 +161,8 @@ BEGIN
 
  -- Strict source verification always wins; never copy a provisional model to
  -- the verified archive, simply mark earlier candidate provenance PROMOTED.
- FOR x IN SELECT canonical_event_id,source_url FROM private.forebet_provisional_links
-    WHERE status='PROVISIONAL'
+ FOR x IN SELECT l.canonical_event_id,l.source_url FROM private.forebet_provisional_links l
+    WHERE l.status='PROVISIONAL'
       AND canonical_event_id IN (SELECT value FROM jsonb_array_elements_text(p_verified_ids))
       AND EXISTS (
         SELECT 1 FROM public.forebet_predictions f
