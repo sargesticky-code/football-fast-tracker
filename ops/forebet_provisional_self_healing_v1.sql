@@ -135,15 +135,15 @@ BEGIN
   IF x.kickoff_hkt<=now() OR x.last_seen_at<now()-interval '36 hours'
   THEN v_reason:='EXPIRED_OR_STALE';
   ELSIF NOT EXISTS (
-   SELECT 1 FROM public.flashscore_primary_fixture_current fs
-   WHERE fs.match_id=x.canonical_event_id
-     AND fs.identity_authority='FLASHSCORE'
-     AND fs.provider_identity_status='VERIFIED_IDENTITY'
-     AND fs.fetched_at>=now()-interval '36 hours'
-     AND fs.kickoff_hkt=x.kickoff_hkt
-     AND lower(btrim(fs.home_en))=lower(btrim(x.canonical_home))
-     AND lower(btrim(fs.away_en))=lower(btrim(x.canonical_away))
-     AND lower(btrim(fs.league))=lower(btrim(x.canonical_league))
+   SELECT 1 FROM public.flashscore_primary_fixture_current canonical_check
+   WHERE canonical_check.match_id=x.canonical_event_id
+     AND canonical_check.identity_authority='FLASHSCORE'
+     AND canonical_check.provider_identity_status='VERIFIED_IDENTITY'
+     AND canonical_check.fetched_at>=now()-interval '36 hours'
+     AND canonical_check.kickoff_hkt=x.kickoff_hkt
+     AND lower(btrim(canonical_check.home_en))=lower(btrim(x.canonical_home))
+     AND lower(btrim(canonical_check.away_en))=lower(btrim(x.canonical_away))
+     AND lower(btrim(canonical_check.league))=lower(btrim(x.canonical_league))
   ) THEN v_reason:='CANONICAL_IDENTITY_CHANGED';
   END IF;
   IF v_reason IS NOT NULL THEN
