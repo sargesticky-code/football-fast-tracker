@@ -9,7 +9,7 @@ const workflowRef = "sargesticky-code/football-fast-tracker/.github/workflows/su
 Deno.serve(async (request: Request): Promise<Response> => {
   const response = (code: number, body: Record<string, unknown>) =>
     Response.json(body, { status: code, headers: { "Cache-Control": "no-store" } });
-  if (request.method !== "POST") return response(405, { error: "METHOD_NOT_ALLOWED" });
+  if (!["POST", "GET"].includes(request.method)) return response(405, { error: "METHOD_NOT_ALLOWED" });
   const authorization = request.headers.get("authorization") || "";
   if (!authorization.startsWith("Bearer ")) return response(401, { error: "MISSING_IDENTITY" });
 
@@ -22,13 +22,60 @@ Deno.serve(async (request: Request): Promise<Response> => {
   } catch {
     return response(401, { error: "INVALID_GITHUB_IDENTITY" });
   }
-  if (claims.repository !== "sargesticky-code/football-fast-tracker"
-      || claims.ref !== "refs/heads/main"
-      || claims.workflow_ref !== workflowRef
-      || !["schedule", "workflow_run", "workflow_dispatch", "push"].includes(String(claims.event_name))
-      || !/^\d{6,20}$/.test(String(claims.run_id ?? ""))) {
+  const trustedRepo = claims.repository === "sargesticky-code/football-fast-tracker";
+  const main = claims.ref === "refs/heads/main" && claims.workflow_ref === workflowRef;
+  const preview = claims.ref === "refs/heads/feat/forebet-v2-20261014" &&
+    claims.workflow_ref === "sargesticky-code/football-fast-tracker/.github/workflows/supabase_private_ingest.yml@refs/heads/feat/forebet-v2-20261014";
+  if (!trustedRepo || !(main || (request.method === "GET" && preview)) ||
+      !["schedule", "workflow_run", "workflow_dispatch", "push"].includes(String(claims.event_name)) ||
+      !/^\d{6,20}$/.test(String(claims.run_id ?? ""))) {
     return response(403, { error: "UNAUTHORIZED_WORKFLOW" });
   }
+
+  if (request.method === "GET") {
+    // OIDC-only. Read verified, recently observed Flashscore fixtures from DB.
+    const url = Deno.env.get("SUPABASE_URL"), secret = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!url || !secret) return response(503, { error:"SERVICE_CONFIGURATION_UNAVAILABLE" });
+    const now = Date.now();
+    const q = new URLSearchParams({
+      select:"match_id,kickoff_hkt,league,home_en,away_en,fetched_at,identity_authority,provider_identity_status",
+      identity_authority:"eq.FLASHSCORE",provider_identity_status:"eq.VERIFIED_IDENTITY",
+      order:"kickoff_hkt.asc",limit:"350"
+    });
+    q.append("kickoff_hkt", "gte." + new Date(now-2*3600000).toISOString());
+    q.append("kickoff_hkt", "lte." + new Date(now+60*3600000).toISOString());
+    try {
+      const fetchResult = await fetch(url + "/rest/v1/flashscore_primary_fixture_current?" + q, {
+        headers:{apikey:secret,authorization:"Bearer "+secret,accept:"application/json"},
+        signal:AbortSignal.timeout(12_000)
+      });
+      if (!fetchResult.ok) {
+        console.error("FOREBET_CANONICAL_READ_FAILED", fetchResult.status);
+        return response(503,{error:"CANONICAL_FIXTURES_UNAVAILABLE"});
+      }
+      const rows = await fetchResult.json();
+      if (!Array.isArray(rows) || rows.length>350) return response(503,{error:"INVALID_FIXTURE_RESPONSE"});
+      const matches = rows.filter((r:any) =>
+        /^FS:[A-Za-z0-9_-]{5,32}$/.test(String(r.match_id||"")) &&
+        Boolean(r.home_en && r.away_en && r.kickoff_hkt && r.league) &&
+        Number.isFinite(Date.parse(r.fetched_at)) &&
+        Date.parse(r.fetched_at)>=now-36*3600000 &&
+        Date.parse(r.fetched_at)<=now+60000
+      ).map((r:any)=>({
+        id:r.match_id,kickoff:r.kickoff_hkt,home:r.home_en,away:r.away_en,
+        league:r.league,fetchedAt:r.fetched_at,
+        sourceContext:{identityStatus:"EXACT_CANONICAL_PROVIDER_FIXTURE",provider:"FLASHSCORE"}
+      }));
+      if (matches.length<8) return response(503,{error:"INSUFFICIENT_VERIFIED_FS_FIXTURES",count:matches.length});
+      return response(200,{source:"flashscore-verified-canonical-fixtures-v2",
+        generatedAt:new Date().toISOString(),matches});
+    } catch {
+      return response(503,{error:"CANONICAL_FIXTURE_READ_FAILED"});
+    }
+  }
+
+  // Read-only preview cannot publish predictions.
+  if (!main) return response(403,{error:"PREVIEW_READ_ONLY"});
 
   let body: unknown;
   try {
