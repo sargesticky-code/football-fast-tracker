@@ -84,8 +84,8 @@ BEGIN
  -- Validate the ENTIRE requested set before mutating any record.
  FOR r IN SELECT value FROM jsonb_array_elements(p_rows) LOOP
   v_id:=r->>'match_id'; v_url:=r->>'source_url';
-  IF coalesce(v_id,'') !~ '^FS:[A-Za-z0-9_-]{5,32}
-   OR coalesce(v_url,'') !~ '^https://www[.]forebet[.]com/en/football/matches/[^/?#]{2,240}-[0-9]{5,12}
+  IF coalesce(v_id,'') !~ '^FS:[A-Za-z0-9_-]{5,32}$'
+   OR coalesce(v_url,'') !~ '^https://www[.]forebet[.]com/en/football/matches/[^/?#]{2,240}-[0-9]{5,12}$'
    OR r->>'matched_identity' IS DISTINCT FROM 'ONE_SIDE_WITH_CONFIRMED_COMPETITION_AND_UNIQUE_KICKOFF'
    OR coalesce(r->>'one_verified_side','') NOT IN ('HOME','AWAY')
    OR r->>'source_league' IS NULL OR length(r->>'source_league') NOT BETWEEN 1 AND 25
