@@ -8,6 +8,7 @@ from playwright.sync_api import Error as BrowserError
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
 from forebet_v2 import verified_rows, canonical_from_oidc, source_dates, dedupe_repeated_source_rows, source_overlap_diagnostics, run
+from forebet_intersection_audit import source_intersection_audit, classify_target
 from forebet_verified_aliases import (shared_verified_catalog, source_forms,
                                       verified_source_name, norm, verified_shared_source_name)
 
@@ -45,6 +46,42 @@ class SourceIdentityTests(unittest.TestCase):
         self.assertNotIn("hkjc",active.lower())
         self.assertNotIn("forebet-firecrawl-collector",active)
 
+
+    def test_source_intersection_counts_each_fixture_once_without_faking_coverage(self):
+        good,target=sample()
+        unmatched=dict(target,match_id="FS:otherfixture",home="Other United",away="Unobserved FC")
+        report=source_intersection_audit([good],[target,unmatched],
+            [{"match_id":target["match_id"]}],NOW)
+        self.assertEqual(report["fixture_denominator"],2)
+        self.assertEqual(report["verified_published"],1)
+        self.assertEqual(sum(report["unmatched_by_reason"].values()),1)
+        self.assertIn("unobserved",report["scope_note"].lower())
+        self.assertEqual(report["source_rows_input"],1)
+
+    def test_forebet_pair_with_clock_disagreement_is_not_silently_accepted(self):
+        source,target=sample()
+        source["kickoff_text"]="10/15/2026 03:00 PM"
+        issue,evidence=classify_target(target,[(source,
+            datetime(2026,10,15,15,tzinfo=timezone.utc),True)],set())
+        self.assertEqual(issue,"VERIFIED_PAIR_DIFFERENT_KICKOFF")
+        self.assertIs(evidence,source)
+
+    def test_forebet_known_league_conflict_does_not_increase_coverage(self):
+        source,target=sample()
+        source["league_short"]="It1"
+        issue,_=classify_target(target,
+            [(source,KO,True)],set())
+        self.assertEqual(issue,"KNOWN_LEAGUE_CONFLICT")
+
+    def test_missing_or_other_sources_are_not_reported_as_missing_forebet_products(self):
+        source,target=sample()
+        report=source_intersection_audit([], [target], [], NOW)
+        self.assertEqual(report["unmatched_by_reason"],{
+            "NO_SOURCE_OBSERVATION_AT_KICKOFF":1})
+        source["away_team"]="Clearly Different Club"
+        report=source_intersection_audit([source], [target], [], NOW)
+        self.assertEqual(report["unmatched_by_reason"],{
+            "ONE_VERIFIED_TEAM_AT_SAME_KICKOFF":1})
 
     def test_cross_source_snapshot_is_complete_and_without_provider_api(self):
         fs,fb,by_key=shared_verified_catalog()
