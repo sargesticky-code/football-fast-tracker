@@ -1,4 +1,4 @@
-name: BetClan and SportyTrader source capture (unmatched only)
+name: BetClan and SportyTrader source capture and verified publication
 
 on:
   workflow_dispatch:
@@ -18,10 +18,11 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 concurrency:
   group: adviser-source-capture
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   source-capture:
@@ -38,6 +39,11 @@ jobs:
       - name: Collect today's and tomorrow's source records
         if: github.event_name != 'pull_request'
         run: python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --limit 100
+      - name: Publish authenticated observations on main
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          ADVISER_OUTPUT: /tmp/adviser-source.json
+        run: python scripts/publish_adviser_source.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

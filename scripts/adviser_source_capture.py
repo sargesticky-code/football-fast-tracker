@@ -7,6 +7,8 @@ non-overlapping identity before a tip can become a dashboard adviser.
 """
 import argparse
 import json
+import hashlib
+import math
 import re
 import time
 from datetime import datetime, timezone
@@ -48,9 +50,9 @@ def percentage(raw):
 
 
 def valid_triplet(p):
-    if not isinstance(p, dict) or any(p.get(x) is None for x in ("home", "draw", "away")):
+    if not isinstance(p, dict) or any(type(p.get(x)) not in (int, float) or not math.isfinite(p[x]) or not 0 <= p[x] <= 1 for x in ("home", "draw", "away")):
         return None
-    return p if abs(sum(p.values()) - 1) <= 0.025 else None
+    return p if abs(sum(p[x] for x in ("home", "draw", "away")) - 1) <= 0.025 else None
 
 
 def parse_betclan(html, url):
@@ -73,14 +75,44 @@ def parse_betclan(html, url):
     }
     goal = section(text, r"\bTotal Goals\s*2\.5\b", r"\bBoth Teams to Score\b")
     btts = section(text, r"\bBoth Teams to Score\b", r"\bCorrect Score\b")
-    score_section = section(text, r"\bCorrect Score\b", r"\bTeam Momentum\b")
-    score = re.search(r"\b(\d{1,2})\s*-\s*(\d{1,2})\b", score_section)
+    # Navigation contains 'Correct Score Calculator' before the fixture date.
+    # Only the actual market heading and its immediate value are evidence.
+    heading = soup.find("h4", string=re.compile(r"^\s*Correct Score\s*$", re.I))
+    value = heading.find_next_sibling() if heading else None
+    score = re.fullmatch(r"(\d{1,2})\s*-\s*(\d{1,2})(?:\s+\d{1,3}%\s+Others\s+\d{1,3}%)?",
+                         value.get_text(" ", strip=True) if value and value.name in ("h5", "p") else "")
+    event = None
+    for script in soup.find_all("script", type="application/ld+json"):
+        try:
+            obj = json.loads(script.string or "")
+        except (ValueError, TypeError):
+            continue
+        for item in obj if isinstance(obj, list) else [obj]:
+            if (isinstance(item, dict) and item.get("@type") == "SportsEvent"
+                and item.get("url") == url
+                and item.get("homeTeam", {}).get("name") == match.group(1).strip()
+                and item.get("awayTeam", {}).get("name") == match.group(2).strip()):
+                event = item
+    kickoff = None
+    if event and re.search(r"(?:Z|[+-]\d{2}:\d{2})$", str(event.get("startDate", ""))):
+        try:
+            at = datetime.fromisoformat(event["startDate"].replace("Z", "+00:00"))
+            if at.strftime("%Y-%m-%d %H:%M") == f"{dt.group(1)} {dt.group(2)}":
+                kickoff = at.isoformat()
+        except ValueError:
+            pass
     return {
         "source": "BETCLAN", "source_url": url,
         "source_event_id": re.search(r"/football/(\d+)/", url).group(1),
         "home": match.group(1).strip(), "away": match.group(2).strip(),
         "source_date": dt.group(1), "source_wall_time": dt.group(2),
-        "kickoff_timezone_verified": False,
+        "kickoff_timezone_verified": kickoff is not None,
+        "source_kickoff": kickoff,
+        "source_timezone": kickoff[-6:] if kickoff else None,
+        "source_competition": event.get("organizer", {}).get("name") if event else None,
+        "source_event_status": event.get("eventStatus") if event else None,
+        "raw_content_hash": hashlib.sha256(html.encode()).hexdigest(),
+        "parser_version": "betclan-v2-structured-event",
         "hda": valid_triplet({k.lower(): v for k, v in probs.items()}),
         "over25": percentage(re.search(r"\bOver\s*" + PERCENT, goal, re.I).group(1))
         if re.search(r"\bOver\s*" + PERCENT, goal, re.I) else None,
