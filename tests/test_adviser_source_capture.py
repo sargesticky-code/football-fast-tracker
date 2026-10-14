@@ -29,6 +29,21 @@ class AdviserSourceCaptureTest(unittest.TestCase):
         self.assertIsNone(row["hda"])
         self.assertEqual(row["identity"], "UNRESOLVED")
 
+
+    def test_sportytrader_verified_algorithm_not_bookmaker_odds(self):
+        html = """<h1>QPR vs Derby County Prediction & Betting Tips - Championship</h1>
+          <div>15/10/2026 07:45</div><p>Prediction : Under 2.5 goals 1.83</p>
+          <p>Prediction published on 14/10/2026</p>
+          <p>Probabilities according to our algorithm of possible 1X2 football predictions
+          The Sportytrader algorithm estimates a probability of 43.66% for a win of QPR.
+          The probability according to Sportytrader for a draw between QPR vs Derby County is 36.64%.
+          Our prediction model gives a 19.71% chance for a win of Derby County vs QPR.
+          </p><h3>QPR - Derby County Prediction and Best Odds:</h3>"""
+        row = parse_sportytrader(html, "https://www.sportytrader.com/en/betting-tips/qpr-derby-county-378837/")
+        self.assertEqual(row["tip"], "Under 2.5 goals")
+        self.assertEqual(row["hda"], {"home": .4366, "draw": .3664, "away": .1971})
+        self.assertIsNone(row["canonical_event_id"])
+
     def test_source_boundary(self):
         html = """<a href="/predictionsdetails/football/123/abc">One</a>
            <a href="https://evil.test/predictionsdetails/football/999/bad">Evil</a>"""
