@@ -25,6 +25,9 @@ SUMMARY=Path("/tmp/ft-forebet-verified-summary.json")
 LEAGUE_PREFIX={
     "EPL":"EPL",
     "CH":"ChampionshipENGLAND:",
+    "UCL":"Champions League - League phase",
+    "UYL":"UEFA Youth League - ",
+    "RuC":"Russian Cup - ",
     "Sc1":"PremiershipSCOTLAND:",
     "Es1":"LaLigaSPAIN:",
     "It1":"Serie AITALY:",
@@ -45,6 +48,12 @@ def league_ok(code,full):
     prefix=LEAGUE_PREFIX.get(str(code or ""))
     if not prefix or not isinstance(full,str):
         return False
+    # Forebet CH is English Championship; Flashscore's verified fixture API
+    # now uses the short canonical name without its former country suffix.
+    if code=="CH" and full=="Championship":
+        return True
+    if code=="UCL":
+        return full=="Champions League - League phase"
     return full==prefix if prefix=="EPL" else full.startswith(prefix)
 
 def displayed_wall_clock(row):
@@ -62,7 +71,13 @@ def displayed_wall_clock(row):
                 "%d/%m/%Y %I:%M %p","%d/%m/%Y %H:%M"):
         try:
             dt=datetime.strptime(stamp,fmt)
-            if dt.date().isoformat()==day:
+            # The HTML <time datetime> is a different clock/basis from the
+            # complete human-visible date_bah. Forebet rows near midnight
+            # legitimately cross a calendar boundary. A discrepancy of one
+            # day is tolerable only because the downstream publisher demands
+            # both verified teams and an exact Flashscore UTC kickoff.
+            # Never infer a time when the displayed full date is absent.
+            if abs((dt.date()-datetime.fromisoformat(day).date()).days)<=1:
                 return dt
         except ValueError:
             continue
