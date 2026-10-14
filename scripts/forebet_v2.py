@@ -101,7 +101,15 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
             if known_league and not league_ok(row.get("league_short"), t.get("league")):
                 continue
             if not known_league and not exactly_named:
-                continue
+                # A missing source league code may be bridged only when BOTH
+                # source and target team identities are independently verified
+                # by both providers; exact UTC kickoff and uniqueness remain
+                # mandatory. Never permit one-sided or legacy-only guesses.
+                if not (
+                    verified_shared_source_name(row["home_team"],t["home"]) is True
+                    and verified_shared_source_name(row["away_team"],t["away"]) is True
+                ):
+                    continue
             expected = t["kickoff"].astimezone(timezone.utc).replace(tzinfo=None)
             if abs((wall-expected).total_seconds()) > 60:
                 rejected["CLOCK_OFFSET_CHANGED_OR_WRONG_FIXTURE"] += 1
@@ -138,13 +146,17 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
             "league":str(row.get("league_short") or ""),
             "source_league":str(row.get("league_short") or ""),
             "source_event_url":link,
-            "league_verification":"VERIFIED_SOURCE_CODE" if known_league else "EXACT_NAMES_AND_UTC_TIME_ONLY",
+            "league_verification":"VERIFIED_SOURCE_CODE" if known_league
+                else ("EXACT_NAMES_AND_UTC_TIME_ONLY" if exact
+                      else "TWO_SHARED_PROVIDER_TEAM_KEYS_AND_UNIQUE_UTC_FIXTURE"),
             "source_event_time":wall.replace(tzinfo=timezone.utc).isoformat(),
             "source_event_time_basis":"CALIBRATED_PROVIDER_UTC_AND_EXACT_CANONICAL_KICKOFF",
             "source_display_offset_minutes":CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES,
             "identity_method":"EXACT_TEAMS_LEAGUE_AND_CALIBRATED_UTC_TIME" if exact
-                else ("VERIFIED_SHARED_PROVIDER_BRIDGE_AND_EXACT_TIME" if bridge_proven
-                      else "VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME")
+                else ("TWO_SHARED_PROVIDER_KEYS_UNKNOWN_LEAGUE_EXACT_UTC_TIME"
+                      if not known_league else
+                      ("VERIFIED_SHARED_PROVIDER_BRIDGE_AND_EXACT_TIME" if bridge_proven
+                       else "VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME"))
         }
     return [emitted[k] for k in sorted(emitted)], dict(rejected)
 
@@ -252,8 +264,10 @@ def candidate_pair_diagnostics(source_rows,targets,now):
                 exactly=(home==exact_name(t["home"]) and away==exact_name(t["away"]))
                 if known and not league_ok(row.get("league_short"),t.get("league")):
                     reason="KNOWN_LEAGUE_CONFLICT"
-                elif not known and not exactly:
-                    reason="UNRECOGNIZED_LEAGUE_REQUIRES_EXACT_TEAMS"
+                elif not known and not exactly and not (
+                    verified_shared_source_name(row["home_team"],t["home"]) is True
+                    and verified_shared_source_name(row["away_team"],t["away"]) is True):
+                    reason="UNRECOGNIZED_LEAGUE_REQUIRES_TWO_VERIFIED_SHARED_KEYS"
                 elif abs((wall-t["kickoff"].astimezone(timezone.utc).replace(tzinfo=None)).total_seconds())>60:
                     reason="KICKOFF_CONFLICT"
             candidates.append(reason or "QUALIFIED")
@@ -311,6 +325,7 @@ def run(now=None, fixture_token=None, helper=None):
         "source_rows_parsed":len(candidates),
         "strict_verified_models":len(rows),
         "verified_shared_bridge_matches":sum(1 for row in rows if row["identity_method"]=="VERIFIED_SHARED_PROVIDER_BRIDGE_AND_EXACT_TIME"),
+        "verified_two_key_unknown_league_matches":sum(1 for row in rows if row["identity_method"]=="TWO_SHARED_PROVIDER_KEYS_UNKNOWN_LEAGUE_EXACT_UTC_TIME"),
         "verified_existing_alias_matches":sum(1 for row in rows if row["identity_method"]=="VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME"),
         "calibrated_utc_offset_minutes":CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES,
         "rejections":rejected,
