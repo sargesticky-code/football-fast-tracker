@@ -8,7 +8,7 @@ allowlist (recorded explicitly in proof, never silently claim full coverage).
 from __future__ import annotations
 
 import requests
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError as BrowserTimeoutError
 from scrape_forebet import parse_forebet_rows
 from forebet_verified_aliases import source_forms
 
@@ -77,10 +77,12 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
                 try:
                     page.wait_for_function(
                         "(before) => document.querySelectorAll('div.rcnt').length > before",
-                        arg=initial, timeout=8000)
-                    page.wait_for_timeout(900)
-                except Exception:
-                    pass
+                        arg=initial, timeout=18000)
+                    page.wait_for_timeout(700)
+                except BrowserTimeoutError as exc:
+                    # Clicking a visible "more" control without new rows is
+                    # incomplete coverage, NOT a successful full-page capture.
+                    raise ValueError("FOREBET_EXPANSION_UNVERIFIED") from exc
             result = page.evaluate("""({allowedPairs,maxRows,maxBytes,maxMatches})=>{
               const norm=s=>String(s||'').normalize('NFKD').toLowerCase()
                 .replace(/[^a-z0-9]/g,'');
