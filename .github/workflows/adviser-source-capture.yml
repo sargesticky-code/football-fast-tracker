@@ -2,6 +2,10 @@ name: BetClan and SportyTrader source capture (unmatched only)
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/adviser-source-capture.yml'
   pull_request:
     branches: [main]
     paths:
