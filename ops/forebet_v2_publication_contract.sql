@@ -1,7 +1,7 @@
--- Forebet V2 production publisher contract (2026-10-14).
--- Maintains verified Flashscore identities in both canonical substrates only
--- for the fully validated publication batch; no unsafe global FK changes.
--- Apply with privileged migration/DB change-management process after review.
+-- Forebet publisher verified Flashscore contract. Deployed and checked 2026-10-14.
+-- The payload preserves verified source identity and display-clock provenance
+-- for each future upsert. Existing earlier records are not retroactively guessed.
+-- Signed OIDC main-only Edge endpoint is still the sole caller.
 
 CREATE OR REPLACE FUNCTION public.ft_publish_forebet_canonical(p_rows jsonb, p_run_id text)
  RETURNS jsonb
@@ -150,7 +150,13 @@ BEGIN
       nullif(r->>'corner_prob_over95','')::numeric,r->>'corner_predicted_score',
       nullif(r->>'avg_corners','')::numeric,r->>'forebet_detail_url',
       jsonb_build_object('source','FOREBET','captured_at',ts,'publication_run',p_run_id,
-        'market_source_url',r->>'forebet_detail_url','market_capture_pre_kickoff',ts<=(r->>'kickoff')::timestamptz),
+        'market_source_url',r->>'forebet_detail_url','market_capture_pre_kickoff',ts<=(r->>'kickoff')::timestamptz,
+        'identity_method',left(coalesce(r->>'identity_method','UNKNOWN'),120),
+        'league_verification',left(coalesce(r->>'league_verification','UNKNOWN'),120),
+        'source_event_time',r->>'source_event_time',
+        'source_event_time_basis',r->>'source_event_time_basis',
+        'source_display_offset_minutes',r->>'source_display_offset_minutes',
+        'source_provider','FOREBET','identity_authority','FLASHSCORE'),
       now())
     ON CONFLICT (canonical_event_id) DO UPDATE SET
       fetched_at=excluded.fetched_at,forebet_match_date=excluded.forebet_match_date,
@@ -228,6 +234,5 @@ END;
 $function$
 ;
 
--- Least privilege: the service-role-only publisher must archive its verified
--- pre-kickoff models; anon/authenticated roles remain disallowed.
+-- Scoped archival function access; never grant to anon/authenticated.
 GRANT EXECUTE ON FUNCTION private.ft_archive_verified_forebet_event(text) TO service_role;
