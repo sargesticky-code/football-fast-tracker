@@ -21,7 +21,7 @@ import requests
 from forebet_browser_source import load_canonical_candidates
 from forebet_canonical_source_probe import canonical_targets, exact_name, model_fields, aware_time
 from forebet_verified_aliases import source_forms, verified_source_name
-from capture_forebet_canonical_light import displayed_wall_clock, league_ok
+from capture_forebet_canonical_light import displayed_wall_clock, league_ok, LEAGUE_PREFIX
 
 API = "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/forebet-canonical-publish"
 HKT = timezone(timedelta(hours=8))
@@ -72,7 +72,7 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
         for home in source_forms(t["home"]):
             for away in source_forms(t["away"]):
                 catalog.setdefault((home, away), []).append(t)
-    emitted, rejected, links = {}, Counter(), set()
+    emitted, rejected, links, blocked_ids = {}, Counter(), set(), set()
     for row in source_rows:
         fields = model_fields(row)
         wall = displayed_wall_clock(row)
@@ -82,25 +82,38 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
         home = exact_name(row.get("home_team"))
         away = exact_name(row.get("away_team"))
         pair = catalog.get((home, away), [])
-        possibles = [t for t in pair
-                     if verified_source_name(row.get("home_team"), t["home"])
-                     and verified_source_name(row.get("away_team"), t["away"])
-                     and league_ok(row.get("league_short"), t.get("league"))
-                     and t["kickoff"] > now
-                     and t["kickoff"] <= now + timedelta(hours=60)]
+        if not pair:
+            rejected["SOURCE_TEAM_PAIR_NOT_IN_VERIFIED_FIXTURES"] += 1
+            continue
+        known_league = str(row.get("league_short") or "") in LEAGUE_PREFIX
+        possibles = []
+        for t in pair:
+            if not now < t["kickoff"] <= now + timedelta(hours=60):
+                continue
+            exactly_named = home == exact_name(t["home"]) and away == exact_name(t["away"])
+            if not (verified_source_name(row.get("home_team"), t["home"]) and
+                    verified_source_name(row.get("away_team"), t["away"])):
+                continue
+            # Known source codes must corroborate competition. For *unknown*
+            # code, permit only TWO exact team names + exact UTC kickoff.
+            # Never promote a fuzzy alias under an unverified league code.
+            if known_league and not league_ok(row.get("league_short"), t.get("league")):
+                continue
+            if not known_league and not exactly_named:
+                continue
+            expected = t["kickoff"].astimezone(timezone.utc).replace(tzinfo=None)
+            if abs((wall-expected).total_seconds()) > 60:
+                rejected["CLOCK_OFFSET_CHANGED_OR_WRONG_FIXTURE"] += 1
+                continue
+            possibles.append(t)
         if len(possibles) != 1:
-            rejected["NOT_UNIQUE_TEAM_LEAGUE"] += 1
+            rejected["NO_UNIQUE_VERIFIED_TEAM_TIME_AND_LEAGUE"] += 1
             continue
         t = possibles[0]
-        # One provider row is accepted only if it independently corroborates
-        # the exact FS match kickoff under the calibrated default UTC clock.
-        expected = t["kickoff"].astimezone(timezone.utc).replace(tzinfo=None)
-        if abs((wall-expected).total_seconds()) > 60:
-            rejected["CLOCK_OFFSET_CHANGED_OR_WRONG_FIXTURE"] += 1
-            continue
         mid, link = t["match_id"], row["forebet_detail_url"]
-        if mid in emitted or link in links:
+        if mid in emitted or mid in blocked_ids or link in links:
             emitted.pop(mid, None)
+            blocked_ids.add(mid)
             rejected["DUPLICATE_SOURCE_OR_CANONICAL_EVENT"] += 1
             continue
         links.add(link)
@@ -118,6 +131,7 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
             "league":str(row.get("league_short") or ""),
             "source_league":str(row.get("league_short") or ""),
             "source_event_url":link,
+            "league_verification":"VERIFIED_SOURCE_CODE" if known_league else "EXACT_NAMES_AND_UTC_TIME_ONLY",
             "source_event_time":t["kickoff"].isoformat(),
             "source_event_time_basis":"CALIBRATED_PROVIDER_UTC_AND_EXACT_CANONICAL_KICKOFF",
             "source_display_offset_minutes":CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES,
