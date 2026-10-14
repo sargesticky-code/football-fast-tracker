@@ -9,6 +9,7 @@ from playwright.sync_api import Error as BrowserError
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
 from forebet_v2 import verified_rows, canonical_from_oidc, source_dates, dedupe_repeated_source_rows, source_overlap_diagnostics, run
 from forebet_intersection_audit import source_intersection_audit, classify_target
+from capture_forebet_canonical_light import league_ok, displayed_wall_clock
 from forebet_verified_aliases import (shared_verified_catalog, source_forms,
                                       verified_source_name, norm, verified_shared_source_name)
 
@@ -45,6 +46,35 @@ class SourceIdentityTests(unittest.TestCase):
         self.assertIn("refs/heads/main",active)
         self.assertNotIn("hkjc",active.lower())
         self.assertNotIn("forebet-firecrawl-collector",active)
+
+
+    def test_source_visible_complete_clock_can_cross_html_date_by_one_day_only(self):
+        row,fixture=sample()
+        row["match_date"]="2026-10-14"
+        wall=displayed_wall_clock(row)
+        self.assertEqual(wall.isoformat(),"2026-10-15T14:00:00")
+        accepted,failures=verified_rows([row],[fixture],NOW)
+        self.assertEqual(len(accepted),1,failures)
+        row["match_date"]="2026-10-12"
+        self.assertIsNone(displayed_wall_clock(row))
+        self.assertEqual(verified_rows([row],[fixture],NOW)[0],[])
+
+    def test_proven_championship_and_uefa_league_aliases_not_guess_other_leagues(self):
+        self.assertTrue(league_ok("CH","Championship"))
+        self.assertTrue(league_ok("CH","ChampionshipENGLAND: Standings"))
+        self.assertTrue(league_ok("UCL","Champions League - League phase"))
+        self.assertTrue(league_ok("UYL","UEFA Youth League - League phase"))
+        self.assertTrue(league_ok("UYL","UEFA Youth League - Winners Play Offs"))
+        self.assertTrue(league_ok("RuC","Russian Cup - Regions Path"))
+        self.assertFalse(league_ok("UCL","Europa League - League phase"))
+        self.assertFalse(league_ok("CH","Championship - Scotland"))
+        self.assertFalse(league_ok("RuC","Premier League"))
+        row,fixture=sample()
+        row["league_short"]="CH"
+        fixture["league"]="Championship"
+        self.assertEqual(len(verified_rows([row],[fixture],NOW)[0]),1)
+        fixture["league"]="EPL"
+        self.assertEqual(verified_rows([row],[fixture],NOW)[0],[])
 
 
     def test_source_intersection_counts_each_fixture_once_without_faking_coverage(self):
