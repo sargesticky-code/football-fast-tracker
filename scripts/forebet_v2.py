@@ -219,6 +219,54 @@ def source_overlap_diagnostics(source_rows, targets, now):
     return dict(counts)
 
 
+
+def candidate_pair_diagnostics(source_rows,targets,now):
+    """Read-only reason accounting for known pairs not admitted by matcher."""
+    catalog={}
+    for t in targets:
+        for h in source_forms(t["home"]):
+            for a in source_forms(t["away"]):
+                catalog.setdefault((h,a),[]).append(t)
+    reasons=Counter()
+    for row in source_rows:
+        if not model_fields(row):
+            continue
+        wall=displayed_wall_clock(row)
+        if wall is None:
+            continue
+        home=exact_name(row.get("home_team"))
+        away=exact_name(row.get("away_team"))
+        pairs=catalog.get((home,away),[])
+        if not pairs:
+            continue
+        candidates=[]
+        for t in pairs:
+            reason=""
+            if not now<t["kickoff"]<=now+timedelta(hours=60):
+                reason="WINDOW_NOT_ACTIVE"
+            elif not (verified_source_name(row.get("home_team"),t["home"]) and
+                      verified_source_name(row.get("away_team"),t["away"])):
+                reason="UNVERIFIED_PAIR_IDENTITY"
+            else:
+                known=str(row.get("league_short") or "") in LEAGUE_PREFIX
+                exactly=(home==exact_name(t["home"]) and away==exact_name(t["away"]))
+                if known and not league_ok(row.get("league_short"),t.get("league")):
+                    reason="KNOWN_LEAGUE_CONFLICT"
+                elif not known and not exactly:
+                    reason="UNRECOGNIZED_LEAGUE_REQUIRES_EXACT_TEAMS"
+                elif abs((wall-t["kickoff"].astimezone(timezone.utc).replace(tzinfo=None)).total_seconds())>60:
+                    reason="KICKOFF_CONFLICT"
+            candidates.append(reason or "QUALIFIED")
+        if candidates.count("QUALIFIED")==1:
+            reasons["one_verified_team_pair"]+=1
+        elif candidates.count("QUALIFIED")>1:
+            reasons["multiple_canonical_candidates"]+=1
+        else:
+            reasons["rejected_known_pair_rows"]+=1
+            reasons[Counter(candidates).most_common(1)[0][0]]+=1
+    return dict(reasons)
+
+
 def run(now=None, fixture_token=None, helper=None):
     now = now or datetime.now(timezone.utc)
     fixture_token = fixture_token or os.getenv("FOREBET_FIXTURES_OIDC", "")
@@ -266,6 +314,7 @@ def run(now=None, fixture_token=None, helper=None):
         "verified_existing_alias_matches":sum(1 for row in rows if row["identity_method"]=="VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME"),
         "calibrated_utc_offset_minutes":CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES,
         "rejections":rejected,
+        "candidate_pair_diagnostics":candidate_pair_diagnostics(candidates,targets,now),
         "source_overlap_diagnostics":source_overlap_diagnostics(candidates,targets,now),
         "verified_by_utc_date":{
             date:sum(1 for row in rows if row["kickoff"][:10]==date)
