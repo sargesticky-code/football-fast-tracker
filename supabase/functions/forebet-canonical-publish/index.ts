@@ -85,6 +85,39 @@ Deno.serve(async (request: Request): Promise<Response> => {
   } catch {
     return response(400, { error: "INVALID_JSON" });
   }
+  // Signed main-only reconciliation for *provisional* one-sided candidates.
+  // Never calls verified publication RPC or promotes model/aliases by guess.
+  const proposal = body as {source?:string; rows?:unknown; verified_ids?:unknown; complete_dates?:unknown};
+  if (proposal?.source === "FOREBET_PROVISIONAL_RECONCILE_V1") {
+    if (!Array.isArray(proposal.rows) || proposal.rows.length > 180
+      || !Array.isArray(proposal.verified_ids) || proposal.verified_ids.length > 350
+      || !Array.isArray(proposal.complete_dates) || proposal.complete_dates.length > 3)
+      return response(422,{error:"INVALID_PROVISIONAL_ENVELOPE"});
+    const base = Deno.env.get("SUPABASE_URL");
+    const service = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!base || !service) return response(503,{error:"SERVICE_CONFIGURATION_UNAVAILABLE"});
+    try {
+      const result = await fetch(base+"/rest/v1/rpc/ft_reconcile_forebet_provisional",{
+        method:"POST",
+        headers:{apikey:service,authorization:"Bearer "+service,
+          "content-type":"application/json","cache-control":"no-store"},
+        body:JSON.stringify({
+          p_rows:proposal.rows,p_verified_ids:proposal.verified_ids,
+          p_complete_dates:proposal.complete_dates,p_run_id:String(claims.run_id)
+        }),
+        signal:AbortSignal.timeout(15_000)
+      });
+      if (!result.ok) {
+        console.error("FOREBET_PROVISIONAL_RECONCILE_RPC_REJECTED",result.status);
+        return response(result.status>=500?503:422,{error:"PROVISIONAL_RECONCILE_REJECTED"});
+      }
+      const reconciled = await result.json();
+      return response(200,{source:"FOREBET_PROVISIONAL",...reconciled});
+    } catch {
+      return response(503,{error:"PROVISIONAL_RECONCILE_UNAVAILABLE"});
+    }
+  }
+
   const payload = body as { rows?: unknown };
   if (!payload || !Array.isArray(payload.rows) || payload.rows.length === 0 || payload.rows.length > 500)
     return response(422, { error: "INVALID_OR_EMPTY_FOREBET_BATCH" });

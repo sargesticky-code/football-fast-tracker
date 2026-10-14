@@ -1,0 +1,53 @@
+name: Forebet provisional safety contract
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/forebet_provisional.py'
+      - 'scripts/forebet_v2.py'
+      - 'tests/test_forebet_v2.py'
+      - 'supabase/functions/forebet-canonical-publish/index.ts'
+      - 'ops/forebet_provisional_self_healing_v1.sql'
+      - '.github/workflows/supabase_private_ingest.yml'
+      - '.github/workflows/forebet_provisional_safety.yml'
+permissions:
+  contents: read
+jobs:
+  safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run all Forebet one-team and strict identity tests
+        run: |
+          python -m pip install requests==2.32.5 beautifulsoup4==4.12.3 lxml==5.4.0 playwright==1.55.0
+          python -m unittest discover -s tests -p test_forebet_v2.py -v
+      - name: Check OIDC publisher TypeScript
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno check supabase/functions/forebet-canonical-publish/index.ts
+      - name: Audit isolation and automatic revocation contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          sql=Path("ops/forebet_provisional_self_healing_v1.sql").read_text()
+          edge=Path("supabase/functions/forebet-canonical-publish/index.ts").read_text()
+          flow=Path(".github/workflows/supabase_private_ingest.yml").read_text()
+          assert "ENABLE ROW LEVEL SECURITY" in sql
+          assert "SECURITY INVOKER" in sql
+          assert "forebet_provisional_audit" in sql
+          assert "SOURCE_IDENTITY_DRIFT" in sql
+          assert "CANONICAL_IDENTITY_CHANGED" in sql
+          assert "NOT_REOBSERVED_ON_COMPLETE_SOURCE_DATE" in sql
+          assert "TWO_SIDED_CANONICAL_VERIFIED" in sql
+          assert "CREATE OR REPLACE VIEW public.forebet_provisional_feed_current" in sql
+          assert "FOREBET_PROVISIONAL_RECONCILE_V1" in edge
+          assert "PREVIEW_READ_ONLY" in edge
+          assert 'forebet-canonical-publish' in flow
+          assert "Reconcile provisional candidates with disconnect-on-conflict" in flow
+          assert "cron: '15 0 * * *'" in flow
+          PY

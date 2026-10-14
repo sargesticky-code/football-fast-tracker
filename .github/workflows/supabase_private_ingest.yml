@@ -98,6 +98,47 @@ jobs:
               raise SystemExit("FOREBET_V2_PUBLICATION_NOT_CONFIRMED")
           print("FOREBET_V2_PUBLISHED",r["accepted"],"APPLIED",r["applied"])
           PY
+      - name: Validate bounded one-team provisional reconciliation
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open("/tmp/ft-forebet-provisional-only.json"))
+          strict=json.load(open("/tmp/ft-forebet-verified-only.json"))["rows"]
+          rows=p["rows"]
+          assert p["source"]=="FOREBET_PROVISIONAL_RECONCILE_V1"
+          assert len(rows)<=180 and len(p["complete_dates"])<=3
+          assert len(p["verified_ids"])==len(strict)
+          assert {r["match_id"] for r in strict}==set(p["verified_ids"])
+          assert not ({r["match_id"] for r in strict}&{r["match_id"] for r in rows})
+          assert len({r["match_id"] for r in rows})==len(rows)
+          assert len({r["source_url"] for r in rows})==len(rows)
+          assert all(r["matched_identity"]=="ONE_SIDE_WITH_CONFIRMED_COMPETITION_AND_UNIQUE_KICKOFF"
+                     and r["one_verified_side"] in ("HOME","AWAY") for r in rows)
+          print("FOREBET_PROVISIONAL_PROOF",len(rows),"STRICT",len(strict))
+          PY
+      - name: Reconcile provisional candidates with disconnect-on-conflict
+        if: github.ref == 'refs/heads/main' && steps.capture.outputs.count != '0'
+        env:
+          FOREBET_OIDC: ${{ steps.oidc.outputs.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail-with-body -sS --connect-timeout 10 --max-time 30 \
+            -X POST -H "Authorization: Bearer $FOREBET_OIDC" \
+            -H "Content-Type: application/json" \
+            --data-binary @/tmp/ft-forebet-provisional-only.json \
+            'https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/forebet-canonical-publish' \
+            -o /tmp/ft-forebet-provisional-result.json
+          python - <<'PY'
+          import json
+          r=json.load(open("/tmp/ft-forebet-provisional-result.json"))
+          if r.get("source")!="FOREBET_PROVISIONAL" or r.get("run") is None:
+              raise SystemExit("FOREBET_PROVISIONAL_RECONCILIATION_NOT_CONFIRMED")
+          print("FOREBET_PROVISIONAL_RECONCILED",
+                r.get("currently_provisional"),"NEW",r.get("admitted_new"),
+                "DISCONNECTED",r.get("disconnected"),"PROMOTED",r.get("promoted"))
+          PY
       - name: Preserve only bounded proof summary
         if: always()
         uses: actions/upload-artifact@v4
