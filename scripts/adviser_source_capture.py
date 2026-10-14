@@ -105,7 +105,19 @@ def parse_sportytrader(html, url):
     if not dt:
         return None
     pick = section(text, r"\bPrediction\s*:", r"(?:Prediction published|Bookmaker|New customers)")
-    pick = re.split(r"\s+(?:\d+(?:\.\d+)?|New customers)\b", pick.strip(), maxsplit=1)[0][:90].strip()
+    # Remove bookmaker decimal quote without corrupting a tip such as "Under 2.5 goals".
+    pick = re.split(r"\s+New customers\b", pick, flags=re.I, maxsplit=1)[0].strip()
+    pick = re.sub(r"\s+[1-9]\d{0,2}\.\d{2}$", "", pick).strip()[:90]
+    # Parse genuine SportyTrader algorithm probabilities, not bookmaker odds.
+    algorithm = section(text, r"Probabilities according to our algorithm", r"Prediction and Best Odds")
+    h = re.search(r"probability of\s*" + PERCENT + r"\s+for a win of", algorithm, re.I)
+    d = re.search(r"for a draw\b.{0,160}?\bis\s*" + PERCENT, algorithm, re.I)
+    a = re.search(r"(?:model gives|model estimates)\s+(?:a\s+)?" + PERCENT + r"\s+chance.{0,100}?for a win of", algorithm, re.I)
+    hda = valid_triplet({
+        "home": percentage(h.group(1)) if h else None,
+        "draw": percentage(d.group(1)) if d else None,
+        "away": percentage(a.group(1)) if a else None,
+    })
     return {
         "source": "SPORTYTRADER", "source_url": url,
         "source_event_id": re.search(r"-(\d+)/?$", url).group(1),
@@ -113,7 +125,7 @@ def parse_sportytrader(html, url):
         "source_date": f"{dt.group(3)}-{dt.group(2)}-{dt.group(1)}",
         "source_wall_time": dt.group(4), "kickoff_timezone_verified": False,
         # A written tip is not a probability triplet; never invent 1X2 from odds.
-        "tip": pick or None, "hda": None, "canonical_event_id": None,
+        "tip": pick or None, "hda": hda, "canonical_event_id": None,
         "identity": "UNRESOLVED",
     }
 
