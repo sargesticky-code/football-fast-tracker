@@ -27,6 +27,25 @@ def sample():
 
 class SourceIdentityTests(unittest.TestCase):
 
+    def test_all_legacy_hkjc_connections_removed_from_active_repo(self):
+        root=Path(__file__).resolve().parents[1]
+        # A mistakenly re-added probe or manual workflow must fail even though
+        # it has no schedule. Do not allow dormant scrapers to be re-enabled.
+        for file in (root/".github"/"workflows").glob("*.yml"):
+            self.assertNotIn("hkjc",file.read_text(encoding="utf-8").lower(),str(file))
+        for relative in (
+            "hkjc_live_market.py","vendor_hkjc_queries.py",
+            "scripts/capture_hkjc_live_odds.py","scripts/normalize_hkjc.py",
+            "scripts/update_hkjc_history.py",
+            ".github/workflows/forebet_daily.yml"):
+            self.assertFalse((root/relative).exists(),relative)
+        active=(root/".github/workflows/supabase_private_ingest.yml").read_text(encoding="utf-8")
+        self.assertIn("forebet-canonical-publish",active)
+        self.assertIn("refs/heads/main",active)
+        self.assertNotIn("hkjc",active.lower())
+        self.assertNotIn("forebet-firecrawl-collector",active)
+
+
     def test_cross_source_snapshot_is_complete_and_without_provider_api(self):
         fs,fb,by_key=shared_verified_catalog()
         self.assertGreaterEqual(len(fs),500)
