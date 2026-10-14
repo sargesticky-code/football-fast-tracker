@@ -55,3 +55,38 @@ class AdviserSourceCaptureTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class BetClanRegressionTest(unittest.TestCase):
+    def page(self, start='2026-10-15T00:30:00+01:00'):
+        import json
+        event={'@type':'SportsEvent','url':'https://www.betclan.com/predictionsdetails/football/123/test/',
+               'startDate':start,'homeTeam':{'name':'Home'},'awayTeam':{'name':'Away'},
+               'organizer':{'name':'Estonia Meistriliiga'}}
+        return '''<nav>Correct Score Calculator</nav><h1>Home vs Away Prediction</h1>
+        <p>Date 2026-10-15 00:30</p><h4>Winner</h4><p>Home 60% Draw 20% Away 20%</p>
+        <h4>Total Goals 2.5</h4><p>Over 63%</p><h4>Both Teams to Score</h4><p>Yes 61%</p>
+        <h4>Correct Score</h4><h5>3-1</h5><h3>Team Momentum</h3>
+        <script type="application/ld+json">'''+json.dumps(event)+'</script>'
+
+    def test_navigation_date_is_never_score(self):
+        row=parse_betclan(self.page(),'https://www.betclan.com/predictionsdetails/football/123/test/')
+        self.assertEqual(row['predicted_score'],'3-1')
+        self.assertEqual(row['source_kickoff'],'2026-10-15T00:30:00+01:00')
+        self.assertTrue(row['kickoff_timezone_verified'])
+        self.assertEqual(row['source_competition'],'Estonia Meistriliiga')
+
+    def test_missing_market_stays_unknown(self):
+        row=parse_betclan(self.page().replace('<h4>Correct Score</h4><h5>3-1</h5>',''),
+                         'https://www.betclan.com/predictionsdetails/football/123/test/')
+        self.assertIsNone(row['predicted_score'])
+
+    def test_timezone_missing_or_conflicting_stays_unknown(self):
+        for at in ['2026-10-15T00:30:00','2026-10-14T00:30:00+01:00']:
+            row=parse_betclan(self.page(at),'https://www.betclan.com/predictionsdetails/football/123/test/')
+            self.assertIsNone(row['source_kickoff'])
+            self.assertFalse(row['kickoff_timezone_verified'])
+
+    def test_bad_triplets(self):
+        for triplet in [{'home':-.1,'draw':.5,'away':.6},{'home':float('nan'),'draw':.5,'away':.5},
+                        {'home':True,'draw':0,'away':0},{'home':1.1,'draw':0,'away':-.1}]:
+            self.assertIsNone(valid_triplet(triplet))
