@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Forebet V2: one source page, DB-verified Flashscore fixture identities only.
+"""Forebet V2: bounded multi-date capture and DB-verified Flashscore identity.
 
 No public dashboard dependency, HKJC feed, fuzzy matcher, per-row DB writes,
 HTML archive, retries, or additional scraping. The previously corroborated
@@ -20,6 +20,7 @@ import requests
 from playwright.sync_api import Error as BrowserError
 
 from forebet_browser_source import load_canonical_candidates
+from forebet_intersection_audit import source_intersection_audit
 from forebet_canonical_source_probe import canonical_targets, exact_name, model_fields, aware_time
 from forebet_verified_aliases import source_forms, verified_source_name, verified_shared_source_name
 from capture_forebet_canonical_light import displayed_wall_clock, league_ok, LEAGUE_PREFIX
@@ -331,6 +332,7 @@ def run(now=None, fixture_token=None, helper=None):
         "rejections":rejected,
         "candidate_pair_diagnostics":candidate_pair_diagnostics(candidates,targets,now),
         "source_overlap_diagnostics":source_overlap_diagnostics(candidates,targets,now),
+        "target_source_intersection":source_intersection_audit(candidates,targets,rows,now),
         "verified_by_utc_date":{
             date:sum(1 for row in rows if row["kickoff"][:10]==date)
             for date in dates
