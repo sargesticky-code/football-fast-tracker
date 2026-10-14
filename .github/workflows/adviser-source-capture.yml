@@ -2,6 +2,12 @@ name: BetClan and SportyTrader source capture (unmatched only)
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/adviser_source_capture.py'
+      - 'tests/test_adviser_source_capture.py'
+      - '.github/workflows/adviser-source-capture.yml'
   schedule:
     # One source snapshot per day (13:30 HKT). No constant scraping or writes to production.
     - cron: "30 5 * * *"
@@ -26,6 +32,7 @@ jobs:
       - name: Validate parsers offline
         run: python -m unittest discover -s tests -p test_adviser_source_capture.py -v
       - name: Collect today's and tomorrow's source records
+        if: github.event_name != 'pull_request'
         run: python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --limit 100
       - uses: actions/upload-artifact@v4
         if: always()
