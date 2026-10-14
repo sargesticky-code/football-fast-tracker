@@ -9,6 +9,7 @@ from playwright.sync_api import Error as BrowserError
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
 from forebet_v2 import verified_rows, canonical_from_oidc, source_dates, dedupe_repeated_source_rows, source_overlap_diagnostics, run
 from forebet_intersection_audit import source_intersection_audit, classify_target
+from forebet_provisional import tentative_rows
 from capture_forebet_canonical_light import league_ok, displayed_wall_clock
 from forebet_verified_aliases import (shared_verified_catalog, source_forms,
                                       verified_source_name, norm, verified_shared_source_name)
@@ -28,6 +29,52 @@ def sample():
     return row,fixture
 
 class SourceIdentityTests(unittest.TestCase):
+
+    def test_one_verified_team_and_league_time_is_only_provisional(self):
+        row,target=sample()
+        row["away_team"]="Man City Completely Unseen"
+        candidates, stats = tentative_rows([row],[target],[],NOW)
+        self.assertEqual(len(candidates),1)
+        self.assertEqual(candidates[0]["one_verified_side"],"HOME")
+        self.assertEqual(candidates[0]["matched_identity"],
+                         "ONE_SIDE_WITH_CONFIRMED_COMPETITION_AND_UNIQUE_KICKOFF")
+        self.assertEqual(len(verified_rows([row],[target],NOW)[0]),0)
+        self.assertEqual(stats["safe_one_side_provisionals"],1)
+        self.assertEqual(tentative_rows([row],[target],
+                         [{"match_id":target["match_id"]}],NOW)[0],[])
+
+    def test_cross_league_and_wrong_kickoff_cannot_be_provisionally_accepted(self):
+        row,target=sample()
+        row["away_team"]="Unseen Visitors"
+        row["league_short"]="It1"
+        self.assertEqual(tentative_rows([row],[target],[],NOW)[0],[])
+        row["league_short"]="EPL"
+        row["kickoff_text"]="10/15/2026 02:10 PM"
+        self.assertEqual(tentative_rows([row],[target],[],NOW)[0],[])
+        row["kickoff_text"]="10/15/2026 02:00 PM"
+        row["league_short"]="UNKNOWN_CODE"
+        self.assertEqual(tentative_rows([row],[target],[],NOW)[0],[])
+
+    def test_provisional_conflicting_source_identity_is_rejected(self):
+        row,target=sample()
+        row["away_team"]="Different Away"
+        row2=dict(row, forebet_detail_url=
+                  "https://www.forebet.com/en/football/matches/different-777777",
+                  away_team="Another Away")
+        self.assertEqual(tentative_rows([row,row2],[target],[],NOW)[0],[])
+        other=dict(target,match_id="FS:othersafe1")
+        self.assertEqual(tentative_rows([row],[target,other],[],NOW)[0],[])
+
+    def test_provisional_both_verified_or_zero_verified_not_used(self):
+        row,target=sample()
+        self.assertEqual(tentative_rows([row],[target],[],NOW)[0],[])
+        row["home_team"]="Unknown Side"
+        row["away_team"]="Other Unknown Side"
+        self.assertEqual(tentative_rows([row],[target],[],NOW)[0],[])
+        row["home_team"]="Liverpool"
+        row["away_team"]="The Unmatched Club"
+        row["prob_home"]=None
+        self.assertEqual(tentative_rows([row],[target],[],NOW)[0],[])
 
     def test_all_legacy_hkjc_connections_removed_from_active_repo(self):
         root=Path(__file__).resolve().parents[1]
