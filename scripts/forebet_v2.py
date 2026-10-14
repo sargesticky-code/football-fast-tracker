@@ -21,7 +21,7 @@ from playwright.sync_api import Error as BrowserError
 
 from forebet_browser_source import load_canonical_candidates
 from forebet_canonical_source_probe import canonical_targets, exact_name, model_fields, aware_time
-from forebet_verified_aliases import source_forms, verified_source_name
+from forebet_verified_aliases import source_forms, verified_source_name, verified_shared_source_name
 from capture_forebet_canonical_light import displayed_wall_clock, league_ok, LEAGUE_PREFIX
 
 API = "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/forebet-canonical-publish"
@@ -101,7 +101,15 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
             if known_league and not league_ok(row.get("league_short"), t.get("league")):
                 continue
             if not known_league and not exactly_named:
-                continue
+                # A missing source league code may be bridged only when BOTH
+                # source and target team identities are independently verified
+                # by both providers; exact UTC kickoff and uniqueness remain
+                # mandatory. Never permit one-sided or legacy-only guesses.
+                if not (
+                    verified_shared_source_name(row["home_team"],t["home"]) is True
+                    and verified_shared_source_name(row["away_team"],t["away"]) is True
+                ):
+                    continue
             expected = t["kickoff"].astimezone(timezone.utc).replace(tzinfo=None)
             if abs((wall-expected).total_seconds()) > 60:
                 rejected["CLOCK_OFFSET_CHANGED_OR_WRONG_FIXTURE"] += 1
@@ -119,6 +127,12 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
             continue
         links.add(link)
         exact = home == exact_name(t["home"]) and away == exact_name(t["away"])
+        bridge_proven = (
+            (home != exact_name(t["home"]) and
+             verified_shared_source_name(row["home_team"], t["home"]) is True)
+            or (away != exact_name(t["away"]) and
+                verified_shared_source_name(row["away_team"], t["away"]) is True)
+        )
         emitted[mid] = {
             "match_id":mid,"captured_at":now.isoformat(),
             "kickoff":t["kickoff"].isoformat(),
@@ -132,12 +146,17 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
             "league":str(row.get("league_short") or ""),
             "source_league":str(row.get("league_short") or ""),
             "source_event_url":link,
-            "league_verification":"VERIFIED_SOURCE_CODE" if known_league else "EXACT_NAMES_AND_UTC_TIME_ONLY",
+            "league_verification":"VERIFIED_SOURCE_CODE" if known_league
+                else ("EXACT_NAMES_AND_UTC_TIME_ONLY" if exact
+                      else "TWO_SHARED_PROVIDER_TEAM_KEYS_AND_UNIQUE_UTC_FIXTURE"),
             "source_event_time":wall.replace(tzinfo=timezone.utc).isoformat(),
             "source_event_time_basis":"CALIBRATED_PROVIDER_UTC_AND_EXACT_CANONICAL_KICKOFF",
             "source_display_offset_minutes":CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES,
             "identity_method":"EXACT_TEAMS_LEAGUE_AND_CALIBRATED_UTC_TIME" if exact
-                else "VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME"
+                else ("TWO_SHARED_PROVIDER_KEYS_UNKNOWN_LEAGUE_EXACT_UTC_TIME"
+                      if not known_league else
+                      ("VERIFIED_SHARED_PROVIDER_BRIDGE_AND_EXACT_TIME" if bridge_proven
+                       else "VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME"))
         }
     return [emitted[k] for k in sorted(emitted)], dict(rejected)
 
@@ -212,6 +231,56 @@ def source_overlap_diagnostics(source_rows, targets, now):
     return dict(counts)
 
 
+
+def candidate_pair_diagnostics(source_rows,targets,now):
+    """Read-only reason accounting for known pairs not admitted by matcher."""
+    catalog={}
+    for t in targets:
+        for h in source_forms(t["home"]):
+            for a in source_forms(t["away"]):
+                catalog.setdefault((h,a),[]).append(t)
+    reasons=Counter()
+    for row in source_rows:
+        if not model_fields(row):
+            continue
+        wall=displayed_wall_clock(row)
+        if wall is None:
+            continue
+        home=exact_name(row.get("home_team"))
+        away=exact_name(row.get("away_team"))
+        pairs=catalog.get((home,away),[])
+        if not pairs:
+            continue
+        candidates=[]
+        for t in pairs:
+            reason=""
+            if not now<t["kickoff"]<=now+timedelta(hours=60):
+                reason="WINDOW_NOT_ACTIVE"
+            elif not (verified_source_name(row.get("home_team"),t["home"]) and
+                      verified_source_name(row.get("away_team"),t["away"])):
+                reason="UNVERIFIED_PAIR_IDENTITY"
+            else:
+                known=str(row.get("league_short") or "") in LEAGUE_PREFIX
+                exactly=(home==exact_name(t["home"]) and away==exact_name(t["away"]))
+                if known and not league_ok(row.get("league_short"),t.get("league")):
+                    reason="KNOWN_LEAGUE_CONFLICT"
+                elif not known and not exactly and not (
+                    verified_shared_source_name(row["home_team"],t["home"]) is True
+                    and verified_shared_source_name(row["away_team"],t["away"]) is True):
+                    reason="UNRECOGNIZED_LEAGUE_REQUIRES_TWO_VERIFIED_SHARED_KEYS"
+                elif abs((wall-t["kickoff"].astimezone(timezone.utc).replace(tzinfo=None)).total_seconds())>60:
+                    reason="KICKOFF_CONFLICT"
+            candidates.append(reason or "QUALIFIED")
+        if candidates.count("QUALIFIED")==1:
+            reasons["one_verified_team_pair"]+=1
+        elif candidates.count("QUALIFIED")>1:
+            reasons["multiple_canonical_candidates"]+=1
+        else:
+            reasons["rejected_known_pair_rows"]+=1
+            reasons[Counter(candidates).most_common(1)[0][0]]+=1
+    return dict(reasons)
+
+
 def run(now=None, fixture_token=None, helper=None):
     now = now or datetime.now(timezone.utc)
     fixture_token = fixture_token or os.getenv("FOREBET_FIXTURES_OIDC", "")
@@ -255,8 +324,12 @@ def run(now=None, fixture_token=None, helper=None):
         "known_team_pair_rows":sum(x["known_pair_rows"] or 0 for x in page_proofs),
         "source_rows_parsed":len(candidates),
         "strict_verified_models":len(rows),
+        "verified_shared_bridge_matches":sum(1 for row in rows if row["identity_method"]=="VERIFIED_SHARED_PROVIDER_BRIDGE_AND_EXACT_TIME"),
+        "verified_two_key_unknown_league_matches":sum(1 for row in rows if row["identity_method"]=="TWO_SHARED_PROVIDER_KEYS_UNKNOWN_LEAGUE_EXACT_UTC_TIME"),
+        "verified_existing_alias_matches":sum(1 for row in rows if row["identity_method"]=="VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME"),
         "calibrated_utc_offset_minutes":CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES,
         "rejections":rejected,
+        "candidate_pair_diagnostics":candidate_pair_diagnostics(candidates,targets,now),
         "source_overlap_diagnostics":source_overlap_diagnostics(candidates,targets,now),
         "verified_by_utc_date":{
             date:sum(1 for row in rows if row["kickoff"][:10]==date)
