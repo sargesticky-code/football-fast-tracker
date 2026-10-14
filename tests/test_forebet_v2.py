@@ -61,6 +61,20 @@ class SourceIdentityTests(unittest.TestCase):
         self.assertEqual(rows,[])
         self.assertEqual(bad["DUPLICATE_SOURCE_OR_CANONICAL_EVENT"],1)
 
+    def test_unknown_league_only_exact_names_and_exact_time(self):
+        row,fixture=sample()
+        row["league_short"]="Us1"
+        matched,_=verified_rows([row],[fixture],NOW)
+        self.assertEqual(len(matched),1)
+        self.assertEqual(matched[0]["league_verification"],"EXACT_NAMES_AND_UTC_TIME_ONLY")
+        row["home_team"]="Liverpoool"
+        self.assertEqual(verified_rows([row],[fixture],NOW)[0],[])
+
+    def test_three_duplicate_rows_never_readmit_fixture(self):
+        row,fixture=sample()
+        out,_=verified_rows([row,dict(row),dict(row)],[fixture],NOW)
+        self.assertEqual(out,[])
+
     def test_requires_verified_provider_not_plain_fixture_snapshot(self):
         class Session:
             def get(self,*args,**kwargs):
