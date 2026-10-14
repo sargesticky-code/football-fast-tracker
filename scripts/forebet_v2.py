@@ -21,7 +21,7 @@ from playwright.sync_api import Error as BrowserError
 
 from forebet_browser_source import load_canonical_candidates
 from forebet_canonical_source_probe import canonical_targets, exact_name, model_fields, aware_time
-from forebet_verified_aliases import source_forms, verified_source_name
+from forebet_verified_aliases import source_forms, verified_source_name, verified_shared_source_name
 from capture_forebet_canonical_light import displayed_wall_clock, league_ok, LEAGUE_PREFIX
 
 API = "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/forebet-canonical-publish"
@@ -119,6 +119,12 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
             continue
         links.add(link)
         exact = home == exact_name(t["home"]) and away == exact_name(t["away"])
+        bridge_proven = (
+            (home != exact_name(t["home"]) and
+             verified_shared_source_name(row["home_team"], t["home"]) is True)
+            or (away != exact_name(t["away"]) and
+                verified_shared_source_name(row["away_team"], t["away"]) is True)
+        )
         emitted[mid] = {
             "match_id":mid,"captured_at":now.isoformat(),
             "kickoff":t["kickoff"].isoformat(),
@@ -137,7 +143,8 @@ def verified_rows(source_rows: list[dict], targets: list[dict], now: datetime):
             "source_event_time_basis":"CALIBRATED_PROVIDER_UTC_AND_EXACT_CANONICAL_KICKOFF",
             "source_display_offset_minutes":CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES,
             "identity_method":"EXACT_TEAMS_LEAGUE_AND_CALIBRATED_UTC_TIME" if exact
-                else "VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME"
+                else ("VERIFIED_SHARED_PROVIDER_BRIDGE_AND_EXACT_TIME" if bridge_proven
+                      else "VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME")
         }
     return [emitted[k] for k in sorted(emitted)], dict(rejected)
 
@@ -255,6 +262,8 @@ def run(now=None, fixture_token=None, helper=None):
         "known_team_pair_rows":sum(x["known_pair_rows"] or 0 for x in page_proofs),
         "source_rows_parsed":len(candidates),
         "strict_verified_models":len(rows),
+        "verified_shared_bridge_matches":sum(1 for row in rows if row["identity_method"]=="VERIFIED_SHARED_PROVIDER_BRIDGE_AND_EXACT_TIME"),
+        "verified_existing_alias_matches":sum(1 for row in rows if row["identity_method"]=="VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME"),
         "calibrated_utc_offset_minutes":CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES,
         "rejections":rejected,
         "source_overlap_diagnostics":source_overlap_diagnostics(candidates,targets,now),

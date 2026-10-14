@@ -8,6 +8,8 @@ from playwright.sync_api import Error as BrowserError
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
 from forebet_v2 import verified_rows, canonical_from_oidc, source_dates, dedupe_repeated_source_rows, source_overlap_diagnostics, run
+from forebet_verified_aliases import (shared_verified_catalog, source_forms,
+                                      verified_source_name, norm, verified_shared_source_name)
 
 NOW=datetime(2026,10,14,3,0,tzinfo=timezone.utc)
 KO=datetime(2026,10,15,14,0,tzinfo=timezone.utc)
@@ -24,6 +26,32 @@ def sample():
     return row,fixture
 
 class SourceIdentityTests(unittest.TestCase):
+
+    def test_cross_source_snapshot_is_complete_and_without_provider_api(self):
+        fs,fb,by_key=shared_verified_catalog()
+        self.assertGreaterEqual(len(fs),500)
+        self.assertGreaterEqual(len(fb),550)
+        self.assertGreaterEqual(len(by_key),500)
+        self.assertTrue(all(len(key)==32 for key in by_key))
+
+    def test_verified_bridge_accepts_only_same_proven_team_key(self):
+        fs,fb,by_key=shared_verified_catalog()
+        proof = next(((f,a) for f,key in fs.items()
+                      for a in by_key.get(key,[]) if a!=f),None)
+        self.assertIsNotNone(proof)
+        flashscore,forebet=proof
+        self.assertIn(forebet,source_forms(flashscore))
+        self.assertTrue(verified_shared_source_name(forebet,flashscore))
+        self.assertTrue(verified_source_name(forebet,flashscore))
+        false_name=next(name for name,key in fb.items()
+                        if key!=fs[flashscore] and name!=flashscore)
+        self.assertFalse(verified_shared_source_name(false_name,flashscore))
+        self.assertFalse(verified_source_name(false_name,flashscore))
+
+    def test_bridge_keeps_exact_name_working_when_missing_from_registry(self):
+        self.assertTrue(verified_source_name("Never Seen Town","Never Seen Town"))
+        self.assertIn(norm("Never Seen Town"),source_forms("Never Seen Town"))
+
     def test_single_unique_exact_match_no_cohort_requirement(self):
         row,fixture=sample()
         accepted,rejected=verified_rows([row],[fixture],NOW)
