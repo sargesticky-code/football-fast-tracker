@@ -1,5 +1,10 @@
 name: BetClan + SportyTrader advisor capture (source-only)
 on:
+  pull_request:
+    paths:
+      - "scripts/capture_advisor_sources.py"
+      - "tests/test_advisor_sources.py"
+      - ".github/workflows/advisor_sources_capture.yml"
   workflow_dispatch:
   schedule:
     # Single bounded daily scan: 09:20 Hong Kong time; no continuous scraping.
