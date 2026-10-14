@@ -21,6 +21,7 @@ from playwright.sync_api import Error as BrowserError
 
 from forebet_browser_source import load_canonical_candidates
 from forebet_intersection_audit import source_intersection_audit
+from forebet_provisional import tentative_rows
 from forebet_canonical_source_probe import canonical_targets, exact_name, model_fields, aware_time
 from forebet_verified_aliases import source_forms, verified_source_name, verified_shared_source_name
 from capture_forebet_canonical_light import displayed_wall_clock, league_ok, LEAGUE_PREFIX
@@ -29,6 +30,7 @@ API = "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/forebet-canonical-p
 HKT = timezone(timedelta(hours=8))
 OUT = Path("/tmp/ft-forebet-verified-only.json")
 SUMMARY = Path("/tmp/ft-forebet-verified-summary.json")
+PROVISIONAL_OUT = Path("/tmp/ft-forebet-provisional-only.json")
 MAX_TARGETS = 350
 # Fixed from 20 independent verified fixtures. If the provider changes its
 # display timezone, exact UTC kickoff comparisons reject affected rows.
@@ -311,6 +313,7 @@ def run(now=None, fixture_token=None, helper=None):
             failures.append({"date":date,"error":type(exc).__name__})
     candidates = dedupe_repeated_source_rows(candidates)
     rows, rejected = verified_rows(candidates, targets, now)
+    provisional, provisional_diagnostics = tentative_rows(candidates, targets, rows, now)
     if len(rows) > MAX_PUBLICATION_ROWS:
         raise ValueError("FOREBET_PUBLICATION_CAPACITY_EXCEEDED")
     summary = {
@@ -325,6 +328,8 @@ def run(now=None, fixture_token=None, helper=None):
         "known_team_pair_rows":sum(x["known_pair_rows"] or 0 for x in page_proofs),
         "source_rows_parsed":len(candidates),
         "strict_verified_models":len(rows),
+        "provisional_one_team_count":len(provisional),
+        "provisional_diagnostics":provisional_diagnostics,
         "verified_shared_bridge_matches":sum(1 for row in rows if row["identity_method"]=="VERIFIED_SHARED_PROVIDER_BRIDGE_AND_EXACT_TIME"),
         "verified_two_key_unknown_league_matches":sum(1 for row in rows if row["identity_method"]=="TWO_SHARED_PROVIDER_KEYS_UNKNOWN_LEAGUE_EXACT_UTC_TIME"),
         "verified_existing_alias_matches":sum(1 for row in rows if row["identity_method"]=="VERIFIED_ALIAS_LEAGUE_AND_CALIBRATED_UTC_TIME"),
@@ -345,6 +350,13 @@ def run(now=None, fixture_token=None, helper=None):
     }
     OUT.write_text(json.dumps({"source":"FOREBET","rows":rows},
                               ensure_ascii=False), encoding="utf-8")
+    PROVISIONAL_OUT.write_text(json.dumps({
+        "source":"FOREBET_PROVISIONAL_RECONCILE_V1",
+        "rows":provisional,
+        "verified_ids":[x["match_id"] for x in rows],
+        "complete_dates":[x["date"] for x in page_proofs if x["capture_mode"]=="full_page"],
+        "captured_at":now.isoformat(),
+    }, ensure_ascii=False), encoding="utf-8")
     SUMMARY.write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
     print("FOREBET_V2_PROOF "+json.dumps(summary,ensure_ascii=False),flush=True)
     return summary
