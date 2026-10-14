@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
       - feat/forebet-v2-20261014
     paths:
       - 'scripts/forebet_v2.py'
