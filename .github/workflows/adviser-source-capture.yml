@@ -59,7 +59,14 @@ jobs:
           cp /tmp/adviser-replay/adviser-source.json /tmp/adviser-source.json
       - name: Collect today's and tomorrow's source records
         if: github.event_name != 'pull_request' && github.event.inputs.replay_run_id == ''
-        run: python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --limit 100
+        env:
+          CAPTURE_EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$CAPTURE_EVENT" = "push" ]; then
+            python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --source SPORTYTRADER --limit 10 --evidence-dir /tmp/adviser-evidence
+          else
+            python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --limit 100
+          fi
       - name: Publish authenticated observations on main
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         env:
@@ -71,4 +78,11 @@ jobs:
           name: adviser-source-observations
           path: /tmp/adviser-source.json
           if-no-files-found: warn
+          retention-days: 5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: adviser-source-evidence
+          path: /tmp/adviser-evidence
+          if-no-files-found: ignore
           retention-days: 5
