@@ -1,5 +1,36 @@
 import unittest
+import hashlib
+import tempfile
+from pathlib import Path
+from unittest.mock import patch
 from scripts.adviser_source_capture import parse_betclan, parse_sportytrader, candidate_urls, valid_triplet
+from scripts.adviser_source_capture import collect
+
+
+class BoundedSourceEvidenceTest(unittest.TestCase):
+    def test_targeted_capture_preserves_replayable_html_without_other_provider_requests(self):
+        html = '<h1>QPR vs Derby County Prediction</h1><p>16/10/2026 07:45</p><p>Prediction : BTTS 1.83</p>'
+        calls = []
+        def fake_fetch(session, url):
+            calls.append(url)
+            if url.endswith('-378837/'):
+                return html
+            return '<a href="/en/betting-tips/qpr-derby-county-378837/">tip</a><a href="/en/betting-tips/zz-other-378838/">other</a>'
+        with tempfile.TemporaryDirectory() as directory, patch('scripts.adviser_source_capture.fetch', side_effect=fake_fetch):
+            result = collect(source='SPORTYTRADER', limit=1, pause=0, evidence_dir=directory)
+            self.assertEqual(len(result['records']), 1)
+            self.assertTrue(all('sportytrader.com' in url for url in calls))
+            self.assertEqual(len(calls), 3)  # Two listings, one deduplicated detail.
+            digest = hashlib.sha256(html.encode()).hexdigest()
+            self.assertEqual(result['records'][0]['raw_content_hash'], digest)
+            self.assertEqual((Path(directory)/'sportytrader'/(digest+'.html')).read_text(), html)
+            self.assertFalse(result['records'][0]['kickoff_timezone_verified'])
+
+    def test_invalid_bounds_reject_before_network(self):
+        for kwargs in ({'limit':0}, {'limit':121}, {'source':'UNKNOWN'}):
+            with self.assertRaises(ValueError), patch('scripts.adviser_source_capture.fetch') as fetch:
+                collect(**kwargs)
+            fetch.assert_not_called()
 
 
 class AdviserSourceCaptureTest(unittest.TestCase):

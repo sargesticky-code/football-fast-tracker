@@ -188,11 +188,18 @@ def fetch(session, url):
     return response.text
 
 
-def collect(limit=100, pause=0.4, session=None):
+def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None):
+    if source is not None and source not in SOURCES:
+        raise ValueError("unknown_source")
+    if not 1 <= limit <= 120:
+        raise ValueError("invalid_source_limit")
+    selected_source = source
     session = session or requests.Session()
     output = {"generated_at": datetime.now(timezone.utc).isoformat(),
               "contract": "source_observations_only_v1", "providers": {}, "records": []}
     for source, listings in SOURCES.items():
+        if selected_source is not None and source != selected_source:
+            continue
         diag = {"listings_ok": 0, "candidate_urls": 0, "parsed": 0, "failed": 0,
                 "status": "UNAVAILABLE"}
         urls = set()
@@ -207,11 +214,17 @@ def collect(limit=100, pause=0.4, session=None):
         for url in sorted(urls)[:limit]:
             try:
                 html = fetch(session, url)
+                evidence_hash = hashlib.sha256(html.encode("utf-8")).hexdigest()
+                if evidence_dir is not None:
+                    evidence_path = Path(evidence_dir) / source.lower() / (evidence_hash + ".html")
+                    evidence_path.parent.mkdir(parents=True, exist_ok=True)
+                    evidence_path.write_text(html, encoding="utf-8")
                 parsed = (parse_betclan(html, url) if source == "BETCLAN"
                           else parse_sportytrader(html, url))
                 if parsed is None:
                     raise ValueError("invalid_source_detail_structure")
                 parsed["captured_at"] = output["generated_at"]
+                parsed["raw_content_hash"] = evidence_hash
                 output["records"].append(parsed)
                 diag["parsed"] += 1
             except (requests.RequestException, RuntimeError, ValueError, AttributeError) as exc:
@@ -228,10 +241,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--limit", type=int, default=100)
+    parser.add_argument("--source", choices=tuple(SOURCES))
+    parser.add_argument("--evidence-dir", type=Path)
     args = parser.parse_args()
     if not 1 <= args.limit <= 120:
         parser.error("limit must be 1..120 per source")
-    report = collect(limit=args.limit)
+    report = collect(limit=args.limit, source=args.source, evidence_dir=args.evidence_dir)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({"providers": report["providers"], "total": len(report["records"]) }))
