@@ -473,6 +473,23 @@ def normalize_date(value: str, fallback: str) -> str:
     return fallback
 
 
+def verified_forebet_kickoff(value: str) -> str:
+    """Use only explicit ISO datetimes with source timezone, never guess one.
+
+    A display clock like 13:30 may be localized by site settings. It is not
+    authoritative fixture identity unless Forebet sends an explicit offset.
+    """
+    if not value:
+        return ""
+    try:
+        dt = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+        if dt.tzinfo is None or dt.utcoffset() is None:
+            return ""
+        return dt.astimezone(timezone.utc).isoformat()
+    except (ValueError, TypeError, OverflowError):
+        return ""
+
+
 def parse_forebet_rows(html: str, requested_date: str) -> list[dict[str, Any]]:
     now = datetime.now(HKT)
     fetched_at = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -511,7 +528,10 @@ def parse_forebet_rows(html: str, requested_date: str) -> list[dict[str, Any]]:
 
         rows.append({
             "fetched_at_hkt": fetched_at,
+            # Source time is evidence for strict canonical matching; never assume a timezone.
+            "source_kickoff_iso": dt_attr,
             "match_date": match_date,
+            "source_kickoff_iso": verified_forebet_kickoff(dt_attr),
             "kickoff_text": text(row.select_one("span.date_bah")),
             "league_short": text(row.select_one("span.shortTag")),
             "home_team": home,
