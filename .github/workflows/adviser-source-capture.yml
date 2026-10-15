@@ -63,7 +63,7 @@ jobs:
           CAPTURE_EVENT: ${{ github.event_name }}
         run: |
           if [ "$CAPTURE_EVENT" = "push" ]; then
-            python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --source SPORTYTRADER --limit 10 --evidence-dir /tmp/adviser-evidence
+            python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --source SPORTYTRADER --limit 10 --evidence-dir /tmp/adviser-evidence --related-evidence-limit 2
           else
             python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --limit 100
           fi

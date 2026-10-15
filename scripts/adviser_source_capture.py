@@ -188,12 +188,15 @@ def fetch(session, url):
     return response.text
 
 
-def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None):
+def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None, related_evidence_limit=0):
     if source is not None and source not in SOURCES:
         raise ValueError("unknown_source")
     if not 1 <= limit <= 120:
         raise ValueError("invalid_source_limit")
+    if not 0 <= related_evidence_limit <= 2 or (related_evidence_limit and evidence_dir is None):
+        raise ValueError("invalid_related_evidence_limit")
     selected_source = source
+    related_attempts = 0
     session = session or requests.Session()
     output = {"generated_at": datetime.now(timezone.utc).isoformat(),
               "contract": "source_observations_only_v1", "providers": {}, "records": []}
@@ -225,6 +228,21 @@ def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None):
                     raise ValueError("invalid_source_detail_structure")
                 parsed["captured_at"] = output["generated_at"]
                 parsed["raw_content_hash"] = evidence_hash
+                if source == "SPORTYTRADER" and related_attempts < related_evidence_limit:
+                    related = next((urljoin(url, a['href']) for a in BeautifulSoup(html, "html.parser").find_all('a', href=True)
+                                    if re.fullmatch(r'/en/results-live/[^/]+-\d+/', a['href'])), None)
+                    if related is not None:
+                        related_attempts += 1
+                        try:
+                            related_html = fetch(session, related)
+                            related_hash = hashlib.sha256(related_html.encode('utf-8')).hexdigest()
+                            related_path = Path(evidence_dir) / 'sportytrader-related' / (related_hash + '.html')
+                            related_path.parent.mkdir(parents=True, exist_ok=True)
+                            related_path.write_text(related_html, encoding='utf-8')
+                            parsed['related_source_url'] = related
+                            parsed['related_content_hash'] = related_hash
+                        except (requests.RequestException, RuntimeError):
+                            diag['related_failed'] = diag.get('related_failed', 0) + 1
                 output["records"].append(parsed)
                 diag["parsed"] += 1
             except (requests.RequestException, RuntimeError, ValueError, AttributeError) as exc:
@@ -243,10 +261,12 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=int, default=100)
     parser.add_argument("--source", choices=tuple(SOURCES))
     parser.add_argument("--evidence-dir", type=Path)
+    parser.add_argument("--related-evidence-limit", type=int, default=0, choices=range(3))
     args = parser.parse_args()
     if not 1 <= args.limit <= 120:
         parser.error("limit must be 1..120 per source")
-    report = collect(limit=args.limit, source=args.source, evidence_dir=args.evidence_dir)
+    report = collect(limit=args.limit, source=args.source, evidence_dir=args.evidence_dir,
+                     related_evidence_limit=args.related_evidence_limit)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({"providers": report["providers"], "total": len(report["records"]) }))
