@@ -5,9 +5,46 @@ from pathlib import Path
 from unittest.mock import patch
 from scripts.adviser_source_capture import parse_betclan, parse_sportytrader, candidate_urls, valid_triplet
 from scripts.adviser_source_capture import collect
+from scripts.adviser_source_capture import enrich_sportytrader_event
+from scripts.adviser_source_capture import replay_saved_evidence
 
 
 class BoundedSourceEvidenceTest(unittest.TestCase):
+    def test_saved_replay_keeps_capture_time_and_rejects_changed_evidence_without_network(self):
+        html = '<h1>QPR vs Derby Prediction</h1><p>16/10/2026 07:45</p>'
+        digest = hashlib.sha256(html.encode()).hexdigest()
+        report = {'generated_at':'2026-10-15T17:15:06Z','records':[{'source':'SPORTYTRADER','source_event_id':'123',
+                  'source_url':'https://www.sportytrader.com/en/betting-tips/qpr-derby-123/',
+                  'captured_at':'2026-10-15T17:15:06Z','raw_content_hash':digest}]}
+        with tempfile.TemporaryDirectory() as directory, patch('scripts.adviser_source_capture.fetch') as fetch:
+            path=Path(directory)/'sportytrader'/(digest+'.html');path.parent.mkdir();path.write_text(html)
+            replay = replay_saved_evidence(report,directory)
+            self.assertEqual(replay['generated_at'],report['generated_at'])
+            self.assertEqual(replay['records'][0]['captured_at'],report['records'][0]['captured_at'])
+            path.write_text(html+' changed')
+            with self.assertRaisesRegex(ValueError,'hash_mismatch'):
+                replay_saved_evidence(report,directory)
+            fetch.assert_not_called()
+
+    def test_source_linked_event_verifies_only_identical_oriented_clock_and_competition(self):
+        import json
+        # Saved live source artifact11994040671 / run38775736633.
+        url = 'https://www.sportytrader.com/en/results-live/aberdeen-st-mirren-8556351/'
+        row = {'source':'SPORTYTRADER','home':'Aberdeen','away':'St Mirren','source_date':'2026-10-17',
+               'source_wall_time':'09:00','source_competition':'Scottish Premiership','kickoff_timezone_verified':False}
+        event = {'@type':'SportsEvent','url':url,'startDate':'2026-10-17T09:00:00-05:00',
+                 'homeTeam':{'name':'Aberdeen'},'awayTeam':{'name':'St Mirren'},'organizer':{'name':'Scottish Premiership'}}
+        def page(events): return '<script type="application/ld+json">'+json.dumps(events)+'</script>'
+        result = enrich_sportytrader_event(row,page([event]),url)
+        self.assertTrue(result['kickoff_timezone_verified'])
+        self.assertEqual(result['source_kickoff'],'2026-10-17T09:00:00-05:00')
+        self.assertIsNone(result['source_event_status'])  # Not invented from a successful capture.
+        for changed in [dict(event,startDate='2026-10-17T09:00:00'),dict(event,startDate='2026-10-17T10:00:00-05:00'),
+                        dict(event,url=url.replace('8556351','999')),dict(event,homeTeam=event['awayTeam'],awayTeam=event['homeTeam']),
+                        dict(event,organizer={'name':'Other league'})]:
+            self.assertFalse(enrich_sportytrader_event(row,page([changed]),url)['kickoff_timezone_verified'])
+        self.assertFalse(enrich_sportytrader_event(row,page([event,event]),url)['kickoff_timezone_verified'])
+
     def test_targeted_capture_preserves_replayable_html_without_other_provider_requests(self):
         html = '<h1>QPR vs Derby County Prediction</h1><p>16/10/2026 07:45</p><p>Prediction : BTTS 1.83</p>'
         calls = []

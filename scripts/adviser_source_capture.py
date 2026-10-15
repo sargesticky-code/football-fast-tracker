@@ -137,6 +137,11 @@ def parse_sportytrader(html, url):
     if not dt:
         return None
     pick = section(text, r"\bPrediction\s*:", r"(?:Prediction published|Bookmaker|New customers)")
+    tip_label = soup.select_one('[data-trans="tips.our.tip"]')
+    if tip_label is not None and tip_label.parent is not None:
+        tip_node = tip_label.parent.select_one('p:not([data-trans])')
+        if tip_node is not None:
+            pick = tip_node.get_text(' ', strip=True)
     # Remove bookmaker decimal quote without corrupting a tip such as "Under 2.5 goals".
     pick = re.split(r"\s+New customers\b", pick, flags=re.I, maxsplit=1)[0].strip()
     pick = re.sub(r"\s+[1-9]\d{0,2}\.\d{2}$", "", pick).strip()[:90]
@@ -156,10 +161,50 @@ def parse_sportytrader(html, url):
         "home": pair.group(1).strip(), "away": pair.group(2).strip(),
         "source_date": f"{dt.group(3)}-{dt.group(2)}-{dt.group(1)}",
         "source_wall_time": dt.group(4), "kickoff_timezone_verified": False,
+        "source_competition": (re.split(r'Prediction\s*&\s*Betting Tips\s*-\s*', title, flags=re.I)[1].strip()
+                               if re.search(r'Prediction\s*&\s*Betting Tips\s*-\s*', title, re.I) else None),
         # A written tip is not a probability triplet; never invent 1X2 from odds.
         "tip": pick or None, "hda": hda, "canonical_event_id": None,
         "identity": "UNRESOLVED",
     }
+
+
+def enrich_sportytrader_event(row, html, url):
+    """Require the directly linked event's oriented teams and local clock to agree."""
+    if not re.fullmatch(r'https://www\.sportytrader\.com/en/results-live/[^/?#]+-\d+/', url):
+        return row
+    events = []
+    for script in BeautifulSoup(html, 'html.parser').select('script[type="application/ld+json"]'):
+        try:
+            data = json.loads(script.get_text())
+        except (ValueError, TypeError):
+            continue
+        nodes = data if isinstance(data, list) else [data]
+        events.extend(x for x in nodes if isinstance(x, dict) and x.get('@type') == 'SportsEvent')
+    valid = []
+    for event in events:
+        try:
+            kickoff = event['startDate']
+            if not isinstance(kickoff, str) or not re.search(r'(Z|[+-]\d{2}:\d{2})$', kickoff):
+                continue
+            at = datetime.fromisoformat(kickoff.replace('Z', '+00:00'))
+            if event.get('url') != url or at.strftime('%Y-%m-%d') != row['source_date'] or at.strftime('%H:%M') != row['source_wall_time']:
+                continue
+            if any(event.get(side+'Team', {}).get('name', '').strip().casefold() != row[side].strip().casefold() for side in ('home', 'away')):
+                continue
+            competition = event.get('organizer', {}).get('name')
+            if not competition or (row.get('source_competition') and competition.casefold() != row['source_competition'].casefold()):
+                continue
+            valid.append((kickoff, competition, event))
+        except (ValueError, TypeError, KeyError, AttributeError):
+            continue
+    if len(valid) != 1:
+        return row
+    kickoff, competition, event = valid[0]
+    return {**row, 'source_kickoff': kickoff, 'source_timezone': kickoff[-6:] if not kickoff.endswith('Z') else 'UTC',
+            'source_competition': competition, 'kickoff_timezone_verified': True,
+            'source_event_status': event.get('eventStatus'), 'related_event_evidence': event,
+            'parser_version': 'sportytrader-v2-linked-sportsevent'}
 
 
 def candidate_urls(html, source):
@@ -186,6 +231,42 @@ def fetch(session, url):
     if len(response.content) > 2_000_000:
         raise RuntimeError("page_too_large")
     return response.text
+
+
+def replay_saved_evidence(report, evidence_dir):
+    """Reparse saved bytes without changing their capture time or making requests."""
+    records = []
+    for old in report['records']:
+        if old.get('source') != 'SPORTYTRADER':
+            records.append(old)
+            continue
+        digest = old.get('raw_content_hash', '')
+        if not re.fullmatch(r'[a-f0-9]{64}', digest):
+            records.append(old)
+            continue
+        path = Path(evidence_dir) / 'sportytrader' / (digest+'.html')
+        if not path.exists():
+            records.append(old)
+            continue
+        html = path.read_text(encoding='utf-8')
+        if hashlib.sha256(html.encode()).hexdigest() != digest:
+            raise ValueError('source_evidence_hash_mismatch')
+        row = parse_sportytrader(html, old['source_url'])
+        if row is None or row['source_event_id'] != old['source_event_id']:
+            raise ValueError('source_evidence_identity_mismatch')
+        related_hash = old.get('related_content_hash', '')
+        related_url = old.get('related_source_url', '')
+        links = {urljoin(old['source_url'], a['href']) for a in BeautifulSoup(html, 'html.parser').find_all('a', href=True)}
+        if re.fullmatch(r'[a-f0-9]{64}', related_hash) and related_url in links:
+            related_path = Path(evidence_dir) / 'sportytrader-related' / (related_hash+'.html')
+            related_html = related_path.read_text(encoding='utf-8')
+            if hashlib.sha256(related_html.encode()).hexdigest() != related_hash:
+                raise ValueError('related_evidence_hash_mismatch')
+            row = enrich_sportytrader_event(row, related_html, related_url)
+            row.update(related_content_hash=related_hash, related_source_url=related_url)
+        row.update(captured_at=old['captured_at'], raw_content_hash=digest)
+        records.append(row)
+    return {**report, 'records': records}
 
 
 def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None, related_evidence_limit=0):
@@ -239,6 +320,7 @@ def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None, 
                             related_path = Path(evidence_dir) / 'sportytrader-related' / (related_hash + '.html')
                             related_path.parent.mkdir(parents=True, exist_ok=True)
                             related_path.write_text(related_html, encoding='utf-8')
+                            parsed = enrich_sportytrader_event(parsed, related_html, related)
                             parsed['related_source_url'] = related
                             parsed['related_content_hash'] = related_hash
                         except (requests.RequestException, RuntimeError):
@@ -262,11 +344,17 @@ if __name__ == "__main__":
     parser.add_argument("--source", choices=tuple(SOURCES))
     parser.add_argument("--evidence-dir", type=Path)
     parser.add_argument("--related-evidence-limit", type=int, default=0, choices=range(3))
+    parser.add_argument("--replay-input", type=Path)
     args = parser.parse_args()
     if not 1 <= args.limit <= 120:
         parser.error("limit must be 1..120 per source")
-    report = collect(limit=args.limit, source=args.source, evidence_dir=args.evidence_dir,
-                     related_evidence_limit=args.related_evidence_limit)
+    if args.replay_input:
+        if args.evidence_dir is None:
+            parser.error('--replay-input requires --evidence-dir')
+        report = replay_saved_evidence(json.loads(args.replay_input.read_text()), args.evidence_dir)
+    else:
+        report = collect(limit=args.limit, source=args.source, evidence_dir=args.evidence_dir,
+                         related_evidence_limit=args.related_evidence_limit)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({"providers": report["providers"], "total": len(report["records"]) }))
