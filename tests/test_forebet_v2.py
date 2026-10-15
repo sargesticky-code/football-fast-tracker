@@ -88,6 +88,8 @@ class SourceIdentityTests(unittest.TestCase):
             "scripts/update_hkjc_history.py",
             ".github/workflows/forebet_daily.yml"):
             self.assertFalse((root/relative).exists(),relative)
+        for relative in ("api/live_scores.py", "vercel.json"):
+            self.assertNotIn("hkjc", (root/relative).read_text(encoding="utf-8").lower(),relative)
         active=(root/".github/workflows/supabase_private_ingest.yml").read_text(encoding="utf-8")
         self.assertIn("forebet-canonical-publish",active)
         self.assertIn("refs/heads/main",active)
