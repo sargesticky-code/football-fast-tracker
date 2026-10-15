@@ -27,10 +27,28 @@ class BoundedSourceEvidenceTest(unittest.TestCase):
             self.assertFalse(result['records'][0]['kickoff_timezone_verified'])
 
     def test_invalid_bounds_reject_before_network(self):
-        for kwargs in ({'limit':0}, {'limit':121}, {'source':'UNKNOWN'}):
+        for kwargs in ({'limit':0}, {'limit':121}, {'source':'UNKNOWN'}, {'related_evidence_limit':3}, {'related_evidence_limit':1}):
             with self.assertRaises(ValueError), patch('scripts.adviser_source_capture.fetch') as fetch:
                 collect(**kwargs)
             fetch.assert_not_called()
+
+    def test_related_evidence_is_explicit_bounded_and_does_not_verify_kickoff(self):
+        html = '<h1>QPR vs Derby Prediction</h1><p>16/10/2026 07:45</p><a href="/en/results-live/qpr-derby-123/">Live</a>'
+        related_html = '<script type="application/ld+json">{"@type":"SportsEvent","startDate":"2026-10-16T19:45:00Z"}</script>'
+        def fake_fetch(session, url):
+            if '/results-live/' in url:
+                return related_html
+            if url.endswith('-378837/'):
+                return html
+            return '<a href="/en/betting-tips/qpr-derby-378837/">tip</a>'
+        with tempfile.TemporaryDirectory() as directory, patch('scripts.adviser_source_capture.fetch', side_effect=fake_fetch) as fetch:
+            result = collect(source='SPORTYTRADER', limit=1, pause=0, evidence_dir=directory, related_evidence_limit=1)
+            self.assertEqual(fetch.call_count, 4)
+            row = result['records'][0]
+            digest = hashlib.sha256(related_html.encode()).hexdigest()
+            self.assertEqual(row['related_content_hash'], digest)
+            self.assertEqual((Path(directory)/'sportytrader-related'/(digest+'.html')).read_text(), related_html)
+            self.assertFalse(row['kickoff_timezone_verified'])
 
 
 class AdviserSourceCaptureTest(unittest.TestCase):
