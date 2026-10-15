@@ -8,34 +8,19 @@ import json
 import os
 import re
 import unicodedata
-from pathlib import Path
 
 import requests
-
-from hkjc_live_market import fetch_live_markets
 
 HKT = timezone(timedelta(hours=8))
 FOTMOB = os.environ.get("FOTMOB_BASE_URL", "https://www.fotmob.com/api").rstrip("/")
 BACKUP = os.environ.get("SPORTSCORE_BASE", "https://sportscore.com").rstrip("/")
 SOFASCORE = os.environ.get("SOFASCORE_BASE_URL", "https://www.sofascore.com/api/v1").rstrip("/")
-HKJC_CSV = os.environ.get(
-    "HKJC_CURRENT_CSV",
-    "https://raw.githubusercontent.com/sargesticky-code/football-fast-tracker/main/data/hkjc_current.csv",
-)
-HKJC_LIVE_TARGETS_URL = os.environ.get(
-    "HKJC_LIVE_TARGETS_URL",
-    "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/hkjc-live-targets",
-)
-LOCAL_HKJC_CSV = Path(__file__).resolve().parent.parent / "data" / "hkjc_current.csv"
 UA = "football-fast-tracker-live/1.0"
 ENDED = ("ENDED", "MATCHENDED", "FT", "AET", "PEN", "CANCEL", "VOID", "ABANDON")
 MAX_DETAIL_CALLS_PER_RUN = int(os.environ.get("MAX_DETAIL_CALLS_PER_RUN", "8"))
 MAX_DETAIL_FALLBACK_CALLS_PER_RUN = int(os.environ.get("MAX_DETAIL_FALLBACK_CALLS_PER_RUN", "2"))
 SOURCE_GAP_MAX_MINUTES = int(os.environ.get("SOURCE_GAP_MAX_MINUTES", "140"))
-SCENARIO_CSV = Path(__file__).resolve().parent.parent / "data" / "match_scenario_current.csv"
-ENABLE_SCENARIO_SHADOW = os.environ.get("ENABLE_SCENARIO_SHADOW", "0") == "1"
-ENABLE_HKJC_LIVE_MARKET = os.environ.get("ENABLE_HKJC_LIVE_MARKET", "0") == "1"
-UPSTREAM_BUILD = "LIVE-UPSTREAM-20260922-2"
+UPSTREAM_BUILD = "LIVE-UPSTREAM-20261015-1"
 
 
 def clean(v):
@@ -48,8 +33,7 @@ def norm(v):
     s = s.replace("&", " and ")
     s = re.sub(r"['’`]", "", s)
     s = re.sub(r"[^a-z0-9]+", " ", s)
-    # HKJC uses AM in age-group team names; providers commonly use U23.
-    s = re.sub(r"\b(u ?23|under ?23|u ?22|u ?21|u ?20|u ?19|am)\b", " ", s)
+    s = re.sub(r"\b(u ?23|under ?23|u ?22|u ?21|u ?20|u ?19)\b", " ", s)
     s = re.sub(r"\b(fc|cf|sc|afc|club|football|soccer)\b", " ", s)
     return " ".join(s.split())
 
@@ -91,87 +75,40 @@ def fetch_json(url, params=None):
     return r.json()
 
 
-def hkjc_targets(now):
-    # Primary target authority: the fresh Supabase HKJC live-market snapshot.
-    # A successful empty response means there are genuinely no HKJC live
-    # selling matches, so do NOT fall back to a stale static universe.
-    try:
-        r = requests.get(
-            HKJC_LIVE_TARGETS_URL,
-            headers={"Accept": "application/json", "User-Agent": UA},
-            timeout=8,
-        )
-        r.raise_for_status()
-        payload = r.json() or {}
-        if payload.get("ok") is True and isinstance(payload.get("rows"), list):
-            out = []
-            for row in payload.get("rows") or []:
-                kick = parse_dt(row.get("kickoff_hkt"))
-                if not kick:
-                    continue
-                status = clean(row.get("status")).upper()
-                if any(x in status for x in ENDED):
-                    continue
-                out.append({
-                    "hkjc_event_id": clean(row.get("hkjc_event_id")),
-                    "kickoff_hkt": kick,
-                    "league": clean(row.get("tournament")),
-                    "home_en": clean(row.get("home_en")),
-                    "away_en": clean(row.get("away_en")),
-                    "in_play": True,
-                    "hkjc_status": status,
-                    "corner_line_ref": clean(row.get("corner_line_ref")),
-                    "corner_over_ref": clean(row.get("corner_over_ref")),
-                    "corner_under_ref": clean(row.get("corner_under_ref")),
-                })
-            return out
-    except Exception:
-        pass
-
-    # Last-resort continuity fallback only when the fresh live-target service
-    # itself is unavailable. Keep the old bounded static source so one service
-    # failure does not make the live-score endpoint unusable.
-    rows = []
-    remote_error = None
-    try:
-        r = requests.get(HKJC_CSV, headers={"User-Agent": UA}, timeout=12)
-        r.raise_for_status()
-        rows = list(csv.DictReader(io.StringIO(r.text.lstrip("\ufeff"))))
-    except Exception as exc:
-        remote_error = exc
-
-    if not rows and LOCAL_HKJC_CSV.exists():
-        with LOCAL_HKJC_CSV.open(encoding="utf-8-sig", newline="") as fh:
-            rows = list(csv.DictReader(fh))
-
-    if not rows:
-        if remote_error:
-            raise remote_error
-        raise RuntimeError("HKJC target feed unavailable")
-
+def provider_targets(matches, now, provider):
+    """Build live targets from an active score provider's own event identities."""
     out = []
-    for row in rows:
-        kick = parse_dt(row.get("kickoff_hkt"))
-        if not kick:
+    seen = set()
+    for match in matches or []:
+        source_id = clean(match.get("source_match_id"))
+        home, away = clean(match.get("home")), clean(match.get("away"))
+        kickoff = match.get("kickoff")
+        if not source_id or not home or not away or not isinstance(kickoff, datetime):
             continue
-        status = clean(row.get("status")).upper()
-        ended = any(x in status for x in ENDED)
-        in_play = clean(row.get("in_play")).lower() in ("1", "true", "yes")
-        if ended and not in_play:
+        if source_id in seen or match.get("_board_cancelled") or match.get("_board_finished"):
             continue
-        if not (now - timedelta(hours=4) <= kick <= now + timedelta(minutes=45)):
+
+        started = match.get("_board_started") is True
+        is_live = clean(match.get("source")) in (
+            "FOOTBALL_LIVE_API_SELF_HOSTED", "SOFASCORE", "SPORTSCORE"
+        ) or started
+        age_min = (now - kickoff).total_seconds() / 60
+        if not is_live and not (0 <= age_min <= SOURCE_GAP_MAX_MINUTES):
             continue
+        if any(x in clean(match.get("status")).upper() for x in ENDED):
+            continue
+
+        seen.add(source_id)
         out.append({
-            "hkjc_event_id": clean(row.get("hkjc_event_id")),
-            "kickoff_hkt": kick,
-            "league": clean(row.get("tournament")),
-            "home_en": clean(row.get("home_en")),
-            "away_en": clean(row.get("away_en")),
-            "in_play": in_play,
-            "hkjc_status": status,
-            "corner_line_ref": clean(row.get("chl_line")),
-            "corner_over_ref": clean(row.get("chl_over")),
-            "corner_under_ref": clean(row.get("chl_under")),
+            "event_id": f"{provider}:{source_id}",
+            "source_event_id": source_id,
+            "target_provider": provider,
+            "kickoff_hkt": kickoff.astimezone(HKT),
+            "league": clean(match.get("league")),
+            "home_en": home,
+            "away_en": away,
+            "in_play": is_live,
+            "status": clean(match.get("status")),
         })
     return out
 
@@ -385,200 +322,6 @@ def extract_live_sections(detail, include_full=False):
 
     return result
 
-def minute_number(v):
-    s = clean(v)
-    if not s:
-        return None
-    z = re.match(r"^(\d+)(?:\+(\d+))?", s)
-    if not z:
-        return None
-    return int(z.group(1)) + int(z.group(2) or 0)
-
-
-def scenario_segment(minute):
-    m = minute_number(minute)
-    if m is None:
-        return ""
-    if m <= 15:
-        return "0-15"
-    if m <= 30:
-        return "16-30"
-    if m <= 45:
-        return "31-HT"
-    if m <= 60:
-        return "46-60"
-    if m <= 75:
-        return "61-75"
-    return "76-FT"
-
-
-def load_scenario_rows():
-    """Load the locally deployed pre-match scenario contract.
-
-    This adds no live upstream request. The file is generated in GitHub before
-    Vercel deploys the repository. Missing/stale data fails closed.
-    """
-    if not SCENARIO_CSV.exists():
-        return {}
-    try:
-        with SCENARIO_CSV.open(encoding="utf-8-sig", newline="") as fh:
-            rows = list(csv.DictReader(fh))
-    except Exception:
-        return {}
-    return {
-        (clean(r.get("hkjc_event_id")), clean(r.get("segment"))): r
-        for r in rows
-        if clean(r.get("hkjc_event_id")) and clean(r.get("segment"))
-    }
-
-
-def stat_number(v):
-    if v in (None, ""):
-        return None
-    z = re.search(r"-?\d+(?:\.\d+)?", clean(v))
-    return float(z.group(0)) if z else None
-
-
-def team_stat_pair(stats, keys):
-    wanted = {slug_stat(k) for k in keys}
-    # Prefer cumulative All/Match values over period-only rows.
-    ordered = sorted(
-        stats or [],
-        key=lambda r: 0 if clean(r.get("period")).lower() in ("all", "match") else 1,
-    )
-    for r in ordered:
-        if clean(r.get("key")) not in wanted:
-            continue
-        h = stat_number(r.get("home"))
-        a = stat_number(r.get("away"))
-        if h is not None and a is not None:
-            return h, a
-    return None, None
-
-
-def infer_live_control(stats):
-    """Heuristic live-state descriptor, not a betting probability.
-
-    It only says which team is controlling the observed match state. Calibration
-    later determines how predictive these deviations are.
-    """
-    signals = []
-    score = 0.0
-
-    ph, pa = team_stat_pair(stats, ("ballpossesion", "ball possession"))
-    if ph is not None and pa is not None:
-        diff = ph - pa
-        if abs(diff) >= 8:
-            w = 2.0 if diff > 0 else -2.0
-            score += w
-            signals.append(f"possession={ph:g}-{pa:g}")
-
-    sh, sa = team_stat_pair(stats, ("total_shots", "total shots"))
-    if sh is not None and sa is not None:
-        diff = sh - sa
-        if abs(diff) >= 2:
-            score += 1.0 if diff > 0 else -1.0
-            signals.append(f"shots={sh:g}-{sa:g}")
-
-    th, ta = team_stat_pair(stats, ("shotsontarget", "shots on target"))
-    if th is not None and ta is not None:
-        diff = th - ta
-        if abs(diff) >= 1:
-            score += 1.0 if diff > 0 else -1.0
-            signals.append(f"sot={th:g}-{ta:g}")
-
-    bh, ba = team_stat_pair(stats, ("touches_opp_box", "touches in opposition box"))
-    if bh is not None and ba is not None:
-        diff = bh - ba
-        if abs(diff) >= 3:
-            score += 1.0 if diff > 0 else -1.0
-            signals.append(f"box_touches={bh:g}-{ba:g}")
-
-    ch, ca = team_stat_pair(stats, ("corners",))
-    if ch is not None and ca is not None:
-        diff = ch - ca
-        if abs(diff) >= 2:
-            score += 1.0 if diff > 0 else -1.0
-            signals.append(f"corners={ch:g}-{ca:g}")
-
-    if score >= 2:
-        side = "H"
-    elif score <= -2:
-        side = "A"
-    elif signals:
-        side = "EVEN"
-    else:
-        side = "UNKNOWN"
-    return side, score, signals
-
-
-def scenario_shadow(event_id, minute, team_stats, scenario_rows):
-    segment = scenario_segment(minute)
-    row = scenario_rows.get((clean(event_id), segment)) if segment else None
-    live_side, live_score, live_signals = infer_live_control(team_stats)
-
-    if not row:
-        return {
-            "segment": segment,
-            "status": "NO_SCENARIO",
-            "expected_control_side": "",
-            "live_control_side": live_side,
-            "alignment": "UNKNOWN",
-            "betting_action": "WAIT",
-            "live_control_score": live_score,
-            "signals": live_signals,
-        }
-
-    expected = clean(row.get("macro_control_side"))
-    if expected in ("H", "A") and live_side in ("H", "A"):
-        alignment = "CONFIRMS" if expected == live_side else "CONTRADICTS"
-    elif expected == "EVEN" and live_side == "EVEN":
-        alignment = "CONFIRMS"
-    elif expected == "EVEN" and live_side in ("H", "A"):
-        alignment = "DEVIATES_FROM_BALANCED"
-    elif expected in ("CONFLICT", "UNKNOWN", ""):
-        alignment = "NO_CLEAR_PREMATCH_EXPECTATION"
-    elif live_side == "UNKNOWN":
-        alignment = "INSUFFICIENT_LIVE_STATS"
-    else:
-        alignment = "MIXED"
-
-    # Hard fail-closed while segment calibration sample is still collecting.
-    return {
-        "segment": segment,
-        "status": clean(row.get("segment_prediction_status")) or "CALIBRATING",
-        "expected_control_side": expected,
-        "control_basis": clean(row.get("control_basis")),
-        "context_coverage_score": stat_number(row.get("context_coverage_score")),
-        "model_hda_consensus": clean(row.get("model_hda_consensus")),
-        "forebet_hda": clean(row.get("forebet_hda")),
-        "dc_hda": clean(row.get("dc_hda")),
-        "pi_hda": clean(row.get("pi_hda")),
-        "live_control_side": live_side,
-        "live_control_score": live_score,
-        "alignment": alignment,
-        "signals": live_signals,
-        "betting_action": "WAIT_CALIBRATING",
-    }
-
-
-def corner_progress(total, line):
-    if total in (None, "") or line in (None, ""):
-        return {"corners_to_hi": "", "corner_progress": ""}
-    try:
-        total_n = int(float(total))
-        line_n = float(line)
-    except Exception:
-        return {"corners_to_hi": "", "corner_progress": ""}
-    target = int(line_n // 1) + 1
-    need = max(0, target - total_n)
-    status = "HI HIT" if need == 0 else f"+{need}"
-    return {
-        "corners_to_hi": need,
-        "corner_progress": f"{total_n}/{line_n:g} · {status}",
-    }
-
-
 def primary_matches():
     """Return FotMob live rows plus the unfiltered daily board from the same requests.
 
@@ -625,6 +368,7 @@ def primary_matches():
                 rec = {
                     "source": "FOOTBALL_LIVE_API_SELF_HOSTED" if is_live else "FOTMOB_DAILY_BOARD",
                     "source_match_id": mid,
+                    "league": clean(lg.get("name")),
                     "home": clean(h.get("name")),
                     "away": clean(a.get("name")),
                     "kickoff": parse_dt(st.get("utcTime") or m.get("utcTime")),
@@ -965,26 +709,6 @@ def best_match(target, candidates):
 
 def collect(include_full=False):
     now = datetime.now(HKT)
-    targets = hkjc_targets(now)
-    scenario_rows = load_scenario_rows() if ENABLE_SCENARIO_SHADOW else {}
-
-    # Later phase only. Keep production requests at zero until the player
-    # database and calibrated scenario layer are ready.
-    if ENABLE_HKJC_LIVE_MARKET:
-        market_event_ids = [
-            t["hkjc_event_id"]
-            for t in targets
-            if t["kickoff_hkt"] <= now + timedelta(minutes=5)
-        ]
-        live_markets, live_market_health = fetch_live_markets(market_event_ids)
-    else:
-        live_markets = {}
-        live_market_health = {
-            "status": "PHASE_PAUSED",
-            "request_count": 0,
-            "cache_hit": False,
-            "refresh_seconds": 0,
-        }
     health = {"primary": "NOT_CALLED", "sofascore": "NOT_CALLED", "backup": "NOT_CALLED", "details": "NOT_CALLED"}
     try:
         primary, primary_board = primary_matches()
@@ -996,6 +720,31 @@ def collect(include_full=False):
 
     sofa = None
     backup = None
+    targets = provider_targets(primary + primary_board, now, "FOTMOB")
+    target_source = "FOTMOB" if targets else "NONE"
+    # If FotMob is unavailable, use an existing independent feed as both the
+    # target list and later score/detail fallback. Never use stale snapshots
+    # to manufacture current coverage.
+    if not targets and health["primary"].startswith("ERROR"):
+        try:
+            sofa = sofascore_matches()
+            health["sofascore"] = "OK"
+            targets = provider_targets(sofa, now, "SOFASCORE")
+            if targets:
+                target_source = "SOFASCORE"
+        except Exception as e:
+            sofa = []
+            health["sofascore"] = "ERROR:" + type(e).__name__
+        if not targets:
+            try:
+                backup = backup_matches()
+                health["backup"] = "OK"
+                targets = provider_targets(backup, now, "SPORTSCORE")
+                if targets:
+                    target_source = "SPORTSCORE"
+            except Exception as e:
+                backup = []
+                health["backup"] = "ERROR:" + type(e).__name__
     staged = []
 
     # Stage identity/score matching first. No matchDetails calls yet.
@@ -1037,8 +786,8 @@ def collect(include_full=False):
             m, conf = best_match(t, backup)
 
         if m is None:
-            # Keep post-kickoff HKJC targets visible when every external live
-            # provider lacks coverage. This is deliberately NOT labelled LIVE
+            # Keep current provider targets visible when every score provider
+            # lacks coverage. This is deliberately NOT labelled LIVE
             # and never invents a 0-0 score.
             age_min = (now - t["kickoff_hkt"]).total_seconds() / 60
             if t.get("in_play") or 0 <= age_min <= SOURCE_GAP_MAX_MINUTES:
@@ -1080,7 +829,7 @@ def collect(include_full=False):
         key=lambda idx: (
             source_priority.get(staged[idx]["match"].get("source"), 9),
             -float(staged[idx].get("confidence") or 0),
-            clean(staged[idx]["target"].get("hkjc_event_id")),
+            clean(staged[idx]["target"].get("event_id")),
         )
     )
     group_count = max(
@@ -1205,10 +954,10 @@ def collect(include_full=False):
         hc = live_corners.get("home_corners") if live_corners else ""
         ac = live_corners.get("away_corners") if live_corners else ""
         tc = live_corners.get("total_corners") if live_corners else ""
-        cp = corner_progress(tc, t.get("corner_line_ref"))
 
         rows.append({
-            "hkjc_event_id": t["hkjc_event_id"],
+            "event_id": t["event_id"],
+            "target_provider": t["target_provider"],
             "kickoff_hkt": t["kickoff_hkt"].isoformat(timespec="minutes"),
             "league": t["league"],
             "home_en": t["home_en"],
@@ -1227,9 +976,6 @@ def collect(include_full=False):
             "home_corners": hc,
             "away_corners": ac,
             "total_corners": tc,
-            "corner_line_ref": t.get("corner_line_ref", ""),
-            "corners_to_hi": cp["corners_to_hi"],
-            "corner_progress": cp["corner_progress"],
             "detail_status": detail_status,
             "team_stats": detail_capture["team_stats"],
             "events": detail_capture["events"],
@@ -1238,13 +984,6 @@ def collect(include_full=False):
             "lineup": detail_capture.get("lineup"),
             "match_facts": detail_capture.get("match_facts") if include_full else None,
             "content_sections": detail_capture.get("content_sections") if include_full else None,
-            "scenario_shadow": scenario_shadow(
-                t["hkjc_event_id"],
-                clean(m["minute"]),
-                detail_capture["team_stats"],
-                scenario_rows,
-            ),
-            "hkjc_live_market": live_markets.get(t["hkjc_event_id"]),
         })
 
     if health["details"] == "NOT_CALLED":
@@ -1256,20 +995,8 @@ def collect(include_full=False):
         "updatedAt": now.isoformat(timespec="seconds"),
         "health": health,
         "targetCount": len(targets),
+        "targetSource": target_source,
         "matchedCount": len(rows),
-        "scenarioPolicy": {
-            "mode": "SHADOW_CALIBRATING" if ENABLE_SCENARIO_SHADOW else "PHASE_PAUSED",
-            "addsUpstreamRequests": False,
-            "bettingEnabled": False,
-            "scenarioRowsLoaded": len(scenario_rows),
-        },
-        "liveMarketPolicy": {
-            "mode": "CAPTURE_ONLY" if ENABLE_HKJC_LIVE_MARKET else "PHASE_PAUSED",
-            "provider": "HKJC official GraphQL",
-            "markets": ["HAD", "HIL", "CHL"],
-            "fanout": "ONE INPLAY_ALL REQUEST FOR ALL TARGET EVENTS",
-            **live_market_health,
-        },
         "detailPolicy": {
             "maxDetailCallsPerRun": MAX_DETAIL_CALLS_PER_RUN,
             "detailCandidates": len(detail_candidates),
@@ -1293,12 +1020,11 @@ def collect(include_full=False):
 
 def as_csv(payload):
     fields = [
-        "updatedAt", "hkjc_event_id", "kickoff_hkt", "league", "home_en", "away_en",
+        "updatedAt", "event_id", "target_provider", "kickoff_hkt", "league", "home_en", "away_en",
         "live_score", "home_score", "away_score", "minute", "match_status",
         "source", "source_match_id", "source_home", "source_away",
         "match_confidence", "source_updated_at",
         "home_corners", "away_corners", "total_corners",
-        "corner_line_ref", "corners_to_hi", "corner_progress",
     ]
     s = io.StringIO()
     w = csv.DictWriter(s, fieldnames=fields)
