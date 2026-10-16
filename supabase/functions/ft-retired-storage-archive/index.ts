@@ -120,7 +120,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         method: "POST",
         headers: {
           apikey: service, authorization: "Bearer " + service,
-          "content-type": "application/json", "x-upsert": "false",
+          "content-type": "application/octet-stream", "x-upsert": "false",
           "cache-control": "no-store"
         },
         body: bytes,
