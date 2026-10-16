@@ -44,6 +44,11 @@ Deno.serve(async(req:Request):Promise<Response>=>{
       home:x.canonical_home,away:x.canonical_away,
       sourceHome:x.source_home,sourceAway:x.source_away,
       matchedSide:x.verified_side,
+      // One independently verified team is sufficient for a usable Forebet
+      // source forecast. Never claim that the opposing team is verified.
+      acceptedForDisplay:x.verified_side==="HOME"||x.verified_side==="AWAY",
+      matchTier:(x.verified_side==="SIMILARITY"
+        ?"TENTATIVE_NAME_SIMILARITY":"ACCEPTED_ONE_VERIFIED_TEAM"),
       nameSimilarities:(x.verified_side==="SIMILARITY"?
         [x.source_model.name_similarity_home,x.source_model.name_similarity_away]:null),
       nameMethod:x.source_model?.name_similarity_method||null,
