@@ -153,9 +153,18 @@ def tentative_rows(source_rows, targets, verified_rows, now):
             continue
         output.append(c)
     if len(output) > MAX_PROVISIONALS:
-        # Never silently truncate a complete source day: omitted candidates
-        # would be treated as disappeared, causing incorrect disconnections.
-        raise ValueError("PROVISIONAL_CAPACITY_EXCEEDED")
+        proven=[x for x in output if x["one_verified_side"] in ("HOME","AWAY")]
+        fuzzy=[x for x in output if x["one_verified_side"]=="SIMILARITY"]
+        if len(proven)>MAX_PROVISIONALS:
+            raise ValueError("ONE_SIDE_VERIFIED_CAPACITY_EXCEEDED")
+        # Deterministic quality priority, never arbitrarily accepting an
+        # unverified match over a source-verified team association.
+        fuzzy.sort(key=lambda x:(
+            -min(x["home_similarity"],x["away_similarity"]),
+            -(x["home_similarity"]+x["away_similarity"]),x["match_id"]))
+        counters["fuzzy_capacity_limited"]=True
+        counters["fuzzy_truncated_count"]=max(0,len(output)-MAX_PROVISIONALS)
+        output=proven+fuzzy[:MAX_PROVISIONALS-len(proven)]
     # An event will never exist twice in the submitted batch.
     if len({x["match_id"] for x in output}) != len(output):
         raise ValueError("DUPLICATE_PROVISIONAL_FIXTURE")
