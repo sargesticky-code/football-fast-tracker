@@ -10,6 +10,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
 from forebet_v2 import verified_rows, canonical_from_oidc, source_dates, dedupe_repeated_source_rows, source_overlap_diagnostics, run
 from forebet_intersection_audit import source_intersection_audit, classify_target
 from forebet_provisional import tentative_rows
+from forebet_league_cohort import verified_competition_cohorts
 from capture_forebet_canonical_light import league_ok, displayed_wall_clock
 from forebet_verified_aliases import (shared_verified_catalog, source_forms,
                                       verified_source_name, norm, verified_shared_source_name)
@@ -58,6 +59,53 @@ class SourceIdentityTests(unittest.TestCase):
             **fixtures[0], "id":"FS:overcap001"}]
         with self.assertRaisesRegex(ValueError, "INVALID_VERIFIED_CANONICAL_FIXTURES"):
             canonical_from_oidc("o"*51, NOW, Session(payload))
+
+    def test_unknown_league_self_corrobates_only_from_three_exact_strict_fixtures(self):
+        source,targets,strict=[],[],[]
+        for i in range(3):
+            r,t=sample()
+            h,a="Cohort Home "+str(i),"Cohort Away "+str(i)
+            ko=KO+timedelta(hours=i)
+            url="https://www.forebet.com/en/football/matches/league-cohort-"+str(700001+i)
+            r.update(home_team=h,away_team=a,league_short="QFC",
+                     forebet_detail_url=url,kickoff_text=ko.strftime("%m/%d/%Y %I:%M %p"))
+            t.update(match_id="FS:cohort"+str(i),home=h,away=a,league="FA Cup - Qualification",kickoff=ko)
+            source.append(r);targets.append(t)
+            strict.append({"match_id":t["match_id"],"source_league":"QFC",
+              "source_event_url":url,"league_verification":"EXACT_NAMES_AND_UTC_TIME_ONLY"})
+        r,t=sample()
+        r.update(home_team="Cohort Last Home",away_team="One Sided Unknown",
+                 league_short="QFC",
+                 forebet_detail_url="https://www.forebet.com/en/football/matches/last-701000",
+                 kickoff_text=(KO+timedelta(hours=3)).strftime("%m/%d/%Y %I:%M %p"))
+        t.update(match_id="FS:cohortlast",home="Cohort Last Home",
+                 away="Canonical Last Away",league="FA Cup - Qualification",
+                 kickoff=KO+timedelta(hours=3))
+        source.append(r);targets.append(t)
+        self.assertEqual(verified_competition_cohorts(source,targets,strict),
+                         {"QFC":"FA Cup - Qualification"})
+        provisional,stats=tentative_rows(source,targets,strict,NOW)
+        self.assertEqual(len(provisional),1)
+        self.assertEqual(provisional[0]["match_id"],t["match_id"])
+        self.assertEqual(provisional[0]["league_verification"],
+                         "SAME_CAPTURE_3_STRICT_TWO_TEAM_FIXTURES")
+        self.assertEqual(stats["cohort_based_provisionals"],1)
+        # Two strict fixtures do not establish competition provenance.
+        self.assertFalse(tentative_rows(source,targets,strict[:2],NOW)[0])
+        # Contradiction anywhere in the cohort invalidates all proposals.
+        mismatched=[dict(x) for x in targets]
+        mismatched[1]["league"]="FA Cup - Final"
+        self.assertFalse(verified_competition_cohorts(source,mismatched,strict))
+        self.assertFalse(tentative_rows(source,mismatched,strict,NOW)[0])
+        # The inferred code must not be used for a different league.
+        wrong=[dict(x) for x in targets]
+        wrong[-1]["league"]="Premier League"
+        self.assertFalse(tentative_rows(source,wrong,strict,NOW)[0])
+        # Source home/away remains ordered even when league is corroborated.
+        flipped=[dict(x) for x in source]
+        flipped[-1]["home_team"],flipped[-1]["away_team"]=(
+            flipped[-1]["away_team"],flipped[-1]["home_team"])
+        self.assertFalse(tentative_rows(flipped,targets,strict,NOW)[0])
 
     def test_one_verified_team_and_league_time_is_only_provisional(self):
         row,target=sample()
