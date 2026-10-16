@@ -5,7 +5,8 @@ on:
     - cron: "0 18 * * *"
   workflow_dispatch:
   push:
-    branches: [main]
+    # Archive branch runs static checks only; the deletion step remains main-only.
+    branches: [main, fix/ft-retired-verified-storage-archive-20261016]
     paths:
       - scripts/run_retired_storage_archive.py
       - supabase/functions/ft-retired-storage-archive/**
