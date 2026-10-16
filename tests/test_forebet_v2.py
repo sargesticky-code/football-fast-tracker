@@ -177,6 +177,23 @@ class SourceIdentityTests(unittest.TestCase):
         self.assertEqual(stats["fuzzy_both_name_provisionals"],1)
         self.assertIn("FS:capfuzzy0",{x["match_id"] for x in candidates})
 
+    def test_one_side_accepted_for_display_but_known_opponent_conflict_rejected(self):
+        row,target=sample()
+        row["away_team"]="New Unknown Away"
+        accepted,stats=tentative_rows([row],[target],[],NOW)
+        self.assertEqual(len(accepted),1,stats)
+        self.assertEqual(accepted[0]["one_verified_side"],"HOME")
+        self.assertEqual(accepted[0]["matched_identity"],
+                         "ONE_SIDE_WITH_CONFIRMED_COMPETITION_AND_UNIQUE_KICKOFF")
+        # The other side is unknown, not independently verified. If the
+        # offline provider registry explicitly contradicts it, disconnect.
+        with patch("forebet_provisional.verified_shared_source_name",return_value=False):
+            refused,stats=tentative_rows([row],[target],[],NOW)
+        self.assertEqual(refused,[])
+        self.assertEqual(stats["verified_opponent_contradiction"],1)
+        # One-team match never becomes two-team verified model evidence.
+        self.assertEqual(verified_rows([row],[target],NOW)[0],[])
+
     def test_one_verified_team_and_league_time_is_only_provisional(self):
         row,target=sample()
         row["away_team"]="Man City Completely Unseen"
