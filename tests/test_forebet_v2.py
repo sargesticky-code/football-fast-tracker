@@ -152,6 +152,31 @@ class SourceIdentityTests(unittest.TestCase):
         self.assertEqual(stats["fuzzy_both_name_provisionals"],0)
         self.assertEqual(rows[0]["source_url"],row["forebet_detail_url"])
 
+    def test_fuzzy_capacity_prefers_verified_side_and_marks_source_incomplete(self):
+        rows=[];targets=[]
+        for i in range(3):
+            row,fixture=sample()
+            at=KO+timedelta(hours=i)
+            row["kickoff_text"]=at.strftime("%m/%d/%Y %I:%M %p")
+            row["forebet_detail_url"]=(
+                "https://www.forebet.com/en/football/matches/limit-"+str(700100+i))
+            fixture["kickoff"]=at
+            fixture["match_id"]="FS:capfuzzy"+str(i)
+            if i==0:
+                row["away_team"]="Unknown Team A"
+            else:
+                row["home_team"]="Liverpoolz"
+                row["away_team"]="Man Ct"
+            rows.append(row);targets.append(fixture)
+        with patch("forebet_provisional.MAX_PROVISIONALS",2):
+            candidates,stats=tentative_rows(rows,targets,[],NOW)
+        self.assertEqual(len(candidates),2)
+        self.assertTrue(stats["fuzzy_capacity_limited"])
+        self.assertEqual(stats["fuzzy_truncated_count"],1)
+        self.assertEqual(stats["safe_one_side_provisionals"],1)
+        self.assertEqual(stats["fuzzy_both_name_provisionals"],1)
+        self.assertIn("FS:capfuzzy0",{x["match_id"] for x in candidates})
+
     def test_one_verified_team_and_league_time_is_only_provisional(self):
         row,target=sample()
         row["away_team"]="Man City Completely Unseen"
