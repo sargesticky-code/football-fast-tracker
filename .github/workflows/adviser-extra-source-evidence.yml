@@ -1,0 +1,51 @@
+name: Extra adviser source evidence (PrimaTips + Statarea)
+on:
+  schedule:
+    # Once daily at 12:40 Hong Kong time. Four bounded pages in total.
+    - cron: "40 4 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - feat/ft-add-primatips-statarea-evidence-20261016
+    paths:
+      - scripts/additional_adviser_sources.py
+      - tests/test_additional_adviser_sources.py
+      - .github/workflows/adviser-extra-source-evidence.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/additional_adviser_sources.py
+      - tests/test_additional_adviser_sources.py
+      - .github/workflows/adviser-extra-source-evidence.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: extra-adviser-source-evidence
+  cancel-in-progress: false
+
+jobs:
+  source-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install requests==2.32.5 beautifulsoup4==4.13.5
+      - name: Validate source identity and probability tests offline
+        run: python -m unittest discover -s tests -p test_additional_adviser_sources.py -v
+      - name: Capture bounded source observations only (no Supabase writes)
+        if: github.event_name != 'pull_request'
+        run: python scripts/additional_adviser_sources.py --output /tmp/adviser-extra-sources.json
+      - name: Preserve bounded source-only evidence
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: adviser-extra-source-observations
+          path: /tmp/adviser-extra-sources.json
+          if-no-files-found: warn
+          retention-days: 3
