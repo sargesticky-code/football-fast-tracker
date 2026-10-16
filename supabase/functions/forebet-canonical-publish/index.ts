@@ -40,7 +40,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
     const q = new URLSearchParams({
       select:"match_id,kickoff_hkt,league,home_en,away_en,fetched_at,identity_authority,provider_identity_status",
       identity_authority:"eq.FLASHSCORE",provider_identity_status:"eq.VERIFIED_IDENTITY",
-      order:"kickoff_hkt.asc",limit:"350"
+      order:"kickoff_hkt.asc",limit:"600"
     });
     q.append("kickoff_hkt", "gte." + new Date(now-2*3600000).toISOString());
     q.append("kickoff_hkt", "lte." + new Date(now+60*3600000).toISOString());
@@ -54,7 +54,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
         return response(503,{error:"CANONICAL_FIXTURES_UNAVAILABLE"});
       }
       const rows = await fetchResult.json();
-      if (!Array.isArray(rows) || rows.length>350) return response(503,{error:"INVALID_FIXTURE_RESPONSE"});
+      if (!Array.isArray(rows) || rows.length>600) return response(503,{error:"INVALID_FIXTURE_RESPONSE"});
       const matches = rows.filter((r:any) =>
         /^FS:[A-Za-z0-9_-]{5,32}$/.test(String(r.match_id||"")) &&
         Boolean(r.home_en && r.away_en && r.kickoff_hkt && r.league) &&
