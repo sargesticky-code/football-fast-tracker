@@ -30,6 +30,35 @@ def sample():
 
 class SourceIdentityTests(unittest.TestCase):
 
+    def test_verified_flashscore_scope_accepts_600_and_fails_closed_above_cap(self):
+        class Response:
+            def __init__(self, payload):
+                self.payload = payload
+            def raise_for_status(self):
+                pass
+            def json(self):
+                return self.payload
+        class Session:
+            def __init__(self, payload):
+                self.payload = payload
+            def get(self, *args, **kwargs):
+                return Response(self.payload)
+        context = {"identityStatus":"EXACT_CANONICAL_PROVIDER_FIXTURE",
+                   "provider":"FLASHSCORE"}
+        fixtures = [
+            {"id":f"FS:cap{i:08d}","home":f"Home {i}","away":f"Away {i}",
+             "league":"Test League","kickoff":(NOW+timedelta(hours=3, minutes=i % 10)).isoformat(),
+             "sourceContext":context}
+            for i in range(600)
+        ]
+        payload = {"source":"flashscore-verified-canonical-fixtures-v2",
+                   "generatedAt":NOW.isoformat(), "matches":fixtures}
+        self.assertEqual(len(canonical_from_oidc("o"*51, NOW, Session(payload))),600)
+        payload["matches"] = fixtures + [{
+            **fixtures[0], "id":"FS:overcap001"}]
+        with self.assertRaisesRegex(ValueError, "INVALID_VERIFIED_CANONICAL_FIXTURES"):
+            canonical_from_oidc("o"*51, NOW, Session(payload))
+
     def test_one_verified_team_and_league_time_is_only_provisional(self):
         row,target=sample()
         row["away_team"]="Man City Completely Unseen"
