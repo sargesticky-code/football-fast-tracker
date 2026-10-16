@@ -87,6 +87,8 @@ BEGIN
   IF coalesce(v_id,'') !~ '^FS:[A-Za-z0-9_-]{5,32}$'
    OR coalesce(v_url,'') !~ '^https://www[.]forebet[.]com/en/football/matches/[^/?#]{2,240}-[0-9]{5,12}$'
    OR r->>'matched_identity' IS DISTINCT FROM 'ONE_SIDE_WITH_CONFIRMED_COMPETITION_AND_UNIQUE_KICKOFF'
+   OR (r ? 'league_verification' AND r->>'league_verification' NOT IN
+       ('VERIFIED_STATIC_LEAGUE_CODE','SAME_CAPTURE_3_STRICT_TWO_TEAM_FIXTURES'))
    OR coalesce(r->>'one_verified_side','') NOT IN ('HOME','AWAY')
    OR r->>'source_league' IS NULL OR length(r->>'source_league') NOT BETWEEN 1 AND 25
    OR coalesce(r->>'source_home','') = '' OR coalesce(r->>'source_away','') = ''
@@ -214,7 +216,8 @@ BEGIN
   END IF;
   v_model:=jsonb_build_object('home',r->'home','draw',r->'draw',
        'away',r->'away','pick',r->>'pick','score',r->>'score',
-       'avg_goals',r->'avg_goals','is_verified',false);
+       'avg_goals',r->'avg_goals','is_verified',false,
+       'league_verification',coalesce(r->>'league_verification','UNKNOWN_LEGACY'));
   IF FOUND THEN
     UPDATE private.forebet_provisional_links
       SET last_seen_at=now(),last_run_id=p_run_id,
@@ -234,7 +237,11 @@ BEGIN
      r->>'one_verified_side',(r->>'kickoff')::timestamptz,
      (r->>'source_clock_utc')::timestamptz,now(),now(),p_run_id,v_model);
     INSERT INTO private.forebet_provisional_audit(canonical_event_id,run_id,transition,reason,source_url)
-     VALUES(v_id,p_run_id,'PROVISIONAL','ONE_SIDE_KNOWN_LEAGUE_EXACT_KICKOFF',v_url);
+     VALUES(v_id,p_run_id,'PROVISIONAL',
+       CASE WHEN r->>'league_verification'='SAME_CAPTURE_3_STRICT_TWO_TEAM_FIXTURES'
+            THEN 'ONE_SIDE_CORROBORATED_BY_THREE_STRICT_FIXTURES'
+            ELSE 'ONE_SIDE_KNOWN_LEAGUE_EXACT_KICKOFF' END,
+       v_url);
     v_provisional:=v_provisional+1;
   END IF;
  END LOOP;
