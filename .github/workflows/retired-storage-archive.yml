@@ -1,0 +1,48 @@
+name: Retired identity Storage backup and verified prune
+on:
+  schedule:
+    # Daily 02:00 Hong Kong (UTC+8); GitHub scheduler may run late.
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+  push:
+    # Archive branch runs static checks only; the deletion step remains main-only.
+    branches: [main, fix/ft-retired-verified-storage-archive-20261016]
+    paths:
+      - scripts/run_retired_storage_archive.py
+      - supabase/functions/ft-retired-storage-archive/**
+      - .github/workflows/retired-storage-archive.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/run_retired_storage_archive.py
+      - supabase/functions/ft-retired-storage-archive/**
+      - .github/workflows/retired-storage-archive.yml
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: retired-identity-storage-verified-archive
+  cancel-in-progress: false
+
+jobs:
+  verify-and-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Type-check production archive Edge handler
+        run: deno check supabase/functions/ft-retired-storage-archive/index.ts
+      - name: Verify archive runner syntax
+        run: python -m py_compile scripts/run_retired_storage_archive.py
+      - name: Upload, read back, SHA256 verify, exact-row delete and reclaim
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: python scripts/run_retired_storage_archive.py
+      - name: Summarize safety gate
+        if: always()
+        shell: bash
+        run: |
+          echo "Immutable private Storage files; exact GitHub OIDC origin; download-checksum-readback; atomic source-row guard." >> "$GITHUB_STEP_SUMMARY"
+          echo "Never mark daily archive PASS when the GitHub action failed. See verified progress in step logs." >> "$GITHUB_STEP_SUMMARY"
