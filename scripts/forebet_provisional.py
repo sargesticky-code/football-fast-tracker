@@ -14,12 +14,14 @@ import re
 from forebet_canonical_source_probe import exact_name, model_fields
 from capture_forebet_canonical_light import displayed_wall_clock, league_ok, LEAGUE_PREFIX
 from forebet_verified_aliases import verified_source_name
+from forebet_league_cohort import verified_competition_cohorts
 
 MAX_PROVISIONALS = 180
 
 
 def tentative_rows(source_rows, targets, verified_rows, now):
     accepted = {x["match_id"] for x in verified_rows}
+    corroborated_leagues = verified_competition_cohorts(source_rows, targets, verified_rows)
     proposed = defaultdict(list)
     candidates_per_source = defaultdict(set)
     counters = Counter()
@@ -38,7 +40,7 @@ def tentative_rows(source_rows, targets, verified_rows, now):
             counters["invalid_source_identity"] += 1
             continue
         code = str(row.get("league_short") or "")
-        if code not in LEAGUE_PREFIX:
+        if code not in LEAGUE_PREFIX and code not in corroborated_leagues:
             counters["unverified_source_league"] += 1
             continue
         for t in targets:
@@ -49,7 +51,14 @@ def tentative_rows(source_rows, targets, verified_rows, now):
                 continue
             # We need known-source-league agreement, not merely overlapping
             # team names in games with synchronized kickoff times.
-            if not league_ok(code, t.get("league")):
+            # Unknown competition is admitted ONLY when independently
+            # corroborated by >=3 strict, exact, cross-provider fixtures in
+            # this same complete source capture. Still provisional only.
+            league_proof = ("VERIFIED_STATIC_LEAGUE_CODE" if code in LEAGUE_PREFIX
+                else "SAME_CAPTURE_3_STRICT_TWO_TEAM_FIXTURES")
+            league_supported = (league_ok(code,t.get("league")) if code in LEAGUE_PREFIX
+                else corroborated_leagues.get(code) == t.get("league"))
+            if not league_supported:
                 continue
             h = verified_source_name(row.get("home_team"), t["home"])
             a = verified_source_name(row.get("away_team"), t["away"])
@@ -73,6 +82,7 @@ def tentative_rows(source_rows, targets, verified_rows, now):
                 "pick":fields["pick"],"score":fields["score"],
                 "avg_goals":fields["avg_goals"],
                 "matched_identity":"ONE_SIDE_WITH_CONFIRMED_COMPETITION_AND_UNIQUE_KICKOFF",
+                "league_verification":league_proof,
             }
             proposed[mid].append(candidate)
             candidates_per_source[source_url].add(mid)
@@ -95,5 +105,9 @@ def tentative_rows(source_rows, targets, verified_rows, now):
         raise ValueError("DUPLICATE_PROVISIONAL_FIXTURE")
     if len({x["source_url"] for x in output}) != len(output):
         raise ValueError("DUPLICATE_PROVISIONAL_SOURCE")
+    counters["crosschecked_league_codes"] = len(corroborated_leagues)
+    counters["cohort_based_provisionals"] = sum(
+        x["league_verification"]=="SAME_CAPTURE_3_STRICT_TWO_TEAM_FIXTURES"
+        for x in output)
     counters["safe_one_side_provisionals"] = len(output)
     return sorted(output,key=lambda x:x["match_id"]),dict(counters)
