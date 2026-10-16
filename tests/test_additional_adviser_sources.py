@@ -70,7 +70,8 @@ class AdditionalAdviserSourcesTests(unittest.TestCase):
         self.assertEqual(r["event_id_basis"], "OBSERVATION_HASH_NOT_PROVIDER_ID")
         self.assertIsNone(r["source_kickoff"])
         self.assertFalse(r["kickoff_timezone_verified"])
-        self.assertEqual(parse_statarea(html, "2026-10-17"), [])
+        with self.assertRaisesRegex(ValueError, "DATE_MISMATCH"):
+            parse_statarea(html, "2026-10-17")
 
     def test_no_unknown_hosts_ever_contacted(self):
         session = Mock()
