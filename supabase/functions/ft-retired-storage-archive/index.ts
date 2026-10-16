@@ -53,7 +53,8 @@ function assertRow(row: unknown): boolean {
   return typeof v.relation_name === "string" && v.relation_name.length > 0
     && typeof v.row_hash === "string" && /^[a-f0-9]{32}$/.test(v.row_hash)
     && typeof v.retired_at === "string" && Number.isFinite(Date.parse(v.retired_at))
-    && typeof v.original_row === "object" && v.original_row !== null;
+    && typeof v.original_row_json === "string" && v.original_row_json.length >= 2
+    && v.original_row_json.length <= 2_000_000 && v.original_row_json.trimStart().startsWith("{");
 }
 
 // Each invocation processes at most 12 * 200 rows. The GitHub job repeatedly
@@ -102,7 +103,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       let limit = MAX_BATCH_ROWS, rows: unknown[] = [];
       let bytes = new Uint8Array(), digest = "", path = "";
       while (limit >= 1) {
-        const fetched = await requestJSON(rpc("ft_retired_archive_read"), service, { p_limit: limit });
+        const fetched = await requestJSON(rpc("ft_retired_archive_read_lossless"), service, { p_limit: limit });
         if (!Array.isArray(fetched) || fetched.length > limit || !fetched.every(assertRow)) {
           throw new Error("UNEXPECTED_SOURCE_BATCH");
         }
@@ -113,7 +114,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
           return String(v.relation_name) + ":" + String(v.row_hash);
         }));
         if (pairs.size !== rows.length) throw new Error("DUPLICATE_SOURCE_KEY");
-        const doc = { schema_version: 1, source_table: "private.ft_identity_retired_rows", rows };
+        const doc = { schema_version: 2, source_table: "private.ft_identity_retired_rows", rows };
         bytes = te.encode(JSON.stringify(doc));
         if (bytes.length <= MAX_FILE_BYTES) {
           digest = await sha256(bytes);
@@ -162,7 +163,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         throw new Error("BACKUP_ROUNDTRIP_CHECKSUM_MISMATCH");
       }
       const backup = JSON.parse(new TextDecoder().decode(checkBytes));
-      if (backup.schema_version !== 1 || backup.source_table !== "private.ft_identity_retired_rows"
+      if (backup.schema_version !== 2 || backup.source_table !== "private.ft_identity_retired_rows"
         || !Array.isArray(backup.rows) || backup.rows.length !== rows.length
         || !backup.rows.every(assertRow)) {
         throw new Error("BACKUP_RESTORE_PARSE_OR_COUNT_FAILED");
@@ -171,7 +172,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       // A receipt and the exact row deletion commit atomically or not at all.
       let result: unknown;
       try {
-        result = await requestJSON(rpc("ft_retired_archive_commit"), service, {
+        result = await requestJSON(rpc("ft_retired_archive_commit_lossless"), service, {
           p_rows: rows, p_storage_path: path, p_sha256_hex: digest,
           p_file_bytes: bytes.length, p_github_run_id: runId,
         });
