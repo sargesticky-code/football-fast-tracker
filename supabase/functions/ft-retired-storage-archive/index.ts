@@ -169,10 +169,24 @@ Deno.serve(async (req: Request): Promise<Response> => {
       }
       // This RPC verifies Storage metadata and exact source JSON & timestamps.
       // A receipt and the exact row deletion commit atomically or not at all.
-      const result = await requestJSON(rpc("ft_retired_archive_commit"), service, {
-        p_rows: rows, p_storage_path: path, p_sha256_hex: digest,
-        p_file_bytes: bytes.length, p_github_run_id: runId,
-      });
+      let result: unknown;
+      try {
+        result = await requestJSON(rpc("ft_retired_archive_commit"), service, {
+          p_rows: rows, p_storage_path: path, p_sha256_hex: digest,
+          p_file_bytes: bytes.length, p_github_run_id: runId,
+        });
+      } catch (err) {
+        // Diagnostic is read-only; only safe mismatch counts, never row values,
+        // hashes, secrets or URLs, leave Edge logs.
+        if (String(err).includes("SOURCE_CHANGED_SINCE_BACKUP_READ")) {
+          try {
+            const diagnostic = await requestJSON(rpc("ft_retired_archive_diagnose"),
+              service, {p_rows: rows}) as Record<string, unknown>;
+            console.error("ARCHIVE_SOURCE_MISMATCH_COUNTS", JSON.stringify(diagnostic));
+          } catch { console.error("ARCHIVE_DIAGNOSTIC_UNAVAILABLE"); }
+        }
+        throw err;
+      }
       if (!result || typeof result !== "object"
         || (result as Record<string, unknown>).deleted !== rows.length
         || (result as Record<string, unknown>).verified_backup !== true) {
