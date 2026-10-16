@@ -32,6 +32,11 @@ class AdditionalAdviserSourcesTests(unittest.TestCase):
         self.assertFalse(r["kickoff_timezone_verified"])
         self.assertEqual(r["source_competition"], "Argentina - Liga Profesional")
         self.assertEqual(r["identity_status"], "UNRESOLVED")
+        relative = html.replace("https://primatips.com/tip/huracan-gimnasia-liga-949885",
+                                "/tip/huracan-gimnasia-liga-949885")
+        relative_rows = parse_primatips(relative, "2026-10-16")
+        self.assertEqual(len(relative_rows), 1)
+        self.assertEqual(relative_rows[0]["source_url"], r["source_url"])
 
     def test_primatips_fail_closed_if_date_or_event_identity_fails(self):
         html = """<h1>Friday, October 16, 2026</h1>
