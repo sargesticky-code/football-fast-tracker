@@ -12,7 +12,7 @@ import json
 import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 import requests
 from bs4 import BeautifulSoup
@@ -59,7 +59,7 @@ def parse_primatips(html, day):
     results, seen = [], set()
     for item in soup.select("a.game[id^='g_']")[:MAX_ROWS_PER_PAGE + 1]:
         source_id = item.get("id", "")[2:]
-        url = item.get("href", "")
+        url = urljoin("https://primatips.com", item.get("href", ""))
         m = _TIP_ID.search(url)
         if (not re.fullmatch(r"\d{4,12}", source_id) or not m
                 or m.group(1) != source_id or urlparse(url).netloc != "primatips.com"
