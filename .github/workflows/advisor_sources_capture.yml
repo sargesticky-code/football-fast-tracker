@@ -1,0 +1,71 @@
+name: BetClan + SportyTrader advisor capture (source-only)
+on:
+  pull_request:
+    paths:
+      - "scripts/capture_advisor_sources.py"
+      - "tests/test_advisor_sources.py"
+      - ".github/workflows/advisor_sources_capture.yml"
+  workflow_dispatch:
+  schedule:
+    # Single bounded daily scan: 09:20 Hong Kong time; no continuous scraping.
+    - cron: "20 1 * * *"
+  push:
+    paths:
+      - "scripts/capture_advisor_sources.py"
+      - "tests/test_advisor_sources.py"
+      - ".github/workflows/advisor_sources_capture.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fast-tracker-advisor-source-capture
+  cancel-in-progress: false
+
+jobs:
+  source-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check requests==2.32.5 beautifulsoup4==4.12.3
+      - run: python -m unittest discover -s tests -p 'test_advisor_sources.py' -v
+
+  source-capture:
+    needs: source-contract
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check requests==2.32.5 beautifulsoup4==4.12.3
+      - name: Capture source evidence only (no matching, DB writes or publication)
+        run: python scripts/capture_advisor_sources.py --provider BOTH --max-details 12 --delay 1.0 --output /tmp/ft-advisor-captures.json
+      - name: Verify source-only safety contract
+        run: |
+          python - <<'PY'
+          import json
+          payload=json.load(open('/tmp/ft-advisor-captures.json'))
+          assert payload['canonical_promotion_enabled'] is False
+          assert payload['dashboard_published'] is False
+          for group in payload['providers']:
+              assert group['details'] <= 12
+              for row in group['rows']:
+                  assert row['canonical_match_id'] is None
+                  assert row['identity_status']=='UNRESOLVED'
+                  assert row['source_timezone_verified'] is False
+                  assert row['provider'] in ('BETCLAN','SPORTYTRADER')
+          print({g['provider']:g['details'] for g in payload['providers']})
+          PY
+      - name: Upload diagnostic artifact without committing new data to Git
+        uses: actions/upload-artifact@v4
+        with:
+          name: advisor-source-evidence
+          path: /tmp/ft-advisor-captures.json
+          retention-days: 7
