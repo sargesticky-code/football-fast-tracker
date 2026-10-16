@@ -211,12 +211,20 @@ def collect(start=None, session=None):
                 html = fetch(session, url)
                 batch = parse_primatips(html, day) if source == "PRIMATIPS" else parse_statarea(html, day)
                 if not batch:
-                    raise ValueError("EMPTY_SOURCE_PARSE")
+                    info = ""
+                    if source == "PRIMATIPS":
+                        soup = BeautifulSoup(html, "html.parser")
+                        first = soup.select_one("a.game")
+                        info = (" n_links=" + str(len(soup.select("a.game")))
+                                + " n_team_names=" + str(len(soup.select("a.game span.nms span.nm")))
+                                + " n_percentages=" + str(len(soup.select("a.game span.ts span.t")))
+                                + " first_href=" + str((first.get("href") if first else "") or "")[:100])
+                    raise ValueError("EMPTY_SOURCE_PARSE" + info)
                 output["records"].extend(batch)
                 stats["parsed"] += len(batch)
                 stats["successful_dates"] += 1
             except (requests.RequestException, ValueError) as exc:
-                stats["failures"].append({"date": day, "error": type(exc).__name__, "reason": str(exc)[:100]})
+                stats["failures"].append({"date": day, "error": type(exc).__name__, "reason": str(exc)[:250]})
         output["providers"][source] = stats
     return output
 
