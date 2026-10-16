@@ -26,7 +26,24 @@ async function requestJSON(url: string, serviceKey: string, body: unknown): Prom
     body: JSON.stringify(body),
     signal: AbortSignal.timeout(25000),
   });
-  if (!res.ok) throw new Error("INTERNAL_RPC_FAILED_" + res.status);
+  if (!res.ok) {
+    // The DB returns a safe SQLSTATE and our fixed reason codes. Avoid
+    // logging the request, source rows, or any credentials.
+    let errorCode = "UNKNOWN";
+    let reason = "REJECTED";
+    try {
+      const fault = await res.json() as Record<string, unknown>;
+      if (typeof fault.code === "string" && /^[A-Z0-9]{5}$/.test(fault.code)) errorCode = fault.code;
+      const allowed = new Set([
+        "INVALID_ARCHIVE_ENVELOPE", "STORAGE_OBJECT_NOT_VERIFIED",
+        "ARCHIVE_DUPLICATE_OR_MALFORMED_ROWS", "SOURCE_CHANGED_SINCE_BACKUP_READ",
+        "ARCHIVE_DELETE_MISMATCH", "ARCHIVE_ALREADY_COMMITTED",
+        "ARCHIVE_ROWS_NOT_ARRAY", "ARCHIVE_READ_LIMIT_INVALID",
+      ]);
+      if (typeof fault.message === "string" && allowed.has(fault.message)) reason = fault.message;
+    } catch { /* malformed errors also stop safely */ }
+    throw new Error("INTERNAL_RPC_FAILED_" + res.status + "_" + errorCode + "_" + reason);
+  }
   return await res.json();
 }
 
