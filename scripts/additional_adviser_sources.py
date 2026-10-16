@@ -21,7 +21,7 @@ UA = "FastTrackerSourceAudit/1.0 (once daily; source-only; no credentials)"
 PROVIDERS = ("PRIMATIPS", "STATAREA")
 MAX_HTML = 2_000_000
 MAX_ROWS_PER_PAGE = 500
-_CLOCK = re.compile(r"^[0-2]\d:[0-5]\d$")
+_CLOCK = re.compile(r"^(?:[01]\d|2[0-3]):[0-5]\d$")
 _PCT = re.compile(r"^(\d{1,3})%?$")
 _TIP_ID = re.compile(r"/tip/[-a-z0-9]+-(\d{4,12})/?$")
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -151,7 +151,11 @@ def parse_statarea(html, day):
             names = []
             continue
         percents = [_pct(v) for v in vals]
-        hda = _triplet(vals[:3]) if all(v is not None for v in percents[:3]) else None
+        # Headers ("1", "X", "2") are not percentages: keep the team pair
+        # until the subsequent actual percentage row is read.
+        if any(v is None for v in percents[:3]):
+            continue
+        hda = _triplet(vals[:3])
         if not hda or not names[0] or not names[1] or names[0] == names[1]:
             names = []
             continue
