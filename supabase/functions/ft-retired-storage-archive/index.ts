@@ -143,8 +143,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
         body: bytes,
         signal: AbortSignal.timeout(30000),
       });
-      // Retry may find the same immutable content-addressed file in Storage.
-      if (![200, 201, 409].includes(upload.status)) {
+      // Storage may answer 400 Asset Already Exists for an immutable orphan
+      // from a previously rolled-back DB receipt. This status is NOT success:
+      // it is accepted solely to attempt readback of the same SHA-256 path.
+      // No receipt or deletion occurs unless all independent checks pass.
+      if (![200, 201, 400, 409].includes(upload.status)) {
         throw new Error("STORAGE_UPLOAD_FAILED_" + upload.status);
       }
       const download = await fetch(storage(path, true), {
