@@ -63,7 +63,7 @@ jobs:
           python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --replay-input /tmp/adviser-replay/adviser-source.json --evidence-dir /tmp/adviser-evidence
       - name: Collect today's and tomorrow's source records
         if: github.event_name != 'pull_request' && github.event_name != 'push' && github.event.inputs.replay_run_id == ''
-        run: python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --limit 100 --evidence-dir /tmp/adviser-evidence --related-evidence-limit 2
+        run: python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --limit 100 --evidence-dir /tmp/adviser-evidence --related-evidence-limit 8
       - name: Publish authenticated observations on main
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         env:
