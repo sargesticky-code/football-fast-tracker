@@ -42,7 +42,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: python scripts/additional_adviser_sources.py --output /tmp/adviser-extra-sources.json
       - name: Preserve bounded source-only evidence
-        if: github.event_name != 'pull_request'
+        if: always() && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: adviser-extra-source-observations
