@@ -83,6 +83,14 @@ def tentative_rows(source_rows, targets, verified_rows, now):
             # Existing one-side verified identity always wins. Fuzzy names
             # NEVER replace or certify a previously verified alias.
             if h or a:
+                # One confirmed team is sufficient to ACCEPT this source for
+                # display. Explicit contrary provider IDs for the other team
+                # are stronger evidence than a non-matching spelling and
+                # invalidate the association.
+                if ((h and verified_shared_source_name(row.get("away_team"),t["away"]) is False)
+                    or (a and verified_shared_source_name(row.get("home_team"),t["home"]) is False)):
+                    counters["verified_opponent_contradiction"] += 1
+                    continue
                 which = "HOME" if h else "AWAY"
                 fuzzy = False
             else:
