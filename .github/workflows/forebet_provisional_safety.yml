@@ -44,6 +44,10 @@ jobs:
           assert "CANONICAL_IDENTITY_CHANGED" in sql
           assert "NOT_REOBSERVED_ON_COMPLETE_SOURCE_DATE" in sql
           assert "TWO_SIDED_CANONICAL_VERIFIED" in sql
+          assert "'league_verification'" in sql
+          assert "SAME_CAPTURE_3_STRICT_TWO_TEAM_FIXTURES" in sql
+          assert "ONE_SIDE_CORROBORATED_BY_THREE_STRICT_FIXTURES" in sql
+          assert "UNKNOWN_LEGACY" in sql
           assert "CREATE OR REPLACE VIEW public.forebet_provisional_feed_current" in sql
           assert "FOREBET_PROVISIONAL_RECONCILE_V1" in edge
           assert "PREVIEW_READ_ONLY" in edge
