@@ -7,7 +7,6 @@ on:
     branches:
       - main
       - feat/forebet-v2-20261014
-      - feat/forebet-name-floor-030-self-healing-20261017
     paths:
       - 'scripts/forebet_v2.py'
       - 'scripts/forebet_provisional.py'
