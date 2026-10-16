@@ -41,6 +41,14 @@ LEAGUE_PREFIX={
     "Hr1":"HNLCROATIA:",
     "Ar1":"Liga Profesional - ClausuraARGENTINA:",
     "Cl1":"Liga de PrimeraCHILE:",
+    # Verified Forebet competition_name_master source codes and Flashscore
+    # canonical league titles; never infer these from a generic division name.
+    "L1":"League OneENGLAND:",
+    "L2":"League TwoENGLAND:",
+    "Th1":"Thai League 1THAILAND:",
+    "Fr2":"Ligue 2FRANCE:",
+    "De2":"2. BundesligaGERMANY:",
+    "Es2":"LaLiga2SPAIN:",
     "Bo1":"Division ProfesionalBOLIVIA:",
 }
 # Exact short league titles now emitted by verified Flashscore fixture rows.
@@ -54,6 +62,13 @@ FLASHscore_EXACT_SHORT_LEAGUES={
     "De1":"Bundesliga",
     "Fr1":"Ligue 1",
     "Ar1":"Liga Profesional - Clausura",
+    "Cz1":"Chance Liga",
+    "L1":"League One",
+    "L2":"League Two",
+    "Th1":"Thai League 1",
+    "Fr2":"Ligue 2",
+    "De2":"2. Bundesliga",
+    "Es2":"LaLiga2",
 }
 # These are validated competition names, not a learned/automatically expanded alias.
 def league_ok(code,full):
