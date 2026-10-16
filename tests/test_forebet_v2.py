@@ -137,6 +137,37 @@ class SourceIdentityTests(unittest.TestCase):
         self.assertIsNone(displayed_wall_clock(row))
         self.assertEqual(verified_rows([row],[fixture],NOW)[0],[])
 
+    def test_short_flashscore_competition_names_are_exact_not_fuzzy(self):
+        expected = {
+            "EPL":"Premier League",
+            "Es1":"LaLiga",
+            "It1":"Serie A",
+            "De1":"Bundesliga",
+            "Fr1":"Ligue 1",
+            "Ar1":"Liga Profesional - Clausura",
+        }
+        for source,canonical in expected.items():
+            with self.subTest(source=source, canonical=canonical):
+                self.assertTrue(league_ok(source,canonical))
+                self.assertFalse(league_ok(source,canonical+" Other"))
+                self.assertFalse(league_ok(source,"Totally Different League"))
+        self.assertFalse(league_ok("Fr1","Serie A"))
+        self.assertFalse(league_ok("It1","Ligue 1"))
+
+    def test_current_short_league_still_requires_exact_pair_and_time(self):
+        row,fixture=sample()
+        fixture["league"]="Premier League"
+        accepted,_=verified_rows([row],[fixture],NOW)
+        self.assertEqual(len(accepted),1)
+        self.assertEqual(accepted[0]["match_id"],fixture["match_id"])
+        self.assertEqual(accepted[0]["source_league"],"EPL")
+        swapped=dict(row,home_team=row["away_team"],away_team=row["home_team"])
+        self.assertEqual(verified_rows([swapped],[fixture],NOW)[0],[])
+        wrong_time=dict(row,kickoff_text="10/15/2026 03:00 PM")
+        self.assertEqual(verified_rows([wrong_time],[fixture],NOW)[0],[])
+        wrong_league=dict(row,league_short="It1")
+        self.assertEqual(verified_rows([wrong_league],[fixture],NOW)[0],[])
+
     def test_proven_championship_and_uefa_league_aliases_not_guess_other_leagues(self):
         self.assertTrue(league_ok("CH","Championship"))
         self.assertTrue(league_ok("CH","ChampionshipENGLAND: Standings"))

@@ -43,6 +43,18 @@ LEAGUE_PREFIX={
     "Cl1":"Liga de PrimeraCHILE:",
     "Bo1":"Division ProfesionalBOLIVIA:",
 }
+# Exact short league titles now emitted by verified Flashscore fixture rows.
+# A short title is corroboration ONLY when the oriented canonical team pair,
+# verified provider identity, unique FS fixture and exact kickoff also pass.
+# Never fuzzy-match competitions or use a short title as standalone identity.
+FLASHscore_EXACT_SHORT_LEAGUES={
+    "EPL":"Premier League",
+    "Es1":"LaLiga",
+    "It1":"Serie A",
+    "De1":"Bundesliga",
+    "Fr1":"Ligue 1",
+    "Ar1":"Liga Profesional - Clausura",
+}
 # These are validated competition names, not a learned/automatically expanded alias.
 def league_ok(code,full):
     prefix=LEAGUE_PREFIX.get(str(code or ""))
@@ -50,6 +62,8 @@ def league_ok(code,full):
         return False
     # Forebet CH is English Championship; Flashscore's verified fixture API
     # now uses the short canonical name without its former country suffix.
+    if full==FLASHscore_EXACT_SHORT_LEAGUES.get(str(code or "")):
+        return True
     if code=="CH" and full=="Championship":
         return True
     if code=="UCL":
