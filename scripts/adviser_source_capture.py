@@ -343,7 +343,7 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=int, default=100)
     parser.add_argument("--source", choices=tuple(SOURCES))
     parser.add_argument("--evidence-dir", type=Path)
-    parser.add_argument("--related-evidence-limit", type=int, default=0, choices=range(3))
+    parser.add_argument("--related-evidence-limit", type=int, default=0, choices=range(9))
     parser.add_argument("--replay-input", type=Path)
     args = parser.parse_args()
     if not 1 <= args.limit <= 120:
