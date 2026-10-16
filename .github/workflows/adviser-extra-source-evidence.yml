@@ -17,6 +17,7 @@ on:
     paths:
       - scripts/additional_adviser_sources.py
       - tests/test_additional_adviser_sources.py
+      - supabase/functions/adviser-extra-source-publish/**
       - .github/workflows/adviser-extra-source-evidence.yml
 
 permissions:
