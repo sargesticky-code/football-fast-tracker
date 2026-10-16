@@ -61,6 +61,17 @@ jobs:
           test -s /tmp/adviser-replay/adviser-source.json
           gh run download "$REPLAY_RUN_ID" --repo "$GITHUB_REPOSITORY" --name adviser-source-evidence --dir /tmp/adviser-evidence
           python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --replay-input /tmp/adviser-replay/adviser-source.json --evidence-dir /tmp/adviser-evidence
+      - name: Validate capture CLI matches the bounded source contract
+        run: |
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          src=Path('scripts/adviser_source_capture.py').read_text()
+          ast.parse(src)
+          assert 'choices=range(9)' in src
+          assert 'related_evidence_limit <= 8' in src
+          print('RELATED_EVIDENCE_CLI_0_TO_8_OK')
+          PY
       - name: Collect today's and tomorrow's source records
         if: github.event_name != 'pull_request' && github.event_name != 'push' && github.event.inputs.replay_run_id == ''
         run: python scripts/adviser_source_capture.py --output /tmp/adviser-source.json --limit 100 --evidence-dir /tmp/adviser-evidence --related-evidence-limit 8
