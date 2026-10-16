@@ -13,7 +13,7 @@ const reply = (status: number, data: Record<string, unknown>) =>
   Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
 
 async function sha256(bytes: Uint8Array): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  const digest = await crypto.subtle.digest("SHA-256", bytes.slice().buffer as ArrayBuffer);
   return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
