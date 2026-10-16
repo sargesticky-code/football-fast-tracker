@@ -46,7 +46,7 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
                 "domain": dom, "path": str(c.get("path") or "/")
             })
     allowed = set()
-    for target in targets[:350]:
+    for target in targets[:600]:
         for home in source_forms(target["home"]):
             for away in source_forms(target["away"]):
                 allowed.add(home + "|" + away)

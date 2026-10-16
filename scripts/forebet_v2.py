@@ -31,7 +31,7 @@ HKT = timezone(timedelta(hours=8))
 OUT = Path("/tmp/ft-forebet-verified-only.json")
 SUMMARY = Path("/tmp/ft-forebet-verified-summary.json")
 PROVISIONAL_OUT = Path("/tmp/ft-forebet-provisional-only.json")
-MAX_TARGETS = 350
+MAX_TARGETS = 600
 # Fixed from 20 independent verified fixtures. If the provider changes its
 # display timezone, exact UTC kickoff comparisons reject affected rows.
 CALIBRATED_DISPLAY_UTC_OFFSET_MINUTES = 0
