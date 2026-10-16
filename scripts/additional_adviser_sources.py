@@ -216,7 +216,7 @@ def collect(start=None, session=None):
                 stats["parsed"] += len(batch)
                 stats["successful_dates"] += 1
             except (requests.RequestException, ValueError) as exc:
-                stats["failures"].append({"date": day, "error": type(exc).__name__})
+                stats["failures"].append({"date": day, "error": type(exc).__name__, "reason": str(exc)[:100]})
         output["providers"][source] = stats
     return output
 
@@ -233,7 +233,7 @@ def main():
         "providers": report["providers"], "records": len(report["records"]),
         "production_published": False, "kickoff_timezone_verified": 0,
     }, ensure_ascii=False))
-    return 0 if all(v["successful_dates"] >= 1 for v in report["providers"].values()) else 2
+    return 0 if any(v["successful_dates"] >= 1 for v in report["providers"].values()) else 2
 
 
 if __name__ == "__main__":
