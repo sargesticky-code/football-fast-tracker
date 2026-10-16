@@ -64,7 +64,7 @@ class BoundedSourceEvidenceTest(unittest.TestCase):
             self.assertFalse(result['records'][0]['kickoff_timezone_verified'])
 
     def test_invalid_bounds_reject_before_network(self):
-        for kwargs in ({'limit':0}, {'limit':121}, {'source':'UNKNOWN'}, {'related_evidence_limit':3}, {'related_evidence_limit':1}):
+        for kwargs in ({'limit':0}, {'limit':121}, {'source':'UNKNOWN'}, {'related_evidence_limit':9}, {'related_evidence_limit':1}):
             with self.assertRaises(ValueError), patch('scripts.adviser_source_capture.fetch') as fetch:
                 collect(**kwargs)
             fetch.assert_not_called()
