@@ -50,7 +50,15 @@ Deno.serve(async(request:Request):Promise<Response>=>{
       }),signal:AbortSignal.timeout(25000)
     });
     if(!r.ok){
-      console.error("EXTRA_SOURCE_PRIVATE_QUARANTINE_FAILED",r.status);
+      let code="UNKNOWN",detail="UNKNOWN";
+      try {
+        const fault=await r.json() as Record<string,unknown>;
+        if(typeof fault.code==="string"&&/^[A-Z0-9]{5,12}$/.test(fault.code))code=fault.code;
+        const safe=new Set(["INVALID_EXTRA_SOURCE_BATCH","INVALID_EXTRA_SOURCE_OBSERVATIONS",
+          "DUPLICATE_EXTRA_SOURCE_IDS","EXTRA_SOURCE_WRITE_MISMATCH"]);
+        if(typeof fault.message==="string"&&safe.has(fault.message))detail=fault.message;
+      } catch { /* never echo source rows or service credentials */ }
+      console.error("EXTRA_SOURCE_PRIVATE_QUARANTINE_FAILED",r.status,code,detail);
       return response(r.status>=500?503:422,{error:"PRIVATE_QUARANTINE_REJECTED"});
     }
     const data=await r.json();
