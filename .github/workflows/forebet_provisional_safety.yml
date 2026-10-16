@@ -8,6 +8,7 @@ on:
       - 'tests/test_forebet_v2.py'
       - 'supabase/functions/forebet-canonical-publish/index.ts'
       - 'ops/forebet_provisional_self_healing_v1.sql'
+      - 'ops/20261017_forebet_provisional_fuzzy_names_030.sql'
       - '.github/workflows/supabase_private_ingest.yml'
       - '.github/workflows/forebet_provisional_safety.yml'
 permissions:
@@ -48,6 +49,18 @@ jobs:
           assert "SAME_CAPTURE_3_STRICT_TWO_TEAM_FIXTURES" in sql
           assert "ONE_SIDE_CORROBORATED_BY_THREE_STRICT_FIXTURES" in sql
           assert "UNKNOWN_LEGACY" in sql
+          low=Path("ops/20261017_forebet_provisional_fuzzy_names_030.sql").read_text()
+          assert "CHECK(verified_side IN ('HOME','AWAY','SIMILARITY'))" in low
+          assert "BOTH_NAME_SIMILARITY_030_STRONG_SIDE_070_LEAGUE_EXACT_TIME_UNIQUE" in low
+          assert "UPGRADED_FROM_030_NAMES_TO_ONE_VERIFIED_SIDE" in low
+          assert "FUZZY_NAMES_030_STRONG_070_LEAGUE_EXACT_TIME_UNVERIFIED" in low
+          assert "'name_similarity_home'" in low and "'name_similarity_away'" in low
+          assert "GRANT EXECUTE" in low and "TO service_role" in low
+          public=Path("supabase/functions/forebet-provisional-feed/index.ts").read_text()
+          assert '"SIMILARITY"' in public
+          assert 'nameSimilarities:' in public
+          assert '>=.30' in public
+          assert '>=.70' in public
           assert "CREATE OR REPLACE VIEW public.forebet_provisional_feed_current" in sql
           assert "FOREBET_PROVISIONAL_RECONCILE_V1" in edge
           assert "PREVIEW_READ_ONLY" in edge

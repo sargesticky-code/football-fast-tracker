@@ -354,7 +354,8 @@ def run(now=None, fixture_token=None, helper=None):
         "source":"FOREBET_PROVISIONAL_RECONCILE_V1",
         "rows":provisional,
         "verified_ids":[x["match_id"] for x in rows],
-        "complete_dates":[x["date"] for x in page_proofs if x["capture_mode"]=="full_page"],
+        "complete_dates":([] if provisional_diagnostics.get("fuzzy_capacity_limited")
+            else [x["date"] for x in page_proofs if x["capture_mode"]=="full_page"]),
         "captured_at":now.isoformat(),
     }, ensure_ascii=False), encoding="utf-8")
     SUMMARY.write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")

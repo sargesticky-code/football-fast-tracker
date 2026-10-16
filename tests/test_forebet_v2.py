@@ -107,6 +107,76 @@ class SourceIdentityTests(unittest.TestCase):
             flipped[-1]["away_team"],flipped[-1]["home_team"])
         self.assertFalse(tentative_rows(flipped,targets,strict,NOW)[0])
 
+    def test_fuzzy_name_floor_030_remains_tentative_and_never_strict(self):
+        row,target=sample()
+        row["home_team"]="Liverpoolz"     # 10/11 chars, verified alias unknown
+        row["away_team"]="Man Ct"        # weak but >=30% name similarity
+        rows,stats=tentative_rows([row],[target],[],NOW)
+        self.assertEqual(len(rows),1,stats)
+        candidate=rows[0]
+        self.assertEqual(candidate["one_verified_side"],"SIMILARITY")
+        self.assertEqual(candidate["matched_identity"],
+                         "BOTH_NAME_SIMILARITY_030_STRONG_SIDE_070_LEAGUE_EXACT_TIME_UNIQUE")
+        self.assertGreaterEqual(min(candidate["home_similarity"],
+                                    candidate["away_similarity"]),0.30)
+        self.assertGreaterEqual(max(candidate["home_similarity"],
+                                    candidate["away_similarity"]),0.70)
+        self.assertEqual(stats["fuzzy_both_name_provisionals"],1)
+        self.assertEqual(stats["safe_one_side_provisionals"],0)
+        self.assertFalse(verified_rows([row],[target],NOW)[0])
+
+    def test_fuzzy_does_not_accept_wrong_or_ambiguous_matches(self):
+        row,target=sample()
+        row.update(home_team="Liverpoolz",away_team="Man Ct")
+        def matches(changed,targets=None):
+            return tentative_rows([changed],targets or [target],[],NOW)[0]
+        self.assertFalse(matches(dict(row,league_short="It1")))
+        self.assertFalse(matches(dict(row,kickoff_text="10/15/2026 02:03 PM")))
+        self.assertFalse(matches(dict(row,home_team="Another Club")))
+        self.assertFalse(matches(dict(row,away_team="Other Unknown Wanderers")))
+        self.assertFalse(matches(dict(row,home_team="Man Ct",away_team="Liverpoolz")))
+        other=dict(target,match_id="FS:duplicatefixture")
+        self.assertFalse(matches(row,[target,other]))
+        self.assertFalse(tentative_rows([row,dict(row,
+           forebet_detail_url="https://www.forebet.com/en/football/matches/second-700001")],
+           [target],[],NOW)[0])
+
+    def test_one_verified_side_takes_priority_over_weaker_030_suggestion(self):
+        row,target=sample()
+        row["away_team"]="Totally Unseen"
+        fuzzy=dict(row,home_team="Liverpoolz",away_team="Man Ct",
+                   forebet_detail_url="https://www.forebet.com/en/football/matches/fuzzy-701123")
+        rows,stats=tentative_rows([row,fuzzy],[target],[],NOW)
+        self.assertEqual(len(rows),1,stats)
+        self.assertEqual(rows[0]["one_verified_side"],"HOME")
+        self.assertEqual(stats["fuzzy_both_name_provisionals"],0)
+        self.assertEqual(rows[0]["source_url"],row["forebet_detail_url"])
+
+    def test_fuzzy_capacity_prefers_verified_side_and_marks_source_incomplete(self):
+        rows=[];targets=[]
+        for i in range(3):
+            row,fixture=sample()
+            at=KO+timedelta(hours=i)
+            row["kickoff_text"]=at.strftime("%m/%d/%Y %I:%M %p")
+            row["forebet_detail_url"]=(
+                "https://www.forebet.com/en/football/matches/limit-"+str(700100+i))
+            fixture["kickoff"]=at
+            fixture["match_id"]="FS:capfuzzy"+str(i)
+            if i==0:
+                row["away_team"]="Unknown Team A"
+            else:
+                row["home_team"]="Liverpoolz"
+                row["away_team"]="Man Ct"
+            rows.append(row);targets.append(fixture)
+        with patch("forebet_provisional.MAX_PROVISIONALS",2):
+            candidates,stats=tentative_rows(rows,targets,[],NOW)
+        self.assertEqual(len(candidates),2)
+        self.assertTrue(stats["fuzzy_capacity_limited"])
+        self.assertEqual(stats["fuzzy_truncated_count"],1)
+        self.assertEqual(stats["safe_one_side_provisionals"],1)
+        self.assertEqual(stats["fuzzy_both_name_provisionals"],1)
+        self.assertIn("FS:capfuzzy0",{x["match_id"] for x in candidates})
+
     def test_one_verified_team_and_league_time_is_only_provisional(self):
         row,target=sample()
         row["away_team"]="Man City Completely Unseen"

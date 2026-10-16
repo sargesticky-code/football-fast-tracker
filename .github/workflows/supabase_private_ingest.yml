@@ -9,6 +9,7 @@ on:
       - feat/forebet-v2-20261014
     paths:
       - 'scripts/forebet_v2.py'
+      - 'scripts/forebet_provisional.py'
       - 'scripts/forebet_browser_source.py'
       - 'tests/test_forebet_v2.py'
       - 'supabase/functions/forebet-canonical-publish/index.ts'
@@ -113,8 +114,16 @@ jobs:
           assert not ({r["match_id"] for r in strict}&{r["match_id"] for r in rows})
           assert len({r["match_id"] for r in rows})==len(rows)
           assert len({r["source_url"] for r in rows})==len(rows)
-          assert all(r["matched_identity"]=="ONE_SIDE_WITH_CONFIRMED_COMPETITION_AND_UNIQUE_KICKOFF"
-                     and r["one_verified_side"] in ("HOME","AWAY") for r in rows)
+          assert all(
+             (r["matched_identity"]=="ONE_SIDE_WITH_CONFIRMED_COMPETITION_AND_UNIQUE_KICKOFF"
+               and r["one_verified_side"] in ("HOME","AWAY")) or
+             (r["matched_identity"]=="BOTH_NAME_SIMILARITY_030_STRONG_SIDE_070_LEAGUE_EXACT_TIME_UNIQUE"
+               and r["one_verified_side"]=="SIMILARITY"
+               and min(r["home_similarity"],r["away_similarity"])>=.30
+               and max(r["home_similarity"],r["away_similarity"])>=.70)
+             for r in rows)
+          print("FOREBET_LOW_SIMILARITY_CANDIDATES",
+                sum(r["one_verified_side"]=="SIMILARITY" for r in rows))
           print("FOREBET_PROVISIONAL_PROOF",len(rows),"STRICT",len(strict))
           PY
       - name: Reconcile provisional candidates with disconnect-on-conflict

@@ -28,7 +28,14 @@ Deno.serve(async(req:Request):Promise<Response>=>{
     const rows=data.filter((x:any)=>
       /^FS:[A-Za-z0-9_-]{5,32}$/.test(String(x.canonical_event_id||""))
       && x.advisory_status==="PROVISIONAL_ONE_SIDE_NOT_VERIFIED"
-      && ["HOME","AWAY"].includes(x.verified_side)
+      && ["HOME","AWAY","SIMILARITY"].includes(x.verified_side)
+      && (x.verified_side!=="SIMILARITY" ||
+        (x.source_model?.match_method==="BOTH_NAME_SIMILARITY_030_STRONG_SIDE_070_LEAGUE_EXACT_TIME_UNIQUE"
+         && x.source_model?.name_similarity_method==="NFKD_CASEFOLD_SEQUENCE_RATIO_V1"
+         && [x.source_model?.name_similarity_home,x.source_model?.name_similarity_away]
+              .every((v:any)=>typeof v==="number"&&v>=.30&&v<=1)
+         && Math.max(x.source_model.name_similarity_home,
+                     x.source_model.name_similarity_away)>=.70))
       && Number.isFinite(Date.parse(x.last_seen_at))
       && Date.parse(x.last_seen_at)>Date.now()-36*3600_000
       && Date.parse(x.kickoff_hkt)>Date.now()
@@ -37,6 +44,9 @@ Deno.serve(async(req:Request):Promise<Response>=>{
       home:x.canonical_home,away:x.canonical_away,
       sourceHome:x.source_home,sourceAway:x.source_away,
       matchedSide:x.verified_side,
+      nameSimilarities:(x.verified_side==="SIMILARITY"?
+        [x.source_model.name_similarity_home,x.source_model.name_similarity_away]:null),
+      nameMethod:x.source_model?.name_similarity_method||null,
       pick:x.source_model?.pick||null,
       probabilities:[x.source_model?.home,x.source_model?.draw,x.source_model?.away],
       predictedScore:x.source_model?.score||null,
