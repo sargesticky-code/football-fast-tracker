@@ -145,6 +145,13 @@ class SourceIdentityTests(unittest.TestCase):
             "De1":"Bundesliga",
             "Fr1":"Ligue 1",
             "Ar1":"Liga Profesional - Clausura",
+            "Cz1":"Chance Liga",
+            "L1":"League One",
+            "L2":"League Two",
+            "Th1":"Thai League 1",
+            "Fr2":"Ligue 2",
+            "De2":"2. Bundesliga",
+            "Es2":"LaLiga2",
         }
         for source,canonical in expected.items():
             with self.subTest(source=source, canonical=canonical):
@@ -153,6 +160,37 @@ class SourceIdentityTests(unittest.TestCase):
                 self.assertFalse(league_ok(source,"Totally Different League"))
         self.assertFalse(league_ok("Fr1","Serie A"))
         self.assertFalse(league_ok("It1","Ligue 1"))
+
+    def test_provisional_cross_league_one_side_can_never_promote_directly(self):
+        row,fixture=sample()
+        row["league_short"]="Th1"
+        row["away_team"]="Unknown away team"
+        fixture["league"]="Thai League 1"
+        preview,_=tentative_rows([row],[fixture],[],NOW)
+        self.assertEqual(len(preview),1)
+        self.assertEqual(preview[0]["one_verified_side"],"HOME")
+        self.assertFalse(verified_rows([row],[fixture],NOW)[0])
+        # Changing the venue, clock or league invalidates the proposal.
+        self.assertFalse(tentative_rows([dict(row,league_short="L1")],[fixture],[],NOW)[0])
+        wrong=dict(fixture,league="Premier League")
+        self.assertFalse(tentative_rows([row],[wrong],[],NOW)[0])
+        self.assertFalse(tentative_rows([dict(row,kickoff_text="10/15/2026 03:00 PM")],[fixture],[],NOW)[0])
+        self.assertFalse(tentative_rows([dict(row,home_team="unknown",away_team="Liverpool")],[fixture],[],NOW)[0])
+
+    def test_short_league_names_reject_other_countries_and_similar_titles(self):
+        for code,title,wrong in (
+            ("Cz1","Chance Liga","Liga Portugal"),
+            ("L1","League One","League One - Scotland"),
+            ("L2","League Two","League One"),
+            ("Th1","Thai League 1","Thai League 2"),
+            ("Fr2","Ligue 2","Ligue 1"),
+            ("De2","2. Bundesliga","Bundesliga"),
+            ("Es2","LaLiga2","LaLiga"),
+        ):
+            with self.subTest(code=code):
+                self.assertTrue(league_ok(code,title))
+                self.assertFalse(league_ok(code,wrong))
+                self.assertFalse(league_ok(code,title+" - OTHER"))
 
     def test_current_short_league_still_requires_exact_pair_and_time(self):
         row,fixture=sample()
