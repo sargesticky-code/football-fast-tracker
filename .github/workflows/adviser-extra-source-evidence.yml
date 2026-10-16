@@ -46,11 +46,11 @@ jobs:
       - name: Validate source identity and probability tests offline
         run: python -m unittest discover -s tests -p test_additional_adviser_sources.py -v
       - name: Capture bounded source observations only (no Supabase writes)
-        if: github.event_name != 'pull_request'
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: python scripts/additional_adviser_sources.py --output /tmp/adviser-extra-sources.json
       - name: Obtain scoped GitHub OIDC identity
         id: oidc
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         shell: bash
         run: |
           set -euo pipefail
@@ -61,7 +61,7 @@ jobs:
           echo "::add-mask::$token"
           echo "token=$token" >> "$GITHUB_OUTPUT"
       - name: Publish raw provider observations to private Supabase quarantine
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         env:
           SOURCE_OIDC: ${{ steps.oidc.outputs.token }}
         shell: bash
@@ -85,7 +85,7 @@ jobs:
                 'VERIFIED_IDENTITY',0,'PUBLIC_FORECASTS',0)
           PY
       - name: Preserve bounded source-only evidence
-        if: always() && github.event_name != 'pull_request'
+        if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
         with:
           name: adviser-extra-source-observations
