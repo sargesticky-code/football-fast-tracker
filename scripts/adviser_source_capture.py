@@ -274,7 +274,7 @@ def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None, 
         raise ValueError("unknown_source")
     if not 1 <= limit <= 120:
         raise ValueError("invalid_source_limit")
-    if not 0 <= related_evidence_limit <= 2 or (related_evidence_limit and evidence_dir is None):
+    if not 0 <= related_evidence_limit <= 8 or (related_evidence_limit and evidence_dir is None):
         raise ValueError("invalid_related_evidence_limit")
     selected_source = source
     related_attempts = 0
