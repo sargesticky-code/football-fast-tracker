@@ -71,6 +71,23 @@ class BrowserSourceSafety(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"FOREBET_SOURCE_RESPONSE_TOO_LARGE"):
                 load_canonical_candidates(URL,"2026-10-18",[],parser=None)
 
+    def test_october_17_large_market_page_does_not_exceed_hard_memory_ceiling(self):
+        # The actual 2026-10-17 corners response exceeded 4 MB; allow 5 MB
+        # transiently for *market only* without adding a new source request.
+        large='<div class="rcnt">'+' '*(5_000_000)+'</div>'
+        self.assertLess(len(large.encode()),MAX_MARKET_SOURCE_BYTES)
+        response,ctx,_=simulated(html=large)
+        rows,proof=self.capture(response,ctx)
+        self.assertEqual(len(rows),1)
+        self.assertGreater(proof["source_page_html_bytes"],4_000_000)
+        self.assertEqual(proof["source_page_html_limit"],MAX_MARKET_SOURCE_BYTES)
+
+        over_hard='<div class="rcnt">'+' '*(MAX_MARKET_SOURCE_BYTES+10)+'</div>'
+        response,_,_=simulated(html=over_hard)
+        with patch("forebet_browser_source.requests.post",return_value=response):
+            with self.assertRaisesRegex(ValueError,"FOREBET_SOURCE_RESPONSE_TOO_LARGE:bytes="):
+                load_canonical_candidates(URL,"2026-10-18",[],parser=parse_for_test)
+
     def test_invalid_http_fails_closed_instead_of_zero_corner_predictions(self):
         for status,reason in [(403,"FOREBET_SOURCE_HTTP_NOT_200"),(503,"FOREBET_SOURCE_HTTP_NOT_200")]:
             response,ctx,_=simulated(http=status)
