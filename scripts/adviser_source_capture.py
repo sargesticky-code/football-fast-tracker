@@ -269,6 +269,28 @@ def replay_saved_evidence(report, evidence_dir):
     return {**report, 'records': records}
 
 
+# Related SportsEvent page fetches are limited to 8 daily. Sort *after*
+# collecting all allowed tip details, so alphabetical URL order cannot spend
+# the evidence budget on arbitrary early URLs. Priority only controls WHICH
+# source proof to read; it never certifies identity or guesses timezones.
+MAJOR_LEAGUES = (
+    "premier league", "champions league", "laliga", "serie a", "bundesliga",
+    "ligue 1", "championship", "europa league", "eredivisie",
+    "primeira liga", "major league soccer", "mls",
+)
+
+def sportytrader_related_priority(row, capture_date):
+    league = str(row.get("source_competition") or "").strip().casefold()
+    source_date = str(row.get("source_date") or "")
+    # Prefer today/tomorrow, then established league importance, then genuine
+    # complete source model probability, finally deterministic provider ID.
+    date_rank = 0 if source_date == capture_date else 1 if source_date > capture_date else 2
+    league_rank = next((i for i, name in enumerate(MAJOR_LEAGUES)
+                        if league == name or league.endswith(" - " + name)), len(MAJOR_LEAGUES))
+    model_rank = 0 if valid_triplet(row.get("hda")) else 1
+    return (date_rank, league_rank, model_rank, str(row.get("source_event_id") or ""))
+
+
 def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None, related_evidence_limit=0):
     if source is not None and source not in SOURCES:
         raise ValueError("unknown_source")
@@ -278,6 +300,7 @@ def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None, 
         raise ValueError("invalid_related_evidence_limit")
     selected_source = source
     related_attempts = 0
+    related_candidates = []
     session = session or requests.Session()
     output = {"generated_at": datetime.now(timezone.utc).isoformat(),
               "contract": "source_observations_only_v1", "providers": {}, "records": []}
@@ -309,22 +332,17 @@ def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None, 
                     raise ValueError("invalid_source_detail_structure")
                 parsed["captured_at"] = output["generated_at"]
                 parsed["raw_content_hash"] = evidence_hash
-                if source == "SPORTYTRADER" and related_attempts < related_evidence_limit:
-                    related = next((urljoin(url, a['href']) for a in BeautifulSoup(html, "html.parser").find_all('a', href=True)
-                                    if re.fullmatch(r'/en/results-live/[^/]+-\d+/', a['href'])), None)
-                    if related is not None:
-                        related_attempts += 1
-                        try:
-                            related_html = fetch(session, related)
-                            related_hash = hashlib.sha256(related_html.encode('utf-8')).hexdigest()
-                            related_path = Path(evidence_dir) / 'sportytrader-related' / (related_hash + '.html')
-                            related_path.parent.mkdir(parents=True, exist_ok=True)
-                            related_path.write_text(related_html, encoding='utf-8')
-                            parsed = enrich_sportytrader_event(parsed, related_html, related)
-                            parsed['related_source_url'] = related
-                            parsed['related_content_hash'] = related_hash
-                        except (requests.RequestException, RuntimeError):
-                            diag['related_failed'] = diag.get('related_failed', 0) + 1
+                if source == "SPORTYTRADER" and related_evidence_limit:
+                    # Collect links already present in this fetched tip HTML.
+                    # Keep the same max-8 related HTTP budget; only improve
+                    # deterministic selection of which URLs merit proof.
+                    related = sorted({
+                        urljoin(url, a['href']) for a in
+                        BeautifulSoup(html, "html.parser").find_all('a', href=True)
+                        if re.fullmatch(r'/en/results-live/[^/]+-\d+/', a['href'])
+                    })
+                    if len(related) == 1:
+                        related_candidates.append((parsed, related[0]))
                 output["records"].append(parsed)
                 diag["parsed"] += 1
             except (requests.RequestException, RuntimeError, ValueError, AttributeError) as exc:
@@ -334,6 +352,42 @@ def collect(limit=100, pause=0.4, session=None, source=None, evidence_dir=None, 
         diag["status"] = ("CAPTURED_UNMATCHED" if diag["parsed"] else
                           "PARSE_FAILED" if diag["candidate_urls"] else "SOURCE_UNAVAILABLE")
         output["providers"][source] = diag
+    if related_evidence_limit and related_candidates:
+        sporty_diag = output["providers"].get("SPORTYTRADER", {})
+        capture_date = output["generated_at"][:10]
+        sporty_diag["related_candidates"] = len(related_candidates)
+        seen_links = set()
+        for row, related in sorted(
+            related_candidates,
+            key=lambda p: sportytrader_related_priority(p[0], capture_date)
+        ):
+            # Never spend two proof requests on the same linked event.
+            if related in seen_links:
+                continue
+            seen_links.add(related)
+            if related_attempts >= related_evidence_limit:
+                break
+            related_attempts += 1
+            try:
+                related_html = fetch(session, related)
+                related_hash = hashlib.sha256(related_html.encode("utf-8")).hexdigest()
+                related_path = Path(evidence_dir) / "sportytrader-related" / (related_hash + ".html")
+                related_path.parent.mkdir(parents=True, exist_ok=True)
+                related_path.write_text(related_html, encoding="utf-8")
+                updated = enrich_sportytrader_event(row, related_html, related)
+                # This mutates ONLY the original in-memory row already in
+                # output["records"]; no second observation or duplicate ID.
+                row.update(updated)
+                row.update(related_source_url=related, related_content_hash=related_hash)
+                if row.get("kickoff_timezone_verified") is True:
+                    sporty_diag["related_verified_kickoff"] = sporty_diag.get("related_verified_kickoff", 0) + 1
+                else:
+                    sporty_diag["related_unverified"] = sporty_diag.get("related_unverified", 0) + 1
+            except (requests.RequestException, RuntimeError, OSError):
+                sporty_diag["related_failed"] = sporty_diag.get("related_failed", 0) + 1
+            time.sleep(pause)
+        sporty_diag["related_attempted"] = related_attempts
+        sporty_diag["related_budget"] = related_evidence_limit
     return output
 
 
