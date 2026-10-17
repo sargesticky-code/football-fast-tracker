@@ -342,6 +342,7 @@ def run(now=None, fixture_token=None, helper=None):
                     "dom_expanded":proof.get("expanded"),
                     "known_team_pair_rows":proof.get("matched"),
                     "rendered_html_bytes":proof.get("rendered_html_bytes"),
+                    "source_page_html_bytes":proof.get("source_page_html_bytes"),
                 })
             except (ValueError, requests.RequestException, BrowserError) as exc:
                 # Only publish fixed reason codes, not HTML/URLs/credentials.
