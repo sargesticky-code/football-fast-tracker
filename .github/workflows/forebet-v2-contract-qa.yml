@@ -5,6 +5,8 @@ on:
     paths:
       - 'scripts/capture_forebet_canonical_light.py'
       - 'scripts/forebet_v2.py'
+      - 'scripts/forebet_market_capture_v2.py'
+      - 'tests/test_forebet_market_capture_v2.py'
       - 'scripts/forebet_verified_aliases.py'
       - 'tests/test_forebet_v2.py'
       - '.github/workflows/forebet-v2-contract-qa.yml'
@@ -13,6 +15,8 @@ on:
     paths:
       - 'scripts/capture_forebet_canonical_light.py'
       - 'scripts/forebet_v2.py'
+      - 'scripts/forebet_market_capture_v2.py'
+      - 'tests/test_forebet_market_capture_v2.py'
       - 'scripts/forebet_verified_aliases.py'
       - 'tests/test_forebet_v2.py'
       - '.github/workflows/forebet-v2-contract-qa.yml'
@@ -31,3 +35,5 @@ jobs:
         run: python -m pip install requests==2.32.5 beautifulsoup4==4.12.3 lxml==5.4.0 playwright==1.55.0
       - name: Validate canonical match identity, source leagues and safety
         run: python -m unittest discover -s tests -p test_forebet_v2.py -v
+      - name: Validate independent source markets and exact-match safeguards
+        run: python -m unittest discover -s tests -p test_forebet_market_capture_v2.py -v

@@ -9,6 +9,7 @@ on:
       - feat/forebet-v2-20261014
     paths:
       - 'scripts/forebet_v2.py'
+      - 'scripts/forebet_market_capture_v2.py'
       - 'scripts/forebet_provisional.py'
       - 'scripts/forebet_browser_source.py'
       - 'tests/test_forebet_v2.py'
@@ -23,7 +24,7 @@ concurrency:
 jobs:
   source-and-match:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 18
     services:
       browser-helper:
         image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -36,6 +37,8 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Test rebuilt Forebet V2 identity contract
         run: python -m unittest discover -s tests -p test_forebet_v2.py -v
+      - name: Verify independent Forebet market parsing safely
+        run: python -m unittest discover -s tests -p test_forebet_market_capture_v2.py -v
       - name: Obtain scoped GitHub OIDC identity
         id: oidc
         shell: bash
@@ -64,6 +67,9 @@ jobs:
           assert batch["source"]=="FOREBET"
           assert 1 <= len(rows) <= 300
           assert 1 <= proof['pages_attempted'] <= 3
+          assert 0 <= proof['market_pages_attempted'] <= 6
+          assert proof['market_pages_attempted']==len(proof['market_pages_successful'])+len(proof['market_pages_failed'])
+          assert all(0 <= proof['market_coverage'][m] <= len(rows) for m in ('ou25','corners95'))
           assert proof['pages_successful'] >= 1
           assert proof['pages_successful'] + len(proof['pages_failed']) == proof['pages_attempted']
           assert proof["canonical_source"]=="VERIFIED_FLASHSCORE_DB"
@@ -73,6 +79,9 @@ jobs:
           with open(os.environ["GITHUB_OUTPUT"],"a") as fd:
               fd.write("count="+str(len(rows))+"\n")
           print("FOREBET_V2_MATCHES",len(rows),"SOURCE_ROWS",proof["source_rows_parsed"],"PAGES",proof["pages_successful"],"OF",proof["pages_attempted"])
+          print("FOREBET_VERIFIED_MARKETS",proof['market_coverage'],"PAGES",proof['market_pages_attempted'],"FAILED",len(proof['market_pages_failed']))
+          if proof['market_pages_failed']:
+              print("::warning::Forebet market pages unavailable or incomplete. Missing O/U/corner fields remain UNKNOWN; 1X2 publication unaffected.")
           if proof["partial_source_coverage"]:
               print("::warning::Some Forebet dates unavailable; publishing verified subset only.")
           if any(p["capture_mode"] != "full_page" for p in proof["page_details"]):

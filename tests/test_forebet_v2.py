@@ -550,7 +550,7 @@ class SourceIdentityTests(unittest.TestCase):
                  away=f"Away{i}",kickoff=NOW+timedelta(hours=i+1))
             for i in range(8)
         ] + [fixture]
-        def browser(url, date, target_rows, helper):
+        def browser(url, date, target_rows, helper, parser=None):
             if date=="2026-10-14":
                 raise BrowserError("navigation timed out")
             return [row], {

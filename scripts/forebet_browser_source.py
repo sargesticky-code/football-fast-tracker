@@ -19,7 +19,7 @@ MAX_ALLOWED_PAIR_ROWS = 300
 
 
 def load_canonical_candidates(url: str, date: str, targets: list[dict],
-                              helper="http://127.0.0.1:8191/v1"):
+                              helper="http://127.0.0.1:8191/v1", parser=None):
     # Same single helper request per date as V2. No page retries/pagination.
     request = requests.post(helper, json={
         "cmd": "request.get", "url": url, "maxTimeout": 55000
@@ -124,7 +124,7 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
     if result.get("oversize"):
         raise ValueError("FOREBET_RENDERED_PAGE_OVER_LIMIT")
     html = "<html><body>" + "".join(result["fragments"]) + "</body></html>"
-    rows = parse_forebet_rows(html, date)
+    rows = (parser or parse_forebet_rows)(html, date)
     return rows, {
         "initial": initial, "expanded": result["all"],
         "expand_clicked": expanded,
