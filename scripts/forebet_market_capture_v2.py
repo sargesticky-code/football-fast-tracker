@@ -16,8 +16,8 @@ from forebet_canonical_source_probe import exact_name
 from capture_forebet_canonical_light import displayed_wall_clock
 
 EVENT = re.compile(r"^https://www[.]forebet[.]com/en/football/matches/[^/?#]+-[0-9]{5,12}/?$")
-SCORE = re.compile(r"^([0-9]{1,2})\\s*-\\s*([0-9]{1,2})$")
-AVG = re.compile(r"^[0-9]{1,2}(?:\\.[0-9]{1,3})?$")
+SCORE = re.compile(r"^([0-9]{1,2})\s*-\s*([0-9]{1,2})$")
+AVG = re.compile(r"^[0-9]{1,2}(?:\.[0-9]{1,3})?$")
 MAX_MARKET_PAGES = 6
 
 def _text(row, selector):
@@ -47,7 +47,7 @@ def parse_market_rows(html, date, market):
         under, over = [int(x) for x in nums]
         if not 0<=under<=100 or not 0<=over<=100 or not 98<=under+over<=102: continue
         pred_text = _text(r,"span.forepr span") or _text(r,".forepr")
-        pick_match = re.search(r"\\b(Under|Over)\\b",pred_text,re.I)
+        pick_match = re.search(r"\b(Under|Over)\b",pred_text,re.I)
         if not pick_match: continue
         pick = pick_match.group(1).capitalize()
         score_txt = _text(r,"div.ex_sc.tabonly") or _text(r,".predict_score, .ex_sc")
