@@ -63,6 +63,52 @@ class BoundedSourceEvidenceTest(unittest.TestCase):
             self.assertEqual((Path(directory)/'sportytrader'/(digest+'.html')).read_text(), html)
             self.assertFalse(result['records'][0]['kickoff_timezone_verified'])
 
+    def test_eight_request_budget_selects_major_upcoming_league_not_alphabetical(self):
+        import json
+        # Alphabetical 'a-minor' used to consume the scarce first linked
+        # evidence request. The ranked selector must use the same one request
+        # for the upcoming Premier League with a REAL timezone-aware event.
+        minor='https://www.sportytrader.com/en/betting-tips/a-minor-cup-123/'
+        major='https://www.sportytrader.com/en/betting-tips/z-liverpool-brentford-124/'
+        minor_related='https://www.sportytrader.com/en/results-live/minor-cup-1111/'
+        major_related='https://www.sportytrader.com/en/results-live/liverpool-brentford-2222/'
+        listing=('<a href="/en/betting-tips/a-minor-cup-123/">minor</a>'
+                 '<a href="/en/betting-tips/z-liverpool-brentford-124/">major</a>')
+        minor_page=('<h1>Minor vs Cup Prediction & Betting Tips - Minor League</h1>'
+                    '<p>18/10/2026 09:00</p><p>Prediction : BTTS</p>'
+                    '<a href="/en/results-live/minor-cup-1111/">Live</a>')
+        major_page=('<h1>Liverpool vs Brentford Prediction & Betting Tips - Premier League</h1>'
+                    '<p>18/10/2026 09:00</p><p>Prediction : BTTS</p>'
+                    '<a href="/en/results-live/liverpool-brentford-2222/">Live</a>')
+        event={"@type":"SportsEvent","url":major_related,
+               "startDate":"2026-10-18T09:00:00-05:00",
+               "homeTeam":{"name":"Liverpool"},"awayTeam":{"name":"Brentford"},
+               "organizer":{"name":"Premier League"}}
+        major_source='<script type="application/ld+json">'+json.dumps(event)+'</script>'
+        calls=[]
+        def fake_fetch(session,url):
+            calls.append(url)
+            return {minor:minor_page,major:major_page,major_related:major_source}.get(url,listing)
+        with tempfile.TemporaryDirectory() as directory, patch(
+            'scripts.adviser_source_capture.fetch',side_effect=fake_fetch
+        ):
+            out=collect(source='SPORTYTRADER',limit=2,pause=0,
+                        evidence_dir=directory,related_evidence_limit=1)
+        self.assertEqual(len(calls),5,"two listing + two tips + SAME single linked page")
+        self.assertIn(major_related,calls)
+        self.assertNotIn(minor_related,calls)
+        self.assertEqual(out['providers']['SPORTYTRADER']['related_candidates'],2)
+        self.assertEqual(out['providers']['SPORTYTRADER']['related_attempted'],1)
+        self.assertEqual(out['providers']['SPORTYTRADER']['related_budget'],1)
+        self.assertEqual(out['providers']['SPORTYTRADER']['related_verified_kickoff'],1)
+        self.assertEqual(len(out['records']),2)
+        minor_row,major_row=out['records']
+        self.assertFalse(minor_row['kickoff_timezone_verified'])
+        self.assertTrue(major_row['kickoff_timezone_verified'])
+        self.assertEqual(major_row['source_kickoff'],"2026-10-18T09:00:00-05:00")
+        self.assertIsNone(major_row['canonical_event_id'],
+            "Linked SportyTrader event proves source clock but not Flashscore identity")
+
     def test_invalid_bounds_reject_before_network(self):
         for kwargs in ({'limit':0}, {'limit':121}, {'source':'UNKNOWN'}, {'related_evidence_limit':9}, {'related_evidence_limit':1}):
             with self.assertRaises(ValueError), patch('scripts.adviser_source_capture.fetch') as fetch:
