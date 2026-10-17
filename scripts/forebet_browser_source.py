@@ -15,7 +15,7 @@ from forebet_verified_aliases import source_forms
 MAX_SOURCE_BYTES = 2_000_000
 # Optional market pages can include a larger initial DOM than the 1X2 page.
 # This raises only the in-memory response limit; not the request/page count.
-MAX_MARKET_SOURCE_BYTES = 4_000_000
+MAX_MARKET_SOURCE_BYTES = 6_000_000
 MAX_RENDERED_ROWS = 1800
 MAX_RENDERED_ROWS_HARD = 4000
 MAX_RENDERED_HTML = 6_000_000
@@ -41,8 +41,11 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
     if not isinstance(page_html, str):
         raise ValueError("FOREBET_SOURCE_HTML_INVALID")
     response_limit = MAX_MARKET_SOURCE_BYTES if parser is not None else MAX_SOURCE_BYTES
-    if len(page_html.encode("utf-8")) > response_limit:
-        raise ValueError("FOREBET_SOURCE_RESPONSE_TOO_LARGE")
+    page_html_bytes = len(page_html.encode("utf-8"))
+    if page_html_bytes > response_limit:
+        raise ValueError(
+            f"FOREBET_SOURCE_RESPONSE_TOO_LARGE:bytes={page_html_bytes}:limit={response_limit}"
+        )
     if "rcnt" not in page_html:
         raise ValueError("FOREBET_NO_SOURCE_ROWS_IN_HTML")
     ua = sol.get("userAgent")
@@ -149,5 +152,6 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
         "capture_mode": result["mode"],
         "rendered_html_bytes": result["bytes"],
         "source_page_html_limit": response_limit,
+        "source_page_html_bytes": page_html_bytes,
         "dom_hard_limit": MAX_RENDERED_ROWS_HARD,
     }
