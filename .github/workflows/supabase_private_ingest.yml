@@ -12,6 +12,7 @@ on:
       - 'scripts/forebet_market_capture_v2.py'
       - 'scripts/forebet_provisional.py'
       - 'scripts/forebet_browser_source.py'
+      - 'tests/test_forebet_browser_source_large_market.py'
       - 'tests/test_forebet_v2.py'
       - 'supabase/functions/forebet-canonical-publish/index.ts'
       - '.github/workflows/supabase_private_ingest.yml'
@@ -39,6 +40,8 @@ jobs:
         run: python -m unittest discover -s tests -p test_forebet_v2.py -v
       - name: Verify independent Forebet market parsing safely
         run: python -m unittest discover -s tests -p test_forebet_market_capture_v2.py -v
+      - name: Verify bounded corner-page recovery without any network calls
+        run: python -m unittest discover -s tests -p test_forebet_browser_source_large_market.py -v
       - name: Obtain scoped GitHub OIDC identity
         id: oidc
         shell: bash
@@ -80,6 +83,10 @@ jobs:
               fd.write("count="+str(len(rows))+"\n")
           print("FOREBET_V2_MATCHES",len(rows),"SOURCE_ROWS",proof["source_rows_parsed"],"PAGES",proof["pages_successful"],"OF",proof["pages_attempted"])
           print("FOREBET_VERIFIED_MARKETS",proof['market_coverage'],"PAGES",proof['market_pages_attempted'],"FAILED",len(proof['market_pages_failed']))
+          print("FOREBET_MARKET_PAGE_DETAILS",json.dumps(proof['market_pages_successful'],separators=(",",":")))
+          print("FOREBET_MARKET_PAGE_FAILURES",json.dumps(proof['market_pages_failed'],separators=(",",":")))
+          if any(p.get("capture_mode")=="allowlist_fallback" for p in proof['market_pages_successful']):
+              print("::warning::Forebet market coverage is bounded to verified team-pair allowlist, not full source coverage.")
           if proof['market_pages_failed']:
               print("::warning::Forebet market pages unavailable or incomplete. Missing O/U/corner fields remain UNKNOWN; 1X2 publication unaffected.")
           if proof["partial_source_coverage"]:
