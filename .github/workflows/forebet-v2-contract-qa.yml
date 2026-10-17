@@ -5,6 +5,8 @@ on:
     paths:
       - 'scripts/capture_forebet_canonical_light.py'
       - 'scripts/forebet_v2.py'
+      - 'scripts/forebet_browser_source.py'
+      - 'tests/test_forebet_browser_source_large_market.py'
       - 'scripts/forebet_market_capture_v2.py'
       - 'tests/test_forebet_market_capture_v2.py'
       - 'scripts/forebet_verified_aliases.py'
@@ -15,6 +17,8 @@ on:
     paths:
       - 'scripts/capture_forebet_canonical_light.py'
       - 'scripts/forebet_v2.py'
+      - 'scripts/forebet_browser_source.py'
+      - 'tests/test_forebet_browser_source_large_market.py'
       - 'scripts/forebet_market_capture_v2.py'
       - 'tests/test_forebet_market_capture_v2.py'
       - 'scripts/forebet_verified_aliases.py'
@@ -37,3 +41,5 @@ jobs:
         run: python -m unittest discover -s tests -p test_forebet_v2.py -v
       - name: Validate independent source markets and exact-match safeguards
         run: python -m unittest discover -s tests -p test_forebet_market_capture_v2.py -v
+      - name: Validate bounded large corner-page capture and explicit failure reasons
+        run: python -m unittest discover -s tests -p test_forebet_browser_source_large_market.py -v
