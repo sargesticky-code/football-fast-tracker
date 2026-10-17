@@ -13,7 +13,11 @@ from scrape_forebet import parse_forebet_rows
 from forebet_verified_aliases import source_forms
 
 MAX_SOURCE_BYTES = 2_000_000
+# Optional market pages can include a larger initial DOM than the 1X2 page.
+# This raises only the in-memory response limit; not the request/page count.
+MAX_MARKET_SOURCE_BYTES = 4_000_000
 MAX_RENDERED_ROWS = 1800
+MAX_RENDERED_ROWS_HARD = 4000
 MAX_RENDERED_HTML = 6_000_000
 MAX_ALLOWED_PAIR_ROWS = 300
 
@@ -28,11 +32,19 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
     answer = request.json()
     sol = answer.get("solution") or {}
     page_html = sol.get("response") or ""
-    if (answer.get("status") != "ok" or sol.get("status") != 200
-            or not isinstance(page_html, str)
-            or len(page_html.encode("utf-8")) > MAX_SOURCE_BYTES
-            or "rcnt" not in page_html):
-        raise ValueError("FOREBET_PAGE_NOT_READABLE")
+    # Record a bounded, actionable reason without logging the HTML, cookies
+    # or helper token. A challenge is NOT an empty prediction set.
+    if answer.get("status") != "ok":
+        raise ValueError("FOREBET_HELPER_FAILED")
+    if sol.get("status") != 200:
+        raise ValueError("FOREBET_SOURCE_HTTP_NOT_200")
+    if not isinstance(page_html, str):
+        raise ValueError("FOREBET_SOURCE_HTML_INVALID")
+    response_limit = MAX_MARKET_SOURCE_BYTES if parser is not None else MAX_SOURCE_BYTES
+    if len(page_html.encode("utf-8")) > response_limit:
+        raise ValueError("FOREBET_SOURCE_RESPONSE_TOO_LARGE")
+    if "rcnt" not in page_html:
+        raise ValueError("FOREBET_NO_SOURCE_ROWS_IN_HTML")
     ua = sol.get("userAgent")
     if not ua:
         raise ValueError("FOREBET_BROWSER_IDENTITY_ABSENT")
@@ -83,12 +95,15 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
                     # Clicking a visible "more" control without new rows is
                     # incomplete coverage, NOT a successful full-page capture.
                     raise ValueError("FOREBET_EXPANSION_UNVERIFIED") from exc
-            result = page.evaluate("""({allowedPairs,maxRows,maxBytes,maxMatches})=>{
+            result = page.evaluate("""({allowedPairs,maxRows,maxHardRows,maxBytes,maxMatches})=>{
               const norm=s=>String(s||'').normalize('NFKD').toLowerCase()
                 .replace(/[^a-z0-9]/g,'');
               const allowed=new Set(allowedPairs);
               const all=document.querySelectorAll('div.rcnt');
-              if(all.length>maxRows) return {oversize:true,all:all.length};
+              // Large corners pages may exceed 1800 visible rows. Never
+              // discard all data solely for crossing that soft boundary:
+              // project only already-authorized source-team pairs instead.
+              if(all.length>maxHardRows) return {oversize:true,all:all.length};
               let matching=0, bytes=0, matchedBytes=0;
               const full=[], matched=[];
               for(const row of all){
@@ -109,20 +124,21 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
               }
               if(matching>maxMatches || matchedBytes>maxBytes)
                 return {oversize:true,all:all.length,matching};
-              const complete=bytes<=maxBytes;
+              const complete=all.length<=maxRows && bytes<=maxBytes;
               return {all:all.length,matching,bytes,
                 mode:complete?'full_page':'allowlist_fallback',
                 fragments:complete?full:matched};
             }""", {
                 "allowedPairs": sorted(allowed),
                 "maxRows": MAX_RENDERED_ROWS,
+                "maxHardRows": MAX_RENDERED_ROWS_HARD,
                 "maxBytes": MAX_RENDERED_HTML,
                 "maxMatches": MAX_ALLOWED_PAIR_ROWS
             })
         finally:
             browser.close()
     if result.get("oversize"):
-        raise ValueError("FOREBET_RENDERED_PAGE_OVER_LIMIT")
+        raise ValueError("FOREBET_RENDERED_PAGE_OVER_HARD_LIMIT")
     html = "<html><body>" + "".join(result["fragments"]) + "</body></html>"
     rows = (parser or parse_forebet_rows)(html, date)
     return rows, {
@@ -132,4 +148,6 @@ def load_canonical_candidates(url: str, date: str, targets: list[dict],
         "parsed_candidates": len(rows),
         "capture_mode": result["mode"],
         "rendered_html_bytes": result["bytes"],
+        "source_page_html_limit": response_limit,
+        "dom_hard_limit": MAX_RENDERED_ROWS_HARD,
     }
