@@ -335,10 +335,21 @@ def run(now=None, fixture_token=None, helper=None):
                     parser=parser,
                 )
                 market_rows.extend(parsed)
-                market_pages.append({"market":market,"date":date,
-                    "rows":len(parsed),"capture_mode":proof.get("capture_mode")})
+                market_pages.append({
+                    "market":market,"date":date,"rows":len(parsed),
+                    "capture_mode":proof.get("capture_mode"),
+                    "dom_initial":proof.get("initial"),
+                    "dom_expanded":proof.get("expanded"),
+                    "known_team_pair_rows":proof.get("matched"),
+                    "rendered_html_bytes":proof.get("rendered_html_bytes"),
+                })
             except (ValueError, requests.RequestException, BrowserError) as exc:
-                market_failures.append({"market":market,"date":date,"error":type(exc).__name__})
+                # Only publish fixed reason codes, not HTML/URLs/credentials.
+                reason=str(exc) if isinstance(exc,ValueError) and str(exc).startswith("FOREBET_") else type(exc).__name__
+                market_failures.append({
+                    "market":market,"date":date,"error":type(exc).__name__,
+                    "reason":reason[:100],
+                })
     market_coverage=enrich_verified_rows(rows,market_rows)
     provisional, provisional_diagnostics = tentative_rows(candidates, targets, rows, now)
     if len(rows) > MAX_PUBLICATION_ROWS:
