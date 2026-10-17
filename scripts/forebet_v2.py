@@ -20,6 +20,7 @@ import requests
 from playwright.sync_api import Error as BrowserError
 
 from forebet_browser_source import load_canonical_candidates
+from forebet_market_capture_v2 import parse_ou25, parse_corners95, enrich_verified_rows, MAX_MARKET_PAGES
 from forebet_intersection_audit import source_intersection_audit
 from forebet_provisional import tentative_rows
 from forebet_canonical_source_probe import canonical_targets, exact_name, model_fields, aware_time
@@ -313,6 +314,32 @@ def run(now=None, fixture_token=None, helper=None):
             failures.append({"date":date,"error":type(exc).__name__})
     candidates = dedupe_repeated_source_rows(candidates)
     rows, rejected = verified_rows(candidates, targets, now)
+    # At most TWO distinct source market pages for each verified 1X2 date.
+    # They are optional and never gate the successful daily score publication.
+    market_rows=[]
+    market_pages=[]
+    market_failures=[]
+    market_dates=sorted({r["kickoff"][:10] for r in rows})
+    if len(market_dates)*2>MAX_MARKET_PAGES:
+        raise ValueError("FOREBET_MARKET_PAGE_BUDGET_EXCEEDED")
+    for date in market_dates:
+        for market,route,parser in (
+            ("ou25","under-over-25-goals",parse_ou25),
+            ("corners95","corners",parse_corners95),
+        ):
+            market_url=f"https://www.forebet.com/en/football-predictions/{route}/{date}/by-league"
+            try:
+                parsed,proof=load_canonical_candidates(
+                    market_url,date,targets,
+                    helper=helper or os.getenv("LOCAL_BROWSER_HELPER","http://127.0.0.1:8191/v1"),
+                    parser=parser,
+                )
+                market_rows.extend(parsed)
+                market_pages.append({"market":market,"date":date,
+                    "rows":len(parsed),"capture_mode":proof.get("capture_mode")})
+            except (ValueError, requests.RequestException, BrowserError) as exc:
+                market_failures.append({"market":market,"date":date,"error":type(exc).__name__})
+    market_coverage=enrich_verified_rows(rows,market_rows)
     provisional, provisional_diagnostics = tentative_rows(candidates, targets, rows, now)
     if len(rows) > MAX_PUBLICATION_ROWS:
         raise ValueError("FOREBET_PUBLICATION_CAPACITY_EXCEEDED")
@@ -328,6 +355,10 @@ def run(now=None, fixture_token=None, helper=None):
         "known_team_pair_rows":sum(x["known_pair_rows"] or 0 for x in page_proofs),
         "source_rows_parsed":len(candidates),
         "strict_verified_models":len(rows),
+        "market_pages_attempted":len(market_pages)+len(market_failures),
+        "market_pages_successful":market_pages,
+        "market_pages_failed":market_failures,
+        "market_coverage":market_coverage,
         "provisional_one_team_count":len(provisional),
         "provisional_diagnostics":provisional_diagnostics,
         "verified_shared_bridge_matches":sum(1 for row in rows if row["identity_method"]=="VERIFIED_SHARED_PROVIDER_BRIDGE_AND_EXACT_TIME"),
