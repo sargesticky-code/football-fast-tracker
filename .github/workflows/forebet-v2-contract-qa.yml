@@ -10,6 +10,7 @@ on:
       - 'scripts/forebet_market_capture_v2.py'
       - 'tests/test_forebet_market_capture_v2.py'
       - 'scripts/forebet_verified_aliases.py'
+      - 'data/forebet_native_strict_aliases_20261018.json'
       - 'tests/test_forebet_v2.py'
       - '.github/workflows/forebet-v2-contract-qa.yml'
   push:
@@ -22,6 +23,7 @@ on:
       - 'scripts/forebet_market_capture_v2.py'
       - 'tests/test_forebet_market_capture_v2.py'
       - 'scripts/forebet_verified_aliases.py'
+      - 'data/forebet_native_strict_aliases_20261018.json'
       - 'tests/test_forebet_v2.py'
       - '.github/workflows/forebet-v2-contract-qa.yml'
 permissions:
