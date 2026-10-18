@@ -12,7 +12,7 @@ from forebet_intersection_audit import source_intersection_audit, classify_targe
 from forebet_provisional import tentative_rows
 from forebet_league_cohort import verified_competition_cohorts
 from capture_forebet_canonical_light import league_ok, displayed_wall_clock
-from forebet_verified_aliases import (shared_verified_catalog, source_forms,
+from forebet_verified_aliases import (shared_verified_catalog, native_verified_catalog, source_forms,
                                       verified_source_name, norm, verified_shared_source_name)
 
 NOW=datetime(2026,10,14,3,0,tzinfo=timezone.utc)
@@ -30,6 +30,21 @@ def sample():
     return row,fixture
 
 class SourceIdentityTests(unittest.TestCase):
+
+    def test_new_native_flashscore_alias_snapshot_is_offline_and_strict(self):
+        source_ids,target_ids,forms=native_verified_catalog()
+        self.assertEqual(len(source_ids),254)
+        self.assertGreaterEqual(len(target_ids),240)
+        self.assertEqual(source_ids[norm("Leeds United")],target_ids[norm("Leeds")])
+        self.assertTrue(verified_source_name("Leeds United","Leeds"))
+        self.assertTrue(verified_source_name("Manchester United","Manchester Utd"))
+        self.assertTrue(verified_source_name("Deportivo Toluca","Toluca"))
+        self.assertTrue(verified_source_name("Atlético San Luis","Atl. San Luis"))
+        self.assertIn(norm("Leeds United"),source_forms("Leeds"))
+        self.assertIn(norm("Manchester United"),source_forms("Manchester Utd"))
+        self.assertFalse(verified_source_name("Leeds United","Manchester Utd"))
+        self.assertFalse(verified_source_name("Deportivo Toluca","Manchester Utd"))
+
 
     def test_verified_flashscore_scope_accepts_600_and_fails_closed_above_cap(self):
         class Response:
