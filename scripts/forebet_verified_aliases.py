@@ -87,7 +87,7 @@ def native_verified_catalog():
         if (not isinstance(sn,str) or not isinstance(cn,str)
             or not isinstance(key,str) or not re.fullmatch(r"FS_TEAM:[A-Za-z0-9]{6,16}",key)
             or not isinstance(url,str)
-            or not re.fullmatch(r"https://www\\.forebet\\.com/en/football/matches/[^/?#]+-\\d{5,12}",url)
+            or not re.fullmatch(r"https://www\.forebet\.com/en/football/matches/[^/?#]+-\d{5,12}",url)
             or not isinstance(fid,str)
             or not re.fullmatch(r"FS:[A-Za-z0-9_-]{5,32}",fid)):
             raise ValueError("FOREBET_NATIVE_ALIAS_EVIDENCE_INVALID")
