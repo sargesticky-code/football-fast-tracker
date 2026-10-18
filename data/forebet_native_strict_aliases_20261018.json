@@ -1,0 +1,2041 @@
+{
+  "snapshot_type": "FOREBET_FLASHSCORE_NATIVE_EXACT_EVENT_ALIASES_V1",
+  "policy": "STRICT_SOURCE_EVENT_AND_FS_NATIVE_TEAM_ID_UNIQUE_NO_PROVISIONAL",
+  "generated_date": "2026-10-18",
+  "source": "Supabase public.football_alias_supertable",
+  "method": "FOREBET_STRICT_TWO_TEAM_EXACT_FIXTURE_SOURCE",
+  "rows": [
+    {
+      "source_name": "AD Ceuta",
+      "flashscore_name": "Ceuta",
+      "team_key": "FS_TEAM:xpWAk3h6",
+      "source_competition": "Es2",
+      "fixture_id": "FS:vJSxGXJ8",
+      "source_url": "https://www.forebet.com/en/football/matches/ad-ceuta-real-oviedo-2509396"
+    },
+    {
+      "source_name": "AEL Limassol",
+      "flashscore_name": "AEL Limassol",
+      "team_key": "FS_TEAM:bBTwQWuj",
+      "source_competition": "Cy1",
+      "fixture_id": "FS:CC4f8J8M",
+      "source_url": "https://www.forebet.com/en/football/matches/omonia-aradippou-ael-limassol-2527038"
+    },
+    {
+      "source_name": "Ajax",
+      "flashscore_name": "Ajax",
+      "team_key": "FS_TEAM:8UOvIwnb",
+      "source_competition": "Nl1",
+      "fixture_id": "FS:bZNCvLf2",
+      "source_url": "https://www.forebet.com/en/football/matches/groningen-ajax-2492081"
+    },
+    {
+      "source_name": "Akhmat Grozny",
+      "flashscore_name": "Akhmat Grozny",
+      "team_key": "FS_TEAM:bJGqkoet",
+      "source_competition": "Ru1",
+      "fixture_id": "FS:IaCyf2j2",
+      "source_url": "https://www.forebet.com/en/football/matches/zenit-akhmat-grozny-2474119"
+    },
+    {
+      "source_name": "AlbinoLeffe",
+      "flashscore_name": "AlbinoLeffe",
+      "team_key": "FS_TEAM:rVfjdq9o",
+      "source_competition": "It3",
+      "fixture_id": "FS:rHbUEP9e",
+      "source_url": "https://www.forebet.com/en/football/matches/albinoleffe-novara-2521790"
+    },
+    {
+      "source_name": "Angers",
+      "flashscore_name": "Angers",
+      "team_key": "FS_TEAM:SAlF91iL",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:j9vrwVNh",
+      "source_url": "https://www.forebet.com/en/football/matches/angers-olympique-marseille-2496244"
+    },
+    {
+      "source_name": "Antalyaspor",
+      "flashscore_name": "Antalyaspor",
+      "team_key": "FS_TEAM:GAtxDHF9",
+      "source_competition": "Tr2",
+      "fixture_id": "FS:6PbKjH0C",
+      "source_url": "https://www.forebet.com/en/football/matches/istanbulspor-as-antalyaspor-2492990"
+    },
+    {
+      "source_name": "APOEL",
+      "flashscore_name": "APOEL",
+      "team_key": "FS_TEAM:OKJwmfm3",
+      "source_competition": "Cy1",
+      "fixture_id": "FS:IV2vC19c",
+      "source_url": "https://www.forebet.com/en/football/matches/pafos-apoel-2527040"
+    },
+    {
+      "source_name": "Arka Gdynia",
+      "flashscore_name": "Arka Gdynia",
+      "team_key": "FS_TEAM:feEez0Ei",
+      "source_competition": "Pl2",
+      "fixture_id": "FS:GpRj6JyJ",
+      "source_url": "https://www.forebet.com/en/football/matches/lechia-gdansk-arka-gdynia-2473830"
+    },
+    {
+      "source_name": "Arminia Bielefeld",
+      "flashscore_name": "Arminia Bielefeld",
+      "team_key": "FS_TEAM:pp38UXK8",
+      "source_competition": "De2",
+      "fixture_id": "FS:QZYjGXCr",
+      "source_url": "https://www.forebet.com/en/football/matches/arminia-bielefeld-vfl-osnabruck-2490761"
+    },
+    {
+      "source_name": "Aston Villa W",
+      "flashscore_name": "Aston Villa W",
+      "team_key": "FS_TEAM:AaUYwhYM",
+      "source_competition": "WSL",
+      "fixture_id": "FS:KWUU7t04",
+      "source_url": "https://www.forebet.com/en/football/matches/aston-villa-w-liverpool-w-2529940"
+    },
+    {
+      "source_name": "Atalanta",
+      "flashscore_name": "Atalanta",
+      "team_key": "FS_TEAM:8C9JjMXu",
+      "source_competition": "It1",
+      "fixture_id": "FS:dzaTNndE",
+      "source_url": "https://www.forebet.com/en/football/matches/milan-atalanta-2496553"
+    },
+    {
+      "source_name": "Athletic Club MG",
+      "flashscore_name": "Athletic Club",
+      "team_key": "FS_TEAM:INXlw5Bp",
+      "source_competition": "Br2",
+      "fixture_id": "FS:tAXl1bs2",
+      "source_url": "https://www.forebet.com/en/football/matches/avai-fc-athletic-club-mg-2442996"
+    },
+    {
+      "source_name": "Atlético San Luis",
+      "flashscore_name": "Atl. San Luis",
+      "team_key": "FS_TEAM:OYSN90J0",
+      "source_competition": "Mx1",
+      "fixture_id": "FS:AVxvJkvq",
+      "source_url": "https://www.forebet.com/en/football/matches/deportivo-toluca-atlético-san-luis-2468166"
+    },
+    {
+      "source_name": "Atlético Tucumán",
+      "flashscore_name": "Atl. Tucuman",
+      "team_key": "FS_TEAM:KpqpxWko",
+      "source_competition": "Ar1",
+      "fixture_id": "FS:E5D6TpPa",
+      "source_url": "https://www.forebet.com/en/football/matches/atlético-tucumán-rosario-central-2417544"
+    },
+    {
+      "source_name": "Auda",
+      "flashscore_name": "Auda",
+      "team_key": "FS_TEAM:n9K4jY6A",
+      "source_competition": "Lv1",
+      "fixture_id": "FS:YLLwsZTF",
+      "source_url": "https://www.forebet.com/en/football/matches/bfc-daugavpils-auda-2434534"
+    },
+    {
+      "source_name": "Austin FC",
+      "flashscore_name": "Austin FC",
+      "team_key": "FS_TEAM:IeT6JBE3",
+      "source_competition": "Us1",
+      "fixture_id": "FS:04Qs4VBL",
+      "source_url": "https://www.forebet.com/en/football/matches/austin-fc-vancouver-whitecaps-2426952"
+    },
+    {
+      "source_name": "Avai FC",
+      "flashscore_name": "Avai",
+      "team_key": "FS_TEAM:rPzY7fWt",
+      "source_competition": "Br2",
+      "fixture_id": "FS:tAXl1bs2",
+      "source_url": "https://www.forebet.com/en/football/matches/avai-fc-athletic-club-mg-2442996"
+    },
+    {
+      "source_name": "Avellino",
+      "flashscore_name": "Avellino",
+      "team_key": "FS_TEAM:A332L1f5",
+      "source_competition": "It2",
+      "fixture_id": "FS:Q5iSKJ8N",
+      "source_url": "https://www.forebet.com/en/football/matches/cesena-avellino-2521349"
+    },
+    {
+      "source_name": "AZ Alkmaar",
+      "flashscore_name": "AZ Alkmaar",
+      "team_key": "FS_TEAM:2RxOow1i",
+      "source_competition": "Nl1",
+      "fixture_id": "FS:CIP4tsQk",
+      "source_url": "https://www.forebet.com/en/football/matches/cambuur-az-alkmaar-2492079"
+    },
+    {
+      "source_name": "Bahia",
+      "flashscore_name": "Bahia",
+      "team_key": "FS_TEAM:UeD7XtzM",
+      "source_competition": "Br1",
+      "fixture_id": "FS:QNNOuHtg",
+      "source_url": "https://www.forebet.com/en/football/matches/bahia-flamengo-2418194"
+    },
+    {
+      "source_name": "Barau",
+      "flashscore_name": "Barau",
+      "team_key": "FS_TEAM:08vcsotn",
+      "source_competition": "Ng1",
+      "fixture_id": "FS:80eYiShd",
+      "source_url": "https://www.forebet.com/en/football/matches/rivers-united-barau-2524324"
+    },
+    {
+      "source_name": "Basaksehir",
+      "flashscore_name": "Basaksehir",
+      "team_key": "FS_TEAM:YqP5NmC1",
+      "source_competition": "Tr1",
+      "fixture_id": "FS:d8E5i3Ja",
+      "source_url": "https://www.forebet.com/en/football/matches/basaksehir-gaziantep-2494929"
+    },
+    {
+      "source_name": "Batman Petrolspor",
+      "flashscore_name": "Batman Petrolspor",
+      "team_key": "FS_TEAM:j3Qqu5jt",
+      "source_competition": "Tr2",
+      "fixture_id": "FS:YB0ChwWa",
+      "source_url": "https://www.forebet.com/en/football/matches/kayserispor-batman-petrolspor-2492991"
+    },
+    {
+      "source_name": "Bayer Leverkusen",
+      "flashscore_name": "Bayer Leverkusen",
+      "team_key": "FS_TEAM:4jcj2zMd",
+      "source_competition": "De1",
+      "fixture_id": "FS:r7ZNv3no",
+      "source_url": "https://www.forebet.com/en/football/matches/bayer-leverkusen-freiburg-2523600"
+    },
+    {
+      "source_name": "Bayern Munich W",
+      "flashscore_name": "Bayern Munich W",
+      "team_key": "FS_TEAM:vkjy3nF9",
+      "source_competition": "DeW",
+      "fixture_id": "FS:tfZOTSed",
+      "source_url": "https://www.forebet.com/en/football/matches/bayern-munich-w-stuttgart-w-2512929"
+    },
+    {
+      "source_name": "Beijing Guoan",
+      "flashscore_name": "Beijing Guoan",
+      "team_key": "FS_TEAM:WSLjVBLN",
+      "source_competition": "Cn1",
+      "fixture_id": "FS:OK1iT1Yj",
+      "source_url": "https://www.forebet.com/en/football/matches/beijing-guoan-qingdao-west-coast-2433567"
+    },
+    {
+      "source_name": "Beitar Jerusalem",
+      "flashscore_name": "Beitar Jerusalem",
+      "team_key": "FS_TEAM:t2BgeFT0",
+      "source_competition": "Il1",
+      "fixture_id": "FS:MaybFKlT",
+      "source_url": "https://www.forebet.com/en/football/matches/beitar-jerusalem-maccabi-tel-aviv-2517409"
+    },
+    {
+      "source_name": "Besiktas",
+      "flashscore_name": "Besiktas",
+      "team_key": "FS_TEAM:IDmErJCR",
+      "source_competition": "Tr1",
+      "fixture_id": "FS:KSKRboRP",
+      "source_url": "https://www.forebet.com/en/football/matches/trabzonspor-besiktas-2494931"
+    },
+    {
+      "source_name": "BFC Daugavpils",
+      "flashscore_name": "BFC Daugavpils",
+      "team_key": "FS_TEAM:Kb4SLBTs",
+      "source_competition": "Lv1",
+      "fixture_id": "FS:YLLwsZTF",
+      "source_url": "https://www.forebet.com/en/football/matches/bfc-daugavpils-auda-2434534"
+    },
+    {
+      "source_name": "Borussia M'gladbach",
+      "flashscore_name": "B. Monchengladbach",
+      "team_key": "FS_TEAM:88HSzjDr",
+      "source_competition": "De1",
+      "fixture_id": "FS:zZsPbOwH",
+      "source_url": "https://www.forebet.com/en/football/matches/borussia-m'gladbach-hoffenheim-2523341"
+    },
+    {
+      "source_name": "Bournemouth",
+      "flashscore_name": "Bournemouth",
+      "team_key": "FS_TEAM:OtpNdwrc",
+      "source_competition": "EPL",
+      "fixture_id": "FS:Y34wXpJN",
+      "source_url": "https://www.forebet.com/en/football/matches/bournemouth-sunderland-2495615"
+    },
+    {
+      "source_name": "Brann",
+      "flashscore_name": "Brann",
+      "team_key": "FS_TEAM:QBbt6ivB",
+      "source_competition": "No1",
+      "fixture_id": "FS:WO4MoVio",
+      "source_url": "https://www.forebet.com/en/football/matches/valerenga-brann-2438540"
+    },
+    {
+      "source_name": "Brest",
+      "flashscore_name": "Brest",
+      "team_key": "FS_TEAM:Cr4VGaUl",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:I3v6XQiU",
+      "source_url": "https://www.forebet.com/en/football/matches/lille-brest-2496241"
+    },
+    {
+      "source_name": "Brighton",
+      "flashscore_name": "Brighton",
+      "team_key": "FS_TEAM:2XrRecc3",
+      "source_competition": "EPL",
+      "fixture_id": "FS:fDsekSYi",
+      "source_url": "https://www.forebet.com/en/football/matches/brighton-crystal-palace-2495613"
+    },
+    {
+      "source_name": "Bursaspor",
+      "flashscore_name": "Bursaspor",
+      "team_key": "FS_TEAM:f9yyDvc8",
+      "source_competition": "Tr2",
+      "fixture_id": "FS:SEc4fa1m",
+      "source_url": "https://www.forebet.com/en/football/matches/bursaspor-pendikspor-2492992"
+    },
+    {
+      "source_name": "CA Aldosivi",
+      "flashscore_name": "Aldosivi",
+      "team_key": "FS_TEAM:Eu4qrEcB",
+      "source_competition": "Ar1",
+      "fixture_id": "FS:8SjuDPvJ",
+      "source_url": "https://www.forebet.com/en/football/matches/estudiantes-río-cuarto-ca-aldosivi-2417546"
+    },
+    {
+      "source_name": "CA Tigre",
+      "flashscore_name": "Tigre",
+      "team_key": "FS_TEAM:nkwO1uw4",
+      "source_competition": "Ar1",
+      "fixture_id": "FS:MVGEROgC",
+      "source_url": "https://www.forebet.com/en/football/matches/independiente-rivadavia-ca-tigre-2417551"
+    },
+    {
+      "source_name": "Cadiz",
+      "flashscore_name": "Cadiz CF",
+      "team_key": "FS_TEAM:hdWjLJUJ",
+      "source_competition": "Es2",
+      "fixture_id": "FS:rFHG8kCr",
+      "source_url": "https://www.forebet.com/en/football/matches/granada-cadiz-2509393"
+    },
+    {
+      "source_name": "Calcio Como",
+      "flashscore_name": "Como",
+      "team_key": "FS_TEAM:ttyLthOA",
+      "source_competition": "It1",
+      "fixture_id": "FS:nNITJIwq",
+      "source_url": "https://www.forebet.com/en/football/matches/fiorentina-calcio-como-2496556"
+    },
+    {
+      "source_name": "Cambuur",
+      "flashscore_name": "Cambuur",
+      "team_key": "FS_TEAM:QRyYgO7J",
+      "source_competition": "Nl1",
+      "fixture_id": "FS:CIP4tsQk",
+      "source_url": "https://www.forebet.com/en/football/matches/cambuur-az-alkmaar-2492079"
+    },
+    {
+      "source_name": "Caracas",
+      "flashscore_name": "Caracas",
+      "team_key": "FS_TEAM:l6AbuB1S",
+      "source_competition": "Ve1",
+      "fixture_id": "FS:QJd7z6Ta",
+      "source_url": "https://www.forebet.com/en/football/matches/rayo-zuliano-caracas-2488244"
+    },
+    {
+      "source_name": "CD Castellon",
+      "flashscore_name": "Castellon",
+      "team_key": "FS_TEAM:QyHHzdwl",
+      "source_competition": "Es2",
+      "fixture_id": "FS:rmwW47B7",
+      "source_url": "https://www.forebet.com/en/football/matches/las-palmas-cd-castellon-2509391"
+    },
+    {
+      "source_name": "Celje",
+      "flashscore_name": "Celje",
+      "team_key": "FS_TEAM:SpbURe4O",
+      "source_competition": "Si1",
+      "fixture_id": "FS:6aoCAotB",
+      "source_url": "https://www.forebet.com/en/football/matches/maribor-celje-2468975"
+    },
+    {
+      "source_name": "Central Español",
+      "flashscore_name": "Central Esp.",
+      "team_key": "FS_TEAM:AsJ8EUY2",
+      "source_competition": "Uy1",
+      "fixture_id": "FS:QLugWrEs",
+      "source_url": "https://www.forebet.com/en/football/matches/danubio-fc-central-español-2560287"
+    },
+    {
+      "source_name": "Cesena",
+      "flashscore_name": "Cesena",
+      "team_key": "FS_TEAM:xddf1qfh",
+      "source_competition": "It2",
+      "fixture_id": "FS:Q5iSKJ8N",
+      "source_url": "https://www.forebet.com/en/football/matches/cesena-avellino-2521349"
+    },
+    {
+      "source_name": "CF Monterrey",
+      "flashscore_name": "Monterrey",
+      "team_key": "FS_TEAM:Ya23C2Zs",
+      "source_competition": "Mx1",
+      "fixture_id": "FS:j9vfF7w8",
+      "source_url": "https://www.forebet.com/en/football/matches/cf-monterrey-pachuca-cf-2468169"
+    },
+    {
+      "source_name": "Chapelton",
+      "flashscore_name": "Chapelton",
+      "team_key": "FS_TEAM:AZJexZFC",
+      "source_competition": "Jm",
+      "fixture_id": "FS:Qez1fJyR",
+      "source_url": "https://www.forebet.com/en/football/matches/chapelton-treasure-beach-2550145"
+    },
+    {
+      "source_name": "Chelsea W",
+      "flashscore_name": "Chelsea W",
+      "team_key": "FS_TEAM:Q7Hu2UDD",
+      "source_competition": "WSL",
+      "fixture_id": "FS:69bIojq2",
+      "source_url": "https://www.forebet.com/en/football/matches/chelsea-w-tottenham-w-2529945"
+    },
+    {
+      "source_name": "Churchill Brothers",
+      "flashscore_name": "Churchill Brothers",
+      "team_key": "FS_TEAM:E11bNKv8",
+      "source_competition": "Isl",
+      "fixture_id": "FS:tnoMT8jA",
+      "source_url": "https://www.forebet.com/en/football/matches/churchill-brothers-east-bengal-2558858"
+    },
+    {
+      "source_name": "Club América",
+      "flashscore_name": "Club America",
+      "team_key": "FS_TEAM:vyrswtJm",
+      "source_competition": "Mx1",
+      "fixture_id": "FS:tGn8OBGL",
+      "source_url": "https://www.forebet.com/en/football/matches/club-león-club-américa-2468167"
+    },
+    {
+      "source_name": "Club León",
+      "flashscore_name": "Club Leon",
+      "team_key": "FS_TEAM:l0iuHPBQ",
+      "source_competition": "Mx1",
+      "fixture_id": "FS:tGn8OBGL",
+      "source_url": "https://www.forebet.com/en/football/matches/club-león-club-américa-2468167"
+    },
+    {
+      "source_name": "Cobán Imperial",
+      "flashscore_name": "Coban Imperial",
+      "team_key": "FS_TEAM:8QRNdPXd",
+      "source_competition": "Gt1",
+      "fixture_id": "FS:Kb5QVGg3",
+      "source_url": "https://www.forebet.com/en/football/matches/deportivo-mixco-cobán-imperial-2476289"
+    },
+    {
+      "source_name": "Colorado Rapids",
+      "flashscore_name": "Colorado Rapids",
+      "team_key": "FS_TEAM:jmBZNRn8",
+      "source_competition": "Us1",
+      "fixture_id": "FS:4QOwi9Ej",
+      "source_url": "https://www.forebet.com/en/football/matches/portland-timbers-colorado-rapids-2426956"
+    },
+    {
+      "source_name": "Columbus Crew",
+      "flashscore_name": "Columbus Crew",
+      "team_key": "FS_TEAM:pQ8rarA7",
+      "source_competition": "Us1",
+      "fixture_id": "FS:jZWQCjyA",
+      "source_url": "https://www.forebet.com/en/football/matches/fc-cincinnati-columbus-crew-2426959"
+    },
+    {
+      "source_name": "Coventry City",
+      "flashscore_name": "Coventry",
+      "team_key": "FS_TEAM:GOvB22xg",
+      "source_competition": "EPL",
+      "fixture_id": "FS:0zSjbNHM",
+      "source_url": "https://www.forebet.com/en/football/matches/tottenham-coventry-city-2495606"
+    },
+    {
+      "source_name": "Criciúma",
+      "flashscore_name": "Criciuma",
+      "team_key": "FS_TEAM:48b7cubd",
+      "source_competition": "Br2",
+      "fixture_id": "FS:dpp9lLcd",
+      "source_url": "https://www.forebet.com/en/football/matches/são-bernardo-sp-criciúma-2442994"
+    },
+    {
+      "source_name": "Cruz Azul",
+      "flashscore_name": "Cruz Azul",
+      "team_key": "FS_TEAM:G8PFBMll",
+      "source_competition": "Mx1",
+      "fixture_id": "FS:rqynHT8e",
+      "source_url": "https://www.forebet.com/en/football/matches/cruz-azul-fc-juárez-2468168"
+    },
+    {
+      "source_name": "Cruzeiro",
+      "flashscore_name": "Cruzeiro",
+      "team_key": "FS_TEAM:0SwtclaU",
+      "source_competition": "Br1",
+      "fixture_id": "FS:U1u7NZQO",
+      "source_url": "https://www.forebet.com/en/football/matches/grêmio-cruzeiro-2418195"
+    },
+    {
+      "source_name": "Crystal Palace",
+      "flashscore_name": "Crystal Palace",
+      "team_key": "FS_TEAM:AovF1Mia",
+      "source_competition": "EPL",
+      "fixture_id": "FS:fDsekSYi",
+      "source_url": "https://www.forebet.com/en/football/matches/brighton-crystal-palace-2495613"
+    },
+    {
+      "source_name": "Crystal Palace W",
+      "flashscore_name": "Crystal Palace W",
+      "team_key": "FS_TEAM:4W00G1qP",
+      "source_competition": "WSL",
+      "fixture_id": "FS:Ye0AmCEk",
+      "source_url": "https://www.forebet.com/en/football/matches/crystal-palace-w-west-ham-w-2529944"
+    },
+    {
+      "source_name": "CSKA Moscow",
+      "flashscore_name": "CSKA Moscow",
+      "team_key": "FS_TEAM:l0r24CuE",
+      "source_competition": "Ru1",
+      "fixture_id": "FS:jmuIl7EM",
+      "source_url": "https://www.forebet.com/en/football/matches/dynamo-moscow-cska-moscow-2474126"
+    },
+    {
+      "source_name": "Danubio FC",
+      "flashscore_name": "Danubio",
+      "team_key": "FS_TEAM:AcRB7b0j",
+      "source_competition": "Uy1",
+      "fixture_id": "FS:QLugWrEs",
+      "source_url": "https://www.forebet.com/en/football/matches/danubio-fc-central-español-2560287"
+    },
+    {
+      "source_name": "Darmstadt",
+      "flashscore_name": "Darmstadt",
+      "team_key": "FS_TEAM:S0hPB9rA",
+      "source_competition": "De2",
+      "fixture_id": "FS:MqHPCb6j",
+      "source_url": "https://www.forebet.com/en/football/matches/karlsruher-sc-darmstadt-2490764"
+    },
+    {
+      "source_name": "De Graafschap",
+      "flashscore_name": "De Graafschap",
+      "team_key": "FS_TEAM:naL1J006",
+      "source_competition": "Nl2",
+      "fixture_id": "FS:zZXTJdxe",
+      "source_url": "https://www.forebet.com/en/football/matches/jong-ajax-de-graafschap-2492416"
+    },
+    {
+      "source_name": "Deportivo Alavés",
+      "flashscore_name": "Alaves",
+      "team_key": "FS_TEAM:hxt57t2q",
+      "source_competition": "Es1",
+      "fixture_id": "FS:zZTwY4cT",
+      "source_url": "https://www.forebet.com/en/football/matches/celta-vigo-deportivo-alavés-2495254"
+    },
+    {
+      "source_name": "Deportivo Garcilaso",
+      "flashscore_name": "Deportivo Garcilaso",
+      "team_key": "FS_TEAM:pQ8DJXPR",
+      "source_competition": "Pe1",
+      "fixture_id": "FS:Wt1fgKJ7",
+      "source_url": "https://www.forebet.com/en/football/matches/fbc-melgar-deportivo-garcilaso-2468572"
+    },
+    {
+      "source_name": "Deportivo Mixco",
+      "flashscore_name": "Deportivo Mixco",
+      "team_key": "FS_TEAM:px1qQF6N",
+      "source_competition": "Gt1",
+      "fixture_id": "FS:Kb5QVGg3",
+      "source_url": "https://www.forebet.com/en/football/matches/deportivo-mixco-cobán-imperial-2476289"
+    },
+    {
+      "source_name": "Deportivo Toluca",
+      "flashscore_name": "Toluca",
+      "team_key": "FS_TEAM:8hiBr2eQ",
+      "source_competition": "Mx1",
+      "fixture_id": "FS:AVxvJkvq",
+      "source_url": "https://www.forebet.com/en/football/matches/deportivo-toluca-atlético-san-luis-2468166"
+    },
+    {
+      "source_name": "Dynamo Moscow",
+      "flashscore_name": "Dynamo Moscow",
+      "team_key": "FS_TEAM:AFWA2jAQ",
+      "source_competition": "Ru1",
+      "fixture_id": "FS:jmuIl7EM",
+      "source_url": "https://www.forebet.com/en/football/matches/dynamo-moscow-cska-moscow-2474126"
+    },
+    {
+      "source_name": "East Bengal",
+      "flashscore_name": "East Bengal",
+      "team_key": "FS_TEAM:hh02MvfE",
+      "source_competition": "Isl",
+      "fixture_id": "FS:tnoMT8jA",
+      "source_url": "https://www.forebet.com/en/football/matches/churchill-brothers-east-bengal-2558858"
+    },
+    {
+      "source_name": "El Paso Locomotive",
+      "flashscore_name": "El Paso",
+      "team_key": "FS_TEAM:MRumD0sn",
+      "source_competition": "Us2",
+      "fixture_id": "FS:067dkPJF",
+      "source_url": "https://www.forebet.com/en/football/matches/el-paso-locomotive-sacramento-republic-2436512"
+    },
+    {
+      "source_name": "Eldense",
+      "flashscore_name": "Eldense",
+      "team_key": "FS_TEAM:8WUSyF3F",
+      "source_competition": "Es2",
+      "fixture_id": "FS:EkKeLSel",
+      "source_url": "https://www.forebet.com/en/football/matches/real-valladolid-eldense-2509388"
+    },
+    {
+      "source_name": "Enyimba",
+      "flashscore_name": "Enyimba",
+      "team_key": "FS_TEAM:tW5m7Mbt",
+      "source_competition": "Ng1",
+      "fixture_id": "FS:pxH0FMjK",
+      "source_url": "https://www.forebet.com/en/football/matches/enyimba-warri-wolves-2524319"
+    },
+    {
+      "source_name": "Esteghlal Khuzestan",
+      "flashscore_name": "Esteghlal Khuzestan",
+      "team_key": "FS_TEAM:0WmFJqn9",
+      "source_competition": "Ir1",
+      "fixture_id": "FS:AuM0Q68T",
+      "source_url": "https://www.forebet.com/en/football/matches/kheybar-khorramabad-esteghlal-khuzestan-2560486"
+    },
+    {
+      "source_name": "Estrella Roja",
+      "flashscore_name": "Estrella Roja",
+      "team_key": "FS_TEAM:2iUTtjy4",
+      "source_competition": "Hn1",
+      "fixture_id": "FS:zycfyMO8",
+      "source_url": "https://www.forebet.com/en/football/matches/génesis-estrella-roja-2560190"
+    },
+    {
+      "source_name": "Estudiantes La Plata",
+      "flashscore_name": "Estudiantes L.P.",
+      "team_key": "FS_TEAM:p2SkCHXs",
+      "source_competition": "Ar1",
+      "fixture_id": "FS:MiU3DYY1",
+      "source_url": "https://www.forebet.com/en/football/matches/estudiantes-la-plata-san-lorenzo-2417539"
+    },
+    {
+      "source_name": "Estudiantes Río Cuarto",
+      "flashscore_name": "Estudiantes Rio Cuarto",
+      "team_key": "FS_TEAM:llpcIYF2",
+      "source_competition": "Ar1",
+      "fixture_id": "FS:8SjuDPvJ",
+      "source_url": "https://www.forebet.com/en/football/matches/estudiantes-río-cuarto-ca-aldosivi-2417546"
+    },
+    {
+      "source_name": "Eupen",
+      "flashscore_name": "Eupen",
+      "team_key": "FS_TEAM:roazgtic",
+      "source_competition": "BeC",
+      "fixture_id": "FS:K0b69Ap1",
+      "source_url": "https://www.forebet.com/en/football/matches/kv-mechelen-eupen-2560137"
+    },
+    {
+      "source_name": "FBC Melgar",
+      "flashscore_name": "FBC Melgar",
+      "team_key": "FS_TEAM:IZO9NXIh",
+      "source_competition": "Pe1",
+      "fixture_id": "FS:Wt1fgKJ7",
+      "source_url": "https://www.forebet.com/en/football/matches/fbc-melgar-deportivo-garcilaso-2468572"
+    },
+    {
+      "source_name": "FC Cincinnati",
+      "flashscore_name": "FC Cincinnati",
+      "team_key": "FS_TEAM:8btog05R",
+      "source_competition": "Us1",
+      "fixture_id": "FS:jZWQCjyA",
+      "source_url": "https://www.forebet.com/en/football/matches/fc-cincinnati-columbus-crew-2426959"
+    },
+    {
+      "source_name": "FC Dallas",
+      "flashscore_name": "FC Dallas",
+      "team_key": "FS_TEAM:4GtbI4Q1",
+      "source_competition": "Us1",
+      "fixture_id": "FS:42ti0Di4",
+      "source_url": "https://www.forebet.com/en/football/matches/houston-dynamo-fc-dallas-2426953"
+    },
+    {
+      "source_name": "FC Juárez",
+      "flashscore_name": "Juarez",
+      "team_key": "FS_TEAM:2wZp8NAh",
+      "source_competition": "Mx1",
+      "fixture_id": "FS:rqynHT8e",
+      "source_url": "https://www.forebet.com/en/football/matches/cruz-azul-fc-juárez-2468168"
+    },
+    {
+      "source_name": "FC Tulsa",
+      "flashscore_name": "FC Tulsa",
+      "team_key": "FS_TEAM:OEz4Fa6C",
+      "source_competition": "Us2",
+      "fixture_id": "FS:dY05m3lS",
+      "source_url": "https://www.forebet.com/en/football/matches/fc-tulsa-oakland-roots-2436510"
+    },
+    {
+      "source_name": "FC Voluntari",
+      "flashscore_name": "FC Voluntari",
+      "team_key": "FS_TEAM:WIoSeFi4",
+      "source_competition": "Ro1",
+      "fixture_id": "FS:dCtAil4t",
+      "source_url": "https://www.forebet.com/en/football/matches/fc-voluntari-fcsb-2468310"
+    },
+    {
+      "source_name": "FCSB",
+      "flashscore_name": "FCSB",
+      "team_key": "FS_TEAM:Gv2kjDpN",
+      "source_competition": "Ro1",
+      "fixture_id": "FS:dCtAil4t",
+      "source_url": "https://www.forebet.com/en/football/matches/fc-voluntari-fcsb-2468310"
+    },
+    {
+      "source_name": "Fiorentina",
+      "flashscore_name": "Fiorentina",
+      "team_key": "FS_TEAM:Q3A3IbXH",
+      "source_competition": "It1",
+      "fixture_id": "FS:nNITJIwq",
+      "source_url": "https://www.forebet.com/en/football/matches/fiorentina-calcio-como-2496556"
+    },
+    {
+      "source_name": "Flamengo",
+      "flashscore_name": "Flamengo RJ",
+      "team_key": "FS_TEAM:WjxY29qB",
+      "source_competition": "Br1",
+      "fixture_id": "FS:QNNOuHtg",
+      "source_url": "https://www.forebet.com/en/football/matches/bahia-flamengo-2418194"
+    },
+    {
+      "source_name": "Fluminense",
+      "flashscore_name": "Fluminense",
+      "team_key": "FS_TEAM:EV9L3kU4",
+      "source_competition": "Br1",
+      "fixture_id": "FS:MF0OCIC6",
+      "source_url": "https://www.forebet.com/en/football/matches/fluminense-santos-2418199"
+    },
+    {
+      "source_name": "Freiburg",
+      "flashscore_name": "Freiburg",
+      "team_key": "FS_TEAM:fiEQZ7C7",
+      "source_competition": "De1",
+      "fixture_id": "FS:r7ZNv3no",
+      "source_url": "https://www.forebet.com/en/football/matches/bayer-leverkusen-freiburg-2523600"
+    },
+    {
+      "source_name": "Gaziantep",
+      "flashscore_name": "Gaziantep",
+      "team_key": "FS_TEAM:ITkIKZ7q",
+      "source_competition": "Tr1",
+      "fixture_id": "FS:d8E5i3Ja",
+      "source_url": "https://www.forebet.com/en/football/matches/basaksehir-gaziantep-2494929"
+    },
+    {
+      "source_name": "Génesis",
+      "flashscore_name": "Genesis",
+      "team_key": "FS_TEAM:IL2ZQcXn",
+      "source_competition": "Hn1",
+      "fixture_id": "FS:zycfyMO8",
+      "source_url": "https://www.forebet.com/en/football/matches/génesis-estrella-roja-2560190"
+    },
+    {
+      "source_name": "Gent",
+      "flashscore_name": "Gent",
+      "team_key": "FS_TEAM:MgkzUx7T",
+      "source_competition": "BeC",
+      "fixture_id": "FS:8v6KIENE",
+      "source_url": "https://www.forebet.com/en/football/matches/union-rochefortoise-gent-2560138"
+    },
+    {
+      "source_name": "Getafe",
+      "flashscore_name": "Getafe",
+      "team_key": "FS_TEAM:dboeiWOt",
+      "source_competition": "Es1",
+      "fixture_id": "FS:pS53lQsA",
+      "source_url": "https://www.forebet.com/en/football/matches/getafe-rayo-vallecano-2495251"
+    },
+    {
+      "source_name": "Gimnasia Mendoza",
+      "flashscore_name": "Gimnasia Mendoza",
+      "team_key": "FS_TEAM:K2sDXbFE",
+      "source_competition": "Ar1",
+      "fixture_id": "FS:WMeGITAs",
+      "source_url": "https://www.forebet.com/en/football/matches/vélez-sársfield-gimnasia-mendoza-2417541"
+    },
+    {
+      "source_name": "Goiás",
+      "flashscore_name": "Goias",
+      "team_key": "FS_TEAM:hfAZyE0t",
+      "source_competition": "Br2",
+      "fixture_id": "FS:YqUt3KCk",
+      "source_url": "https://www.forebet.com/en/football/matches/goiás-nautico-2442995"
+    },
+    {
+      "source_name": "Gornik Zabrze",
+      "flashscore_name": "Gornik Zabrze",
+      "team_key": "FS_TEAM:2LH3Ywq4",
+      "source_competition": "Pl1",
+      "fixture_id": "FS:WC3fNPqL",
+      "source_url": "https://www.forebet.com/en/football/matches/gornik-zabrze-piast-gliwice-2473520"
+    },
+    {
+      "source_name": "Granada",
+      "flashscore_name": "Granada CF",
+      "team_key": "FS_TEAM:EXuxl1xP",
+      "source_competition": "Es2",
+      "fixture_id": "FS:rFHG8kCr",
+      "source_url": "https://www.forebet.com/en/football/matches/granada-cadiz-2509393"
+    },
+    {
+      "source_name": "Grazer AK",
+      "flashscore_name": "Grazer AK",
+      "team_key": "FS_TEAM:bcsfIr0i",
+      "source_competition": "At1",
+      "fixture_id": "FS:2apLgkIc",
+      "source_url": "https://www.forebet.com/en/football/matches/sturm-graz-grazer-ak-2476825"
+    },
+    {
+      "source_name": "Grêmio",
+      "flashscore_name": "Gremio",
+      "team_key": "FS_TEAM:E1EFmhVh",
+      "source_competition": "Br1",
+      "fixture_id": "FS:U1u7NZQO",
+      "source_url": "https://www.forebet.com/en/football/matches/grêmio-cruzeiro-2418195"
+    },
+    {
+      "source_name": "Groningen",
+      "flashscore_name": "Groningen",
+      "team_key": "FS_TEAM:MBUGcjb9",
+      "source_competition": "Nl1",
+      "fixture_id": "FS:bZNCvLf2",
+      "source_url": "https://www.forebet.com/en/football/matches/groningen-ajax-2492081"
+    },
+    {
+      "source_name": "Guadalajara Chivas",
+      "flashscore_name": "Guadalajara Chivas",
+      "team_key": "FS_TEAM:Y5TaMKY6",
+      "source_competition": "Mx1",
+      "fixture_id": "FS:tddE2Ug2",
+      "source_url": "https://www.forebet.com/en/football/matches/guadalajara-chivas-tigres-uanl-2468165"
+    },
+    {
+      "source_name": "Heracles",
+      "flashscore_name": "Heracles",
+      "team_key": "FS_TEAM:bB3JbZpA",
+      "source_competition": "Nl2",
+      "fixture_id": "FS:S8ULLI7r",
+      "source_url": "https://www.forebet.com/en/football/matches/mvv-maastricht-heracles-2492413"
+    },
+    {
+      "source_name": "Hillerod",
+      "flashscore_name": "Hillerod",
+      "team_key": "FS_TEAM:tUY4mtrj",
+      "source_competition": "Dk2",
+      "fixture_id": "FS:tziflZ14",
+      "source_url": "https://www.forebet.com/en/football/matches/hvidovre-if-hillerod-2471314"
+    },
+    {
+      "source_name": "Hoffenheim",
+      "flashscore_name": "Hoffenheim",
+      "team_key": "FS_TEAM:hQAtP9Sl",
+      "source_competition": "De1",
+      "fixture_id": "FS:zZsPbOwH",
+      "source_url": "https://www.forebet.com/en/football/matches/borussia-m'gladbach-hoffenheim-2523341"
+    },
+    {
+      "source_name": "Hoffenheim II",
+      "flashscore_name": "Hoffenheim II",
+      "team_key": "FS_TEAM:bwwlzP9l",
+      "source_competition": "De3",
+      "fixture_id": "FS:tUgIcGWo",
+      "source_url": "https://www.forebet.com/en/football/matches/hoffenheim-ii-verl-2491154"
+    },
+    {
+      "source_name": "Hoffenheim W",
+      "flashscore_name": "Hoffenheim W",
+      "team_key": "FS_TEAM:vkQQP5Rf",
+      "source_competition": "DeW",
+      "fixture_id": "FS:hlXJXycU",
+      "source_url": "https://www.forebet.com/en/football/matches/werder-bremen-w-hoffenheim-w-2512934"
+    },
+    {
+      "source_name": "Houston Dynamo",
+      "flashscore_name": "Houston Dynamo",
+      "team_key": "FS_TEAM:2i4sdl32",
+      "source_competition": "Us1",
+      "fixture_id": "FS:42ti0Di4",
+      "source_url": "https://www.forebet.com/en/football/matches/houston-dynamo-fc-dallas-2426953"
+    },
+    {
+      "source_name": "Humble Lions",
+      "flashscore_name": "Humble Lions",
+      "team_key": "FS_TEAM:lGr4z8rK",
+      "source_competition": "Jm",
+      "fixture_id": "FS:UiPvmyU0",
+      "source_url": "https://www.forebet.com/en/football/matches/tru-juice-humble-lions-2550143"
+    },
+    {
+      "source_name": "Hvidovre IF",
+      "flashscore_name": "Hvidovre IF",
+      "team_key": "FS_TEAM:KOYrUtos",
+      "source_competition": "Dk2",
+      "fixture_id": "FS:tziflZ14",
+      "source_url": "https://www.forebet.com/en/football/matches/hvidovre-if-hillerod-2471314"
+    },
+    {
+      "source_name": "Ikorodu City",
+      "flashscore_name": "Ikorodu City",
+      "team_key": "FS_TEAM:KIgj4VpG",
+      "source_competition": "Ng1",
+      "fixture_id": "FS:6ioSD9FF",
+      "source_url": "https://www.forebet.com/en/football/matches/niger-tornadoes-ikorodu-city-2524322"
+    },
+    {
+      "source_name": "Ind del Valle",
+      "flashscore_name": "Ind. del Valle",
+      "team_key": "FS_TEAM:YFwXD2sh",
+      "source_competition": "Ec1",
+      "fixture_id": "FS:GpsJlmGa",
+      "source_url": "https://www.forebet.com/en/football/matches/macará-ind-del-valle-2553236"
+    },
+    {
+      "source_name": "Independiente Rivadavia",
+      "flashscore_name": "Ind. Rivadavia",
+      "team_key": "FS_TEAM:Eg51aDC4",
+      "source_competition": "Ar1",
+      "fixture_id": "FS:MVGEROgC",
+      "source_url": "https://www.forebet.com/en/football/matches/independiente-rivadavia-ca-tigre-2417551"
+    },
+    {
+      "source_name": "Istanbulspor AS",
+      "flashscore_name": "Istanbulspor AS",
+      "team_key": "FS_TEAM:bwbQIDxd",
+      "source_competition": "Tr2",
+      "fixture_id": "FS:6PbKjH0C",
+      "source_url": "https://www.forebet.com/en/football/matches/istanbulspor-as-antalyaspor-2492990"
+    },
+    {
+      "source_name": "Iwaki FC",
+      "flashscore_name": "Iwaki",
+      "team_key": "FS_TEAM:Mi3WmBrD",
+      "source_competition": "Jp2",
+      "fixture_id": "FS:CWbpkljL",
+      "source_url": "https://www.forebet.com/en/football/matches/iwaki-fc-ventforet-kofu-2493977"
+    },
+    {
+      "source_name": "Jong Ajax",
+      "flashscore_name": "Jong Ajax",
+      "team_key": "FS_TEAM:GncWwxTm",
+      "source_competition": "Nl2",
+      "fixture_id": "FS:zZXTJdxe",
+      "source_url": "https://www.forebet.com/en/football/matches/jong-ajax-de-graafschap-2492416"
+    },
+    {
+      "source_name": "Kapfenberg",
+      "flashscore_name": "Kapfenberg",
+      "team_key": "FS_TEAM:SUpSZy5K",
+      "source_competition": "At2",
+      "fixture_id": "FS:QuOVQgnS",
+      "source_url": "https://www.forebet.com/en/football/matches/sturm-graz-ii-kapfenberg-2476973"
+    },
+    {
+      "source_name": "Karditsa",
+      "flashscore_name": "Karditsa",
+      "team_key": "FS_TEAM:27FAPnX6",
+      "source_competition": "Gr2",
+      "fixture_id": "FS:fDPtewiU",
+      "source_url": "https://www.forebet.com/en/football/matches/pyrgos-karditsa-2560560"
+    },
+    {
+      "source_name": "Karlsruher SC",
+      "flashscore_name": "Karlsruher SC",
+      "team_key": "FS_TEAM:EB3q7jbk",
+      "source_competition": "De2",
+      "fixture_id": "FS:MqHPCb6j",
+      "source_url": "https://www.forebet.com/en/football/matches/karlsruher-sc-darmstadt-2490764"
+    },
+    {
+      "source_name": "Kayserispor",
+      "flashscore_name": "Kayserispor",
+      "team_key": "FS_TEAM:8pwUEwoc",
+      "source_competition": "Tr2",
+      "fixture_id": "FS:YB0ChwWa",
+      "source_url": "https://www.forebet.com/en/football/matches/kayserispor-batman-petrolspor-2492991"
+    },
+    {
+      "source_name": "Kerala Blasters",
+      "flashscore_name": "Kerala Blasters",
+      "team_key": "FS_TEAM:hAtROhM3",
+      "source_competition": "Isl",
+      "fixture_id": "FS:CY7gB0zq",
+      "source_url": "https://www.forebet.com/en/football/matches/north-east-utd-kerala-blasters-2558859"
+    },
+    {
+      "source_name": "KFUM Oslo",
+      "flashscore_name": "KFUM Oslo",
+      "team_key": "FS_TEAM:K4YaWRyM",
+      "source_competition": "No1",
+      "fixture_id": "FS:tzSm6aw0",
+      "source_url": "https://www.forebet.com/en/football/matches/tromso-kfum-oslo-2438542"
+    },
+    {
+      "source_name": "Kheybar Khorramabad",
+      "flashscore_name": "Kheybar Khorramabad",
+      "team_key": "FS_TEAM:0Y0GrDaG",
+      "source_competition": "Ir1",
+      "fixture_id": "FS:AuM0Q68T",
+      "source_url": "https://www.forebet.com/en/football/matches/kheybar-khorramabad-esteghlal-khuzestan-2560486"
+    },
+    {
+      "source_name": "Korona Kielce",
+      "flashscore_name": "Korona Kielce",
+      "team_key": "FS_TEAM:pp78XcbA",
+      "source_competition": "Pl1",
+      "fixture_id": "FS:t6etEL67",
+      "source_url": "https://www.forebet.com/en/football/matches/lech-poznan-korona-kielce-2473517"
+    },
+    {
+      "source_name": "Kryvbas",
+      "flashscore_name": "Kryvbas",
+      "team_key": "FS_TEAM:2gUHsxs4",
+      "source_competition": "Ua1",
+      "fixture_id": "FS:O4mlFvG8",
+      "source_url": "https://www.forebet.com/en/football/matches/kryvbas-lnz-cherkasy-2482293"
+    },
+    {
+      "source_name": "KV Mechelen",
+      "flashscore_name": "KV Mechelen",
+      "team_key": "FS_TEAM:ULVIb27i",
+      "source_competition": "BeC",
+      "fixture_id": "FS:K0b69Ap1",
+      "source_url": "https://www.forebet.com/en/football/matches/kv-mechelen-eupen-2560137"
+    },
+    {
+      "source_name": "Las Palmas",
+      "flashscore_name": "Las Palmas",
+      "team_key": "FS_TEAM:IyRQC2vM",
+      "source_competition": "Es2",
+      "fixture_id": "FS:rmwW47B7",
+      "source_url": "https://www.forebet.com/en/football/matches/las-palmas-cd-castellon-2509391"
+    },
+    {
+      "source_name": "Las Vegas Lights",
+      "flashscore_name": "Las Vegas Lights",
+      "team_key": "FS_TEAM:vVWDE67k",
+      "source_competition": "Us2",
+      "fixture_id": "FS:n3uptLt2",
+      "source_url": "https://www.forebet.com/en/football/matches/las-vegas-lights-lexington-2436515"
+    },
+    {
+      "source_name": "Le Havre",
+      "flashscore_name": "Le Havre",
+      "team_key": "FS_TEAM:CIEe04GT",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:xQxjy9h5",
+      "source_url": "https://www.forebet.com/en/football/matches/le-havre-auxerre-2496243"
+    },
+    {
+      "source_name": "Lech Poznan",
+      "flashscore_name": "Lech Poznan",
+      "team_key": "FS_TEAM:OpNH7Ouf",
+      "source_competition": "Pl1",
+      "fixture_id": "FS:t6etEL67",
+      "source_url": "https://www.forebet.com/en/football/matches/lech-poznan-korona-kielce-2473517"
+    },
+    {
+      "source_name": "Lechia Gdansk",
+      "flashscore_name": "Lechia Gdansk",
+      "team_key": "FS_TEAM:GGLmkiK8",
+      "source_competition": "Pl2",
+      "fixture_id": "FS:GpRj6JyJ",
+      "source_url": "https://www.forebet.com/en/football/matches/lechia-gdansk-arka-gdynia-2473830"
+    },
+    {
+      "source_name": "Leeds United",
+      "flashscore_name": "Leeds",
+      "team_key": "FS_TEAM:tUxUbLR2",
+      "source_competition": "EPL",
+      "fixture_id": "FS:rHnJqO2T",
+      "source_url": "https://www.forebet.com/en/football/matches/leeds-united-manchester-united-2495610"
+    },
+    {
+      "source_name": "Lens",
+      "flashscore_name": "Lens",
+      "team_key": "FS_TEAM:IBmris38",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:QoF9t4Up",
+      "source_url": "https://www.forebet.com/en/football/matches/troyes-lens-2496236"
+    },
+    {
+      "source_name": "Lexington",
+      "flashscore_name": "Lexington",
+      "team_key": "FS_TEAM:CKTv7Tll",
+      "source_competition": "Us2",
+      "fixture_id": "FS:n3uptLt2",
+      "source_url": "https://www.forebet.com/en/football/matches/las-vegas-lights-lexington-2436515"
+    },
+    {
+      "source_name": "Lille",
+      "flashscore_name": "Lille",
+      "team_key": "FS_TEAM:pfDZL71o",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:I3v6XQiU",
+      "source_url": "https://www.forebet.com/en/football/matches/lille-brest-2496241"
+    },
+    {
+      "source_name": "Lincoln Red Imps",
+      "flashscore_name": "Lincoln Red Imps",
+      "team_key": "FS_TEAM:bHbMply6",
+      "source_competition": "Gi1",
+      "fixture_id": "FS:UoGLKqE8",
+      "source_url": "https://www.forebet.com/en/football/matches/lynx-lincoln-red-imps-2516256"
+    },
+    {
+      "source_name": "Liverpool W",
+      "flashscore_name": "Liverpool W",
+      "team_key": "FS_TEAM:Ye260xTF",
+      "source_competition": "WSL",
+      "fixture_id": "FS:KWUU7t04",
+      "source_url": "https://www.forebet.com/en/football/matches/aston-villa-w-liverpool-w-2529940"
+    },
+    {
+      "source_name": "LKS Lodz",
+      "flashscore_name": "LKS Lodz",
+      "team_key": "FS_TEAM:ShUKWHDG",
+      "source_competition": "Pl2",
+      "fixture_id": "FS:EZ98O0im",
+      "source_url": "https://www.forebet.com/en/football/matches/lks-lodz-podbeskidzie-2473823"
+    },
+    {
+      "source_name": "LNZ Cherkasy",
+      "flashscore_name": "LNZ Cherkasy",
+      "team_key": "FS_TEAM:2m6zvQp5",
+      "source_competition": "Ua1",
+      "fixture_id": "FS:O4mlFvG8",
+      "source_url": "https://www.forebet.com/en/football/matches/kryvbas-lnz-cherkasy-2482293"
+    },
+    {
+      "source_name": "Lorient",
+      "flashscore_name": "Lorient",
+      "team_key": "FS_TEAM:jgNAYRGi",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:8SJFiUxn",
+      "source_url": "https://www.forebet.com/en/football/matches/lorient-monaco-2496240"
+    },
+    {
+      "source_name": "Lynx",
+      "flashscore_name": "Lynx",
+      "team_key": "FS_TEAM:Yqn5nA6g",
+      "source_competition": "Gi1",
+      "fixture_id": "FS:UoGLKqE8",
+      "source_url": "https://www.forebet.com/en/football/matches/lynx-lincoln-red-imps-2516256"
+    },
+    {
+      "source_name": "Lyon",
+      "flashscore_name": "Lyon",
+      "team_key": "FS_TEAM:2akflumR",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:EPMNk87b",
+      "source_url": "https://www.forebet.com/en/football/matches/lyon-nice-2496239"
+    },
+    {
+      "source_name": "Macará",
+      "flashscore_name": "Macara",
+      "team_key": "FS_TEAM:QN9rPKwC",
+      "source_competition": "Ec1",
+      "fixture_id": "FS:GpsJlmGa",
+      "source_url": "https://www.forebet.com/en/football/matches/macará-ind-del-valle-2553236"
+    },
+    {
+      "source_name": "Maccabi Tel Aviv",
+      "flashscore_name": "Maccabi Tel Aviv",
+      "team_key": "FS_TEAM:req5XE5Q",
+      "source_competition": "Il1",
+      "fixture_id": "FS:MaybFKlT",
+      "source_url": "https://www.forebet.com/en/football/matches/beitar-jerusalem-maccabi-tel-aviv-2517409"
+    },
+    {
+      "source_name": "Málaga CF",
+      "flashscore_name": "Malaga",
+      "team_key": "FS_TEAM:25tIqYiJ",
+      "source_competition": "Es1",
+      "fixture_id": "FS:hh9Bn4CM",
+      "source_url": "https://www.forebet.com/en/football/matches/málaga-cf-real-sociedad-2495250"
+    },
+    {
+      "source_name": "Manchester United",
+      "flashscore_name": "Manchester Utd",
+      "team_key": "FS_TEAM:ppjDR086",
+      "source_competition": "EPL",
+      "fixture_id": "FS:rHnJqO2T",
+      "source_url": "https://www.forebet.com/en/football/matches/leeds-united-manchester-united-2495610"
+    },
+    {
+      "source_name": "Maribor",
+      "flashscore_name": "Maribor",
+      "team_key": "FS_TEAM:6ycYQFJU",
+      "source_competition": "Si1",
+      "fixture_id": "FS:6aoCAotB",
+      "source_url": "https://www.forebet.com/en/football/matches/maribor-celje-2468975"
+    },
+    {
+      "source_name": "Melbourne Victory",
+      "flashscore_name": "Melbourne Victory",
+      "team_key": "FS_TEAM:Qql6CzOP",
+      "source_competition": "Au1",
+      "fixture_id": "FS:YyC1mHKk",
+      "source_url": "https://www.forebet.com/en/football/matches/wellington-phoenix-melbourne-victory-2559712"
+    },
+    {
+      "source_name": "Meppen",
+      "flashscore_name": "Meppen",
+      "team_key": "FS_TEAM:rXqBh2xP",
+      "source_competition": "De3",
+      "fixture_id": "FS:KveYgYVA",
+      "source_url": "https://www.forebet.com/en/football/matches/meppen-tsv-havelse-2491152"
+    },
+    {
+      "source_name": "Midtjylland",
+      "flashscore_name": "Midtjylland",
+      "team_key": "FS_TEAM:8GZDmdbB",
+      "source_competition": "Dk1",
+      "fixture_id": "FS:OK5AtGEc",
+      "source_url": "https://www.forebet.com/en/football/matches/viborg-ff-midtjylland-2469559"
+    },
+    {
+      "source_name": "Milan",
+      "flashscore_name": "AC Milan",
+      "team_key": "FS_TEAM:8Sa8HInO",
+      "source_competition": "It1",
+      "fixture_id": "FS:dzaTNndE",
+      "source_url": "https://www.forebet.com/en/football/matches/milan-atalanta-2496553"
+    },
+    {
+      "source_name": "Monaco",
+      "flashscore_name": "Monaco",
+      "team_key": "FS_TEAM:2PIvr8o4",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:8SJFiUxn",
+      "source_url": "https://www.forebet.com/en/football/matches/lorient-monaco-2496240"
+    },
+    {
+      "source_name": "Montpellier",
+      "flashscore_name": "Montpellier",
+      "team_key": "FS_TEAM:Eyf00syR",
+      "source_competition": "Fr2",
+      "fixture_id": "FS:M1joy6Q1",
+      "source_url": "https://www.forebet.com/en/football/matches/rodez-montpellier-2497576"
+    },
+    {
+      "source_name": "Montreal Impact",
+      "flashscore_name": "CF Montreal",
+      "team_key": "FS_TEAM:j9cigLCr",
+      "source_competition": "Us1",
+      "fixture_id": "FS:rPT6b9Zr",
+      "source_url": "https://www.forebet.com/en/football/matches/seattle-sounders-montreal-impact-2426957"
+    },
+    {
+      "source_name": "MVV Maastricht",
+      "flashscore_name": "Maastricht",
+      "team_key": "FS_TEAM:YPQnAtpC",
+      "source_competition": "Nl2",
+      "fixture_id": "FS:S8ULLI7r",
+      "source_url": "https://www.forebet.com/en/football/matches/mvv-maastricht-heracles-2492413"
+    },
+    {
+      "source_name": "Nashville SC",
+      "flashscore_name": "Nashville SC",
+      "team_key": "FS_TEAM:84yIDQMe",
+      "source_competition": "Us1",
+      "fixture_id": "FS:r9TIEC6c",
+      "source_url": "https://www.forebet.com/en/football/matches/san-jose-earthquakes-nashville-sc-2426955"
+    },
+    {
+      "source_name": "Nautico",
+      "flashscore_name": "Nautico",
+      "team_key": "FS_TEAM:8ODJnCpa",
+      "source_competition": "Br2",
+      "fixture_id": "FS:YqUt3KCk",
+      "source_url": "https://www.forebet.com/en/football/matches/goiás-nautico-2442995"
+    },
+    {
+      "source_name": "Niger Tornadoes",
+      "flashscore_name": "Niger Tornadoes",
+      "team_key": "FS_TEAM:l2xyIbkT",
+      "source_competition": "Ng1",
+      "fixture_id": "FS:6ioSD9FF",
+      "source_url": "https://www.forebet.com/en/football/matches/niger-tornadoes-ikorodu-city-2524322"
+    },
+    {
+      "source_name": "North East Utd",
+      "flashscore_name": "North East Utd",
+      "team_key": "FS_TEAM:lxzzNWjG",
+      "source_competition": "Isl",
+      "fixture_id": "FS:CY7gB0zq",
+      "source_url": "https://www.forebet.com/en/football/matches/north-east-utd-kerala-blasters-2558859"
+    },
+    {
+      "source_name": "Novara",
+      "flashscore_name": "Novara",
+      "team_key": "FS_TEAM:rPRQmc5D",
+      "source_competition": "It3",
+      "fixture_id": "FS:rHbUEP9e",
+      "source_url": "https://www.forebet.com/en/football/matches/albinoleffe-novara-2521790"
+    },
+    {
+      "source_name": "Novorizontino SP",
+      "flashscore_name": "Novorizontino",
+      "team_key": "FS_TEAM:4lOgZPQl",
+      "source_competition": "Br2",
+      "fixture_id": "FS:j39EHJRr",
+      "source_url": "https://www.forebet.com/en/football/matches/vila-nova-fc-novorizontino-sp-2442993"
+    },
+    {
+      "source_name": "Oakland Roots",
+      "flashscore_name": "Oakland Roots",
+      "team_key": "FS_TEAM:zLYVwGMm",
+      "source_competition": "Us2",
+      "fixture_id": "FS:dY05m3lS",
+      "source_url": "https://www.forebet.com/en/football/matches/fc-tulsa-oakland-roots-2436510"
+    },
+    {
+      "source_name": "Olympique Marseille",
+      "flashscore_name": "Marseille",
+      "team_key": "FS_TEAM:SblU3Hee",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:j9vrwVNh",
+      "source_url": "https://www.forebet.com/en/football/matches/angers-olympique-marseille-2496244"
+    },
+    {
+      "source_name": "Omonia Aradippou",
+      "flashscore_name": "Omonia Aradippou",
+      "team_key": "FS_TEAM:lbEQcoSc",
+      "source_competition": "Cy1",
+      "fixture_id": "FS:CC4f8J8M",
+      "source_url": "https://www.forebet.com/en/football/matches/omonia-aradippou-ael-limassol-2527038"
+    },
+    {
+      "source_name": "Orange County SC",
+      "flashscore_name": "Orange County SC",
+      "team_key": "FS_TEAM:llkqyHYq",
+      "source_competition": "Us2",
+      "fixture_id": "FS:Q9SBfKee",
+      "source_url": "https://www.forebet.com/en/football/matches/orange-county-sc-phoenix-rising-2436513"
+    },
+    {
+      "source_name": "Osasuna",
+      "flashscore_name": "Osasuna",
+      "team_key": "FS_TEAM:ETdxjU8a",
+      "source_competition": "Es1",
+      "fixture_id": "FS:lOfssrzp",
+      "source_url": "https://www.forebet.com/en/football/matches/osasuna-racing-santander-2495249"
+    },
+    {
+      "source_name": "Ospitaletto",
+      "flashscore_name": "Ospitaletto",
+      "team_key": "FS_TEAM:SfaJmg0R",
+      "source_competition": "It3",
+      "fixture_id": "FS:Y9io7GNh",
+      "source_url": "https://www.forebet.com/en/football/matches/ospitaletto-pergolettese-2521782"
+    },
+    {
+      "source_name": "Pachuca CF",
+      "flashscore_name": "Pachuca",
+      "team_key": "FS_TEAM:QT16qrtK",
+      "source_competition": "Mx1",
+      "fixture_id": "FS:j9vfF7w8",
+      "source_url": "https://www.forebet.com/en/football/matches/cf-monterrey-pachuca-cf-2468169"
+    },
+    {
+      "source_name": "Pafos",
+      "flashscore_name": "Pafos",
+      "team_key": "FS_TEAM:n99DUVW8",
+      "source_competition": "Cy1",
+      "fixture_id": "FS:IV2vC19c",
+      "source_url": "https://www.forebet.com/en/football/matches/pafos-apoel-2527040"
+    },
+    {
+      "source_name": "Paris FC",
+      "flashscore_name": "Paris FC",
+      "team_key": "FS_TEAM:0OEHEprs",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:nwLVmnxB",
+      "source_url": "https://www.forebet.com/en/football/matches/paris-fc-rennes-2496238"
+    },
+    {
+      "source_name": "Parma",
+      "flashscore_name": "Parma",
+      "team_key": "FS_TEAM:6DxlaxHN",
+      "source_competition": "It1",
+      "fixture_id": "FS:b3m7G4ll",
+      "source_url": "https://www.forebet.com/en/football/matches/parma-torino-2496551"
+    },
+    {
+      "source_name": "Partizan",
+      "flashscore_name": "Partizan",
+      "team_key": "FS_TEAM:8OLvlKz0",
+      "source_competition": "Rs1",
+      "fixture_id": "FS:4APd48Nq",
+      "source_url": "https://www.forebet.com/en/football/matches/zeleznicar-pancevo-partizan-2468699"
+    },
+    {
+      "source_name": "Pendikspor",
+      "flashscore_name": "Pendikspor",
+      "team_key": "FS_TEAM:dQVdH97o",
+      "source_competition": "Tr2",
+      "fixture_id": "FS:SEc4fa1m",
+      "source_url": "https://www.forebet.com/en/football/matches/bursaspor-pendikspor-2492992"
+    },
+    {
+      "source_name": "Pergolettese",
+      "flashscore_name": "Pergolettese",
+      "team_key": "FS_TEAM:pvWU6W5U",
+      "source_competition": "It3",
+      "fixture_id": "FS:Y9io7GNh",
+      "source_url": "https://www.forebet.com/en/football/matches/ospitaletto-pergolettese-2521782"
+    },
+    {
+      "source_name": "Persib Bandung",
+      "flashscore_name": "Persib Bandung",
+      "team_key": "FS_TEAM:KpBjbPK1",
+      "source_competition": "Id1",
+      "fixture_id": "FS:0x1XzQIF",
+      "source_url": "https://www.forebet.com/en/football/matches/persib-bandung-persik-kediri-2530503"
+    },
+    {
+      "source_name": "Persik Kediri",
+      "flashscore_name": "Persik Kediri",
+      "team_key": "FS_TEAM:MDFOmQ7H",
+      "source_competition": "Id1",
+      "fixture_id": "FS:0x1XzQIF",
+      "source_url": "https://www.forebet.com/en/football/matches/persib-bandung-persik-kediri-2530503"
+    },
+    {
+      "source_name": "Phoenix Rising",
+      "flashscore_name": "Phoenix Rising",
+      "team_key": "FS_TEAM:CWnNB64j",
+      "source_competition": "Us2",
+      "fixture_id": "FS:Q9SBfKee",
+      "source_url": "https://www.forebet.com/en/football/matches/orange-county-sc-phoenix-rising-2436513"
+    },
+    {
+      "source_name": "Piast Gliwice",
+      "flashscore_name": "Piast Gliwice",
+      "team_key": "FS_TEAM:ve2oT9ck",
+      "source_competition": "Pl1",
+      "fixture_id": "FS:WC3fNPqL",
+      "source_url": "https://www.forebet.com/en/football/matches/gornik-zabrze-piast-gliwice-2473520"
+    },
+    {
+      "source_name": "Piratas",
+      "flashscore_name": "Piratas",
+      "team_key": "FS_TEAM:2Ji0bsZg",
+      "source_competition": "Mx2",
+      "fixture_id": "FS:pnWMNHc6",
+      "source_url": "https://www.forebet.com/en/football/matches/piratas-tepatitlán-de-morelos-2475181"
+    },
+    {
+      "source_name": "Plateau United",
+      "flashscore_name": "Plateau United",
+      "team_key": "FS_TEAM:8QFGSB43",
+      "source_competition": "Ng1",
+      "fixture_id": "FS:lY5v8vqf",
+      "source_url": "https://www.forebet.com/en/football/matches/plateau-united-sporting-lagos-2524317"
+    },
+    {
+      "source_name": "Podbeskidzie",
+      "flashscore_name": "Podbeskidzie",
+      "team_key": "FS_TEAM:zBPYeTRl",
+      "source_competition": "Pl2",
+      "fixture_id": "FS:EZ98O0im",
+      "source_url": "https://www.forebet.com/en/football/matches/lks-lodz-podbeskidzie-2473823"
+    },
+    {
+      "source_name": "Portland Timbers",
+      "flashscore_name": "Portland Timbers",
+      "team_key": "FS_TEAM:bm8usLzB",
+      "source_competition": "Us1",
+      "fixture_id": "FS:4QOwi9Ej",
+      "source_url": "https://www.forebet.com/en/football/matches/portland-timbers-colorado-rapids-2426956"
+    },
+    {
+      "source_name": "Pyrgos",
+      "flashscore_name": "Pyrgos",
+      "team_key": "FS_TEAM:6FpLOA46",
+      "source_competition": "Gr2",
+      "fixture_id": "FS:fDPtewiU",
+      "source_url": "https://www.forebet.com/en/football/matches/pyrgos-karditsa-2560560"
+    },
+    {
+      "source_name": "Qingdao West Coast",
+      "flashscore_name": "Qingdao West Coast",
+      "team_key": "FS_TEAM:0QkqH4Gf",
+      "source_competition": "Cn1",
+      "fixture_id": "FS:OK1iT1Yj",
+      "source_url": "https://www.forebet.com/en/football/matches/beijing-guoan-qingdao-west-coast-2433567"
+    },
+    {
+      "source_name": "RAAL La Louvière",
+      "flashscore_name": "RAAL La Louviere",
+      "team_key": "FS_TEAM:K0H6jm7P",
+      "source_competition": "BeC",
+      "fixture_id": "FS:lImwO9af",
+      "source_url": "https://www.forebet.com/en/football/matches/raal-la-louvière-rfc-liège-2560135"
+    },
+    {
+      "source_name": "Racing Club",
+      "flashscore_name": "Racing Club",
+      "team_key": "FS_TEAM:OhapHPm9",
+      "source_competition": "Ar1",
+      "fixture_id": "FS:tKw9Obs3",
+      "source_url": "https://www.forebet.com/en/football/matches/racing-club-independiente-2417549"
+    },
+    {
+      "source_name": "Racing Santander",
+      "flashscore_name": "Racing Santander",
+      "team_key": "FS_TEAM:nVpEwOrl",
+      "source_competition": "Es1",
+      "fixture_id": "FS:lOfssrzp",
+      "source_url": "https://www.forebet.com/en/football/matches/osasuna-racing-santander-2495249"
+    },
+    {
+      "source_name": "Radomiak Radom",
+      "flashscore_name": "Radomiak Radom",
+      "team_key": "FS_TEAM:zD5nYhAT",
+      "source_competition": "Pl1",
+      "fixture_id": "FS:8hcYFsxe",
+      "source_url": "https://www.forebet.com/en/football/matches/wisla-plock-radomiak-radom-2473518"
+    },
+    {
+      "source_name": "Ravenna",
+      "flashscore_name": "Ravenna",
+      "team_key": "FS_TEAM:rZdj2Pvn",
+      "source_competition": "It3",
+      "fixture_id": "FS:CM9NUeWb",
+      "source_url": "https://www.forebet.com/en/football/matches/ravenna-spezia-2522163"
+    },
+    {
+      "source_name": "Rayo Vallecano",
+      "flashscore_name": "Rayo Vallecano",
+      "team_key": "FS_TEAM:8bcjFy6O",
+      "source_competition": "Es1",
+      "fixture_id": "FS:pS53lQsA",
+      "source_url": "https://www.forebet.com/en/football/matches/getafe-rayo-vallecano-2495251"
+    },
+    {
+      "source_name": "Rayo Zuliano",
+      "flashscore_name": "Rayo Zuliano",
+      "team_key": "FS_TEAM:l0k1Tw5i",
+      "source_competition": "Ve1",
+      "fixture_id": "FS:QJd7z6Ta",
+      "source_url": "https://www.forebet.com/en/football/matches/rayo-zuliano-caracas-2488244"
+    },
+    {
+      "source_name": "Real Madrid",
+      "flashscore_name": "Real Madrid",
+      "team_key": "FS_TEAM:W8mj7MDD",
+      "source_competition": "Es1",
+      "fixture_id": "FS:dlbkuM4d",
+      "source_url": "https://www.forebet.com/en/football/matches/real-madrid-sevilla-2495248"
+    },
+    {
+      "source_name": "Real Oviedo",
+      "flashscore_name": "Oviedo",
+      "team_key": "FS_TEAM:SzYzw34K",
+      "source_competition": "Es2",
+      "fixture_id": "FS:vJSxGXJ8",
+      "source_url": "https://www.forebet.com/en/football/matches/ad-ceuta-real-oviedo-2509396"
+    },
+    {
+      "source_name": "Real Salt Lake",
+      "flashscore_name": "Real Salt Lake",
+      "team_key": "FS_TEAM:W0ealpQl",
+      "source_competition": "Us1",
+      "fixture_id": "FS:CSqabiMG",
+      "source_url": "https://www.forebet.com/en/football/matches/sporting-kansas-city-real-salt-lake-2426954"
+    },
+    {
+      "source_name": "Real Sociedad",
+      "flashscore_name": "Real Sociedad",
+      "team_key": "FS_TEAM:jNvak2f3",
+      "source_competition": "Es1",
+      "fixture_id": "FS:hh9Bn4CM",
+      "source_url": "https://www.forebet.com/en/football/matches/málaga-cf-real-sociedad-2495250"
+    },
+    {
+      "source_name": "Real Valladolid",
+      "flashscore_name": "Valladolid",
+      "team_key": "FS_TEAM:zkpajjvm",
+      "source_competition": "Es2",
+      "fixture_id": "FS:EkKeLSel",
+      "source_url": "https://www.forebet.com/en/football/matches/real-valladolid-eldense-2509388"
+    },
+    {
+      "source_name": "RFC Liège",
+      "flashscore_name": "RFC Liege",
+      "team_key": "FS_TEAM:llsHlZZh",
+      "source_competition": "BeC",
+      "fixture_id": "FS:lImwO9af",
+      "source_url": "https://www.forebet.com/en/football/matches/raal-la-louvière-rfc-liège-2560135"
+    },
+    {
+      "source_name": "Rivers United",
+      "flashscore_name": "Rivers United",
+      "team_key": "FS_TEAM:b1JSz0K3",
+      "source_competition": "Ng1",
+      "fixture_id": "FS:80eYiShd",
+      "source_url": "https://www.forebet.com/en/football/matches/rivers-united-barau-2524324"
+    },
+    {
+      "source_name": "Rodez",
+      "flashscore_name": "Rodez",
+      "team_key": "FS_TEAM:0pOdQOCg",
+      "source_competition": "Fr2",
+      "fixture_id": "FS:M1joy6Q1",
+      "source_url": "https://www.forebet.com/en/football/matches/rodez-montpellier-2497576"
+    },
+    {
+      "source_name": "Rosario Central",
+      "flashscore_name": "Rosario Central",
+      "team_key": "FS_TEAM:4QmJ2LNc",
+      "source_competition": "Ar1",
+      "fixture_id": "FS:E5D6TpPa",
+      "source_url": "https://www.forebet.com/en/football/matches/atlético-tucumán-rosario-central-2417544"
+    },
+    {
+      "source_name": "Rubin Kazan",
+      "flashscore_name": "Rubin Kazan",
+      "team_key": "FS_TEAM:t482C620",
+      "source_competition": "Ru1",
+      "fixture_id": "FS:0MQmqoxp",
+      "source_url": "https://www.forebet.com/en/football/matches/spartak-moscow-rubin-kazan-2474125"
+    },
+    {
+      "source_name": "Sacramento Republic",
+      "flashscore_name": "Sacramento Republic",
+      "team_key": "FS_TEAM:z3BFwb83",
+      "source_competition": "Us2",
+      "fixture_id": "FS:067dkPJF",
+      "source_url": "https://www.forebet.com/en/football/matches/el-paso-locomotive-sacramento-republic-2436512"
+    },
+    {
+      "source_name": "San Jose Earthquakes",
+      "flashscore_name": "San Jose Earthquakes",
+      "team_key": "FS_TEAM:x05z14ue",
+      "source_competition": "Us1",
+      "fixture_id": "FS:r9TIEC6c",
+      "source_url": "https://www.forebet.com/en/football/matches/san-jose-earthquakes-nashville-sc-2426955"
+    },
+    {
+      "source_name": "São Bernardo SP",
+      "flashscore_name": "Sao Bernardo",
+      "team_key": "FS_TEAM:Wp4nyhLR",
+      "source_competition": "Br2",
+      "fixture_id": "FS:dpp9lLcd",
+      "source_url": "https://www.forebet.com/en/football/matches/são-bernardo-sp-criciúma-2442994"
+    },
+    {
+      "source_name": "Seattle Sounders",
+      "flashscore_name": "Seattle Sounders",
+      "team_key": "FS_TEAM:6P5S63Ah",
+      "source_competition": "Us1",
+      "fixture_id": "FS:rPT6b9Zr",
+      "source_url": "https://www.forebet.com/en/football/matches/seattle-sounders-montreal-impact-2426957"
+    },
+    {
+      "source_name": "Sevilla",
+      "flashscore_name": "Sevilla",
+      "team_key": "FS_TEAM:h8oAv4Ts",
+      "source_competition": "Es1",
+      "fixture_id": "FS:dlbkuM4d",
+      "source_url": "https://www.forebet.com/en/football/matches/real-madrid-sevilla-2495248"
+    },
+    {
+      "source_name": "Shanghai Shenhua",
+      "flashscore_name": "Shanghai Shenhua",
+      "team_key": "FS_TEAM:r5AIrq5q",
+      "source_competition": "Cn1",
+      "fixture_id": "FS:ILZJoAlI",
+      "source_url": "https://www.forebet.com/en/football/matches/wuhan-three-towns-shanghai-shenhua-2433566"
+    },
+    {
+      "source_name": "Silkeborg",
+      "flashscore_name": "Silkeborg",
+      "team_key": "FS_TEAM:4dCl8IE5",
+      "source_competition": "Dk1",
+      "fixture_id": "FS:ERTpQfUG",
+      "source_url": "https://www.forebet.com/en/football/matches/sonderjyske-silkeborg-2469562"
+    },
+    {
+      "source_name": "Sonderjyske",
+      "flashscore_name": "Sonderjyske",
+      "team_key": "FS_TEAM:42ectuVa",
+      "source_competition": "Dk1",
+      "fixture_id": "FS:ERTpQfUG",
+      "source_url": "https://www.forebet.com/en/football/matches/sonderjyske-silkeborg-2469562"
+    },
+    {
+      "source_name": "Spartak Moscow",
+      "flashscore_name": "Spartak Moscow",
+      "team_key": "FS_TEAM:IXVkvT2D",
+      "source_competition": "Ru1",
+      "fixture_id": "FS:0MQmqoxp",
+      "source_url": "https://www.forebet.com/en/football/matches/spartak-moscow-rubin-kazan-2474125"
+    },
+    {
+      "source_name": "Spezia",
+      "flashscore_name": "Spezia",
+      "team_key": "FS_TEAM:re6VD39b",
+      "source_competition": "It3",
+      "fixture_id": "FS:CM9NUeWb",
+      "source_url": "https://www.forebet.com/en/football/matches/ravenna-spezia-2522163"
+    },
+    {
+      "source_name": "Sporting Kansas City",
+      "flashscore_name": "Sporting Kansas City",
+      "team_key": "FS_TEAM:CURGfJWt",
+      "source_competition": "Us1",
+      "fixture_id": "FS:CSqabiMG",
+      "source_url": "https://www.forebet.com/en/football/matches/sporting-kansas-city-real-salt-lake-2426954"
+    },
+    {
+      "source_name": "Sporting Lagos",
+      "flashscore_name": "Sporting Lagos",
+      "team_key": "FS_TEAM:8Unjxadi",
+      "source_competition": "Ng1",
+      "fixture_id": "FS:lY5v8vqf",
+      "source_url": "https://www.forebet.com/en/football/matches/plateau-united-sporting-lagos-2524317"
+    },
+    {
+      "source_name": "Sturm Graz",
+      "flashscore_name": "Sturm Graz",
+      "team_key": "FS_TEAM:zsktjfsD",
+      "source_competition": "At1",
+      "fixture_id": "FS:2apLgkIc",
+      "source_url": "https://www.forebet.com/en/football/matches/sturm-graz-grazer-ak-2476825"
+    },
+    {
+      "source_name": "Sturm Graz II",
+      "flashscore_name": "Sturm Graz II",
+      "team_key": "FS_TEAM:8IZ6QvUS",
+      "source_competition": "At2",
+      "fixture_id": "FS:QuOVQgnS",
+      "source_url": "https://www.forebet.com/en/football/matches/sturm-graz-ii-kapfenberg-2476973"
+    },
+    {
+      "source_name": "Stuttgart W",
+      "flashscore_name": "Stuttgart W",
+      "team_key": "FS_TEAM:hIFkXfiB",
+      "source_competition": "DeW",
+      "fixture_id": "FS:tfZOTSed",
+      "source_url": "https://www.forebet.com/en/football/matches/bayern-munich-w-stuttgart-w-2512929"
+    },
+    {
+      "source_name": "Sunderland",
+      "flashscore_name": "Sunderland",
+      "team_key": "FS_TEAM:WSzc94ws",
+      "source_competition": "EPL",
+      "fixture_id": "FS:Y34wXpJN",
+      "source_url": "https://www.forebet.com/en/football/matches/bournemouth-sunderland-2495615"
+    },
+    {
+      "source_name": "Taichung Rock",
+      "flashscore_name": "Taichung Rock",
+      "team_key": "FS_TEAM:SAQffwOP",
+      "source_competition": "Tw1",
+      "fixture_id": "FS:SYiM5ehD",
+      "source_url": "https://www.forebet.com/en/football/matches/taiwan-steel-taichung-rock-2549562"
+    },
+    {
+      "source_name": "Tepatitlán de Morelos",
+      "flashscore_name": "Tepatitlan de Morelos",
+      "team_key": "FS_TEAM:IT36ygAH",
+      "source_competition": "Mx2",
+      "fixture_id": "FS:pnWMNHc6",
+      "source_url": "https://www.forebet.com/en/football/matches/piratas-tepatitlán-de-morelos-2475181"
+    },
+    {
+      "source_name": "Tigres UANL",
+      "flashscore_name": "Tigres UANL",
+      "team_key": "FS_TEAM:Iy4albIC",
+      "source_competition": "Mx1",
+      "fixture_id": "FS:tddE2Ug2",
+      "source_url": "https://www.forebet.com/en/football/matches/guadalajara-chivas-tigres-uanl-2468165"
+    },
+    {
+      "source_name": "Torino",
+      "flashscore_name": "Torino",
+      "team_key": "FS_TEAM:MZFZnvX4",
+      "source_competition": "It1",
+      "fixture_id": "FS:b3m7G4ll",
+      "source_url": "https://www.forebet.com/en/football/matches/parma-torino-2496551"
+    },
+    {
+      "source_name": "Tottenham",
+      "flashscore_name": "Tottenham",
+      "team_key": "FS_TEAM:UDg08Ohm",
+      "source_competition": "EPL",
+      "fixture_id": "FS:0zSjbNHM",
+      "source_url": "https://www.forebet.com/en/football/matches/tottenham-coventry-city-2495606"
+    },
+    {
+      "source_name": "Tottenham W",
+      "flashscore_name": "Tottenham W",
+      "team_key": "FS_TEAM:zJscgDii",
+      "source_competition": "WSL",
+      "fixture_id": "FS:69bIojq2",
+      "source_url": "https://www.forebet.com/en/football/matches/chelsea-w-tottenham-w-2529945"
+    },
+    {
+      "source_name": "Trabzonspor",
+      "flashscore_name": "Trabzonspor",
+      "team_key": "FS_TEAM:MmsYDc03",
+      "source_competition": "Tr1",
+      "fixture_id": "FS:KSKRboRP",
+      "source_url": "https://www.forebet.com/en/football/matches/trabzonspor-besiktas-2494931"
+    },
+    {
+      "source_name": "Treasure Beach",
+      "flashscore_name": "Treasure Beach",
+      "team_key": "FS_TEAM:ETwdWBmB",
+      "source_competition": "Jm",
+      "fixture_id": "FS:Qez1fJyR",
+      "source_url": "https://www.forebet.com/en/football/matches/chapelton-treasure-beach-2550145"
+    },
+    {
+      "source_name": "Tromso",
+      "flashscore_name": "Tromso",
+      "team_key": "FS_TEAM:25HpQh9o",
+      "source_competition": "No1",
+      "fixture_id": "FS:tzSm6aw0",
+      "source_url": "https://www.forebet.com/en/football/matches/tromso-kfum-oslo-2438542"
+    },
+    {
+      "source_name": "Troyes",
+      "flashscore_name": "Troyes",
+      "team_key": "FS_TEAM:fsfAHubD",
+      "source_competition": "Fr1",
+      "fixture_id": "FS:QoF9t4Up",
+      "source_url": "https://www.forebet.com/en/football/matches/troyes-lens-2496236"
+    },
+    {
+      "source_name": "Tru-Juice",
+      "flashscore_name": "Tru-Juice",
+      "team_key": "FS_TEAM:zo1b8QxJ",
+      "source_competition": "Jm",
+      "fixture_id": "FS:UiPvmyU0",
+      "source_url": "https://www.forebet.com/en/football/matches/tru-juice-humble-lions-2550143"
+    },
+    {
+      "source_name": "TSV Havelse",
+      "flashscore_name": "TSV Havelse",
+      "team_key": "FS_TEAM:ChZUX0PS",
+      "source_competition": "De3",
+      "fixture_id": "FS:KveYgYVA",
+      "source_url": "https://www.forebet.com/en/football/matches/meppen-tsv-havelse-2491152"
+    },
+    {
+      "source_name": "Twente",
+      "flashscore_name": "Twente",
+      "team_key": "FS_TEAM:dhOKTHGA",
+      "source_competition": "Nl1",
+      "fixture_id": "FS:GnvZo32S",
+      "source_url": "https://www.forebet.com/en/football/matches/twente-utrecht-2492080"
+    },
+    {
+      "source_name": "Udinese",
+      "flashscore_name": "Udinese",
+      "team_key": "FS_TEAM:rXw8YKDE",
+      "source_competition": "It1",
+      "fixture_id": "FS:EgfNCMmD",
+      "source_url": "https://www.forebet.com/en/football/matches/udinese-lecce-2496549"
+    },
+    {
+      "source_name": "Ulytau",
+      "flashscore_name": "Ulytau",
+      "team_key": "FS_TEAM:K6zaDmlS",
+      "source_competition": "Kz1",
+      "fixture_id": "FS:Wl5zeAVN",
+      "source_url": "https://www.forebet.com/en/football/matches/yelimay-semey-ulytau-2435910"
+    },
+    {
+      "source_name": "Union Rochefortoise",
+      "flashscore_name": "Union Rochefortoise",
+      "team_key": "FS_TEAM:pYinlVhm",
+      "source_competition": "BeC",
+      "fixture_id": "FS:8v6KIENE",
+      "source_url": "https://www.forebet.com/en/football/matches/union-rochefortoise-gent-2560138"
+    },
+    {
+      "source_name": "Utrecht",
+      "flashscore_name": "Utrecht",
+      "team_key": "FS_TEAM:p6QXMgOj",
+      "source_competition": "Nl1",
+      "fixture_id": "FS:GnvZo32S",
+      "source_url": "https://www.forebet.com/en/football/matches/twente-utrecht-2492080"
+    },
+    {
+      "source_name": "Valerenga",
+      "flashscore_name": "Valerenga",
+      "team_key": "FS_TEAM:ph9NNA8A",
+      "source_competition": "No1",
+      "fixture_id": "FS:WO4MoVio",
+      "source_url": "https://www.forebet.com/en/football/matches/valerenga-brann-2438540"
+    },
+    {
+      "source_name": "Vancouver Whitecaps",
+      "flashscore_name": "Vancouver Whitecaps",
+      "team_key": "FS_TEAM:K2dlua5N",
+      "source_competition": "Us1",
+      "fixture_id": "FS:04Qs4VBL",
+      "source_url": "https://www.forebet.com/en/football/matches/austin-fc-vancouver-whitecaps-2426952"
+    },
+    {
+      "source_name": "Vélez Sársfield",
+      "flashscore_name": "Velez Sarsfield",
+      "team_key": "FS_TEAM:UsCR8gFd",
+      "source_competition": "Ar1",
+      "fixture_id": "FS:WMeGITAs",
+      "source_url": "https://www.forebet.com/en/football/matches/vélez-sársfield-gimnasia-mendoza-2417541"
+    },
+    {
+      "source_name": "Ventforet Kofu",
+      "flashscore_name": "Kofu",
+      "team_key": "FS_TEAM:4IyNxjsg",
+      "source_competition": "Jp2",
+      "fixture_id": "FS:CWbpkljL",
+      "source_url": "https://www.forebet.com/en/football/matches/iwaki-fc-ventforet-kofu-2493977"
+    },
+    {
+      "source_name": "Verl",
+      "flashscore_name": "Verl",
+      "team_key": "FS_TEAM:ryb0Dqxr",
+      "source_competition": "De3",
+      "fixture_id": "FS:tUgIcGWo",
+      "source_url": "https://www.forebet.com/en/football/matches/hoffenheim-ii-verl-2491154"
+    },
+    {
+      "source_name": "VfL Osnabruck",
+      "flashscore_name": "VfL Osnabruck",
+      "team_key": "FS_TEAM:88Xgj1Y5",
+      "source_competition": "De2",
+      "fixture_id": "FS:QZYjGXCr",
+      "source_url": "https://www.forebet.com/en/football/matches/arminia-bielefeld-vfl-osnabruck-2490761"
+    },
+    {
+      "source_name": "Viborg FF",
+      "flashscore_name": "Viborg",
+      "team_key": "FS_TEAM:v99EsEjo",
+      "source_competition": "Dk1",
+      "fixture_id": "FS:OK5AtGEc",
+      "source_url": "https://www.forebet.com/en/football/matches/viborg-ff-midtjylland-2469559"
+    },
+    {
+      "source_name": "Vila Nova FC",
+      "flashscore_name": "Vila Nova FC",
+      "team_key": "FS_TEAM:Y3E1Lrj3",
+      "source_competition": "Br2",
+      "fixture_id": "FS:j39EHJRr",
+      "source_url": "https://www.forebet.com/en/football/matches/vila-nova-fc-novorizontino-sp-2442993"
+    },
+    {
+      "source_name": "Vitória",
+      "flashscore_name": "Vitoria",
+      "team_key": "FS_TEAM:8bSbHipn",
+      "source_competition": "Br1",
+      "fixture_id": "FS:hdprTwcm",
+      "source_url": "https://www.forebet.com/en/football/matches/corinthians-vitória-2418198"
+    },
+    {
+      "source_name": "Volendam",
+      "flashscore_name": "FC Volendam",
+      "team_key": "FS_TEAM:6VbkuOqa",
+      "source_competition": "Nl2",
+      "fixture_id": "FS:dQwjRvpL",
+      "source_url": "https://www.forebet.com/en/football/matches/waalwijk-volendam-2492412"
+    },
+    {
+      "source_name": "Waalwijk",
+      "flashscore_name": "Waalwijk",
+      "team_key": "FS_TEAM:lvM1vra5",
+      "source_competition": "Nl2",
+      "fixture_id": "FS:dQwjRvpL",
+      "source_url": "https://www.forebet.com/en/football/matches/waalwijk-volendam-2492412"
+    },
+    {
+      "source_name": "Warri Wolves",
+      "flashscore_name": "Warri Wolves",
+      "team_key": "FS_TEAM:4dauChz4",
+      "source_competition": "Ng1",
+      "fixture_id": "FS:pxH0FMjK",
+      "source_url": "https://www.forebet.com/en/football/matches/enyimba-warri-wolves-2524319"
+    },
+    {
+      "source_name": "Wellington Phoenix",
+      "flashscore_name": "Wellington Phoenix",
+      "team_key": "FS_TEAM:Ctp2DG8J",
+      "source_competition": "Au1",
+      "fixture_id": "FS:YyC1mHKk",
+      "source_url": "https://www.forebet.com/en/football/matches/wellington-phoenix-melbourne-victory-2559712"
+    },
+    {
+      "source_name": "Werder Bremen W",
+      "flashscore_name": "Werder Bremen W",
+      "team_key": "FS_TEAM:vyDE3LZH",
+      "source_competition": "DeW",
+      "fixture_id": "FS:hlXJXycU",
+      "source_url": "https://www.forebet.com/en/football/matches/werder-bremen-w-hoffenheim-w-2512934"
+    },
+    {
+      "source_name": "West Ham W",
+      "flashscore_name": "West Ham W",
+      "team_key": "FS_TEAM:f5LnX3Gl",
+      "source_competition": "WSL",
+      "fixture_id": "FS:Ye0AmCEk",
+      "source_url": "https://www.forebet.com/en/football/matches/crystal-palace-w-west-ham-w-2529944"
+    },
+    {
+      "source_name": "Wisla Plock",
+      "flashscore_name": "Wisla Plock",
+      "team_key": "FS_TEAM:QoZYVU3E",
+      "source_competition": "Pl1",
+      "fixture_id": "FS:8hcYFsxe",
+      "source_url": "https://www.forebet.com/en/football/matches/wisla-plock-radomiak-radom-2473518"
+    },
+    {
+      "source_name": "Wuhan Three Towns",
+      "flashscore_name": "Wuhan Three Towns",
+      "team_key": "FS_TEAM:SfLUTe08",
+      "source_competition": "Cn1",
+      "fixture_id": "FS:ILZJoAlI",
+      "source_url": "https://www.forebet.com/en/football/matches/wuhan-three-towns-shanghai-shenhua-2433566"
+    },
+    {
+      "source_name": "Yelimay Semey",
+      "flashscore_name": "Yelimay Semey",
+      "team_key": "FS_TEAM:GEwrHVl3",
+      "source_competition": "Kz1",
+      "fixture_id": "FS:Wl5zeAVN",
+      "source_url": "https://www.forebet.com/en/football/matches/yelimay-semey-ulytau-2435910"
+    },
+    {
+      "source_name": "Zeleznicar Pancevo",
+      "flashscore_name": "Zeleznicar Pancevo",
+      "team_key": "FS_TEAM:jmmBWFML",
+      "source_competition": "Rs1",
+      "fixture_id": "FS:4APd48Nq",
+      "source_url": "https://www.forebet.com/en/football/matches/zeleznicar-pancevo-partizan-2468699"
+    },
+    {
+      "source_name": "Zenit",
+      "flashscore_name": "Zenit",
+      "team_key": "FS_TEAM:vsXou9m7",
+      "source_competition": "Ru1",
+      "fixture_id": "FS:IaCyf2j2",
+      "source_url": "https://www.forebet.com/en/football/matches/zenit-akhmat-grozny-2474119"
+    }
+  ]
+}
