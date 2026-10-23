@@ -18,7 +18,7 @@ from xml.etree import ElementTree
 HKT = timezone(timedelta(hours=8))
 XML_URL = "https://trade.500.com/static/public/jczq/newxml/pl/pl_spf_2.xml"
 INDEX_URL = "https://trade.500.com/jczq/?playid=269&g=2"
-FIXTURES_URL = "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/app-phase1-feed?view=summary&hours=48"
+FIXTURES_URL = "https://hekqxhgjexzxnecwhyao.supabase.co/functions/v1/flashscore-verified-fixtures"
 OUTPUT = Path("/tmp/ft500-spf-canonical.json")
 # Explicitly reviewed Chinese Simplified -> canonical English names. Do NOT infer
 # absent names or rely on kickoff alone to identify same-time matches.
@@ -204,20 +204,54 @@ def get(url,max_bytes):
         raise ValueError("provider payload exceeded size limit")
     return body
 
+def verified_fixtures(payload, now):
+    """Strict Flashscore-source fixture adapter. No team/league aliases inferred."""
+    if not isinstance(payload, dict) or payload.get("source") != "FLASHSCORE_VERIFIED_FIXTURES":
+        raise ValueError("untrusted fixture-feed provenance")
+    if payload.get("bookmaker_quotes_available") is not False:
+        raise ValueError("unexpected bookmaker attribution")
+    updated = iso_time(payload.get("captured_at"))
+    if not updated or not now-timedelta(minutes=30) <= updated <= now+timedelta(minutes=1):
+        raise ValueError("stale or future fixture feed")
+    discovered = payload.get("discovered")
+    if not isinstance(discovered, list) or len(discovered) > 450:
+        raise ValueError("untrusted fixture count")
+    accepted,seen=[],set()
+    for item in discovered:
+        if not isinstance(item,dict): continue
+        event_id=str(item.get("provider_event_id",""))
+        if not re.fullmatch(r"[A-Za-z0-9_-]{5,32}",event_id) or event_id in seen:
+            raise ValueError("duplicate or invalid source fixture identity")
+        seen.add(event_id)
+        kickoff=iso_time(item.get("kickoff_utc"))
+        if not kickoff or not now-timedelta(hours=2) <= kickoff <= now+timedelta(hours=72):
+            continue
+        home,away=item.get("home"),item.get("away")
+        league=item.get("competition")
+        if not all(isinstance(v,str) and v.strip() for v in (home,away,league)):
+            continue
+        if home.strip()==away.strip():
+            continue
+        if league not in ("EPL","LaLigaSPAIN: LaLiga","BundesligaGERMANY: Bundesliga",
+                         "Serie AITALY: Serie A","Ligue 1FRANCE: Ligue 1","MLS"):
+            continue
+        accepted.append({"id":"FS:"+event_id,"kickoff":kickoff.isoformat(),
+                         "home":home,"away":away,"league":league})
+    if not accepted:
+        raise ValueError("no valid verified fixture targets")
+    return accepted
+
 def capture():
     now=datetime.now(timezone.utc)
     raw_json=json.loads(get(FIXTURES_URL,2_000_000))
-    if not isinstance(raw_json,dict) or not isinstance(raw_json.get("matches"),list):
-        raise ValueError("canonical summary absent")
-    if not str(raw_json.get("source","")).startswith(("flashscore-single-rpc-canonical","supabase-canonical-live","flashscore-direct")):
-        raise ValueError("untrusted fixture-feed provenance")
+    fixtures=verified_fixtures(raw_json,now)
     source=read_official(get(XML_URL,500_000),get(INDEX_URL,2_000_000).decode("utf-8","replace"),now)
-    matched=resolve_canonical(source,raw_json["matches"],now)
+    matched=resolve_canonical(source,fixtures,now)
     output={"source":"CHINA_500_SPF","captured_at":now.isoformat(),"source_rows":len(source),
-            "canonical_targets":len(raw_json["matches"]),"accepted":len(matched),"rows":matched}
+            "canonical_targets":len(fixtures),"accepted":len(matched),"rows":matched}
     OUTPUT.write_text(json.dumps(output,ensure_ascii=False),encoding="utf-8")
     print("CHINA_500_SPF_CAPTURE "+json.dumps({
-        "source_rows":len(source),"canonical_targets":len(raw_json["matches"]),
+        "source_rows":len(source),"canonical_targets":len(fixtures),
         "verified":len(matched),"ids":[x["match_id"] for x in matched],
         "publication":False},sort_keys=True))
     return 0  # A match-free schedule is a valid no-op, never publish an empty batch.
