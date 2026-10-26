@@ -70,6 +70,17 @@ class SourceIdentityTests(unittest.TestCase):
         payload = {"source":"flashscore-verified-canonical-fixtures-v2",
                    "generatedAt":NOW.isoformat(), "matches":fixtures}
         self.assertEqual(len(canonical_from_oidc("o"*51, NOW, Session(payload))),600)
+        # Live Flashscore can legitimately return fewer than eight fixtures.
+        # Preserve per-fixture source identity checks even in a sparse batch.
+        for fixture_count in (1, 5, 7):
+            payload["matches"] = fixtures[:fixture_count]
+            self.assertEqual(len(canonical_from_oidc("o"*51, NOW, Session(payload))), fixture_count)
+        payload["matches"] = []
+        with self.assertRaisesRegex(ValueError, "INVALID_VERIFIED_CANONICAL_FIXTURES"):
+            canonical_from_oidc("o"*51, NOW, Session(payload))
+        payload["matches"] = [{**fixtures[0], "sourceContext": {"identityStatus": "UNVERIFIED", "provider": "FLASHSCORE"}}]
+        with self.assertRaisesRegex(ValueError, "UNVERIFIED_CANONICAL_ROW"):
+            canonical_from_oidc("o"*51, NOW, Session(payload))
         payload["matches"] = fixtures + [{
             **fixtures[0], "id":"FS:overcap001"}]
         with self.assertRaisesRegex(ValueError, "INVALID_VERIFIED_CANONICAL_FIXTURES"):
