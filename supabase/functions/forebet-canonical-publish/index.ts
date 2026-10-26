@@ -66,7 +66,10 @@ Deno.serve(async (request: Request): Promise<Response> => {
         league:r.league,fetchedAt:r.fetched_at,
         sourceContext:{identityStatus:"EXACT_CANONICAL_PROVIDER_FIXTURE",provider:"FLASHSCORE"}
       }));
-      if (matches.length<8) return response(503,{error:"INSUFFICIENT_VERIFIED_FS_FIXTURES",count:matches.length});
+      // Individual fixtures already have exact source IDs, verified identity,
+      // timestamp, and competition checks. A quiet matchday with 1-7 fixtures
+      // must not disable the whole Forebet source-collection pipeline.
+      if (matches.length<1) return response(503,{error:"INSUFFICIENT_VERIFIED_FS_FIXTURES",count:matches.length});
       return response(200,{source:"flashscore-verified-canonical-fixtures-v2",
         generatedAt:new Date().toISOString(),matches});
     } catch {
