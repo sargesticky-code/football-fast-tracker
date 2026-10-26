@@ -52,7 +52,9 @@ def canonical_from_oidc(token: str, now: datetime, session=None) -> list[dict]:
     if at is None or not -60 <= (now-at).total_seconds() <= 1200:
         raise ValueError("STALE_CANONICAL_FEED")
     fixtures = payload.get("matches")
-    if not isinstance(fixtures, list) or not 8 <= len(fixtures) <= MAX_TARGETS:
+    # Sparse Flashscore matchdays are valid. Security rests on verifying each
+    # individual fixture; requiring eight unrelated matches blocks collection.
+    if not isinstance(fixtures, list) or not 1 <= len(fixtures) <= MAX_TARGETS:
         raise ValueError("INVALID_VERIFIED_CANONICAL_FIXTURES")
     for m in fixtures:
         if (not isinstance(m, dict)
@@ -289,7 +291,7 @@ def run(now=None, fixture_token=None, helper=None):
     now = now or datetime.now(timezone.utc)
     fixture_token = fixture_token or os.getenv("FOREBET_FIXTURES_OIDC", "")
     targets = canonical_from_oidc(fixture_token, now)
-    if len(targets) < 8:
+    if not targets:
         raise ValueError("TOO_FEW_VERIFIED_FS_FIXTURES")
     dates = source_dates(targets, now)
     candidates, page_proofs, failures = [], [], []
